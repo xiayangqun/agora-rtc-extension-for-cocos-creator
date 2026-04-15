@@ -1,0 +1,8 @@
+# 临时下载/解压目录
+temp/
+
+# 各平台 SDK 库文件（由 predownload 脚本生成）
+android/libs/
+ios/libs/
+mac/libs/
+windows/libs/
