@@ -16,9 +16,21 @@ export interface IMusicContentCenter {
 
     getMusicCharts(requestId: string): Promise<number>;
 
-    getMusicCollectionByMusicChartId(requestId: string, musicChartId: number, page: number, pageSize: number, jsonOption: string): Promise<number>;
+    getMusicCollectionByMusicChartId(
+        requestId: string,
+        musicChartId: number,
+        page: number,
+        pageSize: number,
+        jsonOption: string,
+    ): Promise<number>;
 
-    searchMusic(requestId: string, keyWord: string, page: number, pageSize: number, jsonOption: string): Promise<number>;
+    searchMusic(
+        requestId: string,
+        keyWord: string,
+        page: number,
+        pageSize: number,
+        jsonOption: string,
+    ): Promise<number>;
 
     preload(songCode: number, jsonOption: string): Promise<number>;
 

@@ -24,7 +24,7 @@ import type { ContentInspectConfig, RENDER_MODE_TYPE, SnapshotConfig } from "../
 import { IRtcEngine } from "./IRtcEngine";
 
 export interface IRtcEngineEx extends IRtcEngine {
-    setParametersEx(connection: RtcConnection, key: string, value: object): Promise<number>;
+    setParametersEx(connection: RtcConnection, parameters: object): Promise<number>;
 
     joinChannelEx(token: string, connection: RtcConnection, options: ChannelMediaOptions): Promise<number>;
 
@@ -34,7 +34,11 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     leaveChannelWithUserAccountEx(channelId: string, userAccount: string): Promise<number>;
 
-    leaveChannelWithUserAccountEx(channelId: string, userAccount: string, options: LeaveChannelOptions): Promise<number>;
+    leaveChannelWithUserAccountEx(
+        channelId: string,
+        userAccount: string,
+        options: LeaveChannelOptions,
+    ): Promise<number>;
 
     updateChannelMediaOptionsEx(options: ChannelMediaOptions, connection: RtcConnection): Promise<number>;
 
@@ -64,13 +68,26 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     setSubscribeVideoAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
 
-    setRemoteVideoSubscriptionOptionsEx(uid: number, options: VideoSubscriptionOptions, connection: RtcConnection): Promise<number>;
+    setRemoteVideoSubscriptionOptionsEx(
+        uid: number,
+        options: VideoSubscriptionOptions,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     setRemoteVoicePositionEx(uid: number, pan: number, gain: number, connection: RtcConnection): Promise<number>;
 
-    setRemoteUserSpatialAudioParamsEx(uid: number, params: SpatialAudioParams, connection: RtcConnection): Promise<number>;
+    setRemoteUserSpatialAudioParamsEx(
+        uid: number,
+        params: SpatialAudioParams,
+        connection: RtcConnection,
+    ): Promise<number>;
 
-    setRemoteRenderModeEx(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE, connection: RtcConnection): Promise<number>;
+    setRemoteRenderModeEx(
+        uid: number,
+        renderMode: RENDER_MODE_TYPE,
+        mirrorMode: VIDEO_MIRROR_MODE_TYPE,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     enableLoopbackRecordingEx(connection: RtcConnection, enabled: boolean, deviceName: string): Promise<number>;
 
@@ -84,13 +101,24 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): Promise<number>;
 
-    createDataStreamEx(streamId: number, reliable: boolean, ordered: boolean, connection: RtcConnection): Promise<number>;
+    createDataStreamEx(
+        streamId: number,
+        reliable: boolean,
+        ordered: boolean,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     createDataStreamEx(streamId: number, config: DataStreamConfig, connection: RtcConnection): Promise<number>;
 
     sendStreamMessageEx(streamId: number, data: Uint8Array, length: number, connection: RtcConnection): Promise<number>;
 
-    sendRdtMessageEx(uid: number, type: RdtStreamType, data: string, length: number, connection: RtcConnection): Promise<number>;
+    sendRdtMessageEx(
+        uid: number,
+        type: RdtStreamType,
+        data: string,
+        length: number,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     sendMediaControlMessageEx(uid: number, data: string, length: number, connection: RtcConnection): Promise<number>;
 
@@ -102,19 +130,38 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     clearVideoWatermarkEx(connection: RtcConnection): Promise<number>;
 
-    sendCustomReportMessageEx(id: string, category: string, event: string, label: string, value: number, connection: RtcConnection): Promise<number>;
+    sendCustomReportMessageEx(
+        id: string,
+        category: string,
+        event: string,
+        label: string,
+        value: number,
+        connection: RtcConnection,
+    ): Promise<number>;
 
-    enableAudioVolumeIndicationEx(interval: number, smooth: number, reportVad: boolean, connection: RtcConnection): Promise<number>;
+    enableAudioVolumeIndicationEx(
+        interval: number,
+        smooth: number,
+        reportVad: boolean,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     startRtmpStreamWithoutTranscodingEx(url: string, connection: RtcConnection): Promise<number>;
 
-    startRtmpStreamWithTranscodingEx(url: string, transcoding: LiveTranscoding, connection: RtcConnection): Promise<number>;
+    startRtmpStreamWithTranscodingEx(
+        url: string,
+        transcoding: LiveTranscoding,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     updateRtmpTranscodingEx(transcoding: LiveTranscoding, connection: RtcConnection): Promise<number>;
 
     stopRtmpStreamEx(url: string, connection: RtcConnection): Promise<number>;
 
-    startOrUpdateChannelMediaRelayEx(configuration: ChannelMediaRelayConfiguration, connection: RtcConnection): Promise<number>;
+    startOrUpdateChannelMediaRelayEx(
+        configuration: ChannelMediaRelayConfiguration,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     stopChannelMediaRelayEx(connection: RtcConnection): Promise<number>;
 
@@ -126,13 +173,26 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): Promise<number>;
 
-    enableDualStreamModeEx(enabled: boolean, streamConfig: SimulcastStreamConfig, connection: RtcConnection): Promise<number>;
+    enableDualStreamModeEx(
+        enabled: boolean,
+        streamConfig: SimulcastStreamConfig,
+        connection: RtcConnection,
+    ): Promise<number>;
 
-    setDualStreamModeEx(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig, connection: RtcConnection): Promise<number>;
+    setDualStreamModeEx(
+        mode: SIMULCAST_STREAM_MODE,
+        streamConfig: SimulcastStreamConfig,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     setSimulcastConfigEx(simulcastConfig: SimulcastConfig, connection: RtcConnection): Promise<number>;
 
-    setHighPriorityUserListEx(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS, connection: RtcConnection): Promise<number>;
+    setHighPriorityUserListEx(
+        uidList: number[],
+        uidNum: number,
+        option: STREAM_FALLBACK_OPTIONS,
+        connection: RtcConnection,
+    ): Promise<number>;
 
     takeSnapshotEx(connection: RtcConnection, uid: number, filePath: string): Promise<number>;
 
@@ -150,5 +210,15 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     preloadEffectEx(connection: RtcConnection, soundId: number, filePath: string, startPos: number): Promise<number>;
 
-    playEffectEx(connection: RtcConnection, soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): Promise<number>;
+    playEffectEx(
+        connection: RtcConnection,
+        soundId: number,
+        filePath: string,
+        loopCount: number,
+        pitch: number,
+        pan: number,
+        gain: number,
+        publish: boolean,
+        startPos: number,
+    ): Promise<number>;
 }

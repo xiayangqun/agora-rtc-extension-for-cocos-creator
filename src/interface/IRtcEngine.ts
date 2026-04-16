@@ -66,11 +66,18 @@ import {
     Rectangle,
 } from "../types/AgoraBase";
 import { LOG_LEVEL } from "../types/AgoraLog";
-import { VIDEO_SOURCE_TYPE, VIDEO_MODULE_POSITION, AUDIO_FRAME_POSITION, MEDIA_SOURCE_TYPE, RENDER_MODE_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, SnapshotConfig, ContentInspectConfig } from "../types/AgoraMediaBase";
+import {
+    VIDEO_SOURCE_TYPE,
+    VIDEO_MODULE_POSITION,
+    MEDIA_SOURCE_TYPE,
+    RENDER_MODE_TYPE,
+    RAW_AUDIO_FRAME_OP_MODE_TYPE,
+    SnapshotConfig,
+    ContentInspectConfig,
+} from "../types/AgoraMediaBase";
 import { AUDIO_MIXING_DUAL_MONO_MODE } from "../types/AgoraMediaEngine";
 import { AgoraRhythmPlayerConfig } from "../types/AgoraRhythmPlayer";
 import {
-    Metadata,
     RtcEngineContext,
     ChannelMediaOptions,
     LeaveChannelOptions,
@@ -82,7 +89,6 @@ import {
     ScreenCaptureSourceInfo,
     ScreenCaptureConfiguration,
     PRIORITY_TYPE,
-    METADATA_TYPE,
     DirectCdnStreamingMediaOptions,
     CLOUD_PROXY_TYPE,
     AdvancedAudioOptions,
@@ -91,21 +97,19 @@ import {
     ExtensionInfo,
 } from "../types/AgoraRtcEngine";
 import { IAudioDeviceManager } from "./IAudioDeviceManager";
-import { IAudioEncodedFrameObserver } from "./IAudioEncodedFrameObserver";
 import { IH265Transcoder } from "./IH265Transcoder";
 import { ILocalSpatialAudioEngine } from "./ILocalSpatialAudioEngine";
 import { IMediaPlayer } from "./IMediaPlayer";
 import { IMediaPlayerCacheManager } from "./IMediaPlayerCacheManager";
 import { IMediaRecorder } from "./IMediaRecorder";
 import { IMusicContentCenter } from "./IMusicContentCenter";
-import { IRtcEngineEventHandler } from "./IRtcEngineEventHandler";
 import { IVideoDeviceManager } from "./IVideoDeviceManager";
 import { IVideoEffectObject } from "./IVideoEffectObject";
 
+import { _decorator } from "cc";
+
 export interface IRtcEngine {
     release(sync: boolean): Promise<void>;
-
-    setParameters(key: string, value: string): Promise<number>;
 
     getAudioDeviceManager(): Promise<IAudioDeviceManager>;
 
@@ -181,13 +185,21 @@ export interface IRtcEngine {
 
     setBeautyEffectOptions(enabled: boolean, options: BeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setFaceShapeBeautyOptions(enabled: boolean, options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    setFaceShapeBeautyOptions(
+        enabled: boolean,
+        options: FaceShapeBeautyOptions,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<number>;
 
     setFaceShapeAreaOptions(options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
     getFaceShapeBeautyOptions(options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    getFaceShapeAreaOptions(shapeArea: FACE_SHAPE_AREA, options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    getFaceShapeAreaOptions(
+        shapeArea: FACE_SHAPE_AREA,
+        options: FaceShapeAreaOptions,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<number>;
 
     setFilterEffectOptions(enabled: boolean, options: FilterEffectOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
@@ -195,13 +207,22 @@ export interface IRtcEngine {
 
     destroyVideoEffectObject(videoEffectObject: IVideoEffectObject): Promise<number>;
 
-    setLowlightEnhanceOptions(enabled: boolean, options: LowlightEnhanceOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    setLowlightEnhanceOptions(
+        enabled: boolean,
+        options: LowlightEnhanceOptions,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<number>;
 
     setVideoDenoiserOptions(enabled: boolean, options: VideoDenoiserOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
     setColorEnhanceOptions(enabled: boolean, options: ColorEnhanceOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    enableVirtualBackground(enabled: boolean, backgroundSource: VirtualBackgroundSource, segproperty: SegmentationProperty, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    enableVirtualBackground(
+        enabled: boolean,
+        backgroundSource: VirtualBackgroundSource,
+        segproperty: SegmentationProperty,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<number>;
 
     setupRemoteVideo(canvas: VideoCanvas): Promise<number>;
 
@@ -259,8 +280,6 @@ export interface IRtcEngine {
 
     startAudioRecording(config: AudioRecordingConfiguration): Promise<number>;
 
-    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver): Promise<number>;
-
     stopAudioRecording(): Promise<number>;
 
     createMediaPlayer(): Promise<IMediaPlayer>;
@@ -313,7 +332,16 @@ export interface IRtcEngine {
 
     preloadEffect(soundId: number, filePath: string, startPos: number): Promise<number>;
 
-    playEffect(soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): Promise<number>;
+    playEffect(
+        soundId: number,
+        filePath: string,
+        loopCount: number,
+        pitch: number,
+        pan: number,
+        gain: number,
+        publish: boolean,
+        startPos: number,
+    ): Promise<number>;
 
     playAllEffects(loopCount: number, pitch: number, pan: number, gain: number, publish: boolean): Promise<number>;
 
@@ -411,17 +439,36 @@ export interface IRtcEngine {
 
     setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): Promise<number>;
 
-    setRecordingAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
+    setRecordingAudioFrameParameters(
+        sampleRate: number,
+        channel: number,
+        mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
+        samplesPerCall: number,
+    ): Promise<number>;
 
-    setPlaybackAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
+    setPlaybackAudioFrameParameters(
+        sampleRate: number,
+        channel: number,
+        mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
+        samplesPerCall: number,
+    ): Promise<number>;
 
     setMixedAudioFrameParameters(sampleRate: number, channel: number, samplesPerCall: number): Promise<number>;
 
-    setEarMonitoringAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
+    setEarMonitoringAudioFrameParameters(
+        sampleRate: number,
+        channel: number,
+        mode: RAW_AUDIO_FRAME_OP_MODE_TYPE,
+        samplesPerCall: number,
+    ): Promise<number>;
 
     setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number): Promise<number>;
 
-    setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number, samplesPerCall: number): Promise<number>;
+    setPlaybackAudioFrameBeforeMixingParameters(
+        sampleRate: number,
+        channel: number,
+        samplesPerCall: number,
+    ): Promise<number>;
 
     enableAudioSpectrumMonitor(intervalInMS: number): Promise<number>;
 
@@ -439,11 +486,28 @@ export interface IRtcEngine {
 
     setHighPriorityUserList(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS): Promise<number>;
 
-    enableExtension(provider: string, extension: string, extensionInfo: ExtensionInfo, enable: boolean): Promise<number>;
+    enableExtension(
+        provider: string,
+        extension: string,
+        extensionInfo: ExtensionInfo,
+        enable: boolean,
+    ): Promise<number>;
 
-    setExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, value: string): Promise<number>;
+    setExtensionProperty(
+        provider: string,
+        extension: string,
+        extensionInfo: ExtensionInfo,
+        key: string,
+        value: string,
+    ): Promise<number>;
 
-    getExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, buf_len: number): Promise<{ errorCode: number; value: string }>;
+    getExtensionProperty(
+        provider: string,
+        extension: string,
+        extensionInfo: ExtensionInfo,
+        key: string,
+        buf_len: number,
+    ): Promise<{ errorCode: number; value: string }>;
 
     enableLoopbackRecording(enabled: boolean, deviceName: string): Promise<number>;
 
@@ -463,9 +527,21 @@ export interface IRtcEngine {
 
     enableExtension(provider: string, extension: string, enable: boolean, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setExtensionProperty(provider: string, extension: string, key: string, value: string, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    setExtensionProperty(
+        provider: string,
+        extension: string,
+        key: string,
+        value: string,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<number>;
 
-    getExtensionProperty(provider: string, extension: string, key: string, buf_len: number, type: MEDIA_SOURCE_TYPE): Promise<{ errorCode: number; value: number }>;
+    getExtensionProperty(
+        provider: string,
+        extension: string,
+        key: string,
+        buf_len: number,
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<{ errorCode: number; value: number }>;
 
     setCameraCapturerConfiguration(config: CameraCapturerConfiguration): Promise<number>;
 
@@ -527,17 +603,33 @@ export interface IRtcEngine {
 
     enableCameraCenterStage(enabled: boolean): Promise<number>;
 
-    getScreenCaptureSources(thumbSize: SIZE, iconSize: SIZE, includeScreen: boolean): Promise<ScreenCaptureSourceInfo[]>;
+    getScreenCaptureSources(
+        thumbSize: SIZE,
+        iconSize: SIZE,
+        includeScreen: boolean,
+    ): Promise<ScreenCaptureSourceInfo[]>;
 
     setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): Promise<number>;
 
-    startScreenCaptureByDisplayId(displayId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
+    startScreenCaptureByDisplayId(
+        displayId: number,
+        regionRect: Rectangle,
+        captureParams: ScreenCaptureParameters,
+    ): Promise<number>;
 
-    startScreenCaptureByScreenRect(screenRect: Rectangle, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
+    startScreenCaptureByScreenRect(
+        screenRect: Rectangle,
+        regionRect: Rectangle,
+        captureParams: ScreenCaptureParameters,
+    ): Promise<number>;
 
     getAudioDeviceInfo(): Promise<{ errorCode: number; deviceInfo: DeviceInfo }>;
 
-    startScreenCaptureByWindowId(windowId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
+    startScreenCaptureByWindowId(
+        windowId: number,
+        regionRect: Rectangle,
+        captureParams: ScreenCaptureParameters,
+    ): Promise<number>;
 
     setScreenCaptureContentHint(contentHint: VIDEO_CONTENT_HINT): Promise<number>;
 
@@ -631,7 +723,15 @@ export interface IRtcEngine {
 
     sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): Promise<number>;
 
-    startAudioFrameDump(channel_id: string, uid: number, location: string, uuid: string, passwd: string, duration_ms: number, auto_upload: boolean): Promise<number>;
+    startAudioFrameDump(
+        channel_id: string,
+        uid: number,
+        location: string,
+        uuid: string,
+        passwd: string,
+        duration_ms: number,
+        auto_upload: boolean,
+    ): Promise<number>;
 
     stopAudioFrameDump(channel_id: string, uid: number, location: string): Promise<number>;
 
@@ -641,7 +741,12 @@ export interface IRtcEngine {
 
     joinChannelWithUserAccount(token: string, channelId: string, userAccount: string): Promise<number>;
 
-    joinChannelWithUserAccount(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): Promise<number>;
+    joinChannelWithUserAccount(
+        token: string,
+        channelId: string,
+        userAccount: string,
+        options: ChannelMediaOptions,
+    ): Promise<number>;
 
     getUserInfoByUserAccount(userAccount: string): Promise<{ errorCode: number; userInfo: UserInfo }>;
 
@@ -695,7 +800,7 @@ export interface IRtcEngine {
 
     getNetworkType(): Promise<number>;
 
-    setParameters(parameters: string): Promise<number>;
+    setParameters(parameters: object): Promise<number>;
 
     startMediaRenderingTracing(): Promise<number>;
 

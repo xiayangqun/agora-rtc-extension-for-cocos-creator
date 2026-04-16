@@ -16,7 +16,13 @@ export interface ILocalSpatialAudioEngine {
 
     clearRemotePositionsEx(connection: RtcConnection): Promise<number>;
 
-    updateSelfPositionEx(position: number[], axisForward: number[], axisRight: number[], axisUp: number[], connection: RtcConnection): Promise<number>;
+    updateSelfPositionEx(
+        position: number[],
+        axisForward: number[],
+        axisRight: number[],
+        axisUp: number[],
+        connection: RtcConnection,
+    ): Promise<number>;
 
     setMaxAudioRecvCount(maxCount: number): Promise<number>;
 
@@ -24,7 +30,12 @@ export interface ILocalSpatialAudioEngine {
 
     setDistanceUnit(unit: number): Promise<number>;
 
-    updateSelfPosition(position: number[], axisForward: number[], axisRight: number[], axisUp: number[]): Promise<number>;
+    updateSelfPosition(
+        position: number[],
+        axisForward: number[],
+        axisRight: number[],
+        axisUp: number[],
+    ): Promise<number>;
 
     updatePlayerPositionInfo(playerId: number, positionInfo: RemoteVoicePositionInfo): Promise<number>;
 

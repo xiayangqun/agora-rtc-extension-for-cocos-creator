@@ -1,4 +1,13 @@
-import type { CacheStatistics, MEDIA_PLAYER_EVENT, MEDIA_PLAYER_REASON, MEDIA_PLAYER_STATE, PLAYER_PRELOAD_EVENT, PlayerPlaybackStats, PlayerUpdatedInfo, SrcInfo } from "../types/AgoraMediaPlayerTypes";
+import type {
+    CacheStatistics,
+    MEDIA_PLAYER_EVENT,
+    MEDIA_PLAYER_REASON,
+    MEDIA_PLAYER_STATE,
+    PLAYER_PRELOAD_EVENT,
+    PlayerPlaybackStats,
+    PlayerUpdatedInfo,
+    SrcInfo,
+} from "../types/AgoraMediaPlayerTypes";
 
 export abstract class IMediaPlayerSourceObserver {
     onPlayerSourceStateChanged(state: MEDIA_PLAYER_STATE, reason: MEDIA_PLAYER_REASON): void {}

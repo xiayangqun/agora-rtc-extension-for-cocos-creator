@@ -25,8 +25,8 @@
     "predownload:clear": "node scripts/predownload.js --clear",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
-    "format": "prettier --write \"src/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,assets}/**/*.ts\"",
+    "format:check": "prettier --check \"{src,assets}/**/*.ts\"",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -43,5 +43,13 @@
   },
   "dependencies": {
     "agora-rtc-sdk-ng": "^4.24.3"
-  }
+  },
+  "contributions": {
+        "asset-db": {
+            "mount": {
+                "path": "./assets",
+                "readonly": true
+            }
+        }
+    }
 }
