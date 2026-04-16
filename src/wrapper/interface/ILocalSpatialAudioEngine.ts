@@ -2,45 +2,45 @@ import type { RemoteVoicePositionInfo, SpatialAudioZone } from "../types/AgoraSp
 import type { RtcConnection } from "../types/AgoraRtcEngineEx";
 
 export interface ILocalSpatialAudioEngine {
-    dispose(): void;
+    dispose(): Promise<void>;
 
-    initialize(): number;
+    initialize(): Promise<number>;
 
-    updateRemotePosition(uid: number, posInfo: RemoteVoicePositionInfo): number;
+    updateRemotePosition(uid: number, posInfo: RemoteVoicePositionInfo): Promise<number>;
 
-    updateRemotePositionEx(uid: number, posInfo: RemoteVoicePositionInfo, connection: RtcConnection): number;
+    updateRemotePositionEx(uid: number, posInfo: RemoteVoicePositionInfo, connection: RtcConnection): Promise<number>;
 
-    removeRemotePosition(uid: number): number;
+    removeRemotePosition(uid: number): Promise<number>;
 
-    removeRemotePositionEx(uid: number, connection: RtcConnection): number;
+    removeRemotePositionEx(uid: number, connection: RtcConnection): Promise<number>;
 
-    clearRemotePositionsEx(connection: RtcConnection): number;
+    clearRemotePositionsEx(connection: RtcConnection): Promise<number>;
 
-    updateSelfPositionEx(position: number[], axisForward: number[], axisRight: number[], axisUp: number[], connection: RtcConnection): number;
+    updateSelfPositionEx(position: number[], axisForward: number[], axisRight: number[], axisUp: number[], connection: RtcConnection): Promise<number>;
 
-    setMaxAudioRecvCount(maxCount: number): number;
+    setMaxAudioRecvCount(maxCount: number): Promise<number>;
 
-    setAudioRecvRange(range: number): number;
+    setAudioRecvRange(range: number): Promise<number>;
 
-    setDistanceUnit(unit: number): number;
+    setDistanceUnit(unit: number): Promise<number>;
 
-    updateSelfPosition(position: number[], axisForward: number[], axisRight: number[], axisUp: number[]): number;
+    updateSelfPosition(position: number[], axisForward: number[], axisRight: number[], axisUp: number[]): Promise<number>;
 
-    updatePlayerPositionInfo(playerId: number, positionInfo: RemoteVoicePositionInfo): number;
+    updatePlayerPositionInfo(playerId: number, positionInfo: RemoteVoicePositionInfo): Promise<number>;
 
-    setParameters(params: string): number;
+    setParameters(params: string): Promise<number>;
 
-    muteLocalAudioStream(mute: boolean): number;
+    muteLocalAudioStream(mute: boolean): Promise<number>;
 
-    muteAllRemoteAudioStreams(mute: boolean): number;
+    muteAllRemoteAudioStreams(mute: boolean): Promise<number>;
 
-    muteRemoteAudioStream(uid: number, mute: boolean): number;
+    muteRemoteAudioStream(uid: number, mute: boolean): Promise<number>;
 
-    setRemoteAudioAttenuation(uid: number, attenuation: number, forceSet: boolean): number;
+    setRemoteAudioAttenuation(uid: number, attenuation: number, forceSet: boolean): Promise<number>;
 
-    setZones(zones: SpatialAudioZone[], zoneCount: number): number;
+    setZones(zones: SpatialAudioZone[], zoneCount: number): Promise<number>;
 
-    setPlayerAttenuation(playerId: number, attenuation: number, forceSet: boolean): number;
+    setPlayerAttenuation(playerId: number, attenuation: number, forceSet: boolean): Promise<number>;
 
-    clearRemotePositions(): number;
+    clearRemotePositions(): Promise<number>;
 }

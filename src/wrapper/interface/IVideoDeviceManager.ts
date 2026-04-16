@@ -1,17 +1,17 @@
 import type { DeviceInfo, VideoFormat } from "../types/AgoraBase";
 
 export interface IVideoDeviceManager {
-    enumerateVideoDevices(): DeviceInfo[];
+    enumerateVideoDevices(): Promise<DeviceInfo[]>;
 
-    setDevice(deviceIdUTF8: string): number;
+    setDevice(deviceIdUTF8: string): Promise<number>;
 
-    getDevice(deviceIdUTF8: string): number;
+    getDevice(deviceIdUTF8: string): Promise<number>;
 
-    numberOfCapabilities(deviceIdUTF8: string): number;
+    numberOfCapabilities(deviceIdUTF8: string): Promise<number>;
 
-    getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: VideoFormat): number;
+    getCapability(deviceIdUTF8: string, deviceCapabilityNumber: number, capability: VideoFormat): Promise<number>;
 
-    startDeviceTest(hwnd: unknown): number;
+    startDeviceTest(hwnd: unknown): Promise<number>;
 
-    stopDeviceTest(): number;
+    stopDeviceTest(): Promise<number>;
 }

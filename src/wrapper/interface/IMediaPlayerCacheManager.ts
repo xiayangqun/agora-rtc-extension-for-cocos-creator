@@ -1,23 +1,23 @@
 export interface IMediaPlayerCacheManager {
-    removeAllCaches(): number;
+    removeAllCaches(): Promise<number>;
 
-    removeOldCache(): number;
+    removeOldCache(): Promise<number>;
 
-    removeCacheByUri(uri: string): number;
+    removeCacheByUri(uri: string): Promise<number>;
 
-    setCacheDir(path: string): number;
+    setCacheDir(path: string): Promise<number>;
 
-    setMaxCacheFileCount(count: number): number;
+    setMaxCacheFileCount(count: number): Promise<number>;
 
-    setMaxCacheFileSize(cacheSize: number): number;
+    setMaxCacheFileSize(cacheSize: number): Promise<number>;
 
-    enableAutoRemoveCache(enable: boolean): number;
+    enableAutoRemoveCache(enable: boolean): Promise<number>;
 
-    getCacheDir(path: string, length: number): number;
+    getCacheDir(path: string, length: number): Promise<number>;
 
-    getMaxCacheFileCount(): number;
+    getMaxCacheFileCount(): Promise<number>;
 
-    getMaxCacheFileSize(): number;
+    getMaxCacheFileSize(): Promise<number>;
 
-    getCacheFileCount(): number;
+    getCacheFileCount(): Promise<number>;
 }

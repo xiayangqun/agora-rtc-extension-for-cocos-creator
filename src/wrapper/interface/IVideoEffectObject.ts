@@ -1,23 +1,23 @@
 import { VIDEO_EFFECT_ACTION } from "../types/AgoraRtcEngine";
 
 export interface IVideoEffectObject {
-    getObjectId(): number;
+    getObjectId(): Promise<number>;
 
-    addOrUpdateVideoEffect(nodeId: number, templateName: string): number;
+    addOrUpdateVideoEffect(nodeId: number, templateName: string): Promise<number>;
 
-    removeVideoEffect(nodeId: number): number;
+    removeVideoEffect(nodeId: number): Promise<number>;
 
-    performVideoEffectAction(nodeId: number, actionId: VIDEO_EFFECT_ACTION): number;
+    performVideoEffectAction(nodeId: number, actionId: VIDEO_EFFECT_ACTION): Promise<number>;
 
-    setVideoEffectFloatParam(option: string, key: string, param: number): number;
+    setVideoEffectFloatParam(option: string, key: string, param: number): Promise<number>;
 
-    setVideoEffectIntParam(option: string, key: string, param: number): number;
+    setVideoEffectIntParam(option: string, key: string, param: number): Promise<number>;
 
-    setVideoEffectBoolParam(option: string, key: string, param: boolean): number;
+    setVideoEffectBoolParam(option: string, key: string, param: boolean): Promise<number>;
 
-    getVideoEffectFloatParam(option: string, key: string): number;
+    getVideoEffectFloatParam(option: string, key: string): Promise<number>;
 
-    getVideoEffectIntParam(option: string, key: string): number;
+    getVideoEffectIntParam(option: string, key: string): Promise<number>;
 
-    getVideoEffectBoolParam(option: string, key: string): boolean;
+    getVideoEffectBoolParam(option: string, key: string): Promise<boolean>;
 }

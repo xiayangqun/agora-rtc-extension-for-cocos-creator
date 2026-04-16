@@ -1,37 +1,38 @@
 import type { MusicCacheInfo, MusicContentCenterConfiguration } from "../types/AgoraMusicContentCenter";
+import { IMusicPlayer } from "./IMusicPlayer";
 
 export interface IMusicContentCenter {
-    initialize(configuration: MusicContentCenterConfiguration): number;
+    initialize(configuration: MusicContentCenterConfiguration): Promise<number>;
 
-    renewToken(token: string): number;
+    renewToken(token: string): Promise<number>;
 
-    registerEventHandler(eventHandler: IMusicContentCenterEventHandler): number;
+    registerEventHandler(eventHandler: IMusicContentCenterEventHandler): Promise<number>;
 
-    unregisterEventHandler(): number;
+    unregisterEventHandler(): Promise<number>;
 
-    createMusicPlayer(): IMusicPlayer;
+    createMusicPlayer(): Promise<IMusicPlayer>;
 
-    destroyMusicPlayer(music_player: IMusicPlayer): number;
+    destroyMusicPlayer(music_player: IMusicPlayer): Promise<number>;
 
-    getMusicCharts(requestId: string): number;
+    getMusicCharts(requestId: string): Promise<number>;
 
-    getMusicCollectionByMusicChartId(requestId: string, musicChartId: number, page: number, pageSize: number, jsonOption: string = ""): number;
+    getMusicCollectionByMusicChartId(requestId: string, musicChartId: number, page: number, pageSize: number, jsonOption: string): Promise<number>;
 
-    searchMusic(requestId: string, keyWord: string, page: number, pageSize: number, jsonOption: string = ""): number;
+    searchMusic(requestId: string, keyWord: string, page: number, pageSize: number, jsonOption: string): Promise<number>;
 
-    preload(songCode: number, jsonOption: string): number;
+    preload(songCode: number, jsonOption: string): Promise<number>;
 
-    preload(requestId: string, songCode: number): number;
+    preload(requestId: string, songCode: number): Promise<number>;
 
-    removeCache(songCode: number): number;
+    removeCache(songCode: number): Promise<number>;
 
-    getCaches(cacheInfo: MusicCacheInfo[], cacheInfoSize: number): number;
+    getCaches(cacheInfo: MusicCacheInfo[], cacheInfoSize: number): Promise<number>;
 
-    isPreloaded(songCode: number): number;
+    isPreloaded(songCode: number): Promise<number>;
 
-    getLyric(requestId: string, songCode: number, lyricType: number): number;
+    getLyric(requestId: string, songCode: number, lyricType: number): Promise<number>;
 
-    getSongSimpleInfo(requestId: string, songCode: number): number;
+    getSongSimpleInfo(requestId: string, songCode: number): Promise<number>;
 
-    getInternalSongCode(songCode: number, jsonOption: string, internalSongCode: number): number;
+    getInternalSongCode(songCode: number, jsonOption: string, internalSongCode: number): Promise<number>;
 }

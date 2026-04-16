@@ -4,107 +4,107 @@ import { RENDER_MODE_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, AUDIO_DUAL_MONO_MODE } 
 import { IMediaPlayerSourceObserver } from "./IMediaPlayerSourceObserver";
 
 export interface IMediaPlayer {
-    dispose(): void;
+    dispose(): Promise<void>;
 
-    getId(): number;
+    getId(): Promise<number>;
 
-    initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): number;
+    initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): Promise<number>;
 
-    open(url: string, startPos: number): number;
+    open(url: string, startPos: number): Promise<number>;
 
-    openWithMediaSource(source: MediaSource): number;
+    openWithMediaSource(source: MediaSource): Promise<number>;
 
-    play(): number;
+    play(): Promise<number>;
 
-    pause(): number;
+    pause(): Promise<number>;
 
-    stop(): number;
+    stop(): Promise<number>;
 
-    resume(): number;
+    resume(): Promise<number>;
 
-    seek(newPos: number): number;
+    seek(newPos: number): Promise<number>;
 
-    setAudioPitch(pitch: number): number;
+    setAudioPitch(pitch: number): Promise<number>;
 
-    getDuration(duration: number): number;
+    getDuration(duration: number): Promise<number>;
 
-    getPlayPosition(pos: number): number;
+    getPlayPosition(pos: number): Promise<number>;
 
-    getStreamCount(count: number): number;
+    getStreamCount(count: number): Promise<number>;
 
-    getStreamInfo(index: number, info: PlayerStreamInfo): number;
+    getStreamInfo(index: number, info: PlayerStreamInfo): Promise<number>;
 
-    setLoopCount(loopCount: number): number;
+    setLoopCount(loopCount: number): Promise<number>;
 
-    setPlaybackSpeed(speed: number): number;
+    setPlaybackSpeed(speed: number): Promise<number>;
 
-    selectAudioTrack(index: number): number;
+    selectAudioTrack(index: number): Promise<number>;
 
-    selectMultiAudioTrack(playoutTrackIndex: number, publishTrackIndex: number): number;
+    selectMultiAudioTrack(playoutTrackIndex: number, publishTrackIndex: number): Promise<number>;
 
-    setPlayerOption(key: string, value: number): number;
+    setPlayerOption(key: string, value: number): Promise<number>;
 
-    setPlayerOption(key: string, value: string): number;
+    setPlayerOption(key: string, value: string): Promise<number>;
 
-    takeScreenshot(filename: string): number;
+    takeScreenshot(filename: string): Promise<number>;
 
-    selectInternalSubtitle(index: number): number;
+    selectInternalSubtitle(index: number): Promise<number>;
 
-    setExternalSubtitle(url: string): number;
+    setExternalSubtitle(url: string): Promise<number>;
 
-    getState(): MEDIA_PLAYER_STATE;
+    getState(): Promise<MEDIA_PLAYER_STATE>;
 
-    mute(muted: boolean): number;
+    mute(muted: boolean): Promise<number>;
 
-    getMute(muted: boolean): number;
+    getMute(muted: boolean): Promise<number>;
 
-    adjustPlayoutVolume(volume: number): number;
+    adjustPlayoutVolume(volume: number): Promise<number>;
 
-    getPlayoutVolume(volume: number): number;
+    getPlayoutVolume(volume: number): Promise<number>;
 
-    adjustPublishSignalVolume(volume: number): number;
+    adjustPublishSignalVolume(volume: number): Promise<number>;
 
-    getPublishSignalVolume(volume: number): number;
+    getPublishSignalVolume(volume: number): Promise<number>;
 
-    setView(view: any): number;
+    setView(view: any): Promise<number>;
 
-    setRenderMode(renderMode: RENDER_MODE_TYPE): number;
+    setRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number>;
 
-    unregisterAudioFrameObserver(): number;
+    unregisterAudioFrameObserver(): Promise<number>;
 
-    unregisterMediaPlayerAudioSpectrumObserver(): number;
+    unregisterMediaPlayerAudioSpectrumObserver(): Promise<number>;
 
-    setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): number;
+    setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): Promise<number>;
 
-    getPlayerSdkVersion(): string;
+    getPlayerSdkVersion(): Promise<string>;
 
-    getPlaySrc(): string;
+    getPlaySrc(): Promise<string>;
 
-    openWithAgoraCDNSrc(src: string, startPos: number): number;
+    openWithAgoraCDNSrc(src: string, startPos: number): Promise<number>;
 
-    getAgoraCDNLineCount(): number;
+    getAgoraCDNLineCount(): Promise<number>;
 
-    switchAgoraCDNLineByIndex(index: number): number;
+    switchAgoraCDNLineByIndex(index: number): Promise<number>;
 
-    getCurrentAgoraCDNIndex(): number;
+    getCurrentAgoraCDNIndex(): Promise<number>;
 
-    enableAutoSwitchAgoraCDN(enable: boolean): number;
+    enableAutoSwitchAgoraCDN(enable: boolean): Promise<number>;
 
-    renewAgoraCDNSrcToken(token: string, ts: number): number;
+    renewAgoraCDNSrcToken(token: string, ts: number): Promise<number>;
 
-    switchAgoraCDNSrc(src: string, syncPts: boolean): number;
+    switchAgoraCDNSrc(src: string, syncPts: boolean): Promise<number>;
 
-    switchSrc(src: string, syncPts: boolean): number;
+    switchSrc(src: string, syncPts: boolean): Promise<number>;
 
-    preloadSrc(src: string, startPos: number): number;
+    preloadSrc(src: string, startPos: number): Promise<number>;
 
-    playPreloadedSrc(src: string): number;
+    playPreloadedSrc(src: string): Promise<number>;
 
-    unloadSrc(src: string): number;
+    unloadSrc(src: string): Promise<number>;
 
-    setSpatialAudioParams(params: SpatialAudioParams): number;
+    setSpatialAudioParams(params: SpatialAudioParams): Promise<number>;
 
-    setSoundPositionParams(pan: number, gain: number): number;
+    setSoundPositionParams(pan: number, gain: number): Promise<number>;
 
-    getAudioBufferDelay(delayMs: number): number;
+    getAudioBufferDelay(delayMs: number): Promise<number>;
 }

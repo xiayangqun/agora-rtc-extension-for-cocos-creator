@@ -24,131 +24,131 @@ import type { ContentInspectConfig, RENDER_MODE_TYPE, SnapshotConfig } from "../
 import { IRtcEngine } from "./IRtcEngine";
 
 export interface IRtcEngineEx extends IRtcEngine {
-    setParametersEx(connection: RtcConnection, key: string, value: object): number;
+    setParametersEx(connection: RtcConnection, key: string, value: object): Promise<number>;
 
-    joinChannelEx(token: string, connection: RtcConnection, options: ChannelMediaOptions): number;
+    joinChannelEx(token: string, connection: RtcConnection, options: ChannelMediaOptions): Promise<number>;
 
-    leaveChannelEx(connection: RtcConnection): number;
+    leaveChannelEx(connection: RtcConnection): Promise<number>;
 
-    leaveChannelEx(connection: RtcConnection, options: LeaveChannelOptions): number;
+    leaveChannelEx(connection: RtcConnection, options: LeaveChannelOptions): Promise<number>;
 
-    leaveChannelWithUserAccountEx(channelId: string, userAccount: string): number;
+    leaveChannelWithUserAccountEx(channelId: string, userAccount: string): Promise<number>;
 
-    leaveChannelWithUserAccountEx(channelId: string, userAccount: string, options: LeaveChannelOptions): number;
+    leaveChannelWithUserAccountEx(channelId: string, userAccount: string, options: LeaveChannelOptions): Promise<number>;
 
-    updateChannelMediaOptionsEx(options: ChannelMediaOptions, connection: RtcConnection): number;
+    updateChannelMediaOptionsEx(options: ChannelMediaOptions, connection: RtcConnection): Promise<number>;
 
-    setVideoEncoderConfigurationEx(config: VideoEncoderConfiguration, connection: RtcConnection): number;
+    setVideoEncoderConfigurationEx(config: VideoEncoderConfiguration, connection: RtcConnection): Promise<number>;
 
-    setupRemoteVideoEx(canvas: VideoCanvas, connection: RtcConnection): number;
+    setupRemoteVideoEx(canvas: VideoCanvas, connection: RtcConnection): Promise<number>;
 
-    muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: RtcConnection): number;
+    muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number>;
 
-    muteRemoteVideoStreamEx(uid: number, mute: boolean, connection: RtcConnection): number;
+    muteRemoteVideoStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number>;
 
-    setRemoteVideoStreamTypeEx(uid: number, streamType: VIDEO_STREAM_TYPE, connection: RtcConnection): number;
+    setRemoteVideoStreamTypeEx(uid: number, streamType: VIDEO_STREAM_TYPE, connection: RtcConnection): Promise<number>;
 
-    muteLocalAudioStreamEx(mute: boolean, connection: RtcConnection): number;
+    muteLocalAudioStreamEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    muteLocalVideoStreamEx(mute: boolean, connection: RtcConnection): number;
+    muteLocalVideoStreamEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    muteAllRemoteAudioStreamsEx(mute: boolean, connection: RtcConnection): number;
+    muteAllRemoteAudioStreamsEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    muteAllRemoteVideoStreamsEx(mute: boolean, connection: RtcConnection): number;
+    muteAllRemoteVideoStreamsEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    setSubscribeAudioBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): number;
+    setSubscribeAudioBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
 
-    setSubscribeAudioAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): number;
+    setSubscribeAudioAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
 
-    setSubscribeVideoBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): number;
+    setSubscribeVideoBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
 
-    setSubscribeVideoAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): number;
+    setSubscribeVideoAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
 
-    setRemoteVideoSubscriptionOptionsEx(uid: number, options: VideoSubscriptionOptions, connection: RtcConnection): number;
+    setRemoteVideoSubscriptionOptionsEx(uid: number, options: VideoSubscriptionOptions, connection: RtcConnection): Promise<number>;
 
-    setRemoteVoicePositionEx(uid: number, pan: number, gain: number, connection: RtcConnection): number;
+    setRemoteVoicePositionEx(uid: number, pan: number, gain: number, connection: RtcConnection): Promise<number>;
 
-    setRemoteUserSpatialAudioParamsEx(uid: number, params: SpatialAudioParams, connection: RtcConnection): number;
+    setRemoteUserSpatialAudioParamsEx(uid: number, params: SpatialAudioParams, connection: RtcConnection): Promise<number>;
 
-    setRemoteRenderModeEx(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE, connection: RtcConnection): number;
+    setRemoteRenderModeEx(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE, connection: RtcConnection): Promise<number>;
 
-    enableLoopbackRecordingEx(connection: RtcConnection, enabled: boolean, deviceName: string): number;
+    enableLoopbackRecordingEx(connection: RtcConnection, enabled: boolean, deviceName: string): Promise<number>;
 
-    adjustRecordingSignalVolumeEx(volume: number, connection: RtcConnection): number;
+    adjustRecordingSignalVolumeEx(volume: number, connection: RtcConnection): Promise<number>;
 
-    muteRecordingSignalEx(mute: boolean, connection: RtcConnection): number;
+    muteRecordingSignalEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    adjustUserPlaybackSignalVolumeEx(uid: number, volume: number, connection: RtcConnection): number;
+    adjustUserPlaybackSignalVolumeEx(uid: number, volume: number, connection: RtcConnection): Promise<number>;
 
-    getConnectionStateEx(connection: RtcConnection): CONNECTION_STATE_TYPE;
+    getConnectionStateEx(connection: RtcConnection): Promise<CONNECTION_STATE_TYPE>;
 
-    enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): number;
+    enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): Promise<number>;
 
-    createDataStreamEx(streamId: number, reliable: boolean, ordered: boolean, connection: RtcConnection): number;
+    createDataStreamEx(streamId: number, reliable: boolean, ordered: boolean, connection: RtcConnection): Promise<number>;
 
-    createDataStreamEx(streamId: number, config: DataStreamConfig, connection: RtcConnection): number;
+    createDataStreamEx(streamId: number, config: DataStreamConfig, connection: RtcConnection): Promise<number>;
 
-    sendStreamMessageEx(streamId: number, data: Uint8Array, length: number, connection: RtcConnection): number;
+    sendStreamMessageEx(streamId: number, data: Uint8Array, length: number, connection: RtcConnection): Promise<number>;
 
-    sendRdtMessageEx(uid: number, type: RdtStreamType, data: string, length: number, connection: RtcConnection): number;
+    sendRdtMessageEx(uid: number, type: RdtStreamType, data: string, length: number, connection: RtcConnection): Promise<number>;
 
-    sendMediaControlMessageEx(uid: number, data: string, length: number, connection: RtcConnection): number;
+    sendMediaControlMessageEx(uid: number, data: string, length: number, connection: RtcConnection): Promise<number>;
 
-    addVideoWatermarkEx(watermarkUrl: string, options: WatermarkOptions, connection: RtcConnection): number;
+    addVideoWatermarkEx(watermarkUrl: string, options: WatermarkOptions, connection: RtcConnection): Promise<number>;
 
-    addVideoWatermarkEx(config: WatermarkConfig, connection: RtcConnection): number;
+    addVideoWatermarkEx(config: WatermarkConfig, connection: RtcConnection): Promise<number>;
 
-    removeVideoWatermarkEx(id: string, connection: RtcConnection): number;
+    removeVideoWatermarkEx(id: string, connection: RtcConnection): Promise<number>;
 
-    clearVideoWatermarkEx(connection: RtcConnection): number;
+    clearVideoWatermarkEx(connection: RtcConnection): Promise<number>;
 
-    sendCustomReportMessageEx(id: string, category: string, event: string, label: string, value: number, connection: RtcConnection): number;
+    sendCustomReportMessageEx(id: string, category: string, event: string, label: string, value: number, connection: RtcConnection): Promise<number>;
 
-    enableAudioVolumeIndicationEx(interval: number, smooth: number, reportVad: boolean, connection: RtcConnection): number;
+    enableAudioVolumeIndicationEx(interval: number, smooth: number, reportVad: boolean, connection: RtcConnection): Promise<number>;
 
-    startRtmpStreamWithoutTranscodingEx(url: string, connection: RtcConnection): number;
+    startRtmpStreamWithoutTranscodingEx(url: string, connection: RtcConnection): Promise<number>;
 
-    startRtmpStreamWithTranscodingEx(url: string, transcoding: LiveTranscoding, connection: RtcConnection): number;
+    startRtmpStreamWithTranscodingEx(url: string, transcoding: LiveTranscoding, connection: RtcConnection): Promise<number>;
 
-    updateRtmpTranscodingEx(transcoding: LiveTranscoding, connection: RtcConnection): number;
+    updateRtmpTranscodingEx(transcoding: LiveTranscoding, connection: RtcConnection): Promise<number>;
 
-    stopRtmpStreamEx(url: string, connection: RtcConnection): number;
+    stopRtmpStreamEx(url: string, connection: RtcConnection): Promise<number>;
 
-    startOrUpdateChannelMediaRelayEx(configuration: ChannelMediaRelayConfiguration, connection: RtcConnection): number;
+    startOrUpdateChannelMediaRelayEx(configuration: ChannelMediaRelayConfiguration, connection: RtcConnection): Promise<number>;
 
-    stopChannelMediaRelayEx(connection: RtcConnection): number;
+    stopChannelMediaRelayEx(connection: RtcConnection): Promise<number>;
 
-    pauseAllChannelMediaRelayEx(connection: RtcConnection): number;
+    pauseAllChannelMediaRelayEx(connection: RtcConnection): Promise<number>;
 
-    resumeAllChannelMediaRelayEx(connection: RtcConnection): number;
+    resumeAllChannelMediaRelayEx(connection: RtcConnection): Promise<number>;
 
-    getUserInfoByUserAccountEx(userAccount: string, userInfo: UserInfo, connection: RtcConnection): number;
+    getUserInfoByUserAccountEx(userAccount: string, userInfo: UserInfo, connection: RtcConnection): Promise<number>;
 
-    getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): number;
+    getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): Promise<number>;
 
-    enableDualStreamModeEx(enabled: boolean, streamConfig: SimulcastStreamConfig, connection: RtcConnection): number;
+    enableDualStreamModeEx(enabled: boolean, streamConfig: SimulcastStreamConfig, connection: RtcConnection): Promise<number>;
 
-    setDualStreamModeEx(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig, connection: RtcConnection): number;
+    setDualStreamModeEx(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig, connection: RtcConnection): Promise<number>;
 
-    setSimulcastConfigEx(simulcastConfig: SimulcastConfig, connection: RtcConnection): number;
+    setSimulcastConfigEx(simulcastConfig: SimulcastConfig, connection: RtcConnection): Promise<number>;
 
-    setHighPriorityUserListEx(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS, connection: RtcConnection): number;
+    setHighPriorityUserListEx(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS, connection: RtcConnection): Promise<number>;
 
-    takeSnapshotEx(connection: RtcConnection, uid: number, filePath: string): number;
+    takeSnapshotEx(connection: RtcConnection, uid: number, filePath: string): Promise<number>;
 
-    takeSnapshotEx(connection: RtcConnection, uid: number, config: SnapshotConfig): number;
+    takeSnapshotEx(connection: RtcConnection, uid: number, config: SnapshotConfig): Promise<number>;
 
-    enableContentInspectEx(enabled: boolean, config: ContentInspectConfig, connection: RtcConnection): number;
+    enableContentInspectEx(enabled: boolean, config: ContentInspectConfig, connection: RtcConnection): Promise<number>;
 
-    startMediaRenderingTracingEx(connection: RtcConnection): number;
+    startMediaRenderingTracingEx(connection: RtcConnection): Promise<number>;
 
-    setParametersEx(connection: RtcConnection, parameters: string): number;
+    setParametersEx(connection: RtcConnection, parameters: string): Promise<number>;
 
-    getCallIdEx(callId: string, connection: RtcConnection): number;
+    getCallIdEx(callId: string, connection: RtcConnection): Promise<number>;
 
-    sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): number;
+    sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): Promise<number>;
 
-    preloadEffectEx(connection: RtcConnection, soundId: number, filePath: string, startPos: number): number;
+    preloadEffectEx(connection: RtcConnection, soundId: number, filePath: string, startPos: number): Promise<number>;
 
-    playEffectEx(connection: RtcConnection, soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): number;
+    playEffectEx(connection: RtcConnection, soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): Promise<number>;
 }

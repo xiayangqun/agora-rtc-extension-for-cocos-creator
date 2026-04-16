@@ -4,33 +4,33 @@ import type { IFaceInfoObserver } from "./IFaceInfoObserver";
 import type { IVideoFrameObserver } from "./IVideoFrameObserver";
 
 export interface IMediaEngine {
-    registerAudioFrameObserver(observer: unknown): number;
+    registerAudioFrameObserver(observer: unknown): Promise<number>;
 
-    registerVideoFrameObserver(observer: IVideoFrameObserver): number;
+    registerVideoFrameObserver(observer: IVideoFrameObserver): Promise<number>;
 
-    registerVideoEncodedFrameObserver(observer: unknown): number;
+    registerVideoEncodedFrameObserver(observer: unknown): Promise<number>;
 
-    registerFaceInfoObserver(observer: IFaceInfoObserver): number;
+    registerFaceInfoObserver(observer: IFaceInfoObserver): Promise<number>;
 
-    pushAudioFrame(frame: AudioFrame, trackId: number): number;
+    pushAudioFrame(frame: AudioFrame, trackId: number): Promise<number>;
 
-    pullAudioFrame(frame: AudioFrame): number;
+    pullAudioFrame(frame: AudioFrame): Promise<number>;
 
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): number;
+    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): Promise<number>;
 
-    setExternalRemoteEglContext(eglContext: unknown): number;
+    setExternalRemoteEglContext(eglContext: unknown): Promise<number>;
 
-    setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): number;
+    setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): Promise<number>;
 
-    createCustomAudioTrack(trackType: AUDIO_TRACK_TYPE, config: AudioTrackConfig): number;
+    createCustomAudioTrack(trackType: AUDIO_TRACK_TYPE, config: AudioTrackConfig): Promise<number>;
 
-    destroyCustomAudioTrack(trackId: number): number;
+    destroyCustomAudioTrack(trackId: number): Promise<number>;
 
-    setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
+    setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): Promise<number>;
 
-    enableCustomAudioLocalPlayback(trackId: number, enabled: boolean): number;
+    enableCustomAudioLocalPlayback(trackId: number, enabled: boolean): Promise<number>;
 
-    pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): number;
+    pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): Promise<number>;
 
-    pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): number;
+    pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): Promise<number>;
 }

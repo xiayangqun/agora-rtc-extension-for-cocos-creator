@@ -103,609 +103,609 @@ import { IVideoDeviceManager } from "./IVideoDeviceManager";
 import { IVideoEffectObject } from "./IVideoEffectObject";
 
 export interface IRtcEngine {
-    release(sync: boolean): void;
+    release(sync: boolean): Promise<void>;
 
-    setParameters(key: string, value: string): number;
+    setParameters(key: string, value: string): Promise<number>;
 
-    getAudioDeviceManager(): IAudioDeviceManager;
+    getAudioDeviceManager(): Promise<IAudioDeviceManager>;
 
-    getVideoDeviceManager(): IVideoDeviceManager;
+    getVideoDeviceManager(): Promise<IVideoDeviceManager>;
 
-    getMusicContentCenter(): IMusicContentCenter;
+    getMusicContentCenter(): Promise<IMusicContentCenter>;
 
-    getMediaPlayerCacheManager(): IMediaPlayerCacheManager;
+    getMediaPlayerCacheManager(): Promise<IMediaPlayerCacheManager>;
 
-    getLocalSpatialAudioEngine(): ILocalSpatialAudioEngine;
+    getLocalSpatialAudioEngine(): Promise<ILocalSpatialAudioEngine>;
 
-    getH265Transcoder(): IH265Transcoder;
+    getH265Transcoder(): Promise<IH265Transcoder>;
 
-    setLocalVideoDataSourcePosition(position: VIDEO_MODULE_POSITION): number;
+    setLocalVideoDataSourcePosition(position: VIDEO_MODULE_POSITION): Promise<number>;
 
-    initialize(context: RtcEngineContext): number;
+    initialize(context: RtcEngineContext): Promise<number>;
 
-    getVersion(): { version: string; build: number };
+    getVersion(): Promise<{ version: string; build: number }>;
 
-    getErrorDescription(code: number): string;
+    getErrorDescription(code: number): Promise<string>;
 
-    queryCodecCapability(): { errorCode: number; codecInfo: CodecCapInfo[] };
+    queryCodecCapability(): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }>;
 
-    queryDeviceScore(): number;
+    queryDeviceScore(): Promise<number>;
 
-    preloadChannel(token: string, channelId: string, uid: number): number;
+    preloadChannel(token: string, channelId: string, uid: number): Promise<number>;
 
-    preloadChannelWithUserAccount(token: string, channelId: string, userAccount: string): number;
+    preloadChannelWithUserAccount(token: string, channelId: string, userAccount: string): Promise<number>;
 
-    updatePreloadChannelToken(token: string): number;
+    updatePreloadChannelToken(token: string): Promise<number>;
 
-    joinChannel(token: string, channelId: string, info: string, uid: number): number;
+    joinChannel(token: string, channelId: string, info: string, uid: number): Promise<number>;
 
-    joinChannel(token: string, channelId: string, uid: number, options: ChannelMediaOptions): number;
+    joinChannel(token: string, channelId: string, uid: number, options: ChannelMediaOptions): Promise<number>;
 
-    updateChannelMediaOptions(options: ChannelMediaOptions): number;
+    updateChannelMediaOptions(options: ChannelMediaOptions): Promise<number>;
 
-    leaveChannel(): number;
+    leaveChannel(): Promise<number>;
 
-    leaveChannel(options: LeaveChannelOptions): number;
+    leaveChannel(options: LeaveChannelOptions): Promise<number>;
 
-    renewToken(token: string): number;
+    renewToken(token: string): Promise<number>;
 
-    setChannelProfile(profile: CHANNEL_PROFILE_TYPE): number;
+    setChannelProfile(profile: CHANNEL_PROFILE_TYPE): Promise<number>;
 
-    setClientRole(role: CLIENT_ROLE_TYPE): number;
+    setClientRole(role: CLIENT_ROLE_TYPE): Promise<number>;
 
-    setClientRole(role: CLIENT_ROLE_TYPE, options: ClientRoleOptions): number;
+    setClientRole(role: CLIENT_ROLE_TYPE, options: ClientRoleOptions): Promise<number>;
 
-    startEchoTest(config: EchoTestConfiguration): number;
+    startEchoTest(config: EchoTestConfiguration): Promise<number>;
 
-    stopEchoTest(): number;
+    stopEchoTest(): Promise<number>;
 
-    enableMultiCamera(enabled: boolean, config: CameraCapturerConfiguration): number;
+    enableMultiCamera(enabled: boolean, config: CameraCapturerConfiguration): Promise<number>;
 
-    enableVideo(): number;
+    enableVideo(): Promise<number>;
 
-    disableVideo(): number;
+    disableVideo(): Promise<number>;
 
-    startPreview(): number;
+    startPreview(): Promise<number>;
 
-    startPreview(sourceType: VIDEO_SOURCE_TYPE): number;
+    startPreview(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
 
-    stopPreview(): number;
+    stopPreview(): Promise<number>;
 
-    stopPreview(sourceType: VIDEO_SOURCE_TYPE): number;
+    stopPreview(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
 
-    startLastmileProbeTest(config: LastmileProbeConfig): number;
+    startLastmileProbeTest(config: LastmileProbeConfig): Promise<number>;
 
-    stopLastmileProbeTest(): number;
+    stopLastmileProbeTest(): Promise<number>;
 
-    setVideoEncoderConfiguration(config: VideoEncoderConfiguration): number;
+    setVideoEncoderConfiguration(config: VideoEncoderConfiguration): Promise<number>;
 
-    setBeautyEffectOptions(enabled: boolean, options: BeautyOptions, type: MEDIA_SOURCE_TYPE): number;
+    setBeautyEffectOptions(enabled: boolean, options: BeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setFaceShapeBeautyOptions(enabled: boolean, options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): number;
+    setFaceShapeBeautyOptions(enabled: boolean, options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setFaceShapeAreaOptions(options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): number;
+    setFaceShapeAreaOptions(options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    getFaceShapeBeautyOptions(options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): number;
+    getFaceShapeBeautyOptions(options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    getFaceShapeAreaOptions(shapeArea: FACE_SHAPE_AREA, options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): number;
+    getFaceShapeAreaOptions(shapeArea: FACE_SHAPE_AREA, options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setFilterEffectOptions(enabled: boolean, options: FilterEffectOptions, type: MEDIA_SOURCE_TYPE): number;
+    setFilterEffectOptions(enabled: boolean, options: FilterEffectOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    createVideoEffectObject(bundlePath: string, type: MEDIA_SOURCE_TYPE): IVideoEffectObject;
+    createVideoEffectObject(bundlePath: string, type: MEDIA_SOURCE_TYPE): Promise<IVideoEffectObject>;
 
-    destroyVideoEffectObject(videoEffectObject: IVideoEffectObject): number;
+    destroyVideoEffectObject(videoEffectObject: IVideoEffectObject): Promise<number>;
 
-    setLowlightEnhanceOptions(enabled: boolean, options: LowlightEnhanceOptions, type: MEDIA_SOURCE_TYPE): number;
+    setLowlightEnhanceOptions(enabled: boolean, options: LowlightEnhanceOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setVideoDenoiserOptions(enabled: boolean, options: VideoDenoiserOptions, type: MEDIA_SOURCE_TYPE): number;
+    setVideoDenoiserOptions(enabled: boolean, options: VideoDenoiserOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setColorEnhanceOptions(enabled: boolean, options: ColorEnhanceOptions, type: MEDIA_SOURCE_TYPE): number;
+    setColorEnhanceOptions(enabled: boolean, options: ColorEnhanceOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    enableVirtualBackground(enabled: boolean, backgroundSource: VirtualBackgroundSource, segproperty: SegmentationProperty, type: MEDIA_SOURCE_TYPE): number;
+    enableVirtualBackground(enabled: boolean, backgroundSource: VirtualBackgroundSource, segproperty: SegmentationProperty, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setupRemoteVideo(canvas: VideoCanvas): number;
+    setupRemoteVideo(canvas: VideoCanvas): Promise<number>;
 
-    setupLocalVideo(canvas: VideoCanvas): number;
+    setupLocalVideo(canvas: VideoCanvas): Promise<number>;
 
-    setVideoScenario(scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE): number;
+    setVideoScenario(scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE): Promise<number>;
 
-    setVideoQoEPreference(qoePreference: VIDEO_QOE_PREFERENCE_TYPE): number;
+    setVideoQoEPreference(qoePreference: VIDEO_QOE_PREFERENCE_TYPE): Promise<number>;
 
-    enableAudio(): number;
+    enableAudio(): Promise<number>;
 
-    disableAudio(): number;
+    disableAudio(): Promise<number>;
 
-    setAudioProfile(profile: AUDIO_PROFILE_TYPE, scenario: AUDIO_SCENARIO_TYPE): number;
+    setAudioProfile(profile: AUDIO_PROFILE_TYPE, scenario: AUDIO_SCENARIO_TYPE): Promise<number>;
 
-    setAudioProfile(profile: AUDIO_PROFILE_TYPE): number;
+    setAudioProfile(profile: AUDIO_PROFILE_TYPE): Promise<number>;
 
-    setAudioScenario(scenario: AUDIO_SCENARIO_TYPE): number;
+    setAudioScenario(scenario: AUDIO_SCENARIO_TYPE): Promise<number>;
 
-    enableLocalAudio(enabled: boolean): number;
+    enableLocalAudio(enabled: boolean): Promise<number>;
 
-    muteLocalAudioStream(mute: boolean): number;
+    muteLocalAudioStream(mute: boolean): Promise<number>;
 
-    muteAllRemoteAudioStreams(mute: boolean): number;
+    muteAllRemoteAudioStreams(mute: boolean): Promise<number>;
 
-    muteRemoteAudioStream(uid: number, mute: boolean): number;
+    muteRemoteAudioStream(uid: number, mute: boolean): Promise<number>;
 
-    muteLocalVideoStream(mute: boolean): number;
+    muteLocalVideoStream(mute: boolean): Promise<number>;
 
-    enableLocalVideo(enabled: boolean): number;
+    enableLocalVideo(enabled: boolean): Promise<number>;
 
-    muteAllRemoteVideoStreams(mute: boolean): number;
+    muteAllRemoteVideoStreams(mute: boolean): Promise<number>;
 
-    setRemoteDefaultVideoStreamType(streamType: VIDEO_STREAM_TYPE): number;
+    setRemoteDefaultVideoStreamType(streamType: VIDEO_STREAM_TYPE): Promise<number>;
 
-    muteRemoteVideoStream(uid: number, mute: boolean): number;
+    muteRemoteVideoStream(uid: number, mute: boolean): Promise<number>;
 
-    setRemoteVideoStreamType(uid: number, streamType: VIDEO_STREAM_TYPE): number;
+    setRemoteVideoStreamType(uid: number, streamType: VIDEO_STREAM_TYPE): Promise<number>;
 
-    setRemoteVideoSubscriptionOptions(uid: number, options: VideoSubscriptionOptions): number;
+    setRemoteVideoSubscriptionOptions(uid: number, options: VideoSubscriptionOptions): Promise<number>;
 
-    setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): number;
+    setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): Promise<number>;
 
-    setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): number;
+    setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): Promise<number>;
 
-    setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): number;
+    setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): Promise<number>;
 
-    setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): number;
+    setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): Promise<number>;
 
-    enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): number;
+    enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): Promise<number>;
 
-    startAudioRecording(filePath: string, quality: AUDIO_RECORDING_QUALITY_TYPE): number;
+    startAudioRecording(filePath: string, quality: AUDIO_RECORDING_QUALITY_TYPE): Promise<number>;
 
-    startAudioRecording(filePath: string, sampleRate: number, quality: AUDIO_RECORDING_QUALITY_TYPE): number;
+    startAudioRecording(filePath: string, sampleRate: number, quality: AUDIO_RECORDING_QUALITY_TYPE): Promise<number>;
 
-    startAudioRecording(config: AudioRecordingConfiguration): number;
+    startAudioRecording(config: AudioRecordingConfiguration): Promise<number>;
 
-    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver): number;
+    registerAudioEncodedFrameObserver(config: AudioEncodedFrameObserverConfig, observer: IAudioEncodedFrameObserver): Promise<number>;
 
-    stopAudioRecording(): number;
+    stopAudioRecording(): Promise<number>;
 
-    createMediaPlayer(): IMediaPlayer;
+    createMediaPlayer(): Promise<IMediaPlayer>;
 
-    destroyMediaPlayer(media_player: IMediaPlayer): number;
+    destroyMediaPlayer(media_player: IMediaPlayer): Promise<number>;
 
-    createMediaRecorder(info: RecorderStreamInfo): IMediaRecorder;
+    createMediaRecorder(info: RecorderStreamInfo): Promise<IMediaRecorder>;
 
-    destroyMediaRecorder(mediaRecorder: IMediaRecorder): number;
+    destroyMediaRecorder(mediaRecorder: IMediaRecorder): Promise<number>;
 
-    startAudioMixing(filePath: string, loopback: boolean, cycle: number): number;
+    startAudioMixing(filePath: string, loopback: boolean, cycle: number): Promise<number>;
 
-    startAudioMixing(filePath: string, loopback: boolean, cycle: number, startPos: number): number;
+    startAudioMixing(filePath: string, loopback: boolean, cycle: number, startPos: number): Promise<number>;
 
-    stopAudioMixing(): number;
+    stopAudioMixing(): Promise<number>;
 
-    pauseAudioMixing(): number;
+    pauseAudioMixing(): Promise<number>;
 
-    resumeAudioMixing(): number;
+    resumeAudioMixing(): Promise<number>;
 
-    selectAudioTrack(index: number): number;
+    selectAudioTrack(index: number): Promise<number>;
 
-    getAudioTrackCount(): number;
+    getAudioTrackCount(): Promise<number>;
 
-    adjustAudioMixingVolume(volume: number): number;
+    adjustAudioMixingVolume(volume: number): Promise<number>;
 
-    adjustAudioMixingPublishVolume(volume: number): number;
+    adjustAudioMixingPublishVolume(volume: number): Promise<number>;
 
-    getAudioMixingPublishVolume(): number;
+    getAudioMixingPublishVolume(): Promise<number>;
 
-    adjustAudioMixingPlayoutVolume(volume: number): number;
+    adjustAudioMixingPlayoutVolume(volume: number): Promise<number>;
 
-    getAudioMixingPlayoutVolume(): number;
+    getAudioMixingPlayoutVolume(): Promise<number>;
 
-    getAudioMixingDuration(): number;
+    getAudioMixingDuration(): Promise<number>;
 
-    getAudioMixingCurrentPosition(): number;
+    getAudioMixingCurrentPosition(): Promise<number>;
 
-    setAudioMixingPosition(pos: number): number;
+    setAudioMixingPosition(pos: number): Promise<number>;
 
-    setAudioMixingDualMonoMode(mode: AUDIO_MIXING_DUAL_MONO_MODE): number;
+    setAudioMixingDualMonoMode(mode: AUDIO_MIXING_DUAL_MONO_MODE): Promise<number>;
 
-    setAudioMixingPitch(pitch: number): number;
+    setAudioMixingPitch(pitch: number): Promise<number>;
 
-    setAudioMixingPlaybackSpeed(speed: number): number;
+    setAudioMixingPlaybackSpeed(speed: number): Promise<number>;
 
-    getEffectsVolume(): number;
+    getEffectsVolume(): Promise<number>;
 
-    setEffectsVolume(volume: number): number;
+    setEffectsVolume(volume: number): Promise<number>;
 
-    preloadEffect(soundId: number, filePath: string, startPos: number): number;
+    preloadEffect(soundId: number, filePath: string, startPos: number): Promise<number>;
 
-    playEffect(soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): number;
+    playEffect(soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): Promise<number>;
 
-    playAllEffects(loopCount: number, pitch: number, pan: number, gain: number, publish: boolean): number;
+    playAllEffects(loopCount: number, pitch: number, pan: number, gain: number, publish: boolean): Promise<number>;
 
-    getVolumeOfEffect(soundId: number): number;
+    getVolumeOfEffect(soundId: number): Promise<number>;
 
-    setVolumeOfEffect(soundId: number, volume: number): number;
+    setVolumeOfEffect(soundId: number, volume: number): Promise<number>;
 
-    pauseEffect(soundId: number): number;
+    pauseEffect(soundId: number): Promise<number>;
 
-    pauseAllEffects(): number;
+    pauseAllEffects(): Promise<number>;
 
-    resumeEffect(soundId: number): number;
+    resumeEffect(soundId: number): Promise<number>;
 
-    resumeAllEffects(): number;
+    resumeAllEffects(): Promise<number>;
 
-    stopEffect(soundId: number): number;
+    stopEffect(soundId: number): Promise<number>;
 
-    stopAllEffects(): number;
+    stopAllEffects(): Promise<number>;
 
-    unloadEffect(soundId: number): number;
+    unloadEffect(soundId: number): Promise<number>;
 
-    unloadAllEffects(): number;
+    unloadAllEffects(): Promise<number>;
 
-    getEffectDuration(filePath: string): number;
+    getEffectDuration(filePath: string): Promise<number>;
 
-    setEffectPosition(soundId: number, pos: number): number;
+    setEffectPosition(soundId: number, pos: number): Promise<number>;
 
-    getEffectCurrentPosition(soundId: number): number;
+    getEffectCurrentPosition(soundId: number): Promise<number>;
 
-    enableSoundPositionIndication(enabled: boolean): number;
+    enableSoundPositionIndication(enabled: boolean): Promise<number>;
 
-    setRemoteVoicePosition(uid: number, pan: number, gain: number): number;
+    setRemoteVoicePosition(uid: number, pan: number, gain: number): Promise<number>;
 
-    enableSpatialAudio(enabled: boolean): number;
+    enableSpatialAudio(enabled: boolean): Promise<number>;
 
-    setRemoteUserSpatialAudioParams(uid: number, params: SpatialAudioParams): number;
+    setRemoteUserSpatialAudioParams(uid: number, params: SpatialAudioParams): Promise<number>;
 
-    setVoiceBeautifierPreset(preset: VOICE_BEAUTIFIER_PRESET): number;
+    setVoiceBeautifierPreset(preset: VOICE_BEAUTIFIER_PRESET): Promise<number>;
 
-    setAudioEffectPreset(preset: AUDIO_EFFECT_PRESET): number;
+    setAudioEffectPreset(preset: AUDIO_EFFECT_PRESET): Promise<number>;
 
-    setVoiceConversionPreset(preset: VOICE_CONVERSION_PRESET): number;
+    setVoiceConversionPreset(preset: VOICE_CONVERSION_PRESET): Promise<number>;
 
-    setAudioEffectParameters(preset: AUDIO_EFFECT_PRESET, param1: number, param2: number): number;
+    setAudioEffectParameters(preset: AUDIO_EFFECT_PRESET, param1: number, param2: number): Promise<number>;
 
-    setVoiceBeautifierParameters(preset: VOICE_BEAUTIFIER_PRESET, param1: number, param2: number): number;
+    setVoiceBeautifierParameters(preset: VOICE_BEAUTIFIER_PRESET, param1: number, param2: number): Promise<number>;
 
-    setVoiceConversionParameters(preset: VOICE_CONVERSION_PRESET, param1: number, param2: number): number;
+    setVoiceConversionParameters(preset: VOICE_CONVERSION_PRESET, param1: number, param2: number): Promise<number>;
 
-    setLocalVoicePitch(pitch: number): number;
+    setLocalVoicePitch(pitch: number): Promise<number>;
 
-    setLocalVoiceFormant(formantRatio: number): number;
+    setLocalVoiceFormant(formantRatio: number): Promise<number>;
 
-    setLocalVoiceEqualization(bandFrequency: AUDIO_EQUALIZATION_BAND_FREQUENCY, bandGain: number): number;
+    setLocalVoiceEqualization(bandFrequency: AUDIO_EQUALIZATION_BAND_FREQUENCY, bandGain: number): Promise<number>;
 
-    setLocalVoiceReverb(reverbKey: AUDIO_REVERB_TYPE, value: number): number;
+    setLocalVoiceReverb(reverbKey: AUDIO_REVERB_TYPE, value: number): Promise<number>;
 
-    setHeadphoneEQPreset(preset: HEADPHONE_EQUALIZER_PRESET): number;
+    setHeadphoneEQPreset(preset: HEADPHONE_EQUALIZER_PRESET): Promise<number>;
 
-    setHeadphoneEQParameters(lowGain: number, highGain: number): number;
+    setHeadphoneEQParameters(lowGain: number, highGain: number): Promise<number>;
 
-    enableVoiceAITuner(enabled: boolean, type: VOICE_AI_TUNER_TYPE): number;
+    enableVoiceAITuner(enabled: boolean, type: VOICE_AI_TUNER_TYPE): Promise<number>;
 
-    setLogFile(filePath: string): number;
+    setLogFile(filePath: string): Promise<number>;
 
-    setLogFilter(filter: number): number;
+    setLogFilter(filter: number): Promise<number>;
 
-    setLogLevel(level: LOG_LEVEL): number;
+    setLogLevel(level: LOG_LEVEL): Promise<number>;
 
-    setLogFileSize(fileSizeInKBytes: number): number;
+    setLogFileSize(fileSizeInKBytes: number): Promise<number>;
 
-    uploadLogFile(requestId: string): number;
+    uploadLogFile(requestId: string): Promise<number>;
 
-    writeLog(level: LOG_LEVEL, fmt: string): number;
+    writeLog(level: LOG_LEVEL, fmt: string): Promise<number>;
 
-    setLocalRenderMode(renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE): number;
+    setLocalRenderMode(renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE): Promise<number>;
 
-    setRemoteRenderMode(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE): number;
+    setRemoteRenderMode(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE): Promise<number>;
 
-    setLocalRenderTargetFps(sourceType: VIDEO_SOURCE_TYPE, targetFps: number): number;
+    setLocalRenderTargetFps(sourceType: VIDEO_SOURCE_TYPE, targetFps: number): Promise<number>;
 
-    setRemoteRenderTargetFps(targetFps: number): number;
+    setRemoteRenderTargetFps(targetFps: number): Promise<number>;
 
-    setLocalRenderMode(renderMode: RENDER_MODE_TYPE): number;
+    setLocalRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number>;
 
-    setLocalVideoMirrorMode(mirrorMode: VIDEO_MIRROR_MODE_TYPE): number;
+    setLocalVideoMirrorMode(mirrorMode: VIDEO_MIRROR_MODE_TYPE): Promise<number>;
 
-    enableDualStreamMode(enabled: boolean): number;
+    enableDualStreamMode(enabled: boolean): Promise<number>;
 
-    enableDualStreamMode(enabled: boolean, streamConfig: SimulcastStreamConfig): number;
+    enableDualStreamMode(enabled: boolean, streamConfig: SimulcastStreamConfig): Promise<number>;
 
-    setDualStreamMode(mode: SIMULCAST_STREAM_MODE): number;
+    setDualStreamMode(mode: SIMULCAST_STREAM_MODE): Promise<number>;
 
-    setSimulcastConfig(simulcastConfig: SimulcastConfig): number;
+    setSimulcastConfig(simulcastConfig: SimulcastConfig): Promise<number>;
 
-    setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): number;
+    setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): Promise<number>;
 
-    setRecordingAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): number;
+    setRecordingAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
 
-    setPlaybackAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): number;
+    setPlaybackAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
 
-    setMixedAudioFrameParameters(sampleRate: number, channel: number, samplesPerCall: number): number;
+    setMixedAudioFrameParameters(sampleRate: number, channel: number, samplesPerCall: number): Promise<number>;
 
-    setEarMonitoringAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): number;
+    setEarMonitoringAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): Promise<number>;
 
-    setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number): number;
+    setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number): Promise<number>;
 
-    setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number, samplesPerCall: number): number;
+    setPlaybackAudioFrameBeforeMixingParameters(sampleRate: number, channel: number, samplesPerCall: number): Promise<number>;
 
-    enableAudioSpectrumMonitor(intervalInMS: number): number;
+    enableAudioSpectrumMonitor(intervalInMS: number): Promise<number>;
 
-    disableAudioSpectrumMonitor(): number;
+    disableAudioSpectrumMonitor(): Promise<number>;
 
-    adjustRecordingSignalVolume(volume: number): number;
+    adjustRecordingSignalVolume(volume: number): Promise<number>;
 
-    muteRecordingSignal(mute: boolean): number;
+    muteRecordingSignal(mute: boolean): Promise<number>;
 
-    adjustPlaybackSignalVolume(volume: number): number;
+    adjustPlaybackSignalVolume(volume: number): Promise<number>;
 
-    adjustUserPlaybackSignalVolume(uid: number, volume: number): number;
+    adjustUserPlaybackSignalVolume(uid: number, volume: number): Promise<number>;
 
-    setRemoteSubscribeFallbackOption(option: STREAM_FALLBACK_OPTIONS): number;
+    setRemoteSubscribeFallbackOption(option: STREAM_FALLBACK_OPTIONS): Promise<number>;
 
-    setHighPriorityUserList(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS): number;
+    setHighPriorityUserList(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS): Promise<number>;
 
-    enableExtension(provider: string, extension: string, extensionInfo: ExtensionInfo, enable: boolean): number;
+    enableExtension(provider: string, extension: string, extensionInfo: ExtensionInfo, enable: boolean): Promise<number>;
 
-    setExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, value: string): number;
+    setExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, value: string): Promise<number>;
 
-    getExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, buf_len: number): { errorCode: number; value: string };
+    getExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, buf_len: number): Promise<{ errorCode: number; value: string }>;
 
-    enableLoopbackRecording(enabled: boolean, deviceName: string): number;
+    enableLoopbackRecording(enabled: boolean, deviceName: string): Promise<number>;
 
-    adjustLoopbackSignalVolume(volume: number): number;
+    adjustLoopbackSignalVolume(volume: number): Promise<number>;
 
-    getLoopbackRecordingVolume(): number;
+    getLoopbackRecordingVolume(): Promise<number>;
 
-    enableInEarMonitoring(enabled: boolean, includeAudioFilters: number): number;
+    enableInEarMonitoring(enabled: boolean, includeAudioFilters: number): Promise<number>;
 
-    setInEarMonitoringVolume(volume: number): number;
+    setInEarMonitoringVolume(volume: number): Promise<number>;
 
-    loadExtensionProvider(path: string, unload_after_use: boolean): number;
+    loadExtensionProvider(path: string, unload_after_use: boolean): Promise<number>;
 
-    setExtensionProviderProperty(provider: string, key: string, value: string): number;
+    setExtensionProviderProperty(provider: string, key: string, value: string): Promise<number>;
 
-    registerExtension(provider: string, extension: string, type: MEDIA_SOURCE_TYPE): number;
+    registerExtension(provider: string, extension: string, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    enableExtension(provider: string, extension: string, enable: boolean, type: MEDIA_SOURCE_TYPE): number;
+    enableExtension(provider: string, extension: string, enable: boolean, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    setExtensionProperty(provider: string, extension: string, key: string, value: string, type: MEDIA_SOURCE_TYPE): number;
+    setExtensionProperty(provider: string, extension: string, key: string, value: string, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    getExtensionProperty(provider: string, extension: string, key: string, buf_len: number, type: MEDIA_SOURCE_TYPE): { errorCode: number; value: number };
+    getExtensionProperty(provider: string, extension: string, key: string, buf_len: number, type: MEDIA_SOURCE_TYPE): Promise<{ errorCode: number; value: number }>;
 
-    setCameraCapturerConfiguration(config: CameraCapturerConfiguration): number;
+    setCameraCapturerConfiguration(config: CameraCapturerConfiguration): Promise<number>;
 
-    createCustomVideoTrack(): number;
+    createCustomVideoTrack(): Promise<number>;
 
-    createCustomEncodedVideoTrack(sender_option: SenderOptions): number;
+    createCustomEncodedVideoTrack(sender_option: SenderOptions): Promise<number>;
 
-    destroyCustomVideoTrack(video_track_id: number): number;
+    destroyCustomVideoTrack(video_track_id: number): Promise<number>;
 
-    destroyCustomEncodedVideoTrack(video_track_id: number): number;
+    destroyCustomEncodedVideoTrack(video_track_id: number): Promise<number>;
 
-    switchCamera(): number;
+    switchCamera(): Promise<number>;
 
-    isCameraZoomSupported(): boolean;
+    isCameraZoomSupported(): Promise<boolean>;
 
-    isCameraFaceDetectSupported(): boolean;
+    isCameraFaceDetectSupported(): Promise<boolean>;
 
-    isCameraTorchSupported(): boolean;
+    isCameraTorchSupported(): Promise<boolean>;
 
-    isCameraFocusSupported(): boolean;
+    isCameraFocusSupported(): Promise<boolean>;
 
-    isCameraAutoFocusFaceModeSupported(): boolean;
+    isCameraAutoFocusFaceModeSupported(): Promise<boolean>;
 
-    setCameraZoomFactor(factor: number): number;
+    setCameraZoomFactor(factor: number): Promise<number>;
 
-    enableFaceDetection(enabled: boolean): number;
+    enableFaceDetection(enabled: boolean): Promise<number>;
 
-    getCameraMaxZoomFactor(): number;
+    getCameraMaxZoomFactor(): Promise<number>;
 
-    setCameraFocusPositionInPreview(positionX: number, positionY: number): number;
+    setCameraFocusPositionInPreview(positionX: number, positionY: number): Promise<number>;
 
-    setCameraTorchOn(isOn: boolean): number;
+    setCameraTorchOn(isOn: boolean): Promise<number>;
 
-    setCameraAutoFocusFaceModeEnabled(enabled: boolean): number;
+    setCameraAutoFocusFaceModeEnabled(enabled: boolean): Promise<number>;
 
-    isCameraExposurePositionSupported(): boolean;
+    isCameraExposurePositionSupported(): Promise<boolean>;
 
-    setCameraExposurePosition(positionXinView: number, positionYinView: number): number;
+    setCameraExposurePosition(positionXinView: number, positionYinView: number): Promise<number>;
 
-    isCameraExposureSupported(): boolean;
+    isCameraExposureSupported(): Promise<boolean>;
 
-    setCameraExposureFactor(factor: number): number;
+    setCameraExposureFactor(factor: number): Promise<number>;
 
-    isCameraAutoExposureFaceModeSupported(): boolean;
+    isCameraAutoExposureFaceModeSupported(): Promise<boolean>;
 
-    setCameraAutoExposureFaceModeEnabled(enabled: boolean): number;
+    setCameraAutoExposureFaceModeEnabled(enabled: boolean): Promise<number>;
 
-    setCameraStabilizationMode(mode: CAMERA_STABILIZATION_MODE): number;
+    setCameraStabilizationMode(mode: CAMERA_STABILIZATION_MODE): Promise<number>;
 
-    setDefaultAudioRouteToSpeakerphone(defaultToSpeaker: boolean): number;
+    setDefaultAudioRouteToSpeakerphone(defaultToSpeaker: boolean): Promise<number>;
 
-    setEnableSpeakerphone(speakerOn: boolean): number;
+    setEnableSpeakerphone(speakerOn: boolean): Promise<number>;
 
-    isSpeakerphoneEnabled(): boolean;
+    isSpeakerphoneEnabled(): Promise<boolean>;
 
-    setRouteInCommunicationMode(route: number): number;
+    setRouteInCommunicationMode(route: number): Promise<number>;
 
-    isCameraCenterStageSupported(): boolean;
+    isCameraCenterStageSupported(): Promise<boolean>;
 
-    enableCameraCenterStage(enabled: boolean): number;
+    enableCameraCenterStage(enabled: boolean): Promise<number>;
 
-    getScreenCaptureSources(thumbSize: SIZE, iconSize: SIZE, includeScreen: boolean): ScreenCaptureSourceInfo[];
+    getScreenCaptureSources(thumbSize: SIZE, iconSize: SIZE, includeScreen: boolean): Promise<ScreenCaptureSourceInfo[]>;
 
-    setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): number;
+    setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): Promise<number>;
 
-    startScreenCaptureByDisplayId(displayId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): number;
+    startScreenCaptureByDisplayId(displayId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
 
-    startScreenCaptureByScreenRect(screenRect: Rectangle, regionRect: Rectangle, captureParams: ScreenCaptureParameters): number;
+    startScreenCaptureByScreenRect(screenRect: Rectangle, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
 
-    getAudioDeviceInfo(): { errorCode: number; deviceInfo: DeviceInfo };
+    getAudioDeviceInfo(): Promise<{ errorCode: number; deviceInfo: DeviceInfo }>;
 
-    startScreenCaptureByWindowId(windowId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): number;
+    startScreenCaptureByWindowId(windowId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): Promise<number>;
 
-    setScreenCaptureContentHint(contentHint: VIDEO_CONTENT_HINT): number;
+    setScreenCaptureContentHint(contentHint: VIDEO_CONTENT_HINT): Promise<number>;
 
-    updateScreenCaptureRegion(regionRect: Rectangle): number;
+    updateScreenCaptureRegion(regionRect: Rectangle): Promise<number>;
 
-    updateScreenCaptureParameters(captureParams: ScreenCaptureParameters): number;
+    updateScreenCaptureParameters(captureParams: ScreenCaptureParameters): Promise<number>;
 
-    startScreenCapture(captureParams: ScreenCaptureParameters2): number;
+    startScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number>;
 
-    updateScreenCapture(captureParams: ScreenCaptureParameters2): number;
+    updateScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number>;
 
-    queryScreenCaptureCapability(): number;
+    queryScreenCaptureCapability(): Promise<number>;
 
-    queryCameraFocalLengthCapability(focalLengthInfos: FocalLengthInfo[], size: number): number;
+    queryCameraFocalLengthCapability(focalLengthInfos: FocalLengthInfo[], size: number): Promise<number>;
 
-    setExternalMediaProjection(mediaProjection: unknown): number;
+    setExternalMediaProjection(mediaProjection: unknown): Promise<number>;
 
-    setScreenCaptureScenario(screenScenario: SCREEN_SCENARIO_TYPE): number;
+    setScreenCaptureScenario(screenScenario: SCREEN_SCENARIO_TYPE): Promise<number>;
 
-    stopScreenCapture(): number;
+    stopScreenCapture(): Promise<number>;
 
-    getCallId(callId: string): number;
+    getCallId(callId: string): Promise<number>;
 
-    rate(callId: string, rating: number, description: string): number;
+    rate(callId: string, rating: number, description: string): Promise<number>;
 
-    complain(callId: string, description: string): number;
+    complain(callId: string, description: string): Promise<number>;
 
-    startRtmpStreamWithoutTranscoding(url: string): number;
+    startRtmpStreamWithoutTranscoding(url: string): Promise<number>;
 
-    startRtmpStreamWithTranscoding(url: string, transcoding: LiveTranscoding): number;
+    startRtmpStreamWithTranscoding(url: string, transcoding: LiveTranscoding): Promise<number>;
 
-    updateRtmpTranscoding(transcoding: LiveTranscoding): number;
+    updateRtmpTranscoding(transcoding: LiveTranscoding): Promise<number>;
 
-    startLocalVideoTranscoder(config: LocalTranscoderConfiguration): number;
+    startLocalVideoTranscoder(config: LocalTranscoderConfiguration): Promise<number>;
 
-    updateLocalTranscoderConfiguration(config: LocalTranscoderConfiguration): number;
+    updateLocalTranscoderConfiguration(config: LocalTranscoderConfiguration): Promise<number>;
 
-    stopRtmpStream(url: string): number;
+    stopRtmpStream(url: string): Promise<number>;
 
-    stopLocalVideoTranscoder(): number;
+    stopLocalVideoTranscoder(): Promise<number>;
 
-    startLocalAudioMixer(config: LocalAudioMixerConfiguration): number;
+    startLocalAudioMixer(config: LocalAudioMixerConfiguration): Promise<number>;
 
-    updateLocalAudioMixerConfiguration(config: LocalAudioMixerConfiguration): number;
+    updateLocalAudioMixerConfiguration(config: LocalAudioMixerConfiguration): Promise<number>;
 
-    stopLocalAudioMixer(): number;
+    stopLocalAudioMixer(): Promise<number>;
 
-    startCameraCapture(sourceType: VIDEO_SOURCE_TYPE, config: CameraCapturerConfiguration): number;
+    startCameraCapture(sourceType: VIDEO_SOURCE_TYPE, config: CameraCapturerConfiguration): Promise<number>;
 
-    stopCameraCapture(sourceType: VIDEO_SOURCE_TYPE): number;
+    stopCameraCapture(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
 
-    setCameraDeviceOrientation(type: VIDEO_SOURCE_TYPE, orientation: VIDEO_ORIENTATION): number;
+    setCameraDeviceOrientation(type: VIDEO_SOURCE_TYPE, orientation: VIDEO_ORIENTATION): Promise<number>;
 
-    setScreenCaptureOrientation(type: VIDEO_SOURCE_TYPE, orientation: VIDEO_ORIENTATION): number;
+    setScreenCaptureOrientation(type: VIDEO_SOURCE_TYPE, orientation: VIDEO_ORIENTATION): Promise<number>;
 
-    startScreenCapture(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): number;
+    startScreenCapture(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): Promise<number>;
 
-    stopScreenCapture(sourceType: VIDEO_SOURCE_TYPE): number;
+    stopScreenCapture(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
 
-    getConnectionState(): CONNECTION_STATE_TYPE;
+    getConnectionState(): Promise<CONNECTION_STATE_TYPE>;
 
-    setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): number;
+    setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): Promise<number>;
 
-    enableEncryption(enabled: boolean, config: EncryptionConfig): number;
+    enableEncryption(enabled: boolean, config: EncryptionConfig): Promise<number>;
 
-    createDataStream(streamId: number, reliable: boolean, ordered: boolean): number;
+    createDataStream(streamId: number, reliable: boolean, ordered: boolean): Promise<number>;
 
-    createDataStream(streamId: number, config: DataStreamConfig): number;
+    createDataStream(streamId: number, config: DataStreamConfig): Promise<number>;
 
-    sendStreamMessage(streamId: number, data: Uint8Array, length: number): number;
+    sendStreamMessage(streamId: number, data: Uint8Array, length: number): Promise<number>;
 
-    sendRdtMessage(uid: number, type: RdtStreamType, data: string, length: number): number;
+    sendRdtMessage(uid: number, type: RdtStreamType, data: string, length: number): Promise<number>;
 
-    sendMediaControlMessage(uid: number, data: string, length: number): number;
+    sendMediaControlMessage(uid: number, data: string, length: number): Promise<number>;
 
-    addVideoWatermark(watermark: RtcImage): number;
+    addVideoWatermark(watermark: RtcImage): Promise<number>;
 
-    addVideoWatermark(watermarkUrl: string, options: WatermarkOptions): number;
+    addVideoWatermark(watermarkUrl: string, options: WatermarkOptions): Promise<number>;
 
-    addVideoWatermark(configs: WatermarkConfig): number;
+    addVideoWatermark(configs: WatermarkConfig): Promise<number>;
 
-    removeVideoWatermark(id: string): number;
+    removeVideoWatermark(id: string): Promise<number>;
 
-    clearVideoWatermarks(): number;
+    clearVideoWatermarks(): Promise<number>;
 
-    pauseAudio(): number;
+    pauseAudio(): Promise<number>;
 
-    resumeAudio(): number;
+    resumeAudio(): Promise<number>;
 
-    enableWebSdkInteroperability(enabled: boolean): number;
+    enableWebSdkInteroperability(enabled: boolean): Promise<number>;
 
-    sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): number;
+    sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): Promise<number>;
 
-    startAudioFrameDump(channel_id: string, uid: number, location: string, uuid: string, passwd: string, duration_ms: number, auto_upload: boolean): number;
+    startAudioFrameDump(channel_id: string, uid: number, location: string, uuid: string, passwd: string, duration_ms: number, auto_upload: boolean): Promise<number>;
 
-    stopAudioFrameDump(channel_id: string, uid: number, location: string): number;
+    stopAudioFrameDump(channel_id: string, uid: number, location: string): Promise<number>;
 
-    setAINSMode(enabled: boolean, mode: AUDIO_AINS_MODE): number;
+    setAINSMode(enabled: boolean, mode: AUDIO_AINS_MODE): Promise<number>;
 
-    registerLocalUserAccount(appId: string, userAccount: string): number;
+    registerLocalUserAccount(appId: string, userAccount: string): Promise<number>;
 
-    joinChannelWithUserAccount(token: string, channelId: string, userAccount: string): number;
+    joinChannelWithUserAccount(token: string, channelId: string, userAccount: string): Promise<number>;
 
-    joinChannelWithUserAccount(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): number;
+    joinChannelWithUserAccount(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): Promise<number>;
 
-    getUserInfoByUserAccount(userAccount: string): { errorCode: number; userInfo: UserInfo };
+    getUserInfoByUserAccount(userAccount: string): Promise<{ errorCode: number; userInfo: UserInfo }>;
 
-    getUserInfoByUid(uid: number): { errorCode: number; userInfo: UserInfo };
+    getUserInfoByUid(uid: number): Promise<{ errorCode: number; userInfo: UserInfo }>;
 
-    startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): number;
+    startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): Promise<number>;
 
-    stopChannelMediaRelay(): number;
+    stopChannelMediaRelay(): Promise<number>;
 
-    pauseAllChannelMediaRelay(): number;
+    pauseAllChannelMediaRelay(): Promise<number>;
 
-    resumeAllChannelMediaRelay(): number;
+    resumeAllChannelMediaRelay(): Promise<number>;
 
-    setDirectCdnStreamingAudioConfiguration(profile: AUDIO_PROFILE_TYPE): number;
+    setDirectCdnStreamingAudioConfiguration(profile: AUDIO_PROFILE_TYPE): Promise<number>;
 
-    setDirectCdnStreamingVideoConfiguration(config: VideoEncoderConfiguration): number;
+    setDirectCdnStreamingVideoConfiguration(config: VideoEncoderConfiguration): Promise<number>;
 
-    startDirectCdnStreaming(publishUrl: string, options: DirectCdnStreamingMediaOptions): number;
+    startDirectCdnStreaming(publishUrl: string, options: DirectCdnStreamingMediaOptions): Promise<number>;
 
-    stopDirectCdnStreaming(): number;
+    stopDirectCdnStreaming(): Promise<number>;
 
-    updateDirectCdnStreamingMediaOptions(options: DirectCdnStreamingMediaOptions): number;
+    updateDirectCdnStreamingMediaOptions(options: DirectCdnStreamingMediaOptions): Promise<number>;
 
-    startRhythmPlayer(sound1: string, sound2: string, config: AgoraRhythmPlayerConfig): number;
+    startRhythmPlayer(sound1: string, sound2: string, config: AgoraRhythmPlayerConfig): Promise<number>;
 
-    stopRhythmPlayer(): number;
+    stopRhythmPlayer(): Promise<number>;
 
-    configRhythmPlayer(config: AgoraRhythmPlayerConfig): number;
+    configRhythmPlayer(config: AgoraRhythmPlayerConfig): Promise<number>;
 
-    takeSnapshot(uid: number, filePath: string): number;
+    takeSnapshot(uid: number, filePath: string): Promise<number>;
 
-    takeSnapshot(uid: number, config: SnapshotConfig): number;
+    takeSnapshot(uid: number, config: SnapshotConfig): Promise<number>;
 
-    enableContentInspect(enabled: boolean, config: ContentInspectConfig): number;
+    enableContentInspect(enabled: boolean, config: ContentInspectConfig): Promise<number>;
 
-    adjustCustomAudioPublishVolume(trackId: number, volume: number): number;
+    adjustCustomAudioPublishVolume(trackId: number, volume: number): Promise<number>;
 
-    adjustCustomAudioPlayoutVolume(trackId: number, volume: number): number;
+    adjustCustomAudioPlayoutVolume(trackId: number, volume: number): Promise<number>;
 
-    setCloudProxy(proxyType: CLOUD_PROXY_TYPE): number;
+    setCloudProxy(proxyType: CLOUD_PROXY_TYPE): Promise<number>;
 
-    setLocalAccessPoint(config: LocalAccessPointConfiguration): number;
+    setLocalAccessPoint(config: LocalAccessPointConfiguration): Promise<number>;
 
-    setAdvancedAudioOptions(options: AdvancedAudioOptions, sourceType: number): number;
+    setAdvancedAudioOptions(options: AdvancedAudioOptions, sourceType: number): Promise<number>;
 
-    setAVSyncSource(channelId: string, uid: number): number;
+    setAVSyncSource(channelId: string, uid: number): Promise<number>;
 
-    enableVideoImageSource(enable: boolean, options: ImageTrackOptions): number;
+    enableVideoImageSource(enable: boolean, options: ImageTrackOptions): Promise<number>;
 
-    getCurrentMonotonicTimeInMs(): number;
+    getCurrentMonotonicTimeInMs(): Promise<number>;
 
-    getNetworkType(): number;
+    getNetworkType(): Promise<number>;
 
-    setParameters(parameters: string): number;
+    setParameters(parameters: string): Promise<number>;
 
-    startMediaRenderingTracing(): number;
+    startMediaRenderingTracing(): Promise<number>;
 
-    enableInstantMediaRendering(): number;
+    enableInstantMediaRendering(): Promise<number>;
 
-    getNtpWallTimeInMs(): number;
+    getNtpWallTimeInMs(): Promise<number>;
 
-    isFeatureAvailableOnDevice(type: FeatureType): boolean;
+    isFeatureAvailableOnDevice(type: FeatureType): Promise<boolean>;
 
-    sendAudioMetadata(metadata: Uint8Array, length: number): number;
+    sendAudioMetadata(metadata: Uint8Array, length: number): Promise<number>;
 
-    queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): number;
+    queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): Promise<number>;
 }
