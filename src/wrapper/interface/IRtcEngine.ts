@@ -59,9 +59,6 @@ import {
     LocalAccessPointConfiguration,
     VIDEO_MODULE_TYPE,
     HDR_CAPABILITY,
-    AUDIO_TRACK_TYPE,
-    AudioTrackConfig,
-    EncodedVideoFrameInfo,
     CodecCapInfo,
     DeviceInfo,
     EncryptionConfig,
@@ -69,19 +66,7 @@ import {
     Rectangle,
 } from "../types/AgoraBase";
 import { LOG_LEVEL } from "../types/AgoraLog";
-import {
-    VIDEO_SOURCE_TYPE,
-    VIDEO_MODULE_POSITION,
-    AUDIO_FRAME_POSITION,
-    MEDIA_SOURCE_TYPE,
-    RENDER_MODE_TYPE,
-    RAW_AUDIO_FRAME_OP_MODE_TYPE,
-    SnapshotConfig,
-    ContentInspectConfig,
-    AudioFrame,
-    EXTERNAL_VIDEO_SOURCE_TYPE,
-    ExternalVideoFrame,
-} from "../types/AgoraMediaBase";
+import { VIDEO_SOURCE_TYPE, VIDEO_MODULE_POSITION, AUDIO_FRAME_POSITION, MEDIA_SOURCE_TYPE, RENDER_MODE_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, SnapshotConfig, ContentInspectConfig } from "../types/AgoraMediaBase";
 import { AUDIO_MIXING_DUAL_MONO_MODE } from "../types/AgoraMediaEngine";
 import { AgoraRhythmPlayerConfig } from "../types/AgoraRhythmPlayer";
 import {
@@ -107,7 +92,6 @@ import {
 } from "../types/AgoraRtcEngine";
 import { IAudioDeviceManager } from "./IAudioDeviceManager";
 import { IAudioEncodedFrameObserver } from "./IAudioEncodedFrameObserver";
-import { IFaceInfoObserver } from "./IFaceInfoObserver";
 import { IH265Transcoder } from "./IH265Transcoder";
 import { ILocalSpatialAudioEngine } from "./ILocalSpatialAudioEngine";
 import { IMediaPlayer } from "./IMediaPlayer";
@@ -117,7 +101,6 @@ import { IMusicContentCenter } from "./IMusicContentCenter";
 import { IRtcEngineEventHandler } from "./IRtcEngineEventHandler";
 import { IVideoDeviceManager } from "./IVideoDeviceManager";
 import { IVideoEffectObject } from "./IVideoEffectObject";
-import { IVideoFrameObserver } from "./IVideoFrameObserver";
 
 export interface IRtcEngine {
     release(sync: boolean): void;
@@ -137,16 +120,6 @@ export interface IRtcEngine {
     getH265Transcoder(): IH265Transcoder;
 
     setLocalVideoDataSourcePosition(position: VIDEO_MODULE_POSITION): number;
-
-    registerVideoFrameObserver(observer: IVideoFrameObserver): number;
-
-    unregisterVideoFrameObserver(): number;
-
-    unregisterVideoEncodedFrameObserver(): number;
-
-    unregisterAudioFrameObserver(): number;
-
-    unregisterFaceInfoObserver(): number;
 
     initialize(context: RtcEngineContext): number;
 
@@ -437,8 +410,6 @@ export interface IRtcEngine {
     setSimulcastConfig(simulcastConfig: SimulcastConfig): number;
 
     setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): number;
-
-    enableCustomAudioLocalPlayback(trackId: number, enabled: boolean): number;
 
     setRecordingAudioFrameParameters(sampleRate: number, channel: number, mode: RAW_AUDIO_FRAME_OP_MODE_TYPE, samplesPerCall: number): number;
 
@@ -737,26 +708,4 @@ export interface IRtcEngine {
     sendAudioMetadata(metadata: Uint8Array, length: number): number;
 
     queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): number;
-
-    registerFaceInfoObserver(observer: IFaceInfoObserver): number;
-
-    pushAudioFrame(frame: AudioFrame, trackId: number): number;
-
-    pullAudioFrame(frame: AudioFrame): number;
-
-    setExternalVideoSource(enabled: boolean, useTexture: boolean, sourceType: EXTERNAL_VIDEO_SOURCE_TYPE, encodedVideoOption: SenderOptions): number;
-
-    setExternalRemoteEglContext(eglContext: unknown): number;
-
-    setExternalAudioSource(enabled: boolean, sampleRate: number, channels: number, localPlayback: boolean, publish: boolean): number;
-
-    createCustomAudioTrack(trackType: AUDIO_TRACK_TYPE, config: AudioTrackConfig): number;
-
-    destroyCustomAudioTrack(trackId: number): number;
-
-    setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
-
-    pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): number;
-
-    pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): number;
 }

@@ -1,3 +1,4 @@
+import { IRtcEngineEventHandler } from "../interface/IRtcEngineEventHandler";
 import {
     QUALITY_ADAPT_INDICATION,
     VIDEO_CODEC_TYPE,
@@ -609,6 +610,8 @@ export enum VIDEO_EFFECT_ACTION {
 }
 
 export interface RtcEngineContext {
+    eventHandler: IRtcEngineEventHandler;
+
     appId: string;
 
     context: number;
