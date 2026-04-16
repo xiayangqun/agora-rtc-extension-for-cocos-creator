@@ -25,3 +25,5 @@ export class Web2Native {
 
     public static ChannelMediaRelayError(param: ChannelMediaRelayError): CHANNEL_MEDIA_RELAY_ERROR {}
 }
+
+export class Native2Web {}
