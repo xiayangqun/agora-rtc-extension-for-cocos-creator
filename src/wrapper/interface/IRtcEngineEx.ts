@@ -1,9 +1,27 @@
-import type { RtcConnection } from '../types/AgoraRtcEngineEx';
-import type { ChannelMediaOptions, LeaveChannelOptions, STREAM_FALLBACK_OPTIONS } from '../types/AgoraRtcEngine';
-import type { ChannelMediaRelayConfiguration, CONNECTION_STATE_TYPE, DataStreamConfig, EncryptionConfig, LiveTranscoding, RdtStreamType, SIMULCAST_STREAM_MODE, SimulcastConfig, SimulcastStreamConfig, SpatialAudioParams, UserInfo, VIDEO_MIRROR_MODE_TYPE, VIDEO_STREAM_TYPE, VideoCanvas, VideoEncoderConfiguration, VideoSubscriptionOptions, WatermarkConfig, WatermarkOptions } from '../types/AgoraBase';
-import type { ContentInspectConfig, RENDER_MODE_TYPE, SnapshotConfig } from '../types/AgoraMediaBase';
-import { IRtcEngine } from './IRtcEngine';
-
+import type { RtcConnection } from "../types/AgoraRtcEngineEx";
+import type { ChannelMediaOptions, LeaveChannelOptions, STREAM_FALLBACK_OPTIONS } from "../types/AgoraRtcEngine";
+import type {
+    ChannelMediaRelayConfiguration,
+    CONNECTION_STATE_TYPE,
+    DataStreamConfig,
+    EncryptionConfig,
+    LiveTranscoding,
+    RdtStreamType,
+    SIMULCAST_STREAM_MODE,
+    SimulcastConfig,
+    SimulcastStreamConfig,
+    SpatialAudioParams,
+    UserInfo,
+    VIDEO_MIRROR_MODE_TYPE,
+    VIDEO_STREAM_TYPE,
+    VideoCanvas,
+    VideoEncoderConfiguration,
+    VideoSubscriptionOptions,
+    WatermarkConfig,
+    WatermarkOptions,
+} from "../types/AgoraBase";
+import type { ContentInspectConfig, RENDER_MODE_TYPE, SnapshotConfig } from "../types/AgoraMediaBase";
+import { IRtcEngine } from "./IRtcEngine";
 
 export interface IRtcEngineEx extends IRtcEngine {
     setParametersEx(connection: RtcConnection, key: string, value: object): number;
@@ -50,7 +68,7 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     setRemoteVoicePositionEx(uid: number, pan: number, gain: number, connection: RtcConnection): number;
 
-    setRemoteUserSpatialAudioParamsEx(uid: number, @params: SpatialAudioParams, connection: RtcConnection): number;
+    setRemoteUserSpatialAudioParamsEx(uid: number, params: SpatialAudioParams, connection: RtcConnection): number;
 
     setRemoteRenderModeEx(uid: number, renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE, connection: RtcConnection): number;
 
@@ -84,7 +102,7 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     clearVideoWatermarkEx(connection: RtcConnection): number;
 
-    sendCustomReportMessageEx(id: string, category: string, @event: string, label: string, value: number, connection: RtcConnection): number;
+    sendCustomReportMessageEx(id: string, category: string, event: string, label: string, value: number, connection: RtcConnection): number;
 
     enableAudioVolumeIndicationEx(interval: number, smooth: number, reportVad: boolean, connection: RtcConnection): number;
 
@@ -133,5 +151,4 @@ export interface IRtcEngineEx extends IRtcEngine {
     preloadEffectEx(connection: RtcConnection, soundId: number, filePath: string, startPos: number): number;
 
     playEffectEx(connection: RtcConnection, soundId: number, filePath: string, loopCount: number, pitch: number, pan: number, gain: number, publish: boolean, startPos: number): number;
-
 }

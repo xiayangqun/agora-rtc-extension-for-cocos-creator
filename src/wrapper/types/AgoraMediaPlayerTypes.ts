@@ -1,244 +1,219 @@
-   
-    export enum MEDIA_PLAYER_STATE
-    {
-        PLAYER_STATE_IDLE = 0,
+export enum MEDIA_PLAYER_STATE {
+    PLAYER_STATE_IDLE = 0,
 
-        PLAYER_STATE_OPENING,
+    PLAYER_STATE_OPENING,
 
-        PLAYER_STATE_OPEN_COMPLETED,
+    PLAYER_STATE_OPEN_COMPLETED,
 
-        PLAYER_STATE_PLAYING,
+    PLAYER_STATE_PLAYING,
 
-        PLAYER_STATE_PAUSED,
+    PLAYER_STATE_PAUSED,
 
-        PLAYER_STATE_PLAYBACK_COMPLETED,
+    PLAYER_STATE_PLAYBACK_COMPLETED,
 
-        PLAYER_STATE_PLAYBACK_ALL_LOOPS_COMPLETED,
+    PLAYER_STATE_PLAYBACK_ALL_LOOPS_COMPLETED,
 
-        PLAYER_STATE_STOPPED,
+    PLAYER_STATE_STOPPED,
 
-        PLAYER_STATE_PAUSING_INTERNAL = 50,
+    PLAYER_STATE_PAUSING_INTERNAL = 50,
 
-        PLAYER_STATE_STOPPING_INTERNAL,
+    PLAYER_STATE_STOPPING_INTERNAL,
 
-        PLAYER_STATE_SEEKING_INTERNAL,
+    PLAYER_STATE_SEEKING_INTERNAL,
 
-        PLAYER_STATE_GETTING_INTERNAL,
+    PLAYER_STATE_GETTING_INTERNAL,
 
-        PLAYER_STATE_NONE_INTERNAL,
+    PLAYER_STATE_NONE_INTERNAL,
 
-        PLAYER_STATE_DO_NOTHING_INTERNAL,
+    PLAYER_STATE_DO_NOTHING_INTERNAL,
 
-        PLAYER_STATE_SET_TRACK_INTERNAL,
+    PLAYER_STATE_SET_TRACK_INTERNAL,
 
-        PLAYER_STATE_FAILED = 100,
+    PLAYER_STATE_FAILED = 100,
+}
 
-    }
+export enum MEDIA_PLAYER_REASON {
+    PLAYER_REASON_NONE = 0,
 
-    export enum MEDIA_PLAYER_REASON
-    {
-        PLAYER_REASON_NONE = 0,
+    PLAYER_REASON_INVALID_ARGUMENTS = -1,
 
-        PLAYER_REASON_INVALID_ARGUMENTS = -1,
+    PLAYER_REASON_INTERNAL = -2,
 
-        PLAYER_REASON_INTERNAL = -2,
+    PLAYER_REASON_NO_RESOURCE = -3,
 
-        PLAYER_REASON_NO_RESOURCE = -3,
+    PLAYER_REASON_INVALID_MEDIA_SOURCE = -4,
 
-        PLAYER_REASON_INVALID_MEDIA_SOURCE = -4,
+    PLAYER_REASON_UNKNOWN_STREAM_TYPE = -5,
 
-        PLAYER_REASON_UNKNOWN_STREAM_TYPE = -5,
+    PLAYER_REASON_OBJ_NOT_INITIALIZED = -6,
 
-        PLAYER_REASON_OBJ_NOT_INITIALIZED = -6,
+    PLAYER_REASON_CODEC_NOT_SUPPORTED = -7,
 
-        PLAYER_REASON_CODEC_NOT_SUPPORTED = -7,
+    PLAYER_REASON_VIDEO_RENDER_FAILED = -8,
 
-        PLAYER_REASON_VIDEO_RENDER_FAILED = -8,
+    PLAYER_REASON_INVALID_STATE = -9,
 
-        PLAYER_REASON_INVALID_STATE = -9,
+    PLAYER_REASON_URL_NOT_FOUND = -10,
 
-        PLAYER_REASON_URL_NOT_FOUND = -10,
+    PLAYER_REASON_INVALID_CONNECTION_STATE = -11,
 
-        PLAYER_REASON_INVALID_CONNECTION_STATE = -11,
+    PLAYER_REASON_SRC_BUFFER_UNDERFLOW = -12,
 
-        PLAYER_REASON_SRC_BUFFER_UNDERFLOW = -12,
+    PLAYER_REASON_INTERRUPTED = -13,
 
-        PLAYER_REASON_INTERRUPTED = -13,
+    PLAYER_REASON_NOT_SUPPORTED = -14,
 
-        PLAYER_REASON_NOT_SUPPORTED = -14,
+    PLAYER_REASON_TOKEN_EXPIRED = -15,
 
-        PLAYER_REASON_TOKEN_EXPIRED = -15,
+    PLAYER_REASON_IP_EXPIRED = -16,
 
-        PLAYER_REASON_IP_EXPIRED = -16,
+    PLAYER_REASON_UNKNOWN = -17,
+}
 
-        PLAYER_REASON_UNKNOWN = -17,
+export enum MEDIA_STREAM_TYPE {
+    STREAM_TYPE_UNKNOWN = 0,
 
-    }
+    STREAM_TYPE_VIDEO = 1,
 
-    export enum MEDIA_STREAM_TYPE
-    {
-        STREAM_TYPE_UNKNOWN = 0,
+    STREAM_TYPE_AUDIO = 2,
 
-        STREAM_TYPE_VIDEO = 1,
+    STREAM_TYPE_SUBTITLE = 3,
+}
 
-        STREAM_TYPE_AUDIO = 2,
+export enum MEDIA_PLAYER_EVENT {
+    PLAYER_EVENT_SEEK_BEGIN = 0,
 
-        STREAM_TYPE_SUBTITLE = 3,
+    PLAYER_EVENT_SEEK_COMPLETE = 1,
 
-    }
+    PLAYER_EVENT_SEEK_ERROR = 2,
 
-    export enum MEDIA_PLAYER_EVENT
-    {
-        PLAYER_EVENT_SEEK_BEGIN = 0,
+    PLAYER_EVENT_AUDIO_TRACK_CHANGED = 5,
 
-        PLAYER_EVENT_SEEK_COMPLETE = 1,
+    PLAYER_EVENT_BUFFER_LOW = 6,
 
-        PLAYER_EVENT_SEEK_ERROR = 2,
+    PLAYER_EVENT_BUFFER_RECOVER = 7,
 
-        PLAYER_EVENT_AUDIO_TRACK_CHANGED = 5,
+    PLAYER_EVENT_FREEZE_START = 8,
 
-        PLAYER_EVENT_BUFFER_LOW = 6,
+    PLAYER_EVENT_FREEZE_STOP = 9,
 
-        PLAYER_EVENT_BUFFER_RECOVER = 7,
+    PLAYER_EVENT_SWITCH_BEGIN = 10,
 
-        PLAYER_EVENT_FREEZE_START = 8,
+    PLAYER_EVENT_SWITCH_COMPLETE = 11,
 
-        PLAYER_EVENT_FREEZE_STOP = 9,
+    PLAYER_EVENT_SWITCH_ERROR = 12,
 
-        PLAYER_EVENT_SWITCH_BEGIN = 10,
+    PLAYER_EVENT_FIRST_DISPLAYED = 13,
 
-        PLAYER_EVENT_SWITCH_COMPLETE = 11,
+    PLAYER_EVENT_REACH_CACHE_FILE_MAX_COUNT = 14,
 
-        PLAYER_EVENT_SWITCH_ERROR = 12,
+    PLAYER_EVENT_REACH_CACHE_FILE_MAX_SIZE = 15,
 
-        PLAYER_EVENT_FIRST_DISPLAYED = 13,
+    PLAYER_EVENT_TRY_OPEN_START = 16,
 
-        PLAYER_EVENT_REACH_CACHE_FILE_MAX_COUNT = 14,
+    PLAYER_EVENT_TRY_OPEN_SUCCEED = 17,
 
-        PLAYER_EVENT_REACH_CACHE_FILE_MAX_SIZE = 15,
+    PLAYER_EVENT_TRY_OPEN_FAILED = 18,
 
-        PLAYER_EVENT_TRY_OPEN_START = 16,
+    PLAYER_EVENT_HTTP_REDIRECT = 19,
+}
 
-        PLAYER_EVENT_TRY_OPEN_SUCCEED = 17,
+export enum PLAYER_PRELOAD_EVENT {
+    PLAYER_PRELOAD_EVENT_BEGIN = 0,
 
-        PLAYER_EVENT_TRY_OPEN_FAILED = 18,
+    PLAYER_PRELOAD_EVENT_COMPLETE = 1,
 
-        PLAYER_EVENT_HTTP_REDIRECT = 19,
+    PLAYER_PRELOAD_EVENT_ERROR = 2,
+}
 
-    }
+export interface PlayerStreamInfo {
+    streamIndex: number;
 
-    export enum PLAYER_PRELOAD_EVENT
-    {
-        PLAYER_PRELOAD_EVENT_BEGIN = 0,
+    streamType: MEDIA_STREAM_TYPE;
 
-        PLAYER_PRELOAD_EVENT_COMPLETE = 1,
+    codecName: string;
 
-        PLAYER_PRELOAD_EVENT_ERROR = 2,
+    language: string;
 
-    }
+    videoFrameRate: number;
 
-    export interface PlayerStreamInfo
-    {
-        streamIndex:  number ;
+    videoBitRate: number;
 
-        streamType:  MEDIA_STREAM_TYPE ;
+    videoWidth: number;
 
-        codecName:  string ;
+    videoHeight: number;
 
-        language:  string ;
+    videoRotation: number;
 
-        videoFrameRate:  number ;
+    audioSampleRate: number;
 
-        videoBitRate:  number ;
+    audioChannels: number;
 
-        videoWidth:  number ;
+    audioBitsPerSample: number;
 
-        videoHeight:  number ;
+    duration: number;
+}
 
-        videoRotation:  number ;
+export interface SrcInfo {
+    bitrateInKbps: number;
 
-        audioSampleRate:  number ;
+    name: string;
+}
 
-        audioChannels:  number ;
+export enum MEDIA_PLAYER_METADATA_TYPE {
+    PLAYER_METADATA_TYPE_UNKNOWN = 0,
 
-        audioBitsPerSample:  number ;
+    PLAYER_METADATA_TYPE_SEI = 1,
+}
 
-        duration:  number ;
+export interface CacheStatistics {
+    fileSize: number;
 
-    }
+    cacheSize: number;
 
-    export interface SrcInfo
-    {
-        bitrateInKbps:  number ;
+    downloadSize: number;
+}
 
-        name:  string ;
+export interface PlayerPlaybackStats {
+    videoFps: number;
 
-    }
+    videoBitrateInKbps: number;
 
-    export enum MEDIA_PLAYER_METADATA_TYPE
-    {
-        PLAYER_METADATA_TYPE_UNKNOWN = 0,
+    audioBitrateInKbps: number;
 
-        PLAYER_METADATA_TYPE_SEI = 1,
+    totalBitrateInKbps: number;
+}
 
-    }
+export interface PlayerUpdatedInfo {
+    internalPlayerUuid: string;
 
-    export interface CacheStatistics
-    {
-        fileSize:  number ;
+    deviceId: string;
 
-        cacheSize:  number ;
+    videoHeight: number;
 
-        downloadSize:  number ;
+    videoWidth: number;
 
-    }
+    audioSampleRate: number;
 
-    export interface PlayerPlaybackStats
-    {
-        videoFps:  number ;
+    audioChannels: number;
 
-        videoBitrateInKbps:  number ;
+    audioBitsPerSample: number;
+}
 
-        audioBitrateInKbps:  number ;
+export interface MediaSource {
+    url: string;
 
-        totalBitrateInKbps:  number ;
+    uri: string;
 
-    }
+    startPos: number;
 
-    export interface PlayerUpdatedInfo
-    {
-        internalPlayerUuid:  string ;
+    autoPlay: boolean;
 
-        deviceId:  string ;
+    enableCache: boolean;
 
-        videoHeight:  number ;
+    enableMultiAudioTrack: boolean;
 
-        videoWidth:  number ;
+    isAgoraSource?: boolean;
 
-        audioSampleRate:  number ;
-
-        audioChannels:  number ;
-
-        audioBitsPerSample:  number ;
-
-    }
-
-    export interface MediaSource
-    {
-        url:  string ;
-
-        uri:  string ;
-
-        startPos:  number ;
-
-        autoPlay:  boolean ;
-
-        enableCache:  boolean ;
-
-        enableMultiAudioTrack:  boolean ;
-
-        isAgoraSource?:  boolean ;
-
-        isLiveSource?:  boolean ;
-    }
-
+    isLiveSource?: boolean;
+}

@@ -1,10 +1,110 @@
-import { ExtensionInfo, Rectangle } from "electron";
-import { CHANNEL_PROFILE_TYPE, CLIENT_ROLE_TYPE, ClientRoleOptions, EchoTestConfiguration, LastmileProbeConfig, VideoEncoderConfiguration, BeautyOptions, FaceShapeBeautyOptions, FaceShapeAreaOptions, FACE_SHAPE_AREA, FilterEffectOptions, LowlightEnhanceOptions, VideoDenoiserOptions, ColorEnhanceOptions, VirtualBackgroundSource, SegmentationProperty, VideoCanvas, VIDEO_APPLICATION_SCENARIO_TYPE, VIDEO_QOE_PREFERENCE_TYPE, AUDIO_PROFILE_TYPE, AUDIO_SCENARIO_TYPE, VIDEO_STREAM_TYPE, VideoSubscriptionOptions, AUDIO_RECORDING_QUALITY_TYPE, AudioRecordingConfiguration, AudioEncodedFrameObserverConfig, RecorderStreamInfo, SpatialAudioParams, VOICE_BEAUTIFIER_PRESET, AUDIO_EFFECT_PRESET, VOICE_CONVERSION_PRESET, HEADPHONE_EQUALIZER_PRESET, VOICE_AI_TUNER_TYPE, VIDEO_MIRROR_MODE_TYPE, SimulcastStreamConfig, SIMULCAST_STREAM_MODE, SimulcastConfig, SenderOptions, CAMERA_STABILIZATION_MODE, AUDIO_SESSION_OPERATION_RESTRICTION, ScreenCaptureParameters, VIDEO_CONTENT_HINT, ScreenCaptureParameters2, FocalLengthInfo, SCREEN_SCENARIO_TYPE, LiveTranscoding, LocalTranscoderConfiguration, LocalAudioMixerConfiguration, VIDEO_ORIENTATION, CONNECTION_STATE_TYPE, DataStreamConfig, RdtStreamType, RtcImage, WatermarkOptions, WatermarkConfig, AUDIO_AINS_MODE, ChannelMediaRelayConfiguration, LocalAccessPointConfiguration, VIDEO_MODULE_TYPE, HDR_CAPABILITY, AUDIO_TRACK_TYPE, AudioTrackConfig, EncodedVideoFrameInfo, CodecCapInfo, DeviceInfo, EncryptionConfig, UserInfo } from "../types/AgoraBase";
+import {
+    CHANNEL_PROFILE_TYPE,
+    CLIENT_ROLE_TYPE,
+    ClientRoleOptions,
+    EchoTestConfiguration,
+    LastmileProbeConfig,
+    VideoEncoderConfiguration,
+    BeautyOptions,
+    FaceShapeBeautyOptions,
+    FaceShapeAreaOptions,
+    FACE_SHAPE_AREA,
+    FilterEffectOptions,
+    LowlightEnhanceOptions,
+    VideoDenoiserOptions,
+    ColorEnhanceOptions,
+    VirtualBackgroundSource,
+    SegmentationProperty,
+    VideoCanvas,
+    VIDEO_APPLICATION_SCENARIO_TYPE,
+    VIDEO_QOE_PREFERENCE_TYPE,
+    AUDIO_PROFILE_TYPE,
+    AUDIO_SCENARIO_TYPE,
+    VIDEO_STREAM_TYPE,
+    VideoSubscriptionOptions,
+    AUDIO_RECORDING_QUALITY_TYPE,
+    AudioRecordingConfiguration,
+    AudioEncodedFrameObserverConfig,
+    RecorderStreamInfo,
+    SpatialAudioParams,
+    VOICE_BEAUTIFIER_PRESET,
+    AUDIO_EFFECT_PRESET,
+    VOICE_CONVERSION_PRESET,
+    HEADPHONE_EQUALIZER_PRESET,
+    VOICE_AI_TUNER_TYPE,
+    VIDEO_MIRROR_MODE_TYPE,
+    SimulcastStreamConfig,
+    SIMULCAST_STREAM_MODE,
+    SimulcastConfig,
+    SenderOptions,
+    CAMERA_STABILIZATION_MODE,
+    AUDIO_SESSION_OPERATION_RESTRICTION,
+    ScreenCaptureParameters,
+    VIDEO_CONTENT_HINT,
+    ScreenCaptureParameters2,
+    FocalLengthInfo,
+    SCREEN_SCENARIO_TYPE,
+    LiveTranscoding,
+    LocalTranscoderConfiguration,
+    LocalAudioMixerConfiguration,
+    VIDEO_ORIENTATION,
+    CONNECTION_STATE_TYPE,
+    DataStreamConfig,
+    RdtStreamType,
+    RtcImage,
+    WatermarkOptions,
+    WatermarkConfig,
+    AUDIO_AINS_MODE,
+    ChannelMediaRelayConfiguration,
+    LocalAccessPointConfiguration,
+    VIDEO_MODULE_TYPE,
+    HDR_CAPABILITY,
+    AUDIO_TRACK_TYPE,
+    AudioTrackConfig,
+    EncodedVideoFrameInfo,
+    CodecCapInfo,
+    DeviceInfo,
+    EncryptionConfig,
+    UserInfo,
+    Rectangle,
+} from "../types/AgoraBase";
 import { LOG_LEVEL } from "../types/AgoraLog";
-import { VIDEO_SOURCE_TYPE, VIDEO_MODULE_POSITION, AUDIO_FRAME_POSITION, MEDIA_SOURCE_TYPE, RENDER_MODE_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, SnapshotConfig, ContentInspectConfig, AudioFrame, EXTERNAL_VIDEO_SOURCE_TYPE, ExternalVideoFrame } from "../types/AgoraMediaBase";
+import {
+    VIDEO_SOURCE_TYPE,
+    VIDEO_MODULE_POSITION,
+    AUDIO_FRAME_POSITION,
+    MEDIA_SOURCE_TYPE,
+    RENDER_MODE_TYPE,
+    RAW_AUDIO_FRAME_OP_MODE_TYPE,
+    SnapshotConfig,
+    ContentInspectConfig,
+    AudioFrame,
+    EXTERNAL_VIDEO_SOURCE_TYPE,
+    ExternalVideoFrame,
+} from "../types/AgoraMediaBase";
 import { AUDIO_MIXING_DUAL_MONO_MODE } from "../types/AgoraMediaEngine";
 import { AgoraRhythmPlayerConfig } from "../types/AgoraRhythmPlayer";
-import { Metadata, RtcEngineContext, ChannelMediaOptions, LeaveChannelOptions, CameraCapturerConfiguration, AUDIO_EQUALIZATION_BAND_FREQUENCY, AUDIO_REVERB_TYPE, STREAM_FALLBACK_OPTIONS, SIZE, ScreenCaptureSourceInfo, ScreenCaptureConfiguration, PRIORITY_TYPE, METADATA_TYPE, DirectCdnStreamingMediaOptions, CLOUD_PROXY_TYPE, AdvancedAudioOptions, ImageTrackOptions, FeatureType } from "../types/AgoraRtcEngine";
+import {
+    Metadata,
+    RtcEngineContext,
+    ChannelMediaOptions,
+    LeaveChannelOptions,
+    CameraCapturerConfiguration,
+    AUDIO_EQUALIZATION_BAND_FREQUENCY,
+    AUDIO_REVERB_TYPE,
+    STREAM_FALLBACK_OPTIONS,
+    SIZE,
+    ScreenCaptureSourceInfo,
+    ScreenCaptureConfiguration,
+    PRIORITY_TYPE,
+    METADATA_TYPE,
+    DirectCdnStreamingMediaOptions,
+    CLOUD_PROXY_TYPE,
+    AdvancedAudioOptions,
+    ImageTrackOptions,
+    FeatureType,
+    ExtensionInfo,
+} from "../types/AgoraRtcEngine";
 import { IAudioDeviceManager } from "./IAudioDeviceManager";
 import { IAudioEncodedFrameObserver } from "./IAudioEncodedFrameObserver";
 import { IFaceInfoObserver } from "./IFaceInfoObserver";
@@ -20,7 +120,6 @@ import { IVideoEffectObject } from "./IVideoEffectObject";
 import { IVideoFrameObserver } from "./IVideoFrameObserver";
 
 export interface IRtcEngine {
-
     release(sync: boolean): void;
 
     setParameters(key: string, value: string): number;
@@ -43,7 +142,6 @@ export interface IRtcEngine {
 
     unregisterVideoFrameObserver(): number;
 
-
     unregisterVideoEncodedFrameObserver(): number;
 
     unregisterAudioFrameObserver(): number;
@@ -52,12 +150,11 @@ export interface IRtcEngine {
 
     initialize(context: RtcEngineContext): number;
 
-
-    getVersion(): { version: string, build: number }
+    getVersion(): { version: string; build: number };
 
     getErrorDescription(code: number): string;
 
-    queryCodecCapability(): { errorCode: number, codecInfo: CodecCapInfo[] };
+    queryCodecCapability(): { errorCode: number; codecInfo: CodecCapInfo[] };
 
     queryDeviceScore(): number;
 
@@ -375,7 +472,7 @@ export interface IRtcEngine {
 
     setExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, value: string): number;
 
-    getExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, buf_len: number): { errorCode: number, value: string }
+    getExtensionProperty(provider: string, extension: string, extensionInfo: ExtensionInfo, key: string, buf_len: number): { errorCode: number; value: string };
 
     enableLoopbackRecording(enabled: boolean, deviceName: string): number;
 
@@ -397,7 +494,7 @@ export interface IRtcEngine {
 
     setExtensionProperty(provider: string, extension: string, key: string, value: string, type: MEDIA_SOURCE_TYPE): number;
 
-    getExtensionProperty(provider: string, extension: string, key: string, buf_len: number, type: MEDIA_SOURCE_TYPE): {errorCode:number,value:number};
+    getExtensionProperty(provider: string, extension: string, key: string, buf_len: number, type: MEDIA_SOURCE_TYPE): { errorCode: number; value: number };
 
     setCameraCapturerConfiguration(config: CameraCapturerConfiguration): number;
 
@@ -467,7 +564,7 @@ export interface IRtcEngine {
 
     startScreenCaptureByScreenRect(screenRect: Rectangle, regionRect: Rectangle, captureParams: ScreenCaptureParameters): number;
 
-    getAudioDeviceInfo(): {errorCode:number, deviceInfo: DeviceInfo}
+    getAudioDeviceInfo(): { errorCode: number; deviceInfo: DeviceInfo };
 
     startScreenCaptureByWindowId(windowId: number, regionRect: Rectangle, captureParams: ScreenCaptureParameters): number;
 
@@ -531,10 +628,7 @@ export interface IRtcEngine {
 
     getConnectionState(): CONNECTION_STATE_TYPE;
 
-
-
     setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): number;
-
 
     enableEncryption(enabled: boolean, config: EncryptionConfig): number;
 
@@ -578,9 +672,9 @@ export interface IRtcEngine {
 
     joinChannelWithUserAccount(token: string, channelId: string, userAccount: string, options: ChannelMediaOptions): number;
 
-    getUserInfoByUserAccount(userAccount: string): { errorCode: number, userInfo: UserInfo }
+    getUserInfoByUserAccount(userAccount: string): { errorCode: number; userInfo: UserInfo };
 
-    getUserInfoByUid(uid: number): { errorCode: number, userInfo: UserInfo }
+    getUserInfoByUid(uid: number): { errorCode: number; userInfo: UserInfo };
 
     startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): number;
 
@@ -644,9 +738,6 @@ export interface IRtcEngine {
 
     queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): number;
 
-
-
-
     registerFaceInfoObserver(observer: IFaceInfoObserver): number;
 
     pushAudioFrame(frame: AudioFrame, trackId: number): number;
@@ -665,12 +756,7 @@ export interface IRtcEngine {
 
     setExternalAudioSink(enabled: boolean, sampleRate: number, channels: number): number;
 
-
     pushVideoFrame(frame: ExternalVideoFrame, videoTrackId: number): number;
 
     pushEncodedVideoImage(imageBuffer: Uint8Array, length: number, videoEncodedFrameInfo: EncodedVideoFrameInfo, videoTrackId: number): number;
-
-
-
-
 }

@@ -1,9 +1,5 @@
-   
-    export interface RtcConnection
-    {
-        channelId:  string ;
+export interface RtcConnection {
+    channelId: string;
 
-        localUid:  number ;
-
-    }
-
+    localUid: number;
+}

@@ -10,7 +10,6 @@ export enum CHANNEL_PROFILE_TYPE {
     CHANNEL_PROFILE_CLOUD_GAMING = 3,
 
     CHANNEL_PROFILE_COMMUNICATION_1v1 = 4,
-
 }
 
 export enum WARN_CODE_TYPE {
@@ -77,7 +76,6 @@ export enum WARN_CODE_TYPE {
     WARN_ADM_WIN_CORE_NO_PLAYOUT_DEVICE = 1323,
 
     WARN_ADM_WIN_CORE_IMPROPER_CAPTURE_RELEASE = 1324,
-
 }
 
 export enum ERROR_CODE_TYPE {
@@ -226,7 +224,6 @@ export enum ERROR_CODE_TYPE {
     ERR_ADM_STOP_RECORDING = 1013,
 
     ERR_VDM_CAMERA_NOT_AUTHORIZED = 1501,
-
 }
 
 export enum LICENSE_ERROR_TYPE {
@@ -241,7 +238,6 @@ export enum LICENSE_ERROR_TYPE {
     LICENSE_ERR_DIFF_DEVICES = 5,
 
     LICENSE_ERR_INTERNAL = 99,
-
 }
 
 export enum AUDIO_SESSION_OPERATION_RESTRICTION {
@@ -254,7 +250,6 @@ export enum AUDIO_SESSION_OPERATION_RESTRICTION {
     AUDIO_SESSION_OPERATION_RESTRICTION_DEACTIVATE_SESSION = 1 << 2,
 
     AUDIO_SESSION_OPERATION_RESTRICTION_ALL = 1 << 7,
-
 }
 
 export enum USER_OFFLINE_REASON_TYPE {
@@ -263,7 +258,6 @@ export enum USER_OFFLINE_REASON_TYPE {
     USER_OFFLINE_DROPPED = 1,
 
     USER_OFFLINE_BECOME_AUDIENCE = 2,
-
 }
 
 export enum INTERFACE_ID_TYPE {
@@ -294,7 +288,6 @@ export enum INTERFACE_ID_TYPE {
     AGORA_IID_MUSIC_CONTENT_CENTER = 15,
 
     AGORA_IID_H265_TRANSCODER = 16,
-
 }
 
 export enum QUALITY_TYPE {
@@ -315,14 +308,12 @@ export enum QUALITY_TYPE {
     QUALITY_UNSUPPORTED = 7,
 
     QUALITY_DETECTING = 8,
-
 }
 
 export enum FIT_MODE_TYPE {
     MODE_COVER = 1,
 
     MODE_CONTAIN = 2,
-
 }
 
 export enum VIDEO_ORIENTATION {
@@ -333,7 +324,6 @@ export enum VIDEO_ORIENTATION {
     VIDEO_ORIENTATION_180 = 180,
 
     VIDEO_ORIENTATION_270 = 270,
-
 }
 
 export enum FRAME_RATE {
@@ -350,17 +340,14 @@ export enum FRAME_RATE {
     FRAME_RATE_FPS_30 = 30,
 
     FRAME_RATE_FPS_60 = 60,
-
 }
 
 export enum FRAME_WIDTH {
     FRAME_WIDTH_960 = 960,
-
 }
 
 export enum FRAME_HEIGHT {
     FRAME_HEIGHT_540 = 540,
-
 }
 
 export enum VIDEO_FRAME_TYPE {
@@ -375,7 +362,6 @@ export enum VIDEO_FRAME_TYPE {
     VIDEO_FRAME_TYPE_DROPPABLE_FRAME = 6,
 
     VIDEO_FRAME_TYPE_UNKNOW,
-
 }
 
 export enum ORIENTATION_MODE {
@@ -384,7 +370,6 @@ export enum ORIENTATION_MODE {
     ORIENTATION_MODE_FIXED_LANDSCAPE = 1,
 
     ORIENTATION_MODE_FIXED_PORTRAIT = 2,
-
 }
 
 export enum DEGRADATION_PREFERENCE {
@@ -399,14 +384,12 @@ export enum DEGRADATION_PREFERENCE {
     MAINTAIN_RESOLUTION = 3,
 
     DISABLED = 100,
-
 }
 
 export interface VideoDimensions {
     width: number;
 
     height: number;
-
 }
 
 export enum SCREEN_CAPTURE_FRAMERATE_CAPABILITY {
@@ -415,7 +398,6 @@ export enum SCREEN_CAPTURE_FRAMERATE_CAPABILITY {
     SCREEN_CAPTURE_FRAMERATE_CAPABILITY_30_FPS = 1,
 
     SCREEN_CAPTURE_FRAMERATE_CAPABILITY_60_FPS = 2,
-
 }
 
 export enum VIDEO_CODEC_CAPABILITY_LEVEL {
@@ -428,7 +410,6 @@ export enum VIDEO_CODEC_CAPABILITY_LEVEL {
     CODEC_CAPABILITY_LEVEL_1080P60FPS = 20,
 
     CODEC_CAPABILITY_LEVEL_4K60FPS = 30,
-
 }
 
 export enum VIDEO_CODEC_TYPE {
@@ -449,7 +430,6 @@ export enum VIDEO_CODEC_TYPE {
     VIDEO_CODEC_VP9 = 13,
 
     VIDEO_CODEC_GENERIC_JPEG = 20,
-
 }
 
 export enum CAMERA_FOCAL_LENGTH_TYPE {
@@ -460,14 +440,12 @@ export enum CAMERA_FOCAL_LENGTH_TYPE {
     CAMERA_FOCAL_LENGTH_ULTRA_WIDE = 2,
 
     CAMERA_FOCAL_LENGTH_TELEPHOTO = 3,
-
 }
 
 export enum TCcMode {
     CC_ENABLED,
 
     CC_DISABLED,
-
 }
 
 export interface SenderOptions {
@@ -476,7 +454,6 @@ export interface SenderOptions {
     codecType: VIDEO_CODEC_TYPE;
 
     targetBitrate: number;
-
 }
 
 export enum AUDIO_CODEC_TYPE {
@@ -499,7 +476,6 @@ export enum AUDIO_CODEC_TYPE {
     AUDIO_CODEC_LPCNET = 12,
 
     AUDIO_CODEC_OPUSMC = 13,
-
 }
 
 export enum AUDIO_ENCODING_TYPE {
@@ -524,21 +500,18 @@ export enum AUDIO_ENCODING_TYPE {
     AUDIO_ENCODING_TYPE_OPUS_48000_MEDIUM = 0x020302,
 
     AUDIO_ENCODING_TYPE_OPUS_48000_HIGH = 0x020303,
-
 }
 
 export enum WATERMARK_FIT_MODE {
     FIT_MODE_COVER_POSITION = 0,
 
     FIT_MODE_USE_IMAGE_RATIO = 1,
-
 }
 
 export interface EncodedAudioFrameAdvancedSettings {
     speech: boolean;
 
     sendEvenIfEmpty: boolean;
-
 }
 
 export interface EncodedAudioFrameInfo {
@@ -553,7 +526,6 @@ export interface EncodedAudioFrameInfo {
     advancedSettings: EncodedAudioFrameAdvancedSettings;
 
     captureTimeMs: number;
-
 }
 
 export interface AudioPcmDataInfo {
@@ -566,14 +538,12 @@ export interface AudioPcmDataInfo {
     elapsedTimeMs: number;
 
     ntpTimeMs: number;
-
 }
 
 export enum H264PacketizeMode {
     NonInterleaved = 0,
 
     SingleNalUnit,
-
 }
 
 export enum VIDEO_STREAM_TYPE {
@@ -592,19 +562,16 @@ export enum VIDEO_STREAM_TYPE {
     VIDEO_STREAM_LAYER_5 = 8,
 
     VIDEO_STREAM_LAYER_6 = 9,
-
 }
 
 export interface VideoSubscriptionOptions {
     type?: VIDEO_STREAM_TYPE;
 
     encodedFrameOnly?: boolean;
-
 }
 
 export enum MAX_USER_ACCOUNT_LENGTH_TYPE {
     MAX_USER_ACCOUNT_LENGTH = 256,
-
 }
 
 export interface EncodedVideoFrameInfo {
@@ -629,7 +596,6 @@ export interface EncodedVideoFrameInfo {
     streamType: VIDEO_STREAM_TYPE;
 
     presentationMs: number;
-
 }
 
 export enum COMPRESSION_PREFERENCE {
@@ -638,7 +604,6 @@ export enum COMPRESSION_PREFERENCE {
     PREFER_LOW_LATENCY = 0,
 
     PREFER_QUALITY = 1,
-
 }
 
 export enum ENCODING_PREFERENCE {
@@ -647,7 +612,6 @@ export enum ENCODING_PREFERENCE {
     PREFER_SOFTWARE = 0,
 
     PREFER_HARDWARE = 1,
-
 }
 
 export interface AdvanceOptions {
@@ -656,7 +620,6 @@ export interface AdvanceOptions {
     compressionPreference: COMPRESSION_PREFERENCE;
 
     encodeAlpha: boolean;
-
 }
 
 export enum VIDEO_MIRROR_MODE_TYPE {
@@ -665,14 +628,12 @@ export enum VIDEO_MIRROR_MODE_TYPE {
     VIDEO_MIRROR_MODE_ENABLED = 1,
 
     VIDEO_MIRROR_MODE_DISABLED = 2,
-
 }
 
 export enum CAMERA_FORMAT_TYPE {
     CAMERA_FORMAT_NV12,
 
     CAMERA_FORMAT_BGRA,
-
 }
 
 export enum VIDEO_MODULE_TYPE {
@@ -687,7 +648,6 @@ export enum VIDEO_MODULE_TYPE {
     VIDEO_MODULE_HARDWARE_DECODER = 4,
 
     VIDEO_MODULE_RENDERER = 5,
-
 }
 
 export enum HDR_CAPABILITY {
@@ -696,7 +656,6 @@ export enum HDR_CAPABILITY {
     HDR_CAPABILITY_UNSUPPORTED = 0,
 
     HDR_CAPABILITY_SUPPORTED = 1,
-
 }
 
 export enum CODEC_CAP_MASK {
@@ -709,14 +668,12 @@ export enum CODEC_CAP_MASK {
     CODEC_CAP_MASK_SW_DEC = 1 << 2,
 
     CODEC_CAP_MASK_SW_ENC = 1 << 3,
-
 }
 
 export interface CodecCapLevels {
     hwDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL;
 
     swDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL;
-
 }
 
 export interface CodecCapInfo {
@@ -725,14 +682,12 @@ export interface CodecCapInfo {
     codecCapMask: number;
 
     codecLevels: CodecCapLevels;
-
 }
 
 export interface FocalLengthInfo {
     cameraDirection: number;
 
     focalLengthType: CAMERA_FOCAL_LENGTH_TYPE;
-
 }
 
 export interface VideoEncoderConfiguration {
@@ -753,14 +708,12 @@ export interface VideoEncoderConfiguration {
     mirrorMode: VIDEO_MIRROR_MODE_TYPE;
 
     advanceOptions: AdvanceOptions;
-
 }
 
 export interface DataStreamConfig {
     syncWithAudio: boolean;
 
     ordered: boolean;
-
 }
 
 export enum SIMULCAST_STREAM_MODE {
@@ -769,7 +722,6 @@ export enum SIMULCAST_STREAM_MODE {
     DISABLE_SIMULCAST_STREAM = 0,
 
     ENABLE_SIMULCAST_STREAM = 1,
-
 }
 
 export interface SimulcastStreamConfig {
@@ -778,14 +730,12 @@ export interface SimulcastStreamConfig {
     kBitrate: number;
 
     framerate: number;
-
 }
 
 export interface SimulcastConfig {
     configs: StreamLayerConfig[];
 
     publish_fallback_enable: boolean;
-
 }
 
 export enum StreamLayerIndex {
@@ -804,7 +754,6 @@ export enum StreamLayerIndex {
     STREAM_LOW = 6,
 
     STREAM_LAYER_COUNT_MAX = 7,
-
 }
 
 export interface StreamLayerConfig {
@@ -813,7 +762,6 @@ export interface StreamLayerConfig {
     framerate: number;
 
     enable: boolean;
-
 }
 
 export interface Rectangle {
@@ -824,7 +772,6 @@ export interface Rectangle {
     width: number;
 
     height: number;
-
 }
 
 export interface WatermarkRatio {
@@ -833,7 +780,6 @@ export interface WatermarkRatio {
     yRatio: number;
 
     widthRatio: number;
-
 }
 
 export interface WatermarkOptions {
@@ -848,7 +794,6 @@ export interface WatermarkOptions {
     mode: WATERMARK_FIT_MODE;
 
     zOrder: number;
-
 }
 
 export enum WATERMARK_SOURCE_TYPE {
@@ -859,7 +804,6 @@ export enum WATERMARK_SOURCE_TYPE {
     LITERAL = 2,
 
     TIMESTAMPS = 3,
-
 }
 
 export interface WatermarkTimestamp {
@@ -870,7 +814,6 @@ export interface WatermarkTimestamp {
     strokeWidth: number;
 
     format: string;
-
 }
 
 export interface WatermarkLiteral {
@@ -881,7 +824,6 @@ export interface WatermarkLiteral {
     wmLiteral: string;
 
     fontFilePath: string;
-
 }
 
 export interface WatermarkBuffer {
@@ -894,7 +836,6 @@ export interface WatermarkBuffer {
     format: VIDEO_PIXEL_FORMAT;
 
     buffer: Uint8Array;
-
 }
 
 export interface WatermarkConfig {
@@ -911,14 +852,12 @@ export interface WatermarkConfig {
     imageUrl: string;
 
     options: WatermarkOptions;
-
 }
 
 export enum MultipathMode {
     Duplicate = 0,
 
     Dynamic,
-
 }
 
 export enum MultipathType {
@@ -929,7 +868,6 @@ export enum MultipathType {
     Mobile,
 
     Unknown = 99,
-
 }
 
 export interface PathStats {
@@ -938,7 +876,6 @@ export interface PathStats {
     txKBitRate: number;
 
     rxKBitRate: number;
-
 }
 
 export interface MultipathStats {
@@ -957,7 +894,6 @@ export interface MultipathStats {
     activePathNum: number;
 
     pathStats: PathStats[];
-
 }
 
 export interface RtcStats {
@@ -1028,14 +964,12 @@ export interface RtcStats {
     rxPacketLossRate: number;
 
     lanAccelerateState: number;
-
 }
 
 export enum CLIENT_ROLE_TYPE {
     CLIENT_ROLE_BROADCASTER = 1,
 
     CLIENT_ROLE_AUDIENCE = 2,
-
 }
 
 export enum QUALITY_ADAPT_INDICATION {
@@ -1044,26 +978,22 @@ export enum QUALITY_ADAPT_INDICATION {
     ADAPT_UP_BANDWIDTH = 1,
 
     ADAPT_DOWN_BANDWIDTH = 2,
-
 }
 
 export enum AUDIENCE_LATENCY_LEVEL_TYPE {
     AUDIENCE_LATENCY_LEVEL_LOW_LATENCY = 1,
 
     AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY = 2,
-
 }
 
 export interface ClientRoleOptions {
     audienceLatencyLevel: AUDIENCE_LATENCY_LEVEL_TYPE;
-
 }
 
 export enum EXPERIENCE_QUALITY_TYPE {
     EXPERIENCE_QUALITY_GOOD = 0,
 
     EXPERIENCE_QUALITY_BAD = 1,
-
 }
 
 export enum EXPERIENCE_POOR_REASON {
@@ -1076,7 +1006,6 @@ export enum EXPERIENCE_POOR_REASON {
     WIRELESS_SIGNAL_POOR = 4,
 
     WIFI_BLUETOOTH_COEXIST = 8,
-
 }
 
 export enum AUDIO_AINS_MODE {
@@ -1085,7 +1014,6 @@ export enum AUDIO_AINS_MODE {
     AINS_MODE_AGGRESSIVE = 1,
 
     AINS_MODE_ULTRALOWLATENCY = 2,
-
 }
 
 export enum AUDIO_PROFILE_TYPE {
@@ -1104,7 +1032,6 @@ export enum AUDIO_PROFILE_TYPE {
     AUDIO_PROFILE_IOT = 6,
 
     AUDIO_PROFILE_NUM = 7,
-
 }
 
 export enum AUDIO_SCENARIO_TYPE {
@@ -1123,7 +1050,6 @@ export enum AUDIO_SCENARIO_TYPE {
     AUDIO_SCENARIO_AI_CLIENT = 10,
 
     AUDIO_SCENARIO_NUM = 11,
-
 }
 
 export interface VideoFormat {
@@ -1132,7 +1058,6 @@ export interface VideoFormat {
     height: number;
 
     fps: number;
-
 }
 
 export enum VIDEO_CONTENT_HINT {
@@ -1141,7 +1066,6 @@ export enum VIDEO_CONTENT_HINT {
     CONTENT_HINT_MOTION,
 
     CONTENT_HINT_DETAILS,
-
 }
 
 export enum SCREEN_SCENARIO_TYPE {
@@ -1152,7 +1076,6 @@ export enum SCREEN_SCENARIO_TYPE {
     SCREEN_SCENARIO_VIDEO = 3,
 
     SCREEN_SCENARIO_RDC = 4,
-
 }
 
 export enum VIDEO_APPLICATION_SCENARIO_TYPE {
@@ -1163,7 +1086,6 @@ export enum VIDEO_APPLICATION_SCENARIO_TYPE {
     APPLICATION_SCENARIO_1V1 = 2,
 
     APPLICATION_SCENARIO_LIVESHOW = 3,
-
 }
 
 export enum VIDEO_QOE_PREFERENCE_TYPE {
@@ -1174,7 +1096,6 @@ export enum VIDEO_QOE_PREFERENCE_TYPE {
     VIDEO_QOE_PREFERENCE_PICTURE_QUALITY_FIRST = 3,
 
     VIDEO_QOE_PREFERENCE_FLUENCY_FIRST = 4,
-
 }
 
 export enum CAPTURE_BRIGHTNESS_LEVEL_TYPE {
@@ -1185,7 +1106,6 @@ export enum CAPTURE_BRIGHTNESS_LEVEL_TYPE {
     CAPTURE_BRIGHTNESS_LEVEL_BRIGHT = 1,
 
     CAPTURE_BRIGHTNESS_LEVEL_DARK = 2,
-
 }
 
 export enum CAMERA_STABILIZATION_MODE {
@@ -1200,7 +1120,6 @@ export enum CAMERA_STABILIZATION_MODE {
     CAMERA_STABILIZATION_MODE_LEVEL_3 = 3,
 
     CAMERA_STABILIZATION_MODE_MAX_LEVEL = CAMERA_STABILIZATION_MODE_LEVEL_3,
-
 }
 
 export enum LOCAL_AUDIO_STREAM_STATE {
@@ -1211,7 +1130,6 @@ export enum LOCAL_AUDIO_STREAM_STATE {
     LOCAL_AUDIO_STREAM_STATE_ENCODING = 2,
 
     LOCAL_AUDIO_STREAM_STATE_FAILED = 3,
-
 }
 
 export enum LOCAL_AUDIO_STREAM_REASON {
@@ -1236,7 +1154,6 @@ export enum LOCAL_AUDIO_STREAM_REASON {
     LOCAL_AUDIO_STREAM_REASON_RECORD_INVALID_ID = 9,
 
     LOCAL_AUDIO_STREAM_REASON_PLAYOUT_INVALID_ID = 10,
-
 }
 
 export enum LOCAL_VIDEO_STREAM_STATE {
@@ -1247,7 +1164,6 @@ export enum LOCAL_VIDEO_STREAM_STATE {
     LOCAL_VIDEO_STREAM_STATE_ENCODING = 2,
 
     LOCAL_VIDEO_STREAM_STATE_FAILED = 3,
-
 }
 
 export enum LOCAL_VIDEO_EVENT_TYPE {
@@ -1258,7 +1174,6 @@ export enum LOCAL_VIDEO_EVENT_TYPE {
     LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_STOPPED_BY_USER = 3,
 
     LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_SYSTEM_INTERNAL_ERROR = 4,
-
 }
 
 export enum LOCAL_VIDEO_STREAM_REASON {
@@ -1323,7 +1238,6 @@ export enum LOCAL_VIDEO_STREAM_REASON {
     LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_STOPPED_BY_CALL = 33,
 
     LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_EXCLUDE_WINDOW_FAILED = 34,
-
 }
 
 export enum REMOTE_AUDIO_STATE {
@@ -1336,7 +1250,6 @@ export enum REMOTE_AUDIO_STATE {
     REMOTE_AUDIO_STATE_FROZEN = 3,
 
     REMOTE_AUDIO_STATE_FAILED = 4,
-
 }
 
 export enum REMOTE_AUDIO_STATE_REASON {
@@ -1359,7 +1272,6 @@ export enum REMOTE_AUDIO_STATE_REASON {
     REMOTE_AUDIO_REASON_NO_PACKET_RECEIVE = 8,
 
     REMOTE_AUDIO_REASON_LOCAL_PLAY_FAILED = 9,
-
 }
 
 export enum REMOTE_VIDEO_STATE {
@@ -1372,7 +1284,6 @@ export enum REMOTE_VIDEO_STATE {
     REMOTE_VIDEO_STATE_FROZEN = 3,
 
     REMOTE_VIDEO_STATE_FAILED = 4,
-
 }
 
 export enum REMOTE_VIDEO_STATE_REASON {
@@ -1403,18 +1314,16 @@ export enum REMOTE_VIDEO_STATE_REASON {
     REMOTE_VIDEO_STATE_REASON_SDK_IN_BACKGROUND = 12,
 
     REMOTE_VIDEO_STATE_REASON_CODEC_NOT_SUPPORT = 13,
-
 }
 
 export enum REMOTE_USER_STATE {
-    USER_STATE_MUTE_AUDIO = (1 << 0),
+    USER_STATE_MUTE_AUDIO = 1 << 0,
 
-    USER_STATE_MUTE_VIDEO = (1 << 1),
+    USER_STATE_MUTE_VIDEO = 1 << 1,
 
-    USER_STATE_ENABLE_VIDEO = (1 << 4),
+    USER_STATE_ENABLE_VIDEO = 1 << 4,
 
-    USER_STATE_ENABLE_LOCAL_VIDEO = (1 << 8),
-
+    USER_STATE_ENABLE_LOCAL_VIDEO = 1 << 8,
 }
 
 export interface VideoTrackInfo {
@@ -1433,7 +1342,6 @@ export interface VideoTrackInfo {
     sourceType: VIDEO_SOURCE_TYPE;
 
     observationPosition: number;
-
 }
 
 export enum REMOTE_VIDEO_DOWNSCALE_LEVEL {
@@ -1446,7 +1354,6 @@ export enum REMOTE_VIDEO_DOWNSCALE_LEVEL {
     REMOTE_VIDEO_DOWNSCALE_LEVEL_3,
 
     REMOTE_VIDEO_DOWNSCALE_LEVEL_4,
-
 }
 
 export interface AudioVolumeInfo {
@@ -1457,14 +1364,11 @@ export interface AudioVolumeInfo {
     vad: number;
 
     voicePitch: number;
-
 }
 
 export interface DeviceInfo {
-
-    isLowLatencyAudioSupported: boolean
-
-};
+    isLowLatencyAudioSupported: boolean;
+}
 
 export enum AUDIO_SAMPLE_RATE_TYPE {
     AUDIO_SAMPLE_RATE_32000 = 32000,
@@ -1472,14 +1376,12 @@ export enum AUDIO_SAMPLE_RATE_TYPE {
     AUDIO_SAMPLE_RATE_44100 = 44100,
 
     AUDIO_SAMPLE_RATE_48000 = 48000,
-
 }
 
 export enum VIDEO_CODEC_TYPE_FOR_STREAM {
     VIDEO_CODEC_H264_FOR_STREAM = 1,
 
     VIDEO_CODEC_H265_FOR_STREAM = 2,
-
 }
 
 export enum VIDEO_CODEC_PROFILE_TYPE {
@@ -1488,7 +1390,6 @@ export enum VIDEO_CODEC_PROFILE_TYPE {
     VIDEO_CODEC_PROFILE_MAIN = 77,
 
     VIDEO_CODEC_PROFILE_HIGH = 100,
-
 }
 
 export enum AUDIO_CODEC_PROFILE_TYPE {
@@ -1497,7 +1398,6 @@ export enum AUDIO_CODEC_PROFILE_TYPE {
     AUDIO_CODEC_PROFILE_HE_AAC = 1,
 
     AUDIO_CODEC_PROFILE_HE_AAC_V2 = 2,
-
 }
 
 export interface LocalAudioStats {
@@ -1518,7 +1418,6 @@ export interface LocalAudioStats {
     earMonitorDelay: number;
 
     aecEstimatedDelay: number;
-
 }
 
 export enum RTMP_STREAM_PUBLISH_STATE {
@@ -1533,7 +1432,6 @@ export enum RTMP_STREAM_PUBLISH_STATE {
     RTMP_STREAM_PUBLISH_STATE_FAILURE = 4,
 
     RTMP_STREAM_PUBLISH_STATE_DISCONNECTING = 5,
-
 }
 
 export enum RTMP_STREAM_PUBLISH_REASON {
@@ -1570,7 +1468,6 @@ export enum RTMP_STREAM_PUBLISH_REASON {
     RTMP_STREAM_PUBLISH_REASON_INVALID_PRIVILEGE = 16,
 
     RTMP_STREAM_UNPUBLISH_REASON_OK = 100,
-
 }
 
 export enum RTMP_STREAMING_EVENT {
@@ -1581,7 +1478,6 @@ export enum RTMP_STREAMING_EVENT {
     RTMP_STREAMING_EVENT_ADVANCED_FEATURE_NOT_SUPPORT = 3,
 
     RTMP_STREAMING_EVENT_REQUEST_TOO_OFTEN = 4,
-
 }
 
 export interface RtcImage {
@@ -1598,14 +1494,12 @@ export interface RtcImage {
     zOrder: number;
 
     alpha: number;
-
 }
 
 export interface LiveStreamAdvancedFeature {
     featureName: string;
 
     opened: boolean;
-
 }
 
 export enum CONNECTION_STATE_TYPE {
@@ -1618,7 +1512,6 @@ export enum CONNECTION_STATE_TYPE {
     CONNECTION_STATE_RECONNECTING = 4,
 
     CONNECTION_STATE_FAILED = 5,
-
 }
 
 export interface TranscodingUser {
@@ -1637,7 +1530,6 @@ export interface TranscodingUser {
     alpha: number;
 
     audioChannel: number;
-
 }
 
 export interface LiveTranscoding {
@@ -1686,7 +1578,6 @@ export interface LiveTranscoding {
     advancedFeatures: LiveStreamAdvancedFeature[];
 
     advancedFeatureCount: number;
-
 }
 
 export interface TranscodingVideoStream {
@@ -1711,7 +1602,6 @@ export interface TranscodingVideoStream {
     alpha: number;
 
     mirror: boolean;
-
 }
 
 export interface LocalTranscoderConfiguration {
@@ -1722,7 +1612,6 @@ export interface LocalTranscoderConfiguration {
     videoOutputConfiguration: VideoEncoderConfiguration;
 
     syncWithPrimaryCamera: boolean;
-
 }
 
 export enum VIDEO_TRANSCODER_ERROR {
@@ -1737,7 +1626,6 @@ export enum VIDEO_TRANSCODER_ERROR {
     VT_ERR_INVALID_LAYOUT = 5,
 
     VT_ERR_INTERNAL = 20,
-
 }
 
 export interface MixedAudioStream {
@@ -1748,7 +1636,6 @@ export interface MixedAudioStream {
     channelId: string;
 
     trackId: number;
-
 }
 
 export interface LocalAudioMixerConfiguration {
@@ -1757,7 +1644,6 @@ export interface LocalAudioMixerConfiguration {
     audioInputStreams: MixedAudioStream[];
 
     syncWithLocalMic: boolean;
-
 }
 
 export interface LastmileProbeConfig {
@@ -1768,7 +1654,6 @@ export interface LastmileProbeConfig {
     expectedUplinkBitrate: number;
 
     expectedDownlinkBitrate: number;
-
 }
 
 export enum LASTMILE_PROBE_RESULT_STATE {
@@ -1777,7 +1662,6 @@ export enum LASTMILE_PROBE_RESULT_STATE {
     LASTMILE_PROBE_RESULT_INCOMPLETE_NO_BWE = 2,
 
     LASTMILE_PROBE_RESULT_UNAVAILABLE = 3,
-
 }
 
 export interface LastmileProbeOneWayResult {
@@ -1786,7 +1670,6 @@ export interface LastmileProbeOneWayResult {
     jitter: number;
 
     availableBandwidth: number;
-
 }
 
 export interface LastmileProbeResult {
@@ -1797,7 +1680,6 @@ export interface LastmileProbeResult {
     downlinkReport: LastmileProbeOneWayResult;
 
     rtt: number;
-
 }
 
 export enum CONNECTION_CHANGED_REASON_TYPE {
@@ -1850,7 +1732,6 @@ export enum CONNECTION_CHANGED_REASON_TYPE {
     CONNECTION_CHANGED_STREAM_CHANNEL_NOT_AVAILABLE = 23,
 
     CONNECTION_CHANGED_INCONSISTENT_APPID = 24,
-
 }
 
 export enum CLIENT_ROLE_CHANGE_FAILED_REASON {
@@ -1861,7 +1742,6 @@ export enum CLIENT_ROLE_CHANGE_FAILED_REASON {
     CLIENT_ROLE_CHANGE_FAILED_REQUEST_TIME_OUT = 3,
 
     CLIENT_ROLE_CHANGE_FAILED_CONNECTION_FAILED = 4,
-
 }
 
 export enum NETWORK_TYPE {
@@ -1880,7 +1760,6 @@ export enum NETWORK_TYPE {
     NETWORK_TYPE_MOBILE_4G = 5,
 
     NETWORK_TYPE_MOBILE_5G = 6,
-
 }
 
 export enum VIDEO_VIEW_SETUP_MODE {
@@ -1889,7 +1768,6 @@ export enum VIDEO_VIEW_SETUP_MODE {
     VIDEO_VIEW_SETUP_ADD = 1,
 
     VIDEO_VIEW_SETUP_REMOVE = 2,
-
 }
 
 export interface VideoCanvas {
@@ -1916,7 +1794,6 @@ export interface VideoCanvas {
     enableAlphaMask: boolean;
 
     position: VIDEO_MODULE_POSITION;
-
 }
 
 export interface BeautyOptions {
@@ -1929,7 +1806,6 @@ export interface BeautyOptions {
     rednessLevel: number;
 
     sharpnessLevel: number;
-
 }
 
 export enum LIGHTENING_CONTRAST_LEVEL {
@@ -1938,14 +1814,12 @@ export enum LIGHTENING_CONTRAST_LEVEL {
     LIGHTENING_CONTRAST_NORMAL = 1,
 
     LIGHTENING_CONTRAST_HIGH = 2,
-
 }
 
 export interface FaceShapeAreaOptions {
     shapeArea: FACE_SHAPE_AREA;
 
     shapeIntensity: number;
-
 }
 
 export enum FACE_SHAPE_AREA {
@@ -2008,14 +1882,12 @@ export enum FACE_SHAPE_AREA {
     FACE_SHAPE_AREA_EYEBROWPOSITION = 500,
 
     FACE_SHAPE_AREA_EYEBROWTHICKNESS = 501,
-
 }
 
 export interface FaceShapeBeautyOptions {
     shapeStyle: FACE_SHAPE_BEAUTY_STYLE;
 
     styleIntensity: number;
-
 }
 
 export enum FACE_SHAPE_BEAUTY_STYLE {
@@ -2024,63 +1896,54 @@ export enum FACE_SHAPE_BEAUTY_STYLE {
     FACE_SHAPE_BEAUTY_STYLE_MALE = 1,
 
     FACE_SHAPE_BEAUTY_STYLE_NATURAL = 2,
-
 }
 
 export interface FilterEffectOptions {
     path: string;
 
     strength: number;
-
 }
 
 export interface LowlightEnhanceOptions {
     mode: LOW_LIGHT_ENHANCE_MODE;
 
     level: LOW_LIGHT_ENHANCE_LEVEL;
-
 }
 
 export enum LOW_LIGHT_ENHANCE_MODE {
     LOW_LIGHT_ENHANCE_AUTO = 0,
 
     LOW_LIGHT_ENHANCE_MANUAL = 1,
-
 }
 
 export enum LOW_LIGHT_ENHANCE_LEVEL {
     LOW_LIGHT_ENHANCE_LEVEL_HIGH_QUALITY = 0,
 
     LOW_LIGHT_ENHANCE_LEVEL_FAST = 1,
-
 }
 
 export interface VideoDenoiserOptions {
     mode: VIDEO_DENOISER_MODE;
 
     level: VIDEO_DENOISER_LEVEL;
-
 }
 
 export enum VIDEO_DENOISER_MODE {
     VIDEO_DENOISER_AUTO = 0,
 
     VIDEO_DENOISER_MANUAL = 1,
-
 }
 
 export enum VIDEO_DENOISER_LEVEL {
     VIDEO_DENOISER_LEVEL_HIGH_QUALITY = 0,
 
     VIDEO_DENOISER_LEVEL_FAST = 1,
-
 }
 
 export interface ColorEnhanceOptions {
     strengthLevel: number;
 
     skinProtectLevel: number;
-
 }
 
 export interface VirtualBackgroundSource {
@@ -2091,7 +1954,6 @@ export interface VirtualBackgroundSource {
     source: string;
 
     blur_degree: BACKGROUND_BLUR_DEGREE;
-
 }
 
 export enum BACKGROUND_SOURCE_TYPE {
@@ -2104,7 +1966,6 @@ export enum BACKGROUND_SOURCE_TYPE {
     BACKGROUND_BLUR = 3,
 
     BACKGROUND_VIDEO = 4,
-
 }
 
 export enum BACKGROUND_BLUR_DEGREE {
@@ -2113,7 +1974,6 @@ export enum BACKGROUND_BLUR_DEGREE {
     BLUR_DEGREE_MEDIUM = 2,
 
     BLUR_DEGREE_HIGH = 3,
-
 }
 
 export interface SegmentationProperty {
@@ -2122,14 +1982,12 @@ export interface SegmentationProperty {
     greenCapacity: number;
 
     screenColorType: SCREEN_COLOR_TYPE;
-
 }
 
 export enum SEG_MODEL_TYPE {
     SEG_MODEL_AI = 1,
 
     SEG_MODEL_GREEN = 2,
-
 }
 
 export enum SCREEN_COLOR_TYPE {
@@ -2138,7 +1996,6 @@ export enum SCREEN_COLOR_TYPE {
     SCREEN_COLOR_GREEN = 1,
 
     SCREEN_COLOR_BLUE = 2,
-
 }
 
 export enum AUDIO_TRACK_TYPE {
@@ -2147,14 +2004,12 @@ export enum AUDIO_TRACK_TYPE {
     AUDIO_TRACK_MIXABLE = 0,
 
     AUDIO_TRACK_DIRECT = 1,
-
 }
 
 export interface AudioTrackConfig {
     enableLocalPlayback: boolean;
 
     enableAudioProcessing: boolean;
-
 }
 
 export enum VOICE_BEAUTIFIER_PRESET {
@@ -2185,7 +2040,6 @@ export enum VOICE_BEAUTIFIER_PRESET {
     TIMBRE_TRANSFORMATION_RINGING = 0x01030800,
 
     ULTRA_HIGH_QUALITY_VOICE = 0x01040100,
-
 }
 
 export enum AUDIO_EFFECT_PRESET {
@@ -2209,7 +2063,7 @@ export enum AUDIO_EFFECT_PRESET {
 
     ROOM_ACOUSTICS_VIRTUAL_SURROUND_SOUND = 0x02010900,
 
-    ROOM_ACOUSTICS_CHORUS = 0x02010D00,
+    ROOM_ACOUSTICS_CHORUS = 0x02010d00,
 
     VOICE_CHANGER_EFFECT_UNCLE = 0x02020100,
 
@@ -2230,7 +2084,6 @@ export enum AUDIO_EFFECT_PRESET {
     STYLE_TRANSFORMATION_POPULAR = 0x02030200,
 
     PITCH_CORRECTION = 0x02040100,
-
 }
 
 export enum VOICE_CONVERSION_PRESET {
@@ -2254,18 +2107,17 @@ export enum VOICE_CONVERSION_PRESET {
 
     VOICE_CHANGER_TRANSFORMERS = 0x03010900,
 
-    VOICE_CHANGER_GROOT = 0x03010A00,
+    VOICE_CHANGER_GROOT = 0x03010a00,
 
-    VOICE_CHANGER_DARTH_VADER = 0x03010B00,
+    VOICE_CHANGER_DARTH_VADER = 0x03010b00,
 
-    VOICE_CHANGER_IRON_LADY = 0x03010C00,
+    VOICE_CHANGER_IRON_LADY = 0x03010c00,
 
-    VOICE_CHANGER_SHIN_CHAN = 0x03010D00,
+    VOICE_CHANGER_SHIN_CHAN = 0x03010d00,
 
-    VOICE_CHANGER_GIRLISH_MAN = 0x03010E00,
+    VOICE_CHANGER_GIRLISH_MAN = 0x03010e00,
 
-    VOICE_CHANGER_CHIPMUNK = 0x03010F00,
-
+    VOICE_CHANGER_CHIPMUNK = 0x03010f00,
 }
 
 export enum HEADPHONE_EQUALIZER_PRESET {
@@ -2274,7 +2126,6 @@ export enum HEADPHONE_EQUALIZER_PRESET {
     HEADPHONE_EQUALIZER_OVEREAR = 0x04000001,
 
     HEADPHONE_EQUALIZER_INEAR = 0x04000002,
-
 }
 
 export enum VOICE_AI_TUNER_TYPE {
@@ -2297,7 +2148,6 @@ export enum VOICE_AI_TUNER_TYPE {
     VOICE_AI_TUNER_POWERFUL_MALE_SINGING,
 
     VOICE_AI_TUNER_DREAMY_FEMALE_SINGING,
-
 }
 
 export interface ScreenAudioParameters {
@@ -2308,7 +2158,6 @@ export interface ScreenAudioParameters {
     captureSignalVolume: number;
 
     excludeCurrentProcessAudio: boolean;
-
 }
 
 export interface ScreenCaptureParameters {
@@ -2335,7 +2184,6 @@ export interface ScreenCaptureParameters {
     highLightColor: number;
 
     enableHighLight: boolean;
-
 }
 
 export enum AUDIO_RECORDING_QUALITY_TYPE {
@@ -2346,7 +2194,6 @@ export enum AUDIO_RECORDING_QUALITY_TYPE {
     AUDIO_RECORDING_QUALITY_HIGH = 2,
 
     AUDIO_RECORDING_QUALITY_ULTRA_HIGH = 3,
-
 }
 
 export enum AUDIO_FILE_RECORDING_TYPE {
@@ -2355,7 +2202,6 @@ export enum AUDIO_FILE_RECORDING_TYPE {
     AUDIO_FILE_RECORDING_PLAYBACK = 2,
 
     AUDIO_FILE_RECORDING_MIXED = 3,
-
 }
 
 export enum AUDIO_ENCODED_FRAME_OBSERVER_POSITION {
@@ -2364,7 +2210,6 @@ export enum AUDIO_ENCODED_FRAME_OBSERVER_POSITION {
     AUDIO_ENCODED_FRAME_OBSERVER_POSITION_PLAYBACK = 2,
 
     AUDIO_ENCODED_FRAME_OBSERVER_POSITION_MIXED = 3,
-
 }
 
 export interface AudioRecordingConfiguration {
@@ -2379,14 +2224,12 @@ export interface AudioRecordingConfiguration {
     quality: AUDIO_RECORDING_QUALITY_TYPE;
 
     recordingChannel: number;
-
 }
 
 export interface AudioEncodedFrameObserverConfig {
     postionType: AUDIO_ENCODED_FRAME_OBSERVER_POSITION;
 
     encodingType: AUDIO_ENCODING_TYPE;
-
 }
 
 export enum AREA_CODE {
@@ -2402,8 +2245,7 @@ export enum AREA_CODE {
 
     AREA_CODE_IN = 0x00000020,
 
-    AREA_CODE_GLOB = (0xFFFFFFFF),
-
+    AREA_CODE_GLOB = 0xffffffff,
 }
 
 export enum AREA_CODE_EX {
@@ -2421,8 +2263,7 @@ export enum AREA_CODE_EX {
 
     AREA_CODE_RU = 0x00001000,
 
-    AREA_CODE_OVS = 0xFFFFFFFE,
-
+    AREA_CODE_OVS = 0xfffffffe,
 }
 
 export enum CHANNEL_MEDIA_RELAY_ERROR {
@@ -2449,7 +2290,6 @@ export enum CHANNEL_MEDIA_RELAY_ERROR {
     RELAY_ERROR_SRC_TOKEN_EXPIRED = 10,
 
     RELAY_ERROR_DEST_TOKEN_EXPIRED = 11,
-
 }
 
 export enum CHANNEL_MEDIA_RELAY_STATE {
@@ -2460,7 +2300,6 @@ export enum CHANNEL_MEDIA_RELAY_STATE {
     RELAY_STATE_RUNNING = 2,
 
     RELAY_STATE_FAILURE = 3,
-
 }
 
 export interface ChannelMediaInfo {
@@ -2469,7 +2308,6 @@ export interface ChannelMediaInfo {
     channelName: string;
 
     token: string;
-
 }
 
 export interface ChannelMediaRelayConfiguration {
@@ -2478,12 +2316,10 @@ export interface ChannelMediaRelayConfiguration {
     destInfos: ChannelMediaInfo[];
 
     destCount: number;
-
 }
 
 export interface UplinkNetworkInfo {
     video_encoder_target_bitrate_bps: number;
-
 }
 
 export interface PeerDownlinkInfo {
@@ -2494,7 +2330,6 @@ export interface PeerDownlinkInfo {
     current_downscale_level: REMOTE_VIDEO_DOWNSCALE_LEVEL;
 
     expected_bitrate_bps: number;
-
 }
 
 export enum ENCRYPTION_MODE {
@@ -2515,21 +2350,17 @@ export enum ENCRYPTION_MODE {
     AES_256_GCM2 = 8,
 
     MODE_END,
-
 }
 
 export interface EncryptionConfig {
-
     encryptionMode: ENCRYPTION_MODE;
 
     encryptionKey: string | null;
 
-    encryptionKdfSalt: Uint8Array;  // uint8_t[32] → Uint8Array 或 number[]
+    encryptionKdfSalt: Uint8Array; // uint8_t[32] → Uint8Array 或 number[]
 
     datastreamEncryptionEnabled: boolean;
 }
-
-
 
 export enum ENCRYPTION_ERROR_TYPE {
     ENCRYPTION_ERROR_INTERNAL_FAILURE = 0,
@@ -2541,7 +2372,6 @@ export enum ENCRYPTION_ERROR_TYPE {
     ENCRYPTION_ERROR_DATASTREAM_DECRYPTION_FAILURE = 3,
 
     ENCRYPTION_ERROR_DATASTREAM_ENCRYPTION_FAILURE = 4,
-
 }
 
 export enum UPLOAD_ERROR_REASON {
@@ -2550,7 +2380,6 @@ export enum UPLOAD_ERROR_REASON {
     UPLOAD_NET_ERROR = 1,
 
     UPLOAD_SERVER_ERROR = 2,
-
 }
 
 export enum RENEW_TOKEN_ERROR_CODE {
@@ -2567,7 +2396,6 @@ export enum RENEW_TOKEN_ERROR_CODE {
     RENEW_TOKEN_INCONSISTENT_APPID = 5,
 
     RENEW_TOKEN_CANCELED_BY_NEW_REQUEST = 6,
-
 }
 
 export enum PERMISSION_TYPE {
@@ -2576,7 +2404,6 @@ export enum PERMISSION_TYPE {
     CAMERA = 1,
 
     SCREEN_CAPTURE = 2,
-
 }
 
 export enum STREAM_SUBSCRIBE_STATE {
@@ -2587,7 +2414,6 @@ export enum STREAM_SUBSCRIBE_STATE {
     SUB_STATE_SUBSCRIBING = 2,
 
     SUB_STATE_SUBSCRIBED = 3,
-
 }
 
 export enum STREAM_PUBLISH_STATE {
@@ -2598,7 +2424,6 @@ export enum STREAM_PUBLISH_STATE {
     PUB_STATE_PUBLISHING = 2,
 
     PUB_STATE_PUBLISHED = 3,
-
 }
 
 export interface EchoTestConfiguration {
@@ -2613,24 +2438,22 @@ export interface EchoTestConfiguration {
     channelId: string;
 
     intervalInSeconds: number;
-
 }
 
 export interface UserInfo {
     uid: number;
 
-    userAccount: string
-};
+    userAccount: string;
+}
 
 export enum EAR_MONITORING_FILTER_TYPE {
-    EAR_MONITORING_FILTER_NONE = (1 << 0),
+    EAR_MONITORING_FILTER_NONE = 1 << 0,
 
-    EAR_MONITORING_FILTER_BUILT_IN_AUDIO_FILTERS = (1 << 1),
+    EAR_MONITORING_FILTER_BUILT_IN_AUDIO_FILTERS = 1 << 1,
 
-    EAR_MONITORING_FILTER_NOISE_SUPPRESSION = (1 << 2),
+    EAR_MONITORING_FILTER_NOISE_SUPPRESSION = 1 << 2,
 
-    EAR_MONITORING_FILTER_REUSE_POST_PROCESSING_FILTER = (1 << 15),
-
+    EAR_MONITORING_FILTER_REUSE_POST_PROCESSING_FILTER = 1 << 15,
 }
 
 export enum THREAD_PRIORITY_TYPE {
@@ -2645,7 +2468,6 @@ export enum THREAD_PRIORITY_TYPE {
     HIGHEST = 4,
 
     CRITICAL = 5,
-
 }
 
 export interface ScreenVideoParameters {
@@ -2656,7 +2478,6 @@ export interface ScreenVideoParameters {
     bitrate: number;
 
     contentHint: VIDEO_CONTENT_HINT;
-
 }
 
 export interface ScreenCaptureParameters2 {
@@ -2667,14 +2488,12 @@ export interface ScreenCaptureParameters2 {
     captureVideo: boolean;
 
     videoParams: ScreenVideoParameters;
-
 }
 
 export enum MEDIA_TRACE_EVENT {
     MEDIA_TRACE_EVENT_VIDEO_RENDERED = 0,
 
     MEDIA_TRACE_EVENT_VIDEO_DECODED,
-
 }
 
 export interface VideoRenderingTracingInfo {
@@ -2691,21 +2510,18 @@ export interface VideoRenderingTracingInfo {
     remoteJoined2UnmuteVideo: number;
 
     remoteJoined2PacketReceived: number;
-
 }
 
 export enum CONFIG_FETCH_TYPE {
     CONFIG_FETCH_TYPE_INITIALIZE = 1,
 
     CONFIG_FETCH_TYPE_JOIN_CHANNEL = 2,
-
 }
 
 export enum LOCAL_PROXY_MODE {
     ConnectivityFirst = 0,
 
     LocalOnly = 1,
-
 }
 
 export interface LogUploadServerInfo {
@@ -2716,12 +2532,10 @@ export interface LogUploadServerInfo {
     serverPort: number;
 
     serverHttps: boolean;
-
 }
 
 export interface AdvancedConfigInfo {
     logUploadServer: LogUploadServerInfo;
-
 }
 
 export interface LocalAccessPointConfiguration {
@@ -2740,14 +2554,12 @@ export interface LocalAccessPointConfiguration {
     advancedConfig: AdvancedConfigInfo;
 
     disableAut: boolean;
-
 }
 
 export enum RecorderStreamType {
     RTC,
 
     PREVIEW,
-
 }
 
 export interface RecorderStreamInfo {
@@ -2756,7 +2568,6 @@ export interface RecorderStreamInfo {
     uid: number;
 
     type: RecorderStreamType;
-
 }
 
 export enum RdtStreamType {
@@ -2765,7 +2576,6 @@ export enum RdtStreamType {
     RDT_STREAM_DATA,
 
     RDT_STREAM_COUNT,
-
 }
 
 export enum RdtState {
@@ -2778,7 +2588,6 @@ export enum RdtState {
     RDT_STATE_PENDING,
 
     RDT_STATE_BROKEN,
-
 }
 
 export interface SpatialAudioParams {
@@ -2797,7 +2606,6 @@ export interface SpatialAudioParams {
     speaker_attenuation?: number;
 
     enable_doppler?: boolean;
-
 }
 
 export interface VideoLayout {
@@ -2816,5 +2624,4 @@ export interface VideoLayout {
     height: number;
 
     videoState: number;
-
 }

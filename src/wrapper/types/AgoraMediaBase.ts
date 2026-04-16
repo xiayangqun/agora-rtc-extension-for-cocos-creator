@@ -1,6 +1,5 @@
 import { IVideoFrameMetaInfo } from "../interface/IVideoFrameMetaInfo";
 
-
 export interface ExtensionContext {
     isValid: boolean;
 
@@ -9,7 +8,6 @@ export interface ExtensionContext {
     providerName: string;
 
     extensionName: string;
-
 }
 
 export enum VIDEO_SOURCE_TYPE {
@@ -50,7 +48,6 @@ export enum VIDEO_SOURCE_TYPE {
     VIDEO_SOURCE_SPEECH_DRIVEN = 15,
 
     VIDEO_SOURCE_UNKNOWN = 100,
-
 }
 
 export enum AUDIO_SOURCE_TYPE {
@@ -69,7 +66,6 @@ export enum AUDIO_SOURCE_TYPE {
     AUDIO_SOURCE_REMOTE_CHANNEL = 6,
 
     AUDIO_SOURCE_UNKNOWN = 100,
-
 }
 
 export enum AudioRoute {
@@ -96,12 +92,10 @@ export enum AudioRoute {
     ROUTE_AIRPLAY = 9,
 
     ROUTE_BLUETOOTH_DEVICE_A2DP = 10,
-
 }
 
 export enum BYTES_PER_SAMPLE {
     TWO_BYTES_PER_SAMPLE = 2,
-
 }
 
 export interface AudioParameters {
@@ -110,14 +104,12 @@ export interface AudioParameters {
     channels: number;
 
     frames_per_buffer: number;
-
 }
 
 export enum RAW_AUDIO_FRAME_OP_MODE_TYPE {
     RAW_AUDIO_FRAME_OP_MODE_READ_ONLY = 0,
 
     RAW_AUDIO_FRAME_OP_MODE_READ_WRITE = 2,
-
 }
 
 export enum MEDIA_SOURCE_TYPE {
@@ -150,21 +142,18 @@ export enum MEDIA_SOURCE_TYPE {
     SPEECH_DRIVEN_VIDEO_SOURCE = 13,
 
     UNKNOWN_MEDIA_SOURCE = 100,
-
 }
 
 export interface PacketOptions {
     timestamp: number;
 
     audioLevelIndication: number;
-
 }
 
 export interface AudioEncodedFrameInfo {
     sendTs: number;
 
     codec: number;
-
 }
 
 export interface AudioPcmFrame {
@@ -183,7 +172,6 @@ export interface AudioPcmFrame {
     data_: Uint16Array;
 
     is_stereo_: boolean;
-
 }
 
 export enum AUDIO_DUAL_MONO_MODE {
@@ -194,7 +182,6 @@ export enum AUDIO_DUAL_MONO_MODE {
     AUDIO_DUAL_MONO_R = 2,
 
     AUDIO_DUAL_MONO_MIX = 3,
-
 }
 
 export enum VIDEO_PIXEL_FORMAT {
@@ -227,7 +214,6 @@ export enum VIDEO_PIXEL_FORMAT {
     VIDEO_TEXTURE_ID3D11TEXTURE2D = 17,
 
     VIDEO_PIXEL_I010 = 18,
-
 }
 
 export enum RENDER_MODE_TYPE {
@@ -236,7 +222,6 @@ export enum RENDER_MODE_TYPE {
     RENDER_MODE_FIT = 2,
 
     RENDER_MODE_ADAPTIVE = 3,
-
 }
 
 export enum CAMERA_VIDEO_SOURCE_TYPE {
@@ -245,12 +230,10 @@ export enum CAMERA_VIDEO_SOURCE_TYPE {
     CAMERA_SOURCE_BACK = 1,
 
     VIDEO_SOURCE_UNSPECIFIED = 2,
-
 }
 
 export enum META_INFO_KEY {
     KEY_FACE_CAPTURE = 0,
-
 }
 
 export interface ColorSpace {
@@ -261,7 +244,6 @@ export interface ColorSpace {
     matrix: MatrixID;
 
     range: RangeID;
-
 }
 
 export enum PrimaryID {
@@ -288,7 +270,6 @@ export enum PrimaryID {
     PRIMARYID_SMPTEST432 = 12,
 
     PRIMARYID_JEDECP22 = 22,
-
 }
 
 export enum RangeID {
@@ -299,7 +280,6 @@ export enum RangeID {
     RANGEID_FULL = 2,
 
     RANGEID_DERIVED = 3,
-
 }
 
 export enum MatrixID {
@@ -330,7 +310,6 @@ export enum MatrixID {
     MATRIXID_CDCLS = 13,
 
     MATRIXID_BT2100_ICTCP = 14,
-
 }
 
 export enum TransferID {
@@ -367,7 +346,6 @@ export enum TransferID {
     TRANSFERID_SMPTEST428 = 17,
 
     TRANSFERID_ARIB_STD_B67 = 18,
-
 }
 
 export interface Hdr10MetadataInfo {
@@ -394,7 +372,6 @@ export interface Hdr10MetadataInfo {
     maxContentLightLevel: number;
 
     maxFrameAverageLightLevel: number;
-
 }
 
 export enum ALPHA_STITCH_MODE {
@@ -407,7 +384,6 @@ export enum ALPHA_STITCH_MODE {
     ALPHA_STITCH_LEFT = 3,
 
     ALPHA_STITCH_RIGHT = 4,
-
 }
 
 export interface ExternalVideoFrame {
@@ -460,14 +436,12 @@ export interface ExternalVideoFrame {
     hdr10MetadataInfo: Hdr10MetadataInfo;
 
     colorSpace: ColorSpace;
-
 }
 
 export enum EGL_CONTEXT_TYPE {
     EGL_CONTEXT10 = 0,
 
     EGL_CONTEXT14 = 1,
-
 }
 
 export enum VIDEO_BUFFER_TYPE {
@@ -476,7 +450,6 @@ export enum VIDEO_BUFFER_TYPE {
     VIDEO_BUFFER_ARRAY = 2,
 
     VIDEO_BUFFER_TEXTURE = 3,
-
 }
 
 export interface VideoFrame {
@@ -527,7 +500,6 @@ export interface VideoFrame {
     hdr10MetadataInfo: Hdr10MetadataInfo;
 
     colorSpace: ColorSpace;
-
 }
 
 export enum MEDIA_PLAYER_SOURCE_TYPE {
@@ -536,7 +508,6 @@ export enum MEDIA_PLAYER_SOURCE_TYPE {
     MEDIA_PLAYER_SOURCE_FULL_FEATURED,
 
     MEDIA_PLAYER_SOURCE_SIMPLE,
-
 }
 
 export enum VIDEO_MODULE_POSITION {
@@ -547,7 +518,6 @@ export enum VIDEO_MODULE_POSITION {
     POSITION_PRE_ENCODER = 1 << 2,
 
     POSITION_POST_CAPTURER_ORIGIN = 1 << 3,
-
 }
 
 export enum CONTENT_INSPECT_RESULT {
@@ -556,7 +526,6 @@ export enum CONTENT_INSPECT_RESULT {
     CONTENT_INSPECT_SEXY = 2,
 
     CONTENT_INSPECT_PORN = 3,
-
 }
 
 export enum CONTENT_INSPECT_TYPE {
@@ -567,7 +536,6 @@ export enum CONTENT_INSPECT_TYPE {
     CONTENT_INSPECT_SUPERVISION = 2,
 
     CONTENT_INSPECT_IMAGE_MODERATION = 3,
-
 }
 
 export interface ContentInspectModule {
@@ -576,7 +544,6 @@ export interface ContentInspectModule {
     interval: number;
 
     position: VIDEO_MODULE_POSITION;
-
 }
 
 export interface ContentInspectConfig {
@@ -587,24 +554,19 @@ export interface ContentInspectConfig {
     modules: ContentInspectModule[];
 
     moduleCount: number;
-
 }
 
 export interface SnapshotConfig {
     filePath: string;
 
     position: VIDEO_MODULE_POSITION;
-
 }
 
 export enum AUDIO_FRAME_TYPE {
     FRAME_TYPE_PCM16 = 0,
-
 }
 
 export interface AudioFrame {
-
-
     type: AUDIO_FRAME_TYPE;
 
     samplesPerChannel: number;
@@ -626,7 +588,6 @@ export interface AudioFrame {
     audioTrackNumber: number;
 
     rtpTimestamp: number;
-
 }
 
 export enum AUDIO_FRAME_POSITION {
@@ -641,7 +602,6 @@ export enum AUDIO_FRAME_POSITION {
     AUDIO_FRAME_POSITION_BEFORE_MIXING = 0x0008,
 
     AUDIO_FRAME_POSITION_EAR_MONITORING = 0x0010,
-
 }
 
 export interface AudioParams {
@@ -652,40 +612,34 @@ export interface AudioParams {
     mode: RAW_AUDIO_FRAME_OP_MODE_TYPE;
 
     samples_per_call: number;
-
 }
 
 export interface AudioSpectrumData {
     audioSpectrumData: number[];
 
     dataLength: number;
-
 }
 
 export interface UserAudioSpectrumInfo {
     uid: number;
 
     spectrumData: AudioSpectrumData;
-
 }
 
 export enum VIDEO_FRAME_PROCESS_MODE {
     PROCESS_MODE_READ_ONLY,
 
     PROCESS_MODE_READ_WRITE,
-
 }
 
 export enum EXTERNAL_VIDEO_SOURCE_TYPE {
     VIDEO_FRAME = 0,
 
     ENCODED_VIDEO_FRAME,
-
 }
 
 export enum MediaRecorderContainerFormat {
     FORMAT_MP4 = 1,
-
 }
 
 export enum MediaRecorderStreamType {
@@ -694,7 +648,6 @@ export enum MediaRecorderStreamType {
     STREAM_TYPE_VIDEO = 0x02,
 
     STREAM_TYPE_BOTH = STREAM_TYPE_AUDIO | STREAM_TYPE_VIDEO,
-
 }
 
 export enum RecorderState {
@@ -703,7 +656,6 @@ export enum RecorderState {
     RECORDER_STATE_START = 2,
 
     RECORDER_STATE_STOP = 3,
-
 }
 
 export enum RecorderReasonCode {
@@ -716,7 +668,6 @@ export enum RecorderReasonCode {
     RECORDER_REASON_OVER_MAX_DURATION = 3,
 
     RECORDER_REASON_CONFIG_CHANGED = 4,
-
 }
 
 export interface MediaRecorderConfiguration {
@@ -741,7 +692,6 @@ export interface MediaRecorderConfiguration {
     channel_num: number;
 
     videoSourceType: VIDEO_SOURCE_TYPE;
-
 }
 
 export interface RecorderInfo {
@@ -750,6 +700,4 @@ export interface RecorderInfo {
     durationMs: number;
 
     fileSize: number;
-
 }
-

@@ -1,957 +1,887 @@
-import { QUALITY_ADAPT_INDICATION, VIDEO_CODEC_TYPE, CAPTURE_BRIGHTNESS_LEVEL_TYPE, VideoDimensions, VIDEO_STREAM_TYPE, AUDIO_SAMPLE_RATE_TYPE, CAMERA_FOCAL_LENGTH_TYPE, VideoFormat, VIDEO_MIRROR_MODE_TYPE, CLIENT_ROLE_TYPE, AUDIENCE_LATENCY_LEVEL_TYPE, CHANNEL_PROFILE_TYPE, MultipathMode, MultipathType, AUDIO_SCENARIO_TYPE, AREA_CODE, THREAD_PRIORITY_TYPE, Rectangle, ScreenCaptureParameters } from "./AgoraBase";
+import {
+    QUALITY_ADAPT_INDICATION,
+    VIDEO_CODEC_TYPE,
+    CAPTURE_BRIGHTNESS_LEVEL_TYPE,
+    VideoDimensions,
+    VIDEO_STREAM_TYPE,
+    AUDIO_SAMPLE_RATE_TYPE,
+    CAMERA_FOCAL_LENGTH_TYPE,
+    VideoFormat,
+    VIDEO_MIRROR_MODE_TYPE,
+    CLIENT_ROLE_TYPE,
+    AUDIENCE_LATENCY_LEVEL_TYPE,
+    CHANNEL_PROFILE_TYPE,
+    MultipathMode,
+    MultipathType,
+    AUDIO_SCENARIO_TYPE,
+    AREA_CODE,
+    THREAD_PRIORITY_TYPE,
+    Rectangle,
+    ScreenCaptureParameters,
+} from "./AgoraBase";
 import { LogConfig } from "./AgoraLog";
 import { RENDER_MODE_TYPE, MEDIA_SOURCE_TYPE } from "./AgoraMediaBase";
 
-   
-    export enum MEDIA_DEVICE_TYPE
-    {
-        UNKNOWN_AUDIO_DEVICE = -1,
+export enum MEDIA_DEVICE_TYPE {
+    UNKNOWN_AUDIO_DEVICE = -1,
 
-        AUDIO_PLAYOUT_DEVICE = 0,
+    AUDIO_PLAYOUT_DEVICE = 0,
 
-        AUDIO_RECORDING_DEVICE = 1,
+    AUDIO_RECORDING_DEVICE = 1,
 
-        VIDEO_RENDER_DEVICE = 2,
+    VIDEO_RENDER_DEVICE = 2,
 
-        VIDEO_CAPTURE_DEVICE = 3,
+    VIDEO_CAPTURE_DEVICE = 3,
 
-        AUDIO_APPLICATION_PLAYOUT_DEVICE = 4,
+    AUDIO_APPLICATION_PLAYOUT_DEVICE = 4,
 
-        AUDIO_VIRTUAL_PLAYOUT_DEVICE = 5,
+    AUDIO_VIRTUAL_PLAYOUT_DEVICE = 5,
 
-        AUDIO_VIRTUAL_RECORDING_DEVICE = 6,
+    AUDIO_VIRTUAL_RECORDING_DEVICE = 6,
+}
 
-    }
+export enum AUDIO_MIXING_STATE_TYPE {
+    AUDIO_MIXING_STATE_PLAYING = 710,
 
-    export enum AUDIO_MIXING_STATE_TYPE
-    {
-        AUDIO_MIXING_STATE_PLAYING = 710,
+    AUDIO_MIXING_STATE_PAUSED = 711,
 
-        AUDIO_MIXING_STATE_PAUSED = 711,
+    AUDIO_MIXING_STATE_STOPPED = 713,
 
-        AUDIO_MIXING_STATE_STOPPED = 713,
+    AUDIO_MIXING_STATE_FAILED = 714,
+}
 
-        AUDIO_MIXING_STATE_FAILED = 714,
+export enum AUDIO_MIXING_REASON_TYPE {
+    AUDIO_MIXING_REASON_CAN_NOT_OPEN = 701,
 
-    }
+    AUDIO_MIXING_REASON_TOO_FREQUENT_CALL = 702,
 
-    export enum AUDIO_MIXING_REASON_TYPE
-    {
-        AUDIO_MIXING_REASON_CAN_NOT_OPEN = 701,
+    AUDIO_MIXING_REASON_INTERRUPTED_EOF = 703,
 
-        AUDIO_MIXING_REASON_TOO_FREQUENT_CALL = 702,
+    AUDIO_MIXING_REASON_ONE_LOOP_COMPLETED = 721,
 
-        AUDIO_MIXING_REASON_INTERRUPTED_EOF = 703,
+    AUDIO_MIXING_REASON_ALL_LOOPS_COMPLETED = 723,
 
-        AUDIO_MIXING_REASON_ONE_LOOP_COMPLETED = 721,
+    AUDIO_MIXING_REASON_STOPPED_BY_USER = 724,
 
-        AUDIO_MIXING_REASON_ALL_LOOPS_COMPLETED = 723,
+    AUDIO_MIXING_REASON_RESUMED_BY_USER = 726,
 
-        AUDIO_MIXING_REASON_STOPPED_BY_USER = 724,
+    AUDIO_MIXING_REASON_OK = 0,
+}
 
-        AUDIO_MIXING_REASON_RESUMED_BY_USER = 726,
+export enum INJECT_STREAM_STATUS {
+    INJECT_STREAM_STATUS_START_SUCCESS = 0,
 
-        AUDIO_MIXING_REASON_OK = 0,
+    INJECT_STREAM_STATUS_START_ALREADY_EXISTS = 1,
 
-    }
+    INJECT_STREAM_STATUS_START_UNAUTHORIZED = 2,
 
-    export enum INJECT_STREAM_STATUS
-    {
-        INJECT_STREAM_STATUS_START_SUCCESS = 0,
+    INJECT_STREAM_STATUS_START_TIMEDOUT = 3,
 
-        INJECT_STREAM_STATUS_START_ALREADY_EXISTS = 1,
+    INJECT_STREAM_STATUS_START_FAILED = 4,
 
-        INJECT_STREAM_STATUS_START_UNAUTHORIZED = 2,
+    INJECT_STREAM_STATUS_STOP_SUCCESS = 5,
 
-        INJECT_STREAM_STATUS_START_TIMEDOUT = 3,
+    INJECT_STREAM_STATUS_STOP_NOT_FOUND = 6,
 
-        INJECT_STREAM_STATUS_START_FAILED = 4,
+    INJECT_STREAM_STATUS_STOP_UNAUTHORIZED = 7,
 
-        INJECT_STREAM_STATUS_STOP_SUCCESS = 5,
+    INJECT_STREAM_STATUS_STOP_TIMEDOUT = 8,
 
-        INJECT_STREAM_STATUS_STOP_NOT_FOUND = 6,
+    INJECT_STREAM_STATUS_STOP_FAILED = 9,
 
-        INJECT_STREAM_STATUS_STOP_UNAUTHORIZED = 7,
+    INJECT_STREAM_STATUS_BROKEN = 10,
+}
 
-        INJECT_STREAM_STATUS_STOP_TIMEDOUT = 8,
+export enum AUDIO_EQUALIZATION_BAND_FREQUENCY {
+    AUDIO_EQUALIZATION_BAND_31 = 0,
 
-        INJECT_STREAM_STATUS_STOP_FAILED = 9,
+    AUDIO_EQUALIZATION_BAND_62 = 1,
 
-        INJECT_STREAM_STATUS_BROKEN = 10,
+    AUDIO_EQUALIZATION_BAND_125 = 2,
 
-    }
+    AUDIO_EQUALIZATION_BAND_250 = 3,
 
-    export enum AUDIO_EQUALIZATION_BAND_FREQUENCY
-    {
-        AUDIO_EQUALIZATION_BAND_31 = 0,
+    AUDIO_EQUALIZATION_BAND_500 = 4,
 
-        AUDIO_EQUALIZATION_BAND_62 = 1,
+    AUDIO_EQUALIZATION_BAND_1K = 5,
 
-        AUDIO_EQUALIZATION_BAND_125 = 2,
+    AUDIO_EQUALIZATION_BAND_2K = 6,
 
-        AUDIO_EQUALIZATION_BAND_250 = 3,
+    AUDIO_EQUALIZATION_BAND_4K = 7,
 
-        AUDIO_EQUALIZATION_BAND_500 = 4,
+    AUDIO_EQUALIZATION_BAND_8K = 8,
 
-        AUDIO_EQUALIZATION_BAND_1K = 5,
+    AUDIO_EQUALIZATION_BAND_16K = 9,
+}
 
-        AUDIO_EQUALIZATION_BAND_2K = 6,
+export enum AUDIO_REVERB_TYPE {
+    AUDIO_REVERB_DRY_LEVEL = 0,
 
-        AUDIO_EQUALIZATION_BAND_4K = 7,
+    AUDIO_REVERB_WET_LEVEL = 1,
 
-        AUDIO_EQUALIZATION_BAND_8K = 8,
+    AUDIO_REVERB_ROOM_SIZE = 2,
 
-        AUDIO_EQUALIZATION_BAND_16K = 9,
+    AUDIO_REVERB_WET_DELAY = 3,
 
-    }
+    AUDIO_REVERB_STRENGTH = 4,
+}
 
-    export enum AUDIO_REVERB_TYPE
-    {
-        AUDIO_REVERB_DRY_LEVEL = 0,
+export enum STREAM_FALLBACK_OPTIONS {
+    STREAM_FALLBACK_OPTION_DISABLED = 0,
 
-        AUDIO_REVERB_WET_LEVEL = 1,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LOW = 1,
 
-        AUDIO_REVERB_ROOM_SIZE = 2,
+    STREAM_FALLBACK_OPTION_AUDIO_ONLY = 2,
 
-        AUDIO_REVERB_WET_DELAY = 3,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_1 = 3,
 
-        AUDIO_REVERB_STRENGTH = 4,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_2 = 4,
 
-    }
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_3 = 5,
 
-    export enum STREAM_FALLBACK_OPTIONS
-    {
-        STREAM_FALLBACK_OPTION_DISABLED = 0,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_4 = 6,
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LOW = 1,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_5 = 7,
 
-        STREAM_FALLBACK_OPTION_AUDIO_ONLY = 2,
+    STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_6 = 8,
+}
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_1 = 3,
+export enum PRIORITY_TYPE {
+    PRIORITY_HIGH = 50,
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_2 = 4,
+    PRIORITY_NORMAL = 100,
+}
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_3 = 5,
+export interface LocalVideoStats {
+    uid: number;
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_4 = 6,
+    sentBitrate: number;
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_5 = 7,
+    sentFrameRate: number;
 
-        STREAM_FALLBACK_OPTION_VIDEO_STREAM_LAYER_6 = 8,
+    captureFrameRate: number;
 
-    }
+    captureFrameWidth: number;
 
-    export enum PRIORITY_TYPE
-    {
-        PRIORITY_HIGH = 50,
+    captureFrameHeight: number;
 
-        PRIORITY_NORMAL = 100,
+    regulatedCaptureFrameRate: number;
 
-    }
+    regulatedCaptureFrameWidth: number;
 
-    export interface LocalVideoStats
-    {
-        uid:  number ;
+    regulatedCaptureFrameHeight: number;
 
-        sentBitrate:  number ;
+    encoderOutputFrameRate: number;
 
-        sentFrameRate:  number ;
+    encodedFrameWidth: number;
 
-        captureFrameRate:  number ;
+    encodedFrameHeight: number;
 
-        captureFrameWidth:  number ;
+    rendererOutputFrameRate: number;
 
-        captureFrameHeight:  number ;
+    targetBitrate: number;
 
-        regulatedCaptureFrameRate:  number ;
+    targetFrameRate: number;
 
-        regulatedCaptureFrameWidth:  number ;
+    qualityAdaptIndication: QUALITY_ADAPT_INDICATION;
 
-        regulatedCaptureFrameHeight:  number ;
+    encodedBitrate: number;
 
-        encoderOutputFrameRate:  number ;
+    encodedFrameCount: number;
 
-        encodedFrameWidth:  number ;
+    codecType: VIDEO_CODEC_TYPE;
 
-        encodedFrameHeight:  number ;
+    txPacketLossRate: number;
 
-        rendererOutputFrameRate:  number ;
+    captureBrightnessLevel: CAPTURE_BRIGHTNESS_LEVEL_TYPE;
 
-        targetBitrate:  number ;
+    dualStreamEnabled: boolean;
 
-        targetFrameRate:  number ;
+    hwEncoderAccelerating: number;
 
-        qualityAdaptIndication:  QUALITY_ADAPT_INDICATION ;
+    simulcastDimensions: VideoDimensions[];
 
-        encodedBitrate:  number ;
+    encodedFrameDepth: number;
+}
 
-        encodedFrameCount:  number ;
+export interface RemoteAudioStats {
+    uid: number;
 
-        codecType:  VIDEO_CODEC_TYPE ;
+    quality: number;
 
-        txPacketLossRate:  number ;
+    networkTransportDelay: number;
 
-        captureBrightnessLevel:  CAPTURE_BRIGHTNESS_LEVEL_TYPE ;
+    jitterBufferDelay: number;
 
-        dualStreamEnabled:  boolean ;
+    audioLossRate: number;
 
-        hwEncoderAccelerating:  number ;
+    numChannels: number;
 
-        simulcastDimensions:  VideoDimensions[] ;
+    receivedSampleRate: number;
 
-        encodedFrameDepth:  number ;
+    receivedBitrate: number;
 
-    }
+    totalFrozenTime: number;
 
-    export interface RemoteAudioStats
-    {
-        uid:  number ;
+    frozenRate: number;
 
-        quality:  number ;
+    mosValue: number;
 
-        networkTransportDelay:  number ;
+    frozenRateByCustomPlcCount: number;
 
-        jitterBufferDelay:  number ;
+    plcCount: number;
 
-        audioLossRate:  number ;
+    frozenCntByCustom: number;
 
-        numChannels:  number ;
+    frozenTimeByCustom: number;
 
-        receivedSampleRate:  number ;
+    totalActiveTime: number;
 
-        receivedBitrate:  number ;
+    publishDuration: number;
 
-        totalFrozenTime:  number ;
+    qoeQuality: number;
 
-        frozenRate:  number ;
+    qualityChangedReason: number;
 
-        mosValue:  number ;
+    rxAudioBytes: number;
 
-        frozenRateByCustomPlcCount:  number ;
+    e2eDelay: number;
+}
 
-        plcCount:  number ;
+export interface RemoteVideoStats {
+    uid: number;
 
-        frozenCntByCustom:  number ;
+    delay: number;
 
-        frozenTimeByCustom:  number ;
+    e2eDelay: number;
 
-        totalActiveTime:  number ;
+    width: number;
 
-        publishDuration:  number ;
+    height: number;
 
-        qoeQuality:  number ;
+    receivedBitrate: number;
 
-        qualityChangedReason:  number ;
+    decoderInputFrameRate: number;
 
-        rxAudioBytes:  number ;
+    decoderOutputFrameRate: number;
 
-        e2eDelay:  number ;
+    rendererOutputFrameRate: number;
 
-    }
+    frameLossRate: number;
 
-    export interface RemoteVideoStats
-    {
-        uid:  number ;
+    packetLossRate: number;
 
-        delay:  number ;
+    rxStreamType: VIDEO_STREAM_TYPE;
 
-        e2eDelay:  number ;
+    totalFrozenTime: number;
 
-        width:  number ;
+    frozenRate: number;
 
-        height:  number ;
+    avSyncTimeMs: number;
 
-        receivedBitrate:  number ;
+    totalActiveTime: number;
 
-        decoderInputFrameRate:  number ;
+    publishDuration: number;
 
-        decoderOutputFrameRate:  number ;
+    mosValue: number;
 
-        rendererOutputFrameRate:  number ;
+    rxVideoBytes: number;
+}
 
-        frameLossRate:  number ;
+export interface VideoCompositingLayout {
+    canvasWidth: number;
 
-        packetLossRate:  number ;
+    canvasHeight: number;
 
-        rxStreamType:  VIDEO_STREAM_TYPE ;
+    backgroundColor: string;
 
-        totalFrozenTime:  number ;
+    regions: Region[];
 
-        frozenRate:  number ;
+    regionCount: number;
 
-        avSyncTimeMs:  number ;
+    appData: string;
 
-        totalActiveTime:  number ;
+    appDataLength: number;
+}
 
-        publishDuration:  number ;
+export interface Region {
+    uid: number;
 
-        mosValue:  number ;
+    x: number;
 
-        rxVideoBytes:  number ;
+    y: number;
 
-    }
+    width: number;
 
-    export interface VideoCompositingLayout
-    {
-        canvasWidth:  number ;
+    height: number;
 
-        canvasHeight:  number ;
+    zOrder: number;
 
-        backgroundColor:  string ;
+    alpha: number;
 
-        regions:  Region[] ;
+    renderMode: RENDER_MODE_TYPE;
+}
 
-        regionCount:  number ;
+export interface InjectStreamConfig {
+    width: number;
 
-        appData:  string ;
+    height: number;
 
-        appDataLength:  number ;
+    videoGop: number;
 
-    }
+    videoFramerate: number;
 
-    export interface Region
-    {
-        uid:  number ;
+    videoBitrate: number;
 
-        x:  number ;
+    audioSampleRate: AUDIO_SAMPLE_RATE_TYPE;
 
-        y:  number ;
+    audioBitrate: number;
 
-        width:  number ;
+    audioChannels: number;
+}
 
-        height:  number ;
+export enum RTMP_STREAM_LIFE_CYCLE_TYPE {
+    RTMP_STREAM_LIFE_CYCLE_BIND2CHANNEL = 1,
 
-        zOrder:  number ;
+    RTMP_STREAM_LIFE_CYCLE_BIND2OWNER = 2,
+}
 
-        alpha:  number ;
+export interface PublisherConfiguration {
+    width: number;
 
-        renderMode:  RENDER_MODE_TYPE ;
+    height: number;
 
-    }
+    framerate: number;
 
-    export interface InjectStreamConfig
-    {
-        width:  number ;
+    bitrate: number;
 
-        height:  number ;
+    defaultLayout: number;
 
-        videoGop:  number ;
+    lifecycle: number;
 
-        videoFramerate:  number ;
+    owner: boolean;
 
-        videoBitrate:  number ;
+    injectStreamWidth: number;
 
-        audioSampleRate:  AUDIO_SAMPLE_RATE_TYPE ;
+    injectStreamHeight: number;
 
-        audioBitrate:  number ;
+    injectStreamUrl: string;
 
-        audioChannels:  number ;
+    publishUrl: string;
 
-    }
+    rawStreamUrl: string;
 
-    export enum RTMP_STREAM_LIFE_CYCLE_TYPE
-    {
-        RTMP_STREAM_LIFE_CYCLE_BIND2CHANNEL = 1,
+    extraInfo: string;
+}
 
-        RTMP_STREAM_LIFE_CYCLE_BIND2OWNER = 2,
+export enum CAMERA_DIRECTION {
+    CAMERA_REAR = 0,
 
-    }
+    CAMERA_FRONT = 1,
+}
 
-    export interface PublisherConfiguration
-    {
-        width:  number ;
+export enum CLOUD_PROXY_TYPE {
+    NONE_PROXY = 0,
 
-        height:  number ;
+    UDP_PROXY = 1,
 
-        framerate:  number ;
+    TCP_PROXY = 2,
+}
 
-        bitrate:  number ;
+export interface CameraCapturerConfiguration {
+    cameraDirection?: CAMERA_DIRECTION;
 
-        defaultLayout:  number ;
+    cameraFocalLengthType?: CAMERA_FOCAL_LENGTH_TYPE;
 
-        lifecycle:  number ;
+    deviceId?: string;
 
-        owner:  boolean ;
+    cameraId?: string;
 
-        injectStreamWidth:  number ;
+    followEncodeDimensionRatio?: boolean;
 
-        injectStreamHeight:  number ;
+    format: VideoFormat;
+}
 
-        injectStreamUrl:  string ;
+export interface ScreenCaptureConfiguration {
+    isCaptureWindow: boolean;
 
-        publishUrl:  string ;
+    displayId: number;
 
-        rawStreamUrl:  string ;
+    screenRect: Rectangle;
 
-        extraInfo:  string ;
+    windowId: number;
 
-    }
+    params: ScreenCaptureParameters;
 
-    export enum CAMERA_DIRECTION
-    {
-        CAMERA_REAR = 0,
+    regionRect: Rectangle;
+}
 
-        CAMERA_FRONT = 1,
+export interface SIZE {
+    width: number;
 
-    }
+    height: number;
+}
 
-    export enum CLOUD_PROXY_TYPE
-    {
-        NONE_PROXY = 0,
+export interface ThumbImageBuffer {
+    buffer: Uint8Array;
 
-        UDP_PROXY = 1,
+    length: number;
 
-        TCP_PROXY = 2,
+    width: number;
 
-    }
+    height: number;
+}
 
-    export interface CameraCapturerConfiguration
-    {
-        cameraDirection?:  CAMERA_DIRECTION ;
+export enum ScreenCaptureSourceType {
+    ScreenCaptureSourceType_Unknown = -1,
 
-        cameraFocalLengthType?:  CAMERA_FOCAL_LENGTH_TYPE ;
+    ScreenCaptureSourceType_Window = 0,
 
-        deviceId?:  string ;
+    ScreenCaptureSourceType_Screen = 1,
 
-        cameraId?:  string ;
+    ScreenCaptureSourceType_Custom = 2,
+}
 
-        followEncodeDimensionRatio?:  boolean ;
+export interface ScreenCaptureSourceInfo {
+    type: ScreenCaptureSourceType;
 
-        format:  VideoFormat ;
+    sourceId: number;
 
-    }
+    sourceName: string;
 
-    export interface ScreenCaptureConfiguration
-    {
-        isCaptureWindow:  boolean ;
+    thumbImage: ThumbImageBuffer;
 
-        displayId:  number ;
+    iconImage: ThumbImageBuffer;
 
-        screenRect:  Rectangle ;
+    processPath: string;
 
-        windowId:  number ;
+    sourceTitle: string;
 
-        params:  ScreenCaptureParameters ;
+    primaryMonitor: boolean;
 
-        regionRect:  Rectangle ;
+    isOccluded: boolean;
 
-    }
+    position: Rectangle;
 
-    export interface SIZE
-    {
-        width:  number ;
+    minimizeWindow: boolean;
 
-        height:  number ;
+    sourceDisplayId: number;
+}
 
-    }
+export interface AdvancedAudioOptions {
+    audioProcessingChannels?: number;
+}
 
-    export interface ThumbImageBuffer
-    {
-        buffer:  Uint8Array ;
+export interface ImageTrackOptions {
+    imageUrl: string;
 
-        length:  number ;
+    fps: number;
 
-        width:  number ;
+    mirrorMode: VIDEO_MIRROR_MODE_TYPE;
+}
 
-        height:  number ;
+export interface ChannelMediaOptions {
+    publishCameraTrack?: boolean;
 
-    }
+    publishSecondaryCameraTrack?: boolean;
 
-    export enum ScreenCaptureSourceType
-    {
-        ScreenCaptureSourceType_Unknown = -1,
+    publishThirdCameraTrack?: boolean;
 
-        ScreenCaptureSourceType_Window = 0,
+    publishFourthCameraTrack?: boolean;
 
-        ScreenCaptureSourceType_Screen = 1,
+    publishMicrophoneTrack?: boolean;
 
-        ScreenCaptureSourceType_Custom = 2,
+    publishScreenCaptureAudio?: boolean;
 
-    }
+    publishScreenCaptureVideo?: boolean;
 
-    export interface ScreenCaptureSourceInfo
-    {
-        type:  ScreenCaptureSourceType ;
+    publishScreenTrack?: boolean;
 
-        sourceId:  number ;
+    publishSecondaryScreenTrack?: boolean;
 
-        sourceName:  string ;
+    publishThirdScreenTrack?: boolean;
 
-        thumbImage:  ThumbImageBuffer ;
+    publishFourthScreenTrack?: boolean;
 
-        iconImage:  ThumbImageBuffer ;
+    publishCustomAudioTrack?: boolean;
 
-        processPath:  string ;
+    publishCustomAudioTrackId?: number;
 
-        sourceTitle:  string ;
+    publishCustomVideoTrack?: boolean;
 
-        primaryMonitor:  boolean ;
+    publishEncodedVideoTrack?: boolean;
 
-        isOccluded:  boolean ;
+    publishMediaPlayerAudioTrack?: boolean;
 
-        position:  Rectangle ;
+    publishMediaPlayerVideoTrack?: boolean;
 
-        minimizeWindow:  boolean ;
+    publishTranscodedVideoTrack?: boolean;
 
-        sourceDisplayId:  number ;
+    publishMixedAudioTrack?: boolean;
 
-    }
+    publishLipSyncTrack?: boolean;
 
-    export interface AdvancedAudioOptions
-    {
-        audioProcessingChannels?:  number ;
+    autoSubscribeAudio?: boolean;
 
-    }
+    autoSubscribeVideo?: boolean;
 
-    export interface ImageTrackOptions
-    {
-        imageUrl:  string ;
+    enableAudioRecordingOrPlayout?: boolean;
 
-        fps:  number ;
+    publishMediaPlayerId?: number;
 
-        mirrorMode:  VIDEO_MIRROR_MODE_TYPE ;
+    clientRoleType?: CLIENT_ROLE_TYPE;
 
-    }
+    audienceLatencyLevel?: AUDIENCE_LATENCY_LEVEL_TYPE;
 
-    export interface ChannelMediaOptions
-    {
-        publishCameraTrack?:  boolean ;
+    defaultVideoStreamType?: VIDEO_STREAM_TYPE;
 
-        publishSecondaryCameraTrack?:  boolean ;
+    channelProfile?: CHANNEL_PROFILE_TYPE;
 
-        publishThirdCameraTrack?:  boolean ;
+    audioDelayMs?: number;
 
-        publishFourthCameraTrack?:  boolean ;
+    mediaPlayerAudioDelayMs?: number;
 
-        publishMicrophoneTrack?:  boolean ;
+    token?: string;
 
-        publishScreenCaptureAudio?:  boolean ;
+    enableBuiltInMediaEncryption?: boolean;
 
-        publishScreenCaptureVideo?:  boolean ;
+    publishRhythmPlayerTrack?: boolean;
 
-        publishScreenTrack?:  boolean ;
+    isInteractiveAudience?: boolean;
 
-        publishSecondaryScreenTrack?:  boolean ;
+    customVideoTrackId?: number;
 
-        publishThirdScreenTrack?:  boolean ;
+    isAudioFilterable?: boolean;
 
-        publishFourthScreenTrack?:  boolean ;
+    parameters?: string;
 
-        publishCustomAudioTrack?:  boolean ;
+    enableMultipath?: boolean;
 
-        publishCustomAudioTrackId?:  number ;
+    uplinkMultipathMode?: MultipathMode;
 
-        publishCustomVideoTrack?:  boolean ;
+    downlinkMultipathMode?: MultipathMode;
 
-        publishEncodedVideoTrack?:  boolean ;
+    preferMultipathType?: MultipathType;
+}
 
-        publishMediaPlayerAudioTrack?:  boolean ;
+export enum PROXY_TYPE {
+    NONE_PROXY_TYPE = 0,
 
-        publishMediaPlayerVideoTrack?:  boolean ;
+    UDP_PROXY_TYPE = 1,
 
-        publishTranscodedVideoTrack?:  boolean ;
+    TCP_PROXY_TYPE = 2,
 
-        publishMixedAudioTrack?:  boolean ;
+    LOCAL_PROXY_TYPE = 3,
 
-        publishLipSyncTrack?:  boolean ;
+    TCP_PROXY_AUTO_FALLBACK_TYPE = 4,
 
-        autoSubscribeAudio?:  boolean ;
+    HTTP_PROXY_TYPE = 5,
 
-        autoSubscribeVideo?:  boolean ;
+    HTTPS_PROXY_TYPE = 6,
+}
 
-        enableAudioRecordingOrPlayout?:  boolean ;
+export enum FeatureType {
+    VIDEO_VIRTUAL_BACKGROUND = 1,
 
-        publishMediaPlayerId?:  number ;
+    VIDEO_BEAUTY_EFFECT = 2,
+}
 
-        clientRoleType?:  CLIENT_ROLE_TYPE ;
+export interface LeaveChannelOptions {
+    stopAudioMixing: boolean;
 
-        audienceLatencyLevel?:  AUDIENCE_LATENCY_LEVEL_TYPE ;
+    stopAllEffect: boolean;
 
-        defaultVideoStreamType?:  VIDEO_STREAM_TYPE ;
+    stopMicrophoneRecording: boolean;
+}
 
-        channelProfile?:  CHANNEL_PROFILE_TYPE ;
+export enum VIDEO_EFFECT_NODE_ID {
+    BEAUTY = 1 << 0,
 
-        audioDelayMs?:  number ;
+    STYLE_MAKEUP = 1 << 1,
 
-        mediaPlayerAudioDelayMs?:  number ;
+    FILTER = 1 << 2,
+}
 
-        token?:  string ;
+export enum VIDEO_EFFECT_ACTION {
+    SAVE = 1,
 
-        enableBuiltInMediaEncryption?:  boolean ;
+    RESET = 2,
+}
 
-        publishRhythmPlayerTrack?:  boolean ;
+export interface RtcEngineContext {
+    appId: string;
 
-        isInteractiveAudience?:  boolean ;
+    context: number;
 
-        customVideoTrackId?:  number ;
+    channelProfile: CHANNEL_PROFILE_TYPE;
 
-        isAudioFilterable?:  boolean ;
+    license: string;
 
-        parameters?:  string ;
+    audioScenario: AUDIO_SCENARIO_TYPE;
 
-        enableMultipath?:  boolean ;
+    areaCode: AREA_CODE;
 
-        uplinkMultipathMode?:  MultipathMode ;
+    logConfig: LogConfig;
 
-        downlinkMultipathMode?:  MultipathMode ;
+    threadPriority?: THREAD_PRIORITY_TYPE;
 
-        preferMultipathType?:  MultipathType ;
+    useExternalEglContext: boolean;
 
-    }
+    domainLimit: boolean;
 
-    export enum PROXY_TYPE
-    {
-        NONE_PROXY_TYPE = 0,
+    autoRegisterAgoraExtensions: boolean;
+}
 
-        UDP_PROXY_TYPE = 1,
+export enum METADATA_TYPE {
+    UNKNOWN_METADATA = -1,
 
-        TCP_PROXY_TYPE = 2,
+    VIDEO_METADATA = 0,
+}
 
-        LOCAL_PROXY_TYPE = 3,
+export enum MAX_METADATA_SIZE_TYPE {
+    INVALID_METADATA_SIZE_IN_BYTE = -1,
 
-        TCP_PROXY_AUTO_FALLBACK_TYPE = 4,
+    DEFAULT_METADATA_SIZE_IN_BYTE = 512,
 
-        HTTP_PROXY_TYPE = 5,
+    MAX_METADATA_SIZE_IN_BYTE = 1024,
+}
 
-        HTTPS_PROXY_TYPE = 6,
+export interface Metadata {
+    channelId: string;
 
-    }
+    uid: number;
 
-    export enum FeatureType
-    {
-        VIDEO_VIRTUAL_BACKGROUND = 1,
+    size: number;
 
-        VIDEO_BEAUTY_EFFECT = 2,
+    buffer: unknown;
 
-    }
+    timeStampMs: number;
+}
 
-    export interface LeaveChannelOptions
-    {
-        stopAudioMixing:  boolean ;
+export enum DIRECT_CDN_STREAMING_REASON {
+    DIRECT_CDN_STREAMING_REASON_OK = 0,
 
-        stopAllEffect:  boolean ;
+    DIRECT_CDN_STREAMING_REASON_FAILED = 1,
 
-        stopMicrophoneRecording:  boolean ;
+    DIRECT_CDN_STREAMING_REASON_AUDIO_PUBLICATION = 2,
 
-    }
+    DIRECT_CDN_STREAMING_REASON_VIDEO_PUBLICATION = 3,
 
-    export enum VIDEO_EFFECT_NODE_ID
-    {
-        BEAUTY = 1<<0,
+    DIRECT_CDN_STREAMING_REASON_NET_CONNECT = 4,
 
-        STYLE_MAKEUP = 1<<1,
+    DIRECT_CDN_STREAMING_REASON_BAD_NAME = 5,
+}
 
-        FILTER = 1<<2,
+export enum DIRECT_CDN_STREAMING_STATE {
+    DIRECT_CDN_STREAMING_STATE_IDLE = 0,
 
-    }
+    DIRECT_CDN_STREAMING_STATE_RUNNING = 1,
 
-    export enum VIDEO_EFFECT_ACTION
-    {
-        SAVE = 1,
+    DIRECT_CDN_STREAMING_STATE_STOPPED = 2,
 
-        RESET = 2,
+    DIRECT_CDN_STREAMING_STATE_FAILED = 3,
 
-    }
+    DIRECT_CDN_STREAMING_STATE_RECOVERING = 4,
+}
 
-    export interface RtcEngineContext
-    {
-        appId:  string ;
+export interface DirectCdnStreamingStats {
+    videoWidth: number;
 
-        context:  number ;
+    videoHeight: number;
 
-        channelProfile:  CHANNEL_PROFILE_TYPE ;
+    fps: number;
 
-        license:  string ;
+    videoBitrate: number;
 
-        audioScenario:  AUDIO_SCENARIO_TYPE ;
+    audioBitrate: number;
+}
 
-        areaCode:  AREA_CODE ;
+export interface DirectCdnStreamingMediaOptions {
+    publishCameraTrack?: boolean;
 
-        logConfig:  LogConfig ;
+    publishMicrophoneTrack?: boolean;
 
-        threadPriority?:  THREAD_PRIORITY_TYPE ;
+    publishCustomAudioTrack?: boolean;
 
-        useExternalEglContext:  boolean ;
+    publishCustomVideoTrack?: boolean;
 
-        domainLimit:  boolean ;
+    publishMediaPlayerAudioTrack?: boolean;
 
-        autoRegisterAgoraExtensions:  boolean ;
+    publishMediaPlayerId?: number;
 
-    }
+    customVideoTrackId?: number;
+}
 
-    export enum METADATA_TYPE
-    {
-        UNKNOWN_METADATA = -1,
+export interface ExtensionInfo {
+    mediaSourceType: MEDIA_SOURCE_TYPE;
 
-        VIDEO_METADATA = 0,
+    remoteUid: number;
 
-    }
+    channelId: string;
 
-    export enum MAX_METADATA_SIZE_TYPE
-    {
-        INVALID_METADATA_SIZE_IN_BYTE = -1,
+    localUid: number;
+}
 
-        DEFAULT_METADATA_SIZE_IN_BYTE = 512,
+export enum QUALITY_REPORT_FORMAT_TYPE {
+    QUALITY_REPORT_JSON = 0,
 
-        MAX_METADATA_SIZE_IN_BYTE = 1024,
+    QUALITY_REPORT_HTML = 1,
+}
 
-    }
+export enum MEDIA_DEVICE_STATE_TYPE {
+    MEDIA_DEVICE_STATE_IDLE = 0,
 
-    export interface Metadata
-    {
-        channelId:  string ;
+    MEDIA_DEVICE_STATE_ACTIVE = 1,
 
-        uid:  number ;
+    MEDIA_DEVICE_STATE_DISABLED = 2,
 
-        size:  number ;
+    MEDIA_DEVICE_STATE_PLUGGED_IN = 3,
 
-        buffer:  unknown ;
+    MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
 
-        timeStampMs:  number ;
+    MEDIA_DEVICE_STATE_UNPLUGGED = 8,
+}
 
-    }
+export enum VIDEO_PROFILE_TYPE {
+    VIDEO_PROFILE_LANDSCAPE_120P = 0,
 
-    export enum DIRECT_CDN_STREAMING_REASON
-    {
-        DIRECT_CDN_STREAMING_REASON_OK = 0,
+    VIDEO_PROFILE_LANDSCAPE_120P_3 = 2,
 
-        DIRECT_CDN_STREAMING_REASON_FAILED = 1,
+    VIDEO_PROFILE_LANDSCAPE_180P = 10,
 
-        DIRECT_CDN_STREAMING_REASON_AUDIO_PUBLICATION = 2,
+    VIDEO_PROFILE_LANDSCAPE_180P_3 = 12,
 
-        DIRECT_CDN_STREAMING_REASON_VIDEO_PUBLICATION = 3,
+    VIDEO_PROFILE_LANDSCAPE_180P_4 = 13,
 
-        DIRECT_CDN_STREAMING_REASON_NET_CONNECT = 4,
+    VIDEO_PROFILE_LANDSCAPE_240P = 20,
 
-        DIRECT_CDN_STREAMING_REASON_BAD_NAME = 5,
+    VIDEO_PROFILE_LANDSCAPE_240P_3 = 22,
 
-    }
+    VIDEO_PROFILE_LANDSCAPE_240P_4 = 23,
 
-    export enum DIRECT_CDN_STREAMING_STATE
-    {
-        DIRECT_CDN_STREAMING_STATE_IDLE = 0,
+    VIDEO_PROFILE_LANDSCAPE_360P = 30,
 
-        DIRECT_CDN_STREAMING_STATE_RUNNING = 1,
+    VIDEO_PROFILE_LANDSCAPE_360P_3 = 32,
 
-        DIRECT_CDN_STREAMING_STATE_STOPPED = 2,
+    VIDEO_PROFILE_LANDSCAPE_360P_4 = 33,
 
-        DIRECT_CDN_STREAMING_STATE_FAILED = 3,
+    VIDEO_PROFILE_LANDSCAPE_360P_6 = 35,
 
-        DIRECT_CDN_STREAMING_STATE_RECOVERING = 4,
+    VIDEO_PROFILE_LANDSCAPE_360P_7 = 36,
 
-    }
+    VIDEO_PROFILE_LANDSCAPE_360P_8 = 37,
 
-    export interface DirectCdnStreamingStats
-    {
-        videoWidth:  number ;
+    VIDEO_PROFILE_LANDSCAPE_360P_9 = 38,
 
-        videoHeight:  number ;
+    VIDEO_PROFILE_LANDSCAPE_360P_10 = 39,
 
-        fps:  number ;
+    VIDEO_PROFILE_LANDSCAPE_360P_11 = 100,
 
-        videoBitrate:  number ;
+    VIDEO_PROFILE_LANDSCAPE_480P = 40,
 
-        audioBitrate:  number ;
+    VIDEO_PROFILE_LANDSCAPE_480P_3 = 42,
 
-    }
+    VIDEO_PROFILE_LANDSCAPE_480P_4 = 43,
 
-    export interface DirectCdnStreamingMediaOptions
-    {
-        publishCameraTrack?:  boolean ;
+    VIDEO_PROFILE_LANDSCAPE_480P_6 = 45,
 
-        publishMicrophoneTrack?:  boolean ;
+    VIDEO_PROFILE_LANDSCAPE_480P_8 = 47,
 
-        publishCustomAudioTrack?:  boolean ;
+    VIDEO_PROFILE_LANDSCAPE_480P_9 = 48,
 
-        publishCustomVideoTrack?:  boolean ;
+    VIDEO_PROFILE_LANDSCAPE_480P_10 = 49,
 
-        publishMediaPlayerAudioTrack?:  boolean ;
+    VIDEO_PROFILE_LANDSCAPE_720P = 50,
 
-        publishMediaPlayerId?:  number ;
+    VIDEO_PROFILE_LANDSCAPE_720P_3 = 52,
 
-        customVideoTrackId?:  number ;
+    VIDEO_PROFILE_LANDSCAPE_720P_5 = 54,
 
-    }
+    VIDEO_PROFILE_LANDSCAPE_720P_6 = 55,
 
-    export interface ExtensionInfo
-    {
-        mediaSourceType:  MEDIA_SOURCE_TYPE ;
+    VIDEO_PROFILE_LANDSCAPE_1080P = 60,
 
-        remoteUid:  number ;
+    VIDEO_PROFILE_LANDSCAPE_1080P_3 = 62,
 
-        channelId:  string ;
+    VIDEO_PROFILE_LANDSCAPE_1080P_5 = 64,
 
-        localUid:  number ;
+    VIDEO_PROFILE_LANDSCAPE_1440P = 66,
 
-    }
+    VIDEO_PROFILE_LANDSCAPE_1440P_2 = 67,
 
-    export enum QUALITY_REPORT_FORMAT_TYPE
-    {
-        QUALITY_REPORT_JSON = 0,
+    VIDEO_PROFILE_LANDSCAPE_4K = 70,
 
-        QUALITY_REPORT_HTML = 1,
+    VIDEO_PROFILE_LANDSCAPE_4K_3 = 72,
 
-    }
+    VIDEO_PROFILE_PORTRAIT_120P = 1000,
 
-    export enum MEDIA_DEVICE_STATE_TYPE
-    {
-        MEDIA_DEVICE_STATE_IDLE = 0,
+    VIDEO_PROFILE_PORTRAIT_120P_3 = 1002,
 
-        MEDIA_DEVICE_STATE_ACTIVE = 1,
+    VIDEO_PROFILE_PORTRAIT_180P = 1010,
 
-        MEDIA_DEVICE_STATE_DISABLED = 2,
+    VIDEO_PROFILE_PORTRAIT_180P_3 = 1012,
 
-        MEDIA_DEVICE_STATE_PLUGGED_IN = 3,
+    VIDEO_PROFILE_PORTRAIT_180P_4 = 1013,
 
-        MEDIA_DEVICE_STATE_NOT_PRESENT = 4,
+    VIDEO_PROFILE_PORTRAIT_240P = 1020,
 
-        MEDIA_DEVICE_STATE_UNPLUGGED = 8,
+    VIDEO_PROFILE_PORTRAIT_240P_3 = 1022,
 
-    }
+    VIDEO_PROFILE_PORTRAIT_240P_4 = 1023,
 
-    export enum VIDEO_PROFILE_TYPE
-    {
-        VIDEO_PROFILE_LANDSCAPE_120P = 0,
+    VIDEO_PROFILE_PORTRAIT_360P = 1030,
 
-        VIDEO_PROFILE_LANDSCAPE_120P_3 = 2,
+    VIDEO_PROFILE_PORTRAIT_360P_3 = 1032,
 
-        VIDEO_PROFILE_LANDSCAPE_180P = 10,
+    VIDEO_PROFILE_PORTRAIT_360P_4 = 1033,
 
-        VIDEO_PROFILE_LANDSCAPE_180P_3 = 12,
+    VIDEO_PROFILE_PORTRAIT_360P_6 = 1035,
 
-        VIDEO_PROFILE_LANDSCAPE_180P_4 = 13,
+    VIDEO_PROFILE_PORTRAIT_360P_7 = 1036,
 
-        VIDEO_PROFILE_LANDSCAPE_240P = 20,
+    VIDEO_PROFILE_PORTRAIT_360P_8 = 1037,
 
-        VIDEO_PROFILE_LANDSCAPE_240P_3 = 22,
+    VIDEO_PROFILE_PORTRAIT_360P_9 = 1038,
 
-        VIDEO_PROFILE_LANDSCAPE_240P_4 = 23,
+    VIDEO_PROFILE_PORTRAIT_360P_10 = 1039,
 
-        VIDEO_PROFILE_LANDSCAPE_360P = 30,
+    VIDEO_PROFILE_PORTRAIT_360P_11 = 1100,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_3 = 32,
+    VIDEO_PROFILE_PORTRAIT_480P = 1040,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_4 = 33,
+    VIDEO_PROFILE_PORTRAIT_480P_3 = 1042,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_6 = 35,
+    VIDEO_PROFILE_PORTRAIT_480P_4 = 1043,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_7 = 36,
+    VIDEO_PROFILE_PORTRAIT_480P_6 = 1045,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_8 = 37,
+    VIDEO_PROFILE_PORTRAIT_480P_8 = 1047,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_9 = 38,
+    VIDEO_PROFILE_PORTRAIT_480P_9 = 1048,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_10 = 39,
+    VIDEO_PROFILE_PORTRAIT_480P_10 = 1049,
 
-        VIDEO_PROFILE_LANDSCAPE_360P_11 = 100,
+    VIDEO_PROFILE_PORTRAIT_720P = 1050,
 
-        VIDEO_PROFILE_LANDSCAPE_480P = 40,
+    VIDEO_PROFILE_PORTRAIT_720P_3 = 1052,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_3 = 42,
+    VIDEO_PROFILE_PORTRAIT_720P_5 = 1054,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_4 = 43,
+    VIDEO_PROFILE_PORTRAIT_720P_6 = 1055,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_6 = 45,
+    VIDEO_PROFILE_PORTRAIT_1080P = 1060,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_8 = 47,
+    VIDEO_PROFILE_PORTRAIT_1080P_3 = 1062,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_9 = 48,
+    VIDEO_PROFILE_PORTRAIT_1080P_5 = 1064,
 
-        VIDEO_PROFILE_LANDSCAPE_480P_10 = 49,
+    VIDEO_PROFILE_PORTRAIT_1440P = 1066,
 
-        VIDEO_PROFILE_LANDSCAPE_720P = 50,
+    VIDEO_PROFILE_PORTRAIT_1440P_2 = 1067,
 
-        VIDEO_PROFILE_LANDSCAPE_720P_3 = 52,
+    VIDEO_PROFILE_PORTRAIT_4K = 1070,
 
-        VIDEO_PROFILE_LANDSCAPE_720P_5 = 54,
+    VIDEO_PROFILE_PORTRAIT_4K_3 = 1072,
 
-        VIDEO_PROFILE_LANDSCAPE_720P_6 = 55,
-
-        VIDEO_PROFILE_LANDSCAPE_1080P = 60,
-
-        VIDEO_PROFILE_LANDSCAPE_1080P_3 = 62,
-
-        VIDEO_PROFILE_LANDSCAPE_1080P_5 = 64,
-
-        VIDEO_PROFILE_LANDSCAPE_1440P = 66,
-
-        VIDEO_PROFILE_LANDSCAPE_1440P_2 = 67,
-
-        VIDEO_PROFILE_LANDSCAPE_4K = 70,
-
-        VIDEO_PROFILE_LANDSCAPE_4K_3 = 72,
-
-        VIDEO_PROFILE_PORTRAIT_120P = 1000,
-
-        VIDEO_PROFILE_PORTRAIT_120P_3 = 1002,
-
-        VIDEO_PROFILE_PORTRAIT_180P = 1010,
-
-        VIDEO_PROFILE_PORTRAIT_180P_3 = 1012,
-
-        VIDEO_PROFILE_PORTRAIT_180P_4 = 1013,
-
-        VIDEO_PROFILE_PORTRAIT_240P = 1020,
-
-        VIDEO_PROFILE_PORTRAIT_240P_3 = 1022,
-
-        VIDEO_PROFILE_PORTRAIT_240P_4 = 1023,
-
-        VIDEO_PROFILE_PORTRAIT_360P = 1030,
-
-        VIDEO_PROFILE_PORTRAIT_360P_3 = 1032,
-
-        VIDEO_PROFILE_PORTRAIT_360P_4 = 1033,
-
-        VIDEO_PROFILE_PORTRAIT_360P_6 = 1035,
-
-        VIDEO_PROFILE_PORTRAIT_360P_7 = 1036,
-
-        VIDEO_PROFILE_PORTRAIT_360P_8 = 1037,
-
-        VIDEO_PROFILE_PORTRAIT_360P_9 = 1038,
-
-        VIDEO_PROFILE_PORTRAIT_360P_10 = 1039,
-
-        VIDEO_PROFILE_PORTRAIT_360P_11 = 1100,
-
-        VIDEO_PROFILE_PORTRAIT_480P = 1040,
-
-        VIDEO_PROFILE_PORTRAIT_480P_3 = 1042,
-
-        VIDEO_PROFILE_PORTRAIT_480P_4 = 1043,
-
-        VIDEO_PROFILE_PORTRAIT_480P_6 = 1045,
-
-        VIDEO_PROFILE_PORTRAIT_480P_8 = 1047,
-
-        VIDEO_PROFILE_PORTRAIT_480P_9 = 1048,
-
-        VIDEO_PROFILE_PORTRAIT_480P_10 = 1049,
-
-        VIDEO_PROFILE_PORTRAIT_720P = 1050,
-
-        VIDEO_PROFILE_PORTRAIT_720P_3 = 1052,
-
-        VIDEO_PROFILE_PORTRAIT_720P_5 = 1054,
-
-        VIDEO_PROFILE_PORTRAIT_720P_6 = 1055,
-
-        VIDEO_PROFILE_PORTRAIT_1080P = 1060,
-
-        VIDEO_PROFILE_PORTRAIT_1080P_3 = 1062,
-
-        VIDEO_PROFILE_PORTRAIT_1080P_5 = 1064,
-
-        VIDEO_PROFILE_PORTRAIT_1440P = 1066,
-
-        VIDEO_PROFILE_PORTRAIT_1440P_2 = 1067,
-
-        VIDEO_PROFILE_PORTRAIT_4K = 1070,
-
-        VIDEO_PROFILE_PORTRAIT_4K_3 = 1072,
-
-        VIDEO_PROFILE_DEFAULT = VIDEO_PROFILE_LANDSCAPE_360P,
-
-    }
-
+    VIDEO_PROFILE_DEFAULT = VIDEO_PROFILE_LANDSCAPE_360P,
+}

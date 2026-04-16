@@ -1,142 +1,119 @@
-   
-    export enum MusicPlayMode
-    {
-        kMusicPlayModeOriginal = 0,
+export enum MusicPlayMode {
+    kMusicPlayModeOriginal = 0,
 
-        kMusicPlayModeAccompany = 1,
+    kMusicPlayModeAccompany = 1,
 
-        kMusicPlayModeLeadSing = 2,
+    kMusicPlayModeLeadSing = 2,
+}
 
-    }
+export enum PreloadState {
+    kPreloadStateCompleted = 0,
 
-    export enum PreloadState
-    {
-        kPreloadStateCompleted = 0,
+    kPreloadStateFailed = 1,
 
-        kPreloadStateFailed = 1,
+    kPreloadStatePreloading = 2,
 
-        kPreloadStatePreloading = 2,
+    kPreloadStateRemoved = 3,
+}
 
-        kPreloadStateRemoved = 3,
+export enum MusicContentCenterStateReason {
+    kMusicContentCenterReasonOk = 0,
 
-    }
+    kMusicContentCenterReasonError = 1,
 
-    export enum MusicContentCenterStateReason
-    {
-        kMusicContentCenterReasonOk = 0,
+    kMusicContentCenterReasonGateway = 2,
 
-        kMusicContentCenterReasonError = 1,
+    kMusicContentCenterReasonPermissionAndResource = 3,
 
-        kMusicContentCenterReasonGateway = 2,
+    kMusicContentCenterReasonInternalDataParse = 4,
 
-        kMusicContentCenterReasonPermissionAndResource = 3,
+    kMusicContentCenterReasonMusicLoading = 5,
 
-        kMusicContentCenterReasonInternalDataParse = 4,
+    kMusicContentCenterReasonMusicDecryption = 6,
 
-        kMusicContentCenterReasonMusicLoading = 5,
+    kMusicContentCenterReasonHttpInternalError = 7,
+}
 
-        kMusicContentCenterReasonMusicDecryption = 6,
+export interface MusicChartInfo {
+    chartName: string;
 
-        kMusicContentCenterReasonHttpInternalError = 7,
+    id: number;
+}
 
-    }
+export enum MUSIC_CACHE_STATUS_TYPE {
+    MUSIC_CACHE_STATUS_TYPE_CACHED = 0,
 
-    export interface MusicChartInfo
-    {
-        chartName:  string ;
+    MUSIC_CACHE_STATUS_TYPE_CACHING = 1,
+}
 
-        id:  number ;
+export interface MusicCacheInfo {
+    songCode: number;
 
-    }
+    status: MUSIC_CACHE_STATUS_TYPE;
+}
 
-    export enum MUSIC_CACHE_STATUS_TYPE
-    {
-        MUSIC_CACHE_STATUS_TYPE_CACHED = 0,
+export interface MvProperty {
+    resolution: string;
 
-        MUSIC_CACHE_STATUS_TYPE_CACHING = 1,
+    bandwidth: string;
+}
 
-    }
+export interface ClimaxSegment {
+    startTimeMs: number;
 
-    export interface MusicCacheInfo
-    {
-        songCode:  number ;
+    endTimeMs: number;
+}
 
-        status:  MUSIC_CACHE_STATUS_TYPE ;
+export interface Music {
+    songCode: number;
 
-    }
+    name: string;
 
-    export interface MvProperty
-    {
-        resolution:  string ;
+    singer: string;
 
-        bandwidth:  string ;
+    poster: string;
 
-    }
+    releaseTime: string;
 
-    export interface ClimaxSegment
-    {
-        startTimeMs:  number ;
+    durationS: number;
 
-        endTimeMs:  number ;
+    type: number;
 
-    }
+    pitchType: number;
 
-    export interface Music
-    {
-        songCode:  number ;
+    lyricCount: number;
 
-        name:  string ;
+    lyricList: number[];
 
-        singer:  string ;
+    climaxSegmentCount: number;
 
-        poster:  string ;
+    climaxSegmentList: ClimaxSegment[];
 
-        releaseTime:  string ;
+    mvPropertyCount: number;
 
-        durationS:  number ;
+    mvPropertyList: MvProperty[];
+}
 
-        type:  number ;
+export interface MusicCollection {
+    count: number;
 
-        pitchType:  number ;
+    total: number;
 
-        lyricCount:  number ;
+    page: number;
 
-        lyricList:  number[] ;
+    pageSize: number;
 
-        climaxSegmentCount:  number ;
+    musics: Music[];
+}
 
-        climaxSegmentList:  ClimaxSegment[] ;
+export interface MusicContentCenterConfiguration {
+    appId: string;
 
-        mvPropertyCount:  number ;
+    token: string;
 
-        mvPropertyList:  MvProperty[] ;
+    mccUid: number;
 
-    }
+    maxCacheSize: number;
 
-    export interface MusicCollection{
-        
-        count:number;
-
-        total:number;
-
-        page:number;
-
-        pageSize:number;
-
-        musics:Music[];
-    }
-
-    export interface MusicContentCenterConfiguration
-    {
-        appId:  string ;
-
-        token:  string ;
-
-        mccUid:  number ;
-
-        maxCacheSize:  number ;
-
-        mccDomain:  string ;
-
-    }
-
+    mccDomain: string;
+}

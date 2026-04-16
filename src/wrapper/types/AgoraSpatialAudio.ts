@@ -1,31 +1,25 @@
-   
-    export interface RemoteVoicePositionInfo
-    {
-        position:  number[] ;
+export interface RemoteVoicePositionInfo {
+    position: number[];
 
-        forward:  number[] ;
+    forward: number[];
+}
 
-    }
+export interface SpatialAudioZone {
+    zoneSetId: number;
 
-    export interface SpatialAudioZone
-    {
-        zoneSetId:  number ;
+    position: number[];
 
-        position:  number[] ;
+    forward: number[];
 
-        forward:  number[] ;
+    right: number[];
 
-        right:  number[] ;
+    up: number[];
 
-        up:  number[] ;
+    forwardLength: number;
 
-        forwardLength:  number ;
+    rightLength: number;
 
-        rightLength:  number ;
+    upLength: number;
 
-        upLength:  number ;
-
-        audioAttenuation:  number ;
-
-    }
-
+    audioAttenuation: number;
+}
