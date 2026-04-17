@@ -2,6 +2,8 @@ import AgoraRTC, {
     ClientConfig,
     IAgoraRTCClient,
     IAgoraRTCRemoteUser,
+    ILocalTrack,
+    ILocalDataChannel,
     UID,
     ConnectionState,
     ConnectionDisconnectedReason,
@@ -11,6 +13,8 @@ import AgoraRTC, {
     ChannelMediaRelayState,
     ChannelMediaRelayError,
     ChannelMediaRelayEvent,
+    ClientRole,
+    ClientRoleOptions,
 } from "agora-rtc-sdk-ng";
 import { RtcEngineWeb } from "./RtcEngineWeb";
 import { Web2Native } from "./Helper";
@@ -18,12 +22,185 @@ import { RtcConnection } from "../../types/AgoraRtcEngineEx";
 import { ENCRYPTION_ERROR_TYPE } from "../../types/AgoraBase";
 
 export class AgoraRTCClientProxy {
-    private _client: IAgoraRTCClient;
-    private _rtcEngine: RtcEngineWeb;
+    private _client!: IAgoraRTCClient;
+    private _rtcEngine!: RtcEngineWeb;
 
     constructor(config: ClientConfig, rtcEngineWeb: RtcEngineWeb) {
         this._client = AgoraRTC.createClient(config);
         this._rtcEngine = rtcEngineWeb;
+    }
+
+    async release(): Promise<void> {
+        this._client.localTracks.forEach((track) => track.close());
+        await this._client.unpublish();
+        for (const user of this._client.remoteUsers) {
+            await this._client.unsubscribe(user);
+        }
+        await this._client.leave();
+    }
+
+    getClient(): IAgoraRTCClient {
+        return this._client;
+    }
+
+    setupMainClient(client: IAgoraRTCClient): void {
+        this._client = client;
+    }
+
+    // ==================== Properties ====================
+
+    get remoteUsers(): IAgoraRTCRemoteUser[] {
+        return this._client.remoteUsers;
+    }
+
+    get connectionState(): ConnectionState {
+        return this._client.connectionState;
+    }
+
+    get channelName(): string {
+        return this._client.channelName || "";
+    }
+
+    get uid(): UID | undefined {
+        return this._client.uid;
+    }
+
+    // ==================== Connection ====================
+
+    async join(appid: string, channel: string, token: string | null, uid?: UID | null): Promise<UID> {
+        return this._client.join(appid, channel, token, uid);
+    }
+
+    async leave(): Promise<void> {
+        return this._client.leave();
+    }
+
+    async renewToken(token: string): Promise<void> {
+        return this._client.renewToken(token);
+    }
+
+    async setClientRole(role: ClientRole, options?: ClientRoleOptions): Promise<void> {
+        if (options) {
+            return this._client.setClientRole(role, options);
+        }
+        return this._client.setClientRole(role);
+    }
+
+    // ==================== Publish / Subscribe ====================
+
+    async publish(tracks: ILocalTrack | ILocalTrack[]): Promise<void>;
+    async publish(config: any): Promise<ILocalDataChannel>;
+    async publish(params: ILocalTrack | ILocalTrack[] | any): Promise<void | ILocalDataChannel> {
+        return (this._client as any).publish(params);
+    }
+
+    async unpublish(tracks?: ILocalTrack | ILocalTrack[]): Promise<void> {
+        return this._client.unpublish(tracks);
+    }
+
+    async subscribe(user: IAgoraRTCRemoteUser | UID, mediaType: "video"): Promise<any>;
+    async subscribe(user: IAgoraRTCRemoteUser | UID, mediaType: "audio"): Promise<any>;
+    async subscribe(
+        user: IAgoraRTCRemoteUser | UID,
+        mediaType: "video" | "audio" | "datachannel",
+        channelId?: number,
+    ): Promise<any> {
+        if (channelId !== undefined) {
+            return (this._client as any).subscribe(user, mediaType, channelId);
+        }
+        return (this._client as any).subscribe(user, mediaType);
+    }
+
+    async unsubscribe(
+        user: IAgoraRTCRemoteUser | UID,
+        mediaType?: "video" | "audio" | "datachannel",
+        channelId?: number,
+    ): Promise<void> {
+        return (this._client as any).unsubscribe(user, mediaType, channelId);
+    }
+
+    // ==================== Video Stream Control ====================
+
+    async setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
+        return this._client.setRemoteVideoStreamType(uid, streamType);
+    }
+
+    async setRemoteDefaultVideoStreamType(streamType: RemoteStreamType): Promise<void> {
+        return this._client.setRemoteDefaultVideoStreamType(streamType);
+    }
+
+    async setDualStreamMode(mode: number, streamParameter?: any): Promise<void> {
+        return (this._client as any).setDualStreamMode(mode, streamParameter);
+    }
+
+    async setStreamFallbackOption(uid: UID, fallbackType: any): Promise<void> {
+        return (this._client as any).setStreamFallbackOption(uid, fallbackType);
+    }
+
+    // ==================== Subscription Filters ====================
+
+    setSubscribeAudioBlocklist(uidList: UID[]): void {
+        (this._client as any).setSubscribeAudioBlocklist?.(uidList);
+    }
+
+    setSubscribeAudioAllowlist(uidList: UID[]): void {
+        (this._client as any).setSubscribeAudioAllowlist?.(uidList);
+    }
+
+    setSubscribeVideoBlocklist(uidList: UID[]): void {
+        (this._client as any).setSubscribeVideoBlocklist?.(uidList);
+    }
+
+    setSubscribeVideoAllowlist(uidList: UID[]): void {
+        (this._client as any).setSubscribeVideoAllowlist?.(uidList);
+    }
+
+    // ==================== Volume ====================
+
+    enableAudioVolumeIndicator(): void {
+        this._client.enableAudioVolumeIndicator();
+    }
+
+    // ==================== Encryption ====================
+
+    setEncryptionConfig(encryptionMode: string, secret: string, salt?: Uint8Array, encryptDataStream?: boolean): void {
+        (this._client as any).setEncryptionConfig(encryptionMode, secret, salt, encryptDataStream);
+    }
+
+    // ==================== CDN Streaming ====================
+
+    async startLiveStreaming(url: string, transcodingEnabled?: boolean): Promise<void> {
+        return this._client.startLiveStreaming(url, transcodingEnabled);
+    }
+
+    async setLiveTranscoding(config: any): Promise<void> {
+        return (this._client as any).setLiveTranscoding(config);
+    }
+
+    async stopLiveStreaming(url: string): Promise<void> {
+        return this._client.stopLiveStreaming(url);
+    }
+
+    // ==================== Channel Media Relay ====================
+
+    async startChannelMediaRelay(config: any): Promise<void> {
+        return (this._client as any).startChannelMediaRelay(config);
+    }
+
+    async stopChannelMediaRelay(): Promise<void> {
+        return this._client.stopChannelMediaRelay();
+    }
+
+    // ==================== Proxy ====================
+
+    startProxyServer(mode?: number): void {
+        this._client.startProxyServer(mode);
+    }
+
+    // ==================== Reporting ====================
+
+    sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): void {
+        (this._client as any).sendCustomReportMessage?.(id, category, event, label, value);
     }
 
     init() {
@@ -72,7 +249,7 @@ export class AgoraRTCClientProxy {
         revState: ConnectionState,
         reason?: ConnectionDisconnectedReason,
     ) {
-        if (!this._client.uid || this._client.channelName) return;
+        if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
             localUid: this._client.uid as number,
@@ -87,7 +264,7 @@ export class AgoraRTCClientProxy {
         }
     }
     onUserJoined(user: IAgoraRTCRemoteUser) {
-        if (!this._client.uid || this._client.channelName) return;
+        if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
             localUid: this._client.uid as number,
@@ -99,7 +276,7 @@ export class AgoraRTCClientProxy {
     }
 
     onUserLeft(user: IAgoraRTCRemoteUser, reason: string) {
-        if (!this._client.uid || this._client.channelName) return;
+        if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
             localUid: this._client.uid as number,
@@ -129,7 +306,7 @@ export class AgoraRTCClientProxy {
             | "unmute-video"
             | "disable-local-video",
     ) {
-        if (!this._client.uid || this._client.channelName) return;
+        if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
             localUid: this._client.uid as number,
