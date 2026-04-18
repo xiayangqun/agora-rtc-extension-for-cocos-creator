@@ -1,4 +1,3 @@
-import { Rectangle } from "../../types/AgoraBase";
 import { UserInfo } from "../../types/AgoraBase";
 import { IAudioDeviceManager } from "../../interface/IAudioDeviceManager";
 import { IH265Transcoder } from "../../interface/IH265Transcoder";
@@ -11,6 +10,8 @@ import { IRtcEngineEx } from "../../interface/IRtcEngineEx";
 import { IVideoDeviceManager } from "../../interface/IVideoDeviceManager";
 import { IVideoEffectObject } from "../../interface/IVideoEffectObject";
 import {
+    Rectangle,
+    VIDEO_CODEC_CAPABILITY_LEVEL,
     DeviceInfo,
     CodecCapInfo,
     CHANNEL_PROFILE_TYPE,
@@ -73,7 +74,7 @@ import {
     VIDEO_MODULE_TYPE,
     HDR_CAPABILITY,
     ClientRoleOptions,
-    VideoEncoderConfiguration,
+    VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
     ERROR_CODE_TYPE,
     AREA_CODE,
     THREAD_PRIORITY_TYPE,
@@ -121,9 +122,10 @@ import AgoraRTC, {
     UID,
     DeviceInfo as WebDeviceInfo,
     AREAS,
+    IAgoraRTCError,
 } from "agora-rtc-sdk-ng";
 import { AgoraRTCClientProxy } from "./AgoraRTCClientProxy";
-import { Native2Web, Web2Native } from "./Helper";
+import { isAgoraRTCError, Native2Web, Web2Native } from "./Helper";
 import { AudioDeviceManagerWeb } from "./AudioDeviceManagerWeb";
 import { VideoDeviceManagerWeb } from "./VideoDeviceManagerWeb";
 
@@ -141,22 +143,23 @@ export class RtcEngineWeb implements IRtcEngineEx {
     public rtcEngineEventHandler?: IRtcEngineEventHandler;
 
     //come from  initialize parameters
-    private _appId?: string;
-    private _channelProfile: CHANNEL_PROFILE_TYPE = CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION;
-    private _audioScenario: AUDIO_SCENARIO_TYPE = AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_DEFAULT;
-    private _areaCode: AREA_CODE = AREA_CODE.AREA_CODE_GLOB;
-    private _logConfig: LogConfig = { level: LOG_LEVEL.LOG_LEVEL_NONE, filePath: "", fileSizeInKB: 0 };
-    private _threadPriority: THREAD_PRIORITY_TYPE = THREAD_PRIORITY_TYPE.NORMAL;
-    private _useExternalEglContext = false;
-    private _domainLimit = false;
+    public appId: string;
+    public channelProfile: CHANNEL_PROFILE_TYPE = CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION;
+    public audioScenario: AUDIO_SCENARIO_TYPE = AUDIO_SCENARIO_TYPE.AUDIO_SCENARIO_DEFAULT;
+    public areaCode: AREA_CODE = AREA_CODE.AREA_CODE_GLOB;
+    public logConfig: LogConfig = { level: LOG_LEVEL.LOG_LEVEL_NONE, filePath: "", fileSizeInKB: 0 };
+    public threadPriority: THREAD_PRIORITY_TYPE = THREAD_PRIORITY_TYPE.NORMAL;
+    public useExternalEglContext = false;
+    public domainLimit = false;
 
-    private _mainClientProxy?: AgoraRTCClientProxy;
-    private _subClients: Map<string, IAgoraRTCClient> = new Map();
-    private _subClientProxies: Map<string, AgoraRTCClientProxy> = new Map();
-    private _audioEnabled = true;
-    private _videoEnabled = false;
-    private _dualStreamEnabled = false;
-    private _audioVolumeIndicationEnabled = false;
+    public mainClientProxy: AgoraRTCClientProxy;
+    public mainClientVideoEncoderConfiguration: NativeVideoEncoderConfiguration;
+    public subClientProxies: Map<string, AgoraRTCClientProxy> = new Map();
+    public subClientVideoEncoderConfigurations: Map<string, NativeVideoEncoderConfiguration> = new Map();
+    public audioEnabled = true;
+    public videoEnabled = false;
+    public dualStreamEnabled = false;
+    public audioVolumeIndicationEnabled = false;
 
     constructor() {
         AgoraRTC.on("camera-changed", this.onCameraChanged.bind(this));
@@ -236,32 +239,32 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async initialize(context: RtcEngineContext): Promise<number> {
-        this._appId = context.appId;
+        this.appId = context.appId;
         this.rtcEngineEventHandler = context.eventHandler;
-        this._channelProfile = context.channelProfile;
-        this._audioScenario = context.audioScenario;
-        this._areaCode = context.areaCode;
-        this._logConfig = context.logConfig;
+        this.channelProfile = context.channelProfile;
+        this.audioScenario = context.audioScenario;
+        this.areaCode = context.areaCode;
+        this.logConfig = context.logConfig;
         if (context.threadPriority) {
-            this._threadPriority = context.threadPriority;
+            this.threadPriority = context.threadPriority;
         }
-        this._useExternalEglContext = context.useExternalEglContext;
-        this._domainLimit = context.domainLimit;
+        this.useExternalEglContext = context.useExternalEglContext;
+        this.domainLimit = context.domainLimit;
 
         if (AgoraRTC.checkSystemRequirements() == false) {
             console.error("The current browser does not support AgoraRTC!");
         }
-        const webAreas: AREAS[] = Native2Web.AreaCodes(this._areaCode);
+        const webAreas: AREAS[] = Native2Web.AreaCodes(this.areaCode);
         AgoraRTC.setArea(webAreas);
-        const logLevel = Native2Web.LogLevel(this._logConfig.level);
+        const logLevel = Native2Web.LogLevel(this.logConfig.level);
         AgoraRTC.setLogLevel(logLevel);
 
         const config: ClientConfig = {
-            mode: Native2Web.ChannelProfile(this._channelProfile),
+            mode: Native2Web.ChannelProfile(this.channelProfile),
             codec: "vp8",
         };
-        this._mainClientProxy = new AgoraRTCClientProxy(config, this);
-        this._mainClientProxy.init();
+        this.mainClientProxy = new AgoraRTCClientProxy(config, this);
+        this.mainClientProxy.init();
 
         return ERR_OK;
     }
@@ -271,12 +274,32 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async getErrorDescription(code: ERROR_CODE_TYPE): Promise<string> {
-        return `Error code: ${Native2Web.ERROR_CODE_TYPE(code)}`;
+        return Native2Web.ERROR_CODE_TYPE(code);
     }
 
     async queryCodecCapability(): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }> {
-        console.warn("queryCodecCapability not support in web");
-        return { errorCode: ERR_NOT_SUPPORTED, codecInfo: [] };
+        try {
+            const webCodecs = await AgoraRTC.getSupportedCodec();
+            const codecInfo: CodecCapInfo[] = webCodecs.video.map((video) => {
+                return {
+                    codecType: Web2Native.string2VIDEO_CODEC_TYPE(video),
+                    codecCapMask: 0,
+                    codecLevels: {
+                        hwDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL.CODEC_CAPABILITY_LEVEL_BASIC_SUPPORT,
+                        swDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL.CODEC_CAPABILITY_LEVEL_BASIC_SUPPORT,
+                    },
+                };
+            });
+            return { errorCode: ERR_OK, codecInfo };
+        } catch (e: any) {
+            console.error("queryCodecCapability failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), codecInfo: [] };
+            } else {
+                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, codecInfo: [] };
+            }
+        }
     }
 
     async queryDeviceScore(): Promise<number> {
@@ -285,13 +308,33 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async preloadChannel(token: string, channelId: string, uid: number): Promise<number> {
-        console.warn("preloadChannel not support in web");
-        return -ERR_NOT_SUPPORTED;
+        try {
+            await AgoraRTC.preload(this._appId, channelId, token, uid);
+            return ERR_OK;
+        } catch (e: any) {
+            console.error("preloadChannel failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
+        }
     }
 
     async preloadChannelWithUserAccount(token: string, channelId: string, userAccount: string): Promise<number> {
-        console.warn("preloadChannelWithUserAccount not support in web");
-        return -ERR_NOT_SUPPORTED;
+        try {
+            await AgoraRTC.preload(this._appId, channelId, token, userAccount);
+            return ERR_OK;
+        } catch (e: any) {
+            console.error("preloadChannelWithUserAccount failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
+        }
     }
 
     async updatePreloadChannelToken(token: string): Promise<number> {
@@ -303,49 +346,75 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async joinChannel(token: string, channelId: string, info: string, uid: number): Promise<number>;
     async joinChannel(token: string, channelId: string, uid: number, options: ChannelMediaOptions): Promise<number>;
-    async joinChannel(token: unknown, channelId: unknown, uid: unknown, options: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            const tk = token as string;
-            const ch = channelId as string;
-            const u = uid as number;
-            const opts = options as ChannelMediaOptions | undefined;
-
-            if (opts?.channelProfile) {
-                this._channelProfile = opts.channelProfile;
+    async joinChannel(token: unknown, channelId: unknown, infoOrUid: unknown, uidOrOptions: unknown): Promise<number> {
+        if (typeof infoOrUid === "string") {
+            console.warn("The 'info' parameter in joinChannel is not support in web");
+            const info = infoOrUid as string;
+            const uid = uidOrOptions as number;
+            try {
+                const selfUid = await this.mainClientProxy.join(
+                    this._appId,
+                    channelId as string,
+                    token as string,
+                    uid,
+                    {
+                        autoSubscribe: true,
+                        networkQualityProbe: true,
+                    },
+                );
+                this.rtcEngineEventHandler?.onJoinChannelSuccess(
+                    { channelId: channelId as string, localUid: selfUid as number },
+                    0,
+                );
+                return ERROR_CODE_TYPE.ERR_OK;
+            } catch (e: any) {
+                console.error("joinChannel failed:", e.toString ? e.toString() : "");
+                if (isAgoraRTCError(e)) {
+                    const err = e as IAgoraRTCError;
+                    return -Web2Native.AgoraRTCErrorCode(err.code);
+                } else {
+                    return -ERROR_CODE_TYPE.ERR_FAILED;
+                }
             }
-            if (opts?.clientRoleType) {
-                const webRole = Native2Web.ClientRole(opts.clientRoleType);
-                await this._mainClientProxy!.setClientRole(webRole);
+        } else {
+            try {
+                const uid = infoOrUid as number;
+                const options = uidOrOptions as ChannelMediaOptions;
+                const autoSubscribe = (options.autoSubscribeVideo ?? true) || (options.autoSubscribeAudio ?? true);
+                const selfUid = await this.mainClientProxy.join(
+                    this._appId,
+                    channelId as string,
+                    token as string,
+                    uid,
+                    {
+                        autoSubscribe: autoSubscribe,
+                        networkQualityProbe: true,
+                    },
+                );
+                this.rtcEngineEventHandler?.onJoinChannelSuccess(
+                    { channelId: channelId as string, localUid: selfUid as number },
+                    0,
+                );
+                return ERROR_CODE_TYPE.ERR_OK;
+            } catch (e: any) {
+                console.error("joinChannel failed:", e.toString ? e.toString() : "");
+                if (isAgoraRTCError(e)) {
+                    const err = e as IAgoraRTCError;
+                    return -Web2Native.AgoraRTCErrorCode(err.code);
+                } else {
+                    return -ERROR_CODE_TYPE.ERR_FAILED;
+                }
             }
-
-            const joinedUid = await this._mainClientProxy!.join(this._appId!, ch, tk || null, u || null);
-
-            // Auto publish tracks based on options
-            if (opts?.publishMicrophoneTrack && this._localAudioTrack) {
-                await this._mainClientProxy!.publish([this._localAudioTrack]).catch(() => {});
-            }
-            if (opts?.publishCameraTrack && this._localVideoTrack) {
-                await this._mainClientProxy!.publish([this._localVideoTrack]).catch(() => {});
-            }
-
-            this.rtcEngineEventHandler?.onJoinChannelSuccess({ channelId: ch, localUid: joinedUid as number }, 0);
-            return ERR_OK;
-        } catch (e) {
-            console.error("joinChannel failed:", e);
-            return ERR_NOT_READY;
         }
     }
 
     async updateChannelMediaOptions(options: ChannelMediaOptions): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         if (options.clientRoleType) {
             const webRole = Native2Web.ClientRole(options.clientRoleType);
-            await this._mainClientProxy!.setClientRole(webRole);
+            await this.mainClientProxy!.setClientRole(webRole);
         }
         return ERR_OK;
     }
@@ -353,33 +422,33 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async leaveChannel(): Promise<number>;
     async leaveChannel(options: LeaveChannelOptions): Promise<number>;
     async leaveChannel(options?: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.leave();
-            if (this._mainClientProxy!.channelName && this._mainClientProxy!.uid) {
+            await this.mainClientProxy!.leave();
+            if (this.mainClientProxy!.channelName && this.mainClientProxy!.uid) {
                 this.rtcEngineEventHandler?.onLeaveChannel(
                     {
-                        channelId: this._mainClientProxy!.channelName,
-                        localUid: this._mainClientProxy!.uid as number,
+                        channelId: this.mainClientProxy!.channelName,
+                        localUid: this.mainClientProxy!.uid as number,
                     },
                     {} as any,
                 );
             }
             return ERR_OK;
         } catch (e) {
-            console.error("leaveChannel failed:", e);
+            console.error("leaveChannel failed:", e.toString ? e.toString() : "");
             return ERR_NOT_READY;
         }
     }
 
     async renewToken(token: string): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.renewToken(token);
+            await this.mainClientProxy!.renewToken(token);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -387,25 +456,25 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setChannelProfile(profile: CHANNEL_PROFILE_TYPE): Promise<number> {
-        this._channelProfile = profile;
+        this.channelProfile = profile;
         return ERR_OK;
     }
 
     async setClientRole(role: CLIENT_ROLE_TYPE): Promise<number>;
     async setClientRole(role: CLIENT_ROLE_TYPE, options: ClientRoleOptions): Promise<number>;
     async setClientRole(role: unknown, options?: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
             const webRole = Native2Web.ClientRole(role as CLIENT_ROLE_TYPE);
             const opts = options as ClientRoleOptions | undefined;
             if (opts) {
-                await this._mainClientProxy!.setClientRole(webRole, {
+                await this.mainClientProxy!.setClientRole(webRole, {
                     level: opts.audienceLatencyLevel as any,
                 });
             } else {
-                await this._mainClientProxy!.setClientRole(webRole);
+                await this.mainClientProxy!.setClientRole(webRole);
             }
             return ERR_OK;
         } catch (e) {
@@ -431,12 +500,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Video ====================
 
     async enableVideo(): Promise<number> {
-        this._videoEnabled = true;
+        this.videoEnabled = true;
         return ERR_OK;
     }
 
     async disableVideo(): Promise<number> {
-        this._videoEnabled = false;
+        this.videoEnabled = false;
         if (this._localVideoTrack) {
             this._localVideoTrack.close();
             this._localVideoTrack = undefined;
@@ -477,28 +546,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async setVideoEncoderConfiguration(config: VideoEncoderConfiguration): Promise<number> {
-        if (!this._localVideoTrack) {
-            return ERR_NOT_READY;
-        }
-        try {
-            const webConfig: any = {};
-            if (config.dimensions) {
-                webConfig.width = config.dimensions.width;
-                webConfig.height = config.dimensions.height;
-            }
-            if (config.frameRate) {
-                webConfig.frameRate = config.frameRate;
-            }
-            if (config.bitrate) {
-                webConfig.bitrateMin = config.bitrate;
-                webConfig.bitrateMax = config.bitrate;
-            }
-            await this._localVideoTrack.setEncoderConfiguration(webConfig);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+    async setVideoEncoderConfiguration(config: NativeVideoEncoderConfiguration): Promise<number> {
+        this.mainClientVideoEncoderConfiguration = config;
+        await this.mainClientProxy.setEncoderConfiguration(config);
+        return ERROR_CODE_TYPE.ERR_OK;
     }
 
     async setBeautyEffectOptions(enabled: boolean, options: BeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number> {
@@ -613,7 +664,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Audio ====================
 
     async enableAudio(): Promise<number> {
-        this._audioEnabled = true;
+        this.audioEnabled = true;
         try {
             if (!this._localAudioTrack) {
                 this._localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
@@ -626,7 +677,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async disableAudio(): Promise<number> {
-        this._audioEnabled = false;
+        this.audioEnabled = false;
         if (this._localAudioTrack) {
             this._localAudioTrack.close();
             this._localAudioTrack = undefined;
@@ -672,10 +723,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async muteAllRemoteAudioStreams(mute: boolean): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        for (const user of this._mainClientProxy!.remoteUsers) {
+        for (const user of this.mainClientProxy!.remoteUsers) {
             if (user.audioTrack) {
                 user.audioTrack.setVolume(mute ? 0 : 100);
             }
@@ -684,10 +735,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async muteRemoteAudioStream(uid: number, mute: boolean): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        const user = this._mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
+        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
         if (user?.audioTrack) {
             user.audioTrack.setVolume(mute ? 0 : 100);
         }
@@ -722,15 +773,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async muteAllRemoteVideoStreams(mute: boolean): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        for (const user of this._mainClientProxy!.remoteUsers) {
+        for (const user of this.mainClientProxy!.remoteUsers) {
             if (user.videoTrack) {
                 if (mute) {
-                    await this._mainClientProxy!.unsubscribe(user, "video").catch(() => {});
+                    await this.mainClientProxy!.unsubscribe(user, "video").catch(() => {});
                 } else {
-                    await this._mainClientProxy!.subscribe(user, "video").catch(() => {});
+                    await this.mainClientProxy!.subscribe(user, "video").catch(() => {});
                 }
             }
         }
@@ -738,11 +789,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setRemoteDefaultVideoStreamType(streamType: VIDEO_STREAM_TYPE): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setRemoteDefaultVideoStreamType(Native2Web.VideoStreamType(streamType));
+            this.mainClientProxy!.setRemoteDefaultVideoStreamType(Native2Web.VideoStreamType(streamType));
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -750,26 +801,26 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async muteRemoteVideoStream(uid: number, mute: boolean): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        const user = this._mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
+        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
         if (user) {
             if (mute) {
-                await this._mainClientProxy!.unsubscribe(user, "video").catch(() => {});
+                await this.mainClientProxy!.unsubscribe(user, "video").catch(() => {});
             } else {
-                await this._mainClientProxy!.subscribe(user, "video").catch(() => {});
+                await this.mainClientProxy!.subscribe(user, "video").catch(() => {});
             }
         }
         return ERR_OK;
     }
 
     async setRemoteVideoStreamType(uid: number, streamType: VIDEO_STREAM_TYPE): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setRemoteVideoStreamType(uid, Native2Web.VideoStreamType(streamType));
+            this.mainClientProxy!.setRemoteVideoStreamType(uid, Native2Web.VideoStreamType(streamType));
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -782,11 +833,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setSubscribeAudioBlocklist(uidList);
+            this.mainClientProxy!.setSubscribeAudioBlocklist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -794,11 +845,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setSubscribeAudioAllowlist(uidList);
+            this.mainClientProxy!.setSubscribeAudioAllowlist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -806,11 +857,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setSubscribeVideoBlocklist(uidList);
+            this.mainClientProxy!.setSubscribeVideoBlocklist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -818,11 +869,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setSubscribeVideoAllowlist(uidList);
+            this.mainClientProxy!.setSubscribeVideoAllowlist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -830,12 +881,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        if (!this._audioVolumeIndicationEnabled) {
-            this._mainClientProxy!.enableAudioVolumeIndicator();
-            this._audioVolumeIndicationEnabled = true;
+        if (!this.audioVolumeIndicationEnabled) {
+            this.mainClientProxy!.enableAudioVolumeIndicator();
+            this.audioVolumeIndicationEnabled = true;
         }
         return ERR_OK;
     }
@@ -1239,15 +1290,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async enableDualStreamMode(enabled: boolean): Promise<number>;
     async enableDualStreamMode(enabled: boolean, streamConfig: SimulcastStreamConfig): Promise<number>;
     async enableDualStreamMode(enabled: unknown, streamConfig?: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._dualStreamEnabled = enabled as boolean;
+            this.dualStreamEnabled = enabled as boolean;
             if (enabled) {
-                await this._mainClientProxy!.setDualStreamMode(1 as any, streamConfig as any);
+                await this.mainClientProxy!.setDualStreamMode(1 as any, streamConfig as any);
             } else {
-                await this._mainClientProxy!.setDualStreamMode(0 as any);
+                await this.mainClientProxy!.setDualStreamMode(0 as any);
             }
             return ERR_OK;
         } catch (e) {
@@ -1258,12 +1309,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async setDualStreamMode(mode: SIMULCAST_STREAM_MODE): Promise<number>;
     async setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): Promise<number>;
     async setDualStreamMode(mode: unknown, streamConfig?: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
             const webMode = Native2Web.SimulcastMode(mode as SIMULCAST_STREAM_MODE);
-            await this._mainClientProxy!.setDualStreamMode(webMode, streamConfig as any);
+            await this.mainClientProxy!.setDualStreamMode(webMode, streamConfig as any);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1352,10 +1403,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async adjustPlaybackSignalVolume(volume: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        for (const user of this._mainClientProxy!.remoteUsers) {
+        for (const user of this.mainClientProxy!.remoteUsers) {
             if (user.audioTrack) {
                 user.audioTrack.setVolume(volume);
             }
@@ -1364,10 +1415,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async adjustUserPlaybackSignalVolume(uid: number, volume: number): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
-        const user = this._mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
+        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
         if (user?.audioTrack) {
             user.audioTrack.setVolume(volume);
         }
@@ -1375,11 +1426,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setRemoteSubscribeFallbackOption(option: STREAM_FALLBACK_OPTIONS): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.setStreamFallbackOption(0, Native2Web.StreamFallbackOption(option));
+            this.mainClientProxy!.setStreamFallbackOption(0, Native2Web.StreamFallbackOption(option));
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1387,12 +1438,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setHighPriorityUserList(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
             for (const uid of uidList) {
-                this._mainClientProxy!.setStreamFallbackOption(uid, Native2Web.StreamFallbackOption(option));
+                this.mainClientProxy!.setStreamFallbackOption(uid, Native2Web.StreamFallbackOption(option));
             }
             return ERR_OK;
         } catch (e) {
@@ -1718,8 +1769,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async startScreenCapture(sourceType: unknown, config?: unknown): Promise<number> {
         try {
             this._screenTrack = await AgoraRTC.createScreenVideoTrack(config as any, "disable");
-            if (this._mainClientProxy && this._mainClientProxy.connectionState === "CONNECTED") {
-                await this._mainClientProxy!.publish([this._screenTrack]);
+            if (this.mainClientProxy && this.mainClientProxy.connectionState === "CONNECTED") {
+                await this.mainClientProxy!.publish([this._screenTrack]);
             }
             return ERR_OK;
         } catch (e) {
@@ -1757,8 +1808,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async stopScreenCapture(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
     async stopScreenCapture(sourceType?: unknown): Promise<number> {
         if (this._screenTrack) {
-            if (this._mainClientProxy) {
-                await this._mainClientProxy.unpublish([this._screenTrack]).catch(() => {});
+            if (this.mainClientProxy) {
+                await this.mainClientProxy.unpublish([this._screenTrack]).catch(() => {});
             }
             this._screenTrack.close();
             this._screenTrack = undefined;
@@ -1786,11 +1837,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== CDN Streaming ====================
 
     async startRtmpStreamWithoutTranscoding(url: string): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.startLiveStreaming(url, false);
+            await this.mainClientProxy!.startLiveStreaming(url, false);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1798,12 +1849,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async startRtmpStreamWithTranscoding(url: string, transcoding: LiveTranscoding): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.startLiveStreaming(url, true);
-            await this._mainClientProxy!.setLiveTranscoding(transcoding as any);
+            await this.mainClientProxy!.startLiveStreaming(url, true);
+            await this.mainClientProxy!.setLiveTranscoding(transcoding as any);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1811,11 +1862,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async updateRtmpTranscoding(transcoding: LiveTranscoding): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.setLiveTranscoding(transcoding as any);
+            await this.mainClientProxy!.setLiveTranscoding(transcoding as any);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1833,11 +1884,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async stopRtmpStream(url: string): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.stopLiveStreaming(url);
+            await this.mainClientProxy!.stopLiveStreaming(url);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -1883,11 +1934,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async getConnectionState(): Promise<CONNECTION_STATE_TYPE> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
         const { Web2Native } = await import("./Helper");
-        return Web2Native.ConnectionState(this._mainClientProxy!.connectionState);
+        return Web2Native.ConnectionState(this.mainClientProxy!.connectionState);
     }
 
     async setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): Promise<number> {
@@ -1898,13 +1949,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Encryption ====================
 
     async enableEncryption(enabled: boolean, config: EncryptionConfig): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
             if (enabled && config.encryptionKey) {
                 const webMode = Native2Web.EncryptionMode(config.encryptionMode);
-                this._mainClientProxy!.setEncryptionConfig(
+                this.mainClientProxy!.setEncryptionConfig(
                     webMode,
                     config.encryptionKey,
                     config.encryptionKdfSalt || undefined,
@@ -1922,7 +1973,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async createDataStream(streamId: number, reliable: boolean, ordered: boolean): Promise<number>;
     async createDataStream(streamId: number, config: DataStreamConfig): Promise<number>;
     async createDataStream(_streamId: unknown, reliable: unknown, orderedParam?: unknown): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
@@ -1934,7 +1985,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 isOrdered = cfg.ordered;
             }
             const id = this._nextDataStreamId++;
-            const dc = await this._mainClientProxy!.publish({ id, ordered: isOrdered, metadata: "" });
+            const dc = await this.mainClientProxy!.publish({ id, ordered: isOrdered, metadata: "" });
             this._dataChannels.set(id, dc);
             return id;
         } catch (e) {
@@ -2014,11 +2065,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
         label: string,
         value: number,
     ): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.sendCustomReportMessage(id, category, event, label, value);
+            this.mainClientProxy!.sendCustomReportMessage(id, category, event, label, value);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2083,7 +2134,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Channel Media Relay ====================
 
     async startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
@@ -2100,7 +2151,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 })),
                 channelCount: configuration.destInfos.length,
             };
-            await this._mainClientProxy!.startChannelMediaRelay(webConfig);
+            await this.mainClientProxy!.startChannelMediaRelay(webConfig);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2108,11 +2159,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async stopChannelMediaRelay(): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this._mainClientProxy!.stopChannelMediaRelay();
+            await this.mainClientProxy!.stopChannelMediaRelay();
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2200,11 +2251,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Cloud Proxy ====================
 
     async setCloudProxy(proxyType: CLOUD_PROXY_TYPE): Promise<number> {
-        if (!this._mainClientProxy) {
+        if (!this.mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            this._mainClientProxy!.startProxyServer(proxyType);
+            this.mainClientProxy!.startProxyServer(proxyType);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2284,7 +2335,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         const key = connectionKey(connection);
         try {
             const config: ClientConfig = {
-                mode: Native2Web.ChannelProfile(options.channelProfile || this._channelProfile),
+                mode: Native2Web.ChannelProfile(options.channelProfile || this.channelProfile),
                 codec: "vp8",
             };
             const proxy = new AgoraRTCClientProxy(config, this);
@@ -2293,8 +2344,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
             await client.join(this._appId, connection.channelId, token || null, connection.localUid);
 
-            this._subClients.set(key, client);
-            this._subClientProxies.set(key, proxy);
+            this.subClients.set(key, client);
+            this.subClientProxies.set(key, proxy);
 
             if (options.publishMicrophoneTrack && this._localAudioTrack) {
                 await client.publish([this._localAudioTrack]).catch(() => {});
@@ -2315,14 +2366,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async leaveChannelEx(connection: RtcConnection, options: LeaveChannelOptions): Promise<number>;
     async leaveChannelEx(connection: unknown, options?: unknown): Promise<number> {
         const key = connectionKey(connection as RtcConnection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
         try {
             await client.leave();
-            this._subClients.delete(key);
-            this._subClientProxies.delete(key);
+            this.subClients.delete(key);
+            this.subClientProxies.delete(key);
             this.rtcEngineEventHandler?.onLeaveChannel(connection as RtcConnection, {} as any);
             return ERR_OK;
         } catch (e) {
@@ -2343,7 +2394,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async updateChannelMediaOptionsEx(options: ChannelMediaOptions, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2355,30 +2406,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setVideoEncoderConfigurationEx(
-        config: VideoEncoderConfiguration,
+        config: NativeVideoEncoderConfiguration,
         connection: RtcConnection,
     ): Promise<number> {
-        if (!this._localVideoTrack) {
-            return ERR_NOT_READY;
-        }
-        try {
-            const webConfig: any = {};
-            if (config.dimensions) {
-                webConfig.width = config.dimensions.width;
-                webConfig.height = config.dimensions.height;
-            }
-            if (config.frameRate) {
-                webConfig.frameRate = config.frameRate;
-            }
-            if (config.bitrate) {
-                webConfig.bitrateMin = config.bitrate;
-                webConfig.bitrateMax = config.bitrate;
-            }
-            await this._localVideoTrack.setEncoderConfiguration(webConfig);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        const key = connectionKey(connection);
+        this.subClientVideoEncoderConfigurations.set(key, config);
+
+        const client = this.subClientProxies.get(key);
+        client?.setEncoderConfiguration(config);
+        return ERROR_CODE_TYPE.ERR_OK;
     }
 
     async setupRemoteVideoEx(canvas: VideoCanvas, connection: RtcConnection): Promise<number> {
@@ -2387,7 +2423,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2400,7 +2436,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async muteRemoteVideoStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2424,7 +2460,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2454,7 +2490,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async muteAllRemoteAudioStreamsEx(mute: boolean, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2468,7 +2504,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async muteAllRemoteVideoStreamsEx(mute: boolean, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2492,7 +2528,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2510,7 +2546,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2528,7 +2564,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2546,7 +2582,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2610,7 +2646,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async adjustUserPlaybackSignalVolumeEx(uid: number, volume: number, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key) || this._mainClientProxy?.getClient();
+        const client = this.subClients.get(key) || this.mainClientProxy?.getClient();
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2623,7 +2659,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async getConnectionStateEx(connection: RtcConnection): Promise<CONNECTION_STATE_TYPE> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
@@ -2633,7 +2669,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2667,7 +2703,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection?: unknown,
     ): Promise<number> {
         const key = connectionKey(connection as RtcConnection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2757,7 +2793,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2767,7 +2803,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async startRtmpStreamWithoutTranscodingEx(url: string, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2785,7 +2821,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2800,7 +2836,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async updateRtmpTranscodingEx(transcoding: LiveTranscoding, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2814,7 +2850,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async stopRtmpStreamEx(url: string, connection: RtcConnection): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2867,7 +2903,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2889,7 +2925,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         connection: RtcConnection,
     ): Promise<number> {
         const key = connectionKey(connection);
-        const client = this._subClients.get(key);
+        const client = this.subClients.get(key);
         if (!client) {
             return ERR_NOT_READY;
         }
@@ -2969,5 +3005,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     ): Promise<number> {
         console.warn("playEffectEx not support in web");
         return -ERR_NOT_SUPPORTED;
+    }
+
+    async initSubClientProxy(subClient: AgoraRTCClientProxy, connection: RtcConnection): Promise<number> {
+        const key = connectionKey(connection);
+
+        if (this.subClientVideoEncoderConfigurations.has(key)) {
+            subClient.setEncoderConfiguration(this.subClientVideoEncoderConfigurations.get(key)!);
+        }
+
+        return ERR_OK;
     }
 }

@@ -15,15 +15,36 @@ import AgoraRTC, {
     ChannelMediaRelayEvent,
     ClientRole,
     ClientRoleOptions,
+    ILocalVideoTrack,
+    ICameraVideoTrack,
+    VideoEncoderConfiguration as WebVideoEncoderConfiguration,
 } from "agora-rtc-sdk-ng";
 import { RtcEngineWeb } from "./RtcEngineWeb";
-import { Web2Native } from "./Helper";
+import { Native2Web, Web2Native } from "./Helper";
 import { RtcConnection } from "../../types/AgoraRtcEngineEx";
-import { ENCRYPTION_ERROR_TYPE } from "../../types/AgoraBase";
+import {
+    AUDIENCE_LATENCY_LEVEL_TYPE,
+    CHANNEL_PROFILE_TYPE,
+    CLIENT_ROLE_TYPE,
+    ENCRYPTION_ERROR_TYPE,
+    ERROR_CODE_TYPE,
+    MultipathMode,
+    MultipathType,
+    VIDEO_STREAM_TYPE,
+    VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
+} from "../../types/AgoraBase";
+import { ChannelMediaOptions } from "../../types/AgoraRtcEngine";
+import { ClientRequest } from "http";
 
 export class AgoraRTCClientProxy {
     private _client!: IAgoraRTCClient;
     private _rtcEngine!: RtcEngineWeb;
+
+    //local camera track
+    _localFirstCameraTrack: ICameraVideoTrack = null;
+    _localSecondCameraTrack: ICameraVideoTrack = null;
+    _localThirdCameraTrack: ICameraVideoTrack = null;
+    _localFourthCameraTrack: ICameraVideoTrack = null;
 
     constructor(config: ClientConfig, rtcEngineWeb: RtcEngineWeb) {
         this._client = AgoraRTC.createClient(config);
@@ -61,29 +82,38 @@ export class AgoraRTCClientProxy {
         return this._client.channelName || "";
     }
 
-    get uid(): UID | undefined {
+    get uid(): UID {
         return this._client.uid;
     }
 
     // ==================== Connection ====================
 
-    async join(appid: string, channel: string, token: string | null, uid?: UID | null): Promise<UID> {
-        return this._client.join(appid, channel, token, uid);
+    async join(
+        appid: string,
+        channel: string,
+        token: string | null,
+        uid?: UID | null,
+        options?: {
+            autoSubscribe?: boolean;
+            networkQualityProbe?: boolean;
+        },
+    ): Promise<UID> {
+        return await this._client.join(appid, channel, token, uid, options);
     }
 
     async leave(): Promise<void> {
-        return this._client.leave();
+        return await this._client.leave();
     }
 
     async renewToken(token: string): Promise<void> {
-        return this._client.renewToken(token);
+        return await this._client.renewToken(token);
     }
 
     async setClientRole(role: ClientRole, options?: ClientRoleOptions): Promise<void> {
         if (options) {
-            return this._client.setClientRole(role, options);
+            return await this._client.setClientRole(role, options);
         }
-        return this._client.setClientRole(role);
+        return await this._client.setClientRole(role);
     }
 
     // ==================== Publish / Subscribe ====================
@@ -474,5 +504,342 @@ export class AgoraRTCClientProxy {
         };
         //can not get streamId and sentTs from agora-rtc-sdk-ng, so set to 0
         this._rtcEngine.rtcEngineEventHandler?.onStreamMessage(con, uid as number, 0, payload, payload.length, 0);
+    }
+
+    //channelMediaOptions
+    _publishCameraTrack: boolean = undefined;
+    _publishSecondaryCameraTrack: boolean = undefined;
+    _publishThirdCameraTrack: boolean = undefined;
+    _publishFourthCameraTrack: boolean = undefined;
+    _publishMicrophoneTrack: boolean = undefined;
+    _publishScreenCaptureAudio: boolean = undefined;
+    _publishScreenCaptureVideo: boolean = undefined;
+    _publishScreenTrack: boolean = undefined;
+    _publishSecondaryScreenTrack: boolean = undefined;
+    _publishThirdScreenTrack: boolean = undefined;
+    _publishFourthScreenTrack: boolean = undefined;
+    _publishCustomAudioTrack: boolean = undefined;
+    _publishCustomAudioTrackId: number = undefined;
+    _publishCustomVideoTrack: boolean = undefined;
+    _publishEncodedVideoTrack: boolean = undefined;
+    _publishMediaPlayerAudioTrack: boolean = undefined;
+    _publishMediaPlayerVideoTrack: boolean = undefined;
+    _publishTranscodedVideoTrack: boolean = undefined;
+    _publishMixedAudioTrack: boolean = undefined;
+    _publishLipSyncTrack: boolean = undefined;
+    _autoSubscribeAudio: boolean = undefined;
+    _autoSubscribeVideo: boolean = undefined;
+    _enableAudioRecordingOrPlayout: boolean = undefined;
+    _publishMediaPlayerId: number = undefined;
+    _clientRoleType: CLIENT_ROLE_TYPE = undefined;
+    _audienceLatencyLevel: AUDIENCE_LATENCY_LEVEL_TYPE = undefined;
+    _defaultVideoStreamType: VIDEO_STREAM_TYPE = undefined;
+    _channelProfile: CHANNEL_PROFILE_TYPE = undefined;
+    _audioDelayMs: number = undefined;
+    _mediaPlayerAudioDelayMs: number = undefined;
+    _token: string = undefined;
+    _enableBuiltInMediaEncryption: boolean = undefined;
+    _publishRhythmPlayerTrack: boolean = undefined;
+    _isInteractiveAudience: boolean = undefined;
+    _customVideoTrackId: number = undefined;
+    _isAudioFilterable: boolean = undefined;
+    _parameters: string = undefined;
+    _enableMultipath: boolean = undefined;
+    _uplinkMultipathMode: MultipathMode = undefined;
+    _downlinkMultipathMode: MultipathMode = undefined;
+    _preferMultipathType: MultipathType = undefined;
+    async updateChannelMediaOptions(options: ChannelMediaOptions): Promise<number> {
+        if (this._client.uid === undefined || this._client.channelName === undefined) {
+            return -ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL;
+        }
+
+        if (this._rtcEngine.videoEnabled) {
+            if (options.publishCameraTrack !== undefined && options.publishCameraTrack !== this._publishCameraTrack) {
+                this._publishCameraTrack = options.publishCameraTrack;
+                if (!this._publishCameraTrack && this._localFirstCameraTrack) {
+                    this._client.unpublish(this._localFirstCameraTrack);
+                } else {
+                    if (!this._localFirstCameraTrack) {
+                        this.createLocalFirstCameraVideoTrack();
+                    }
+                    this._client.publish(this._localFirstCameraTrack);
+                }
+            }
+
+            if (
+                options.publishSecondaryCameraTrack !== undefined &&
+                options.publishSecondaryCameraTrack !== this._publishSecondaryCameraTrack
+            ) {
+                this._publishSecondaryCameraTrack = options.publishSecondaryCameraTrack;
+                if (!this._publishSecondaryCameraTrack && this._localSecondCameraTrack) {
+                    this._client.unpublish(this._localSecondCameraTrack);
+                } else {
+                    if (!this._localSecondCameraTrack) {
+                        console.warn("Secondary camera track is not created yet. call startCameraCapture first.");
+                    }
+                }
+            }
+
+            if (
+                options.publishThirdCameraTrack !== undefined &&
+                options.publishThirdCameraTrack !== this._publishThirdCameraTrack
+            ) {
+                this._publishThirdCameraTrack = options.publishThirdCameraTrack;
+                if (!this._publishThirdCameraTrack && this._localThirdCameraTrack) {
+                    this._client.unpublish(this._localThirdCameraTrack);
+                } else {
+                    if (!this._localThirdCameraTrack) {
+                        console.warn("Third camera track is not created yet. call startCameraCapture first.");
+                    }
+                }
+            }
+
+            if (
+                options.publishFourthCameraTrack !== undefined &&
+                options.publishFourthCameraTrack !== this._publishFourthCameraTrack
+            ) {
+                this._publishFourthCameraTrack = options.publishFourthCameraTrack;
+                if (!this._publishFourthCameraTrack && this._localFourthCameraTrack) {
+                    this._client.unpublish(this._localFourthCameraTrack);
+                } else {
+                    if (!this._localFourthCameraTrack) {
+                        console.warn("Fourth camera track is not created yet. call startCameraCapture first.");
+                    }
+                }
+            }
+        }
+
+        if (this._rtcEngine.audioEnabled) {
+            if (
+                options.publishMicrophoneTrack !== undefined &&
+                options.publishMicrophoneTrack !== this._publishMicrophoneTrack
+            ) {
+                // no-op
+            }
+        }
+
+        if (
+            options.publishScreenCaptureAudio !== undefined &&
+            options.publishScreenCaptureAudio !== this._publishScreenCaptureAudio
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishScreenCaptureVideo !== undefined &&
+            options.publishScreenCaptureVideo !== this._publishScreenCaptureVideo
+        ) {
+            // no-op
+        }
+
+        if (options.publishScreenTrack !== undefined && options.publishScreenTrack !== this._publishScreenTrack) {
+            // no-op
+        }
+
+        if (
+            options.publishSecondaryScreenTrack !== undefined &&
+            options.publishSecondaryScreenTrack !== this._publishSecondaryScreenTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishThirdScreenTrack !== undefined &&
+            options.publishThirdScreenTrack !== this._publishThirdScreenTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishFourthScreenTrack !== undefined &&
+            options.publishFourthScreenTrack !== this._publishFourthScreenTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishCustomAudioTrack !== undefined &&
+            options.publishCustomAudioTrack !== this._publishCustomAudioTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishCustomAudioTrackId !== undefined &&
+            options.publishCustomAudioTrackId !== this._publishCustomAudioTrackId
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishCustomVideoTrack !== undefined &&
+            options.publishCustomVideoTrack !== this._publishCustomVideoTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishEncodedVideoTrack !== undefined &&
+            options.publishEncodedVideoTrack !== this._publishEncodedVideoTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishMediaPlayerAudioTrack !== undefined &&
+            options.publishMediaPlayerAudioTrack !== this._publishMediaPlayerAudioTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishMediaPlayerVideoTrack !== undefined &&
+            options.publishMediaPlayerVideoTrack !== this._publishMediaPlayerVideoTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishTranscodedVideoTrack !== undefined &&
+            options.publishTranscodedVideoTrack !== this._publishTranscodedVideoTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishMixedAudioTrack !== undefined &&
+            options.publishMixedAudioTrack !== this._publishMixedAudioTrack
+        ) {
+            // no-op
+        }
+
+        if (options.publishLipSyncTrack !== undefined && options.publishLipSyncTrack !== this._publishLipSyncTrack) {
+            // no-op
+        }
+
+        if (options.autoSubscribeAudio !== undefined && options.autoSubscribeAudio !== this._autoSubscribeAudio) {
+            // no-op
+        }
+
+        if (options.autoSubscribeVideo !== undefined && options.autoSubscribeVideo !== this._autoSubscribeVideo) {
+            // no-op
+        }
+
+        if (
+            options.enableAudioRecordingOrPlayout !== undefined &&
+            options.enableAudioRecordingOrPlayout !== this._enableAudioRecordingOrPlayout
+        ) {
+            // no-op
+        }
+
+        if (options.publishMediaPlayerId !== undefined && options.publishMediaPlayerId !== this._publishMediaPlayerId) {
+            // no-op
+        }
+
+        if (options.clientRoleType !== undefined && options.clientRoleType !== this._clientRoleType) {
+            // no-op
+        }
+
+        if (options.audienceLatencyLevel !== undefined && options.audienceLatencyLevel !== this._audienceLatencyLevel) {
+            // no-op
+        }
+
+        if (
+            options.defaultVideoStreamType !== undefined &&
+            options.defaultVideoStreamType !== this._defaultVideoStreamType
+        ) {
+            // no-op
+        }
+
+        if (options.channelProfile !== undefined && options.channelProfile !== this._channelProfile) {
+            // no-op
+        }
+
+        if (options.audioDelayMs !== undefined && options.audioDelayMs !== this._audioDelayMs) {
+            // no-op
+        }
+
+        if (
+            options.mediaPlayerAudioDelayMs !== undefined &&
+            options.mediaPlayerAudioDelayMs !== this._mediaPlayerAudioDelayMs
+        ) {
+            // no-op
+        }
+
+        if (options.token !== undefined && options.token !== this._token) {
+            // no-op
+        }
+
+        if (
+            options.enableBuiltInMediaEncryption !== undefined &&
+            options.enableBuiltInMediaEncryption !== this._enableBuiltInMediaEncryption
+        ) {
+            // no-op
+        }
+
+        if (
+            options.publishRhythmPlayerTrack !== undefined &&
+            options.publishRhythmPlayerTrack !== this._publishRhythmPlayerTrack
+        ) {
+            // no-op
+        }
+
+        if (
+            options.isInteractiveAudience !== undefined &&
+            options.isInteractiveAudience !== this._isInteractiveAudience
+        ) {
+            // no-op
+        }
+
+        if (options.customVideoTrackId !== undefined && options.customVideoTrackId !== this._customVideoTrackId) {
+            // no-op
+        }
+
+        if (options.isAudioFilterable !== undefined && options.isAudioFilterable !== this._isAudioFilterable) {
+            // no-op
+        }
+
+        if (options.parameters !== undefined && options.parameters !== this._parameters) {
+            // no-op
+        }
+
+        if (options.enableMultipath !== undefined && options.enableMultipath !== this._enableMultipath) {
+            // no-op
+        }
+
+        if (options.uplinkMultipathMode !== undefined && options.uplinkMultipathMode !== this._uplinkMultipathMode) {
+            // no-op
+        }
+
+        if (
+            options.downlinkMultipathMode !== undefined &&
+            options.downlinkMultipathMode !== this._downlinkMultipathMode
+        ) {
+            // no-op
+        }
+
+        if (options.preferMultipathType !== undefined && options.preferMultipathType !== this._preferMultipathType) {
+            // no-op
+        }
+
+        return ERR_OK;
+    }
+
+    _videoEncoderConfig: WebVideoEncoderConfiguration = undefined;
+    public async setEncoderConfiguration(videoEncoderConfig: NativeVideoEncoderConfiguration): Promise<void> {
+        this._videoEncoderConfig = Native2Web.VideoEncoderConfiguration(videoEncoderConfig);
+
+        this._localFirstCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
+        this._localSecondCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
+        this._localThirdCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
+        this._localFourthCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
+    }
+
+    async createLocalFirstCameraVideoTrack(): Promise<number> {
+        this._localFirstCameraTrack = await AgoraRTC.createCameraVideoTrack({
+            encoderConfig: this._videoEncoderConfig,
+            //todo other options
+        });
+        return ERROR_CODE_TYPE.ERR_OK;
     }
 }

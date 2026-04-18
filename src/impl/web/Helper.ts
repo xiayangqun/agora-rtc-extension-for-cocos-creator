@@ -6,6 +6,8 @@ import {
     EncryptionMode,
     DeviceState,
     AREAS,
+    IAgoraRTCError,
+    VideoEncoderConfiguration as WebVideoEncoderConfiguration,
 } from "agora-rtc-sdk-ng";
 import {
     CONNECTION_CHANGED_REASON_TYPE,
@@ -20,6 +22,8 @@ import {
     AREA_CODE,
     AREA_CODE_EX,
     ERROR_CODE_TYPE,
+    VIDEO_CODEC_TYPE,
+    VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
 } from "../../types/AgoraBase";
 import { MEDIA_DEVICE_STATE_TYPE, STREAM_FALLBACK_OPTIONS } from "../../types/AgoraRtcEngine";
 import { SIMULCAST_STREAM_MODE } from "../../types/AgoraBase";
@@ -124,6 +128,195 @@ export class Web2Native {
                 return MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_IDLE;
             default:
                 return MEDIA_DEVICE_STATE_TYPE.MEDIA_DEVICE_STATE_IDLE;
+        }
+    }
+
+    // "H264" | "H265" | "VP8" | "VP9" | "AV1X" | "AV1";
+    public static string2VIDEO_CODEC_TYPE(webCodec: string): VIDEO_CODEC_TYPE {
+        switch (webCodec) {
+            case "H264":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_H264;
+            case "H265":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_H265;
+            case "VP8":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_VP8;
+            case "VP9":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_VP9;
+            case "AV1X":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_AV1;
+            case "AV1":
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_AV1;
+            default:
+                return VIDEO_CODEC_TYPE.VIDEO_CODEC_NONE;
+        }
+    }
+
+    public static AgoraRTCErrorCode(code: AgoraRTCErrorCode): ERROR_CODE_TYPE {
+        switch (code) {
+            // 参数非法
+            case AgoraRTCErrorCode.INVALID_PARAMS:
+            case AgoraRTCErrorCode.MEDIA_OPTION_INVALID:
+            case AgoraRTCErrorCode.INVALID_LOCAL_TRACK:
+            case AgoraRTCErrorCode.INVALID_TRACK:
+            case AgoraRTCErrorCode.SENDER_NOT_FOUND:
+            case AgoraRTCErrorCode.INVALID_UINT_UID_FROM_STRING_UID:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INVALID_ARGUMENT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INVALID_RAW_STREAM:
+            case AgoraRTCErrorCode.INVALID_PLUGIN:
+                return ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+
+            // 状态非法/未就绪
+            case AgoraRTCErrorCode.INVALID_OPERATION:
+            case AgoraRTCErrorCode.TRACK_IS_DISABLED:
+            case AgoraRTCErrorCode.TRACK_STATE_UNREACHABLE:
+            case AgoraRTCErrorCode.EXIST_DISABLED_VIDEO_TRACK:
+                return ERROR_CODE_TYPE.ERR_INVALID_STATE;
+
+            // 不支持
+            case AgoraRTCErrorCode.NOT_SUPPORTED:
+            case AgoraRTCErrorCode.CONSTRAINT_NOT_SATISFIED:
+            case AgoraRTCErrorCode.ELECTRON_IS_NULL:
+            case AgoraRTCErrorCode.ELECTRON_DESKTOP_CAPTURER_GET_SOURCES_ERROR:
+            case AgoraRTCErrorCode.CHROME_PLUGIN_NO_RESPONSE:
+            case AgoraRTCErrorCode.CHROME_PLUGIN_NOT_INSTALL:
+            case AgoraRTCErrorCode.GET_LOCAL_CAPABILITIES_FAILED:
+            case AgoraRTCErrorCode.CAN_NOT_PUBLISH_MULTIPLE_VIDEO_TRACKS:
+            case AgoraRTCErrorCode.LIVE_STREAMING_TRANSCODING_NOT_SUPPORTED:
+                return ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
+
+            // 权限不足
+            case AgoraRTCErrorCode.PERMISSION_DENIED:
+            case AgoraRTCErrorCode.SHARE_AUDIO_NOT_ALLOWED:
+                return ERROR_CODE_TYPE.ERR_NO_PERMISSION;
+
+            // 超时
+            case AgoraRTCErrorCode.TIMEOUT:
+            case AgoraRTCErrorCode.NETWORK_TIMEOUT:
+            case AgoraRTCErrorCode.API_INVOKE_TIMEOUT:
+            case AgoraRTCErrorCode.INIT_DATACHANNEL_TIMEOUT:
+            case AgoraRTCErrorCode.DATACHANNEL_CONNECTION_TIMEOUT:
+                return ERROR_CODE_TYPE.ERR_TIMEDOUT;
+
+            // 操作被取消/中止
+            case AgoraRTCErrorCode.OPERATION_ABORTED:
+                return ERROR_CODE_TYPE.ERR_ABORTED;
+
+            // 网络错误
+            case AgoraRTCErrorCode.NETWORK_ERROR:
+            case AgoraRTCErrorCode.NETWORK_RESPONSE_ERROR:
+            case AgoraRTCErrorCode.WS_ERR:
+                return ERROR_CODE_TYPE.ERR_NET_DOWN;
+
+            // 连接断开/中断 (P2P/WebSocket层)
+            case AgoraRTCErrorCode.PC_CLOSED:
+            case AgoraRTCErrorCode.GATEWAY_P2P_LOST:
+            case AgoraRTCErrorCode.WS_ABORT:
+            case AgoraRTCErrorCode.WS_DISCONNECT:
+            case AgoraRTCErrorCode.EXTERNAL_SIGNAL_ABORT:
+            case AgoraRTCErrorCode.DISCONNECT_P2P:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_PACKET_SENT_TO_DEST:
+            case AgoraRTCErrorCode.P2P_MESSAGE_FAILED:
+                return ERROR_CODE_TYPE.ERR_CONNECTION_LOST;
+
+            // P2P 信令交互失败
+            case AgoraRTCErrorCode.EXCHANGE_SDP_FAILED:
+            case AgoraRTCErrorCode.ADD_CANDIDATE_FAILED:
+            case AgoraRTCErrorCode.CREATE_OFFER_FAILED:
+            case AgoraRTCErrorCode.SET_ANSWER_FAILED:
+            case AgoraRTCErrorCode.ICE_FAILED:
+            case AgoraRTCErrorCode.NO_ICE_CANDIDATE:
+                return ERROR_CODE_TYPE.ERR_CONNECTION_INTERRUPTED;
+
+            // 拒绝/安全策略
+            case AgoraRTCErrorCode.WEB_SECURITY_RESTRICT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_PUBLISH_STREAM_NOT_AUTHORIZED:
+                return ERROR_CODE_TYPE.ERR_REFUSED;
+
+            // DataChannel / 数据流
+            case AgoraRTCErrorCode.DATACHANNEL_FAILED:
+            case AgoraRTCErrorCode.CREATE_DATACHANNEL_ERROR:
+                return ERROR_CODE_TYPE.ERR_DATASTREAM_DECRYPTION_FAILED;
+
+            // 资源受限/设备不可用
+            case AgoraRTCErrorCode.NOT_READABLE:
+            case AgoraRTCErrorCode.ENUMERATE_DEVICES_FAILED:
+            case AgoraRTCErrorCode.DEVICE_NOT_FOUND:
+            case AgoraRTCErrorCode.LOCAL_AEC_ERROR:
+                return ERROR_CODE_TYPE.ERR_RESOURCE_LIMITED;
+
+            // 服务器资源不足 / 网关不可用
+            case AgoraRTCErrorCode.CAN_NOT_GET_PROXY_SERVER:
+            case AgoraRTCErrorCode.CAN_NOT_GET_GATEWAY_SERVER:
+            case AgoraRTCErrorCode.VOID_GATEWAY_ADDRESS:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INTERNAL_SERVER_ERROR:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_SERVER_ERROR_RESPONSE:
+                return ERROR_CODE_TYPE.ERR_NO_SERVER_RESOURCES;
+
+            // Token 过期
+            case AgoraRTCErrorCode.TOKEN_EXPIRE:
+                return ERROR_CODE_TYPE.ERR_TOKEN_EXPIRED;
+
+            // UID 冲突
+            case AgoraRTCErrorCode.UID_CONFLICT:
+                return ERROR_CODE_TYPE.ERR_LOGIN_ALREADY_LOGIN;
+
+            // 远端用户不存在/未就绪
+            case AgoraRTCErrorCode.INVALID_REMOTE_USER:
+                return ERROR_CODE_TYPE.ERR_INVALID_USER_ID;
+            case AgoraRTCErrorCode.REMOTE_USER_IS_NOT_PUBLISHED:
+                return ERROR_CODE_TYPE.ERR_RDT_USER_NOT_READY;
+
+            // 已被占用
+            case AgoraRTCErrorCode.LIVE_STREAMING_TASK_CONFLICT:
+                return ERROR_CODE_TYPE.ERR_ALREADY_IN_USE;
+
+            // 频率/数量超限
+            case AgoraRTCErrorCode.CUSTOM_REPORT_FREQUENCY_TOO_HIGH:
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_FREQUENT_REQUEST:
+                return ERROR_CODE_TYPE.ERR_TOO_OFTEN;
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_STREAM_NUM_REACH_LIMIT:
+                return ERROR_CODE_TYPE.ERR_TOO_MANY_DATA_STREAMS;
+
+            // 数据过大
+            case AgoraRTCErrorCode.METADATA_OUT_OF_RANGE:
+                return ERROR_CODE_TYPE.ERR_SIZE_TOO_LARGE;
+
+            // 禁止的操作
+            case AgoraRTCErrorCode.PROHIBITED_OPERATION:
+                return ERROR_CODE_TYPE.ERR_FUNC_IS_PROHIBITED;
+
+            // 跨频道加入失败
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_JOIN_SRC:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_JOIN_DEST:
+                return ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
+
+            // 其余全部兜底到 ERR_FAILED
+            case AgoraRTCErrorCode.UNEXPECTED_ERROR:
+            case AgoraRTCErrorCode.UNEXPECTED_RESPONSE:
+            case AgoraRTCErrorCode.PB_ERROR:
+            case AgoraRTCErrorCode.GET_VIDEO_ELEMENT_VISIBLE_ERROR:
+            case AgoraRTCErrorCode.LOW_STREAM_ENCODING_ERROR:
+            case AgoraRTCErrorCode.SET_ENCODING_PARAMETER_ERROR:
+            case AgoraRTCErrorCode.MULTI_UNILBS_RESPONSE_ERROR:
+            case AgoraRTCErrorCode.UPDATE_TICKET_FAILED:
+            case AgoraRTCErrorCode.SENDER_REPLACE_FAILED:
+            case AgoraRTCErrorCode.GET_LOCAL_CONNECTION_PARAMS_FAILED:
+            case AgoraRTCErrorCode.SUBSCRIBE_FAILED:
+            case AgoraRTCErrorCode.UNSUBSCRIBE_FAILED:
+            case AgoraRTCErrorCode.CUSTOM_REPORT_SEND_FAILED:
+            case AgoraRTCErrorCode.FETCH_AUDIO_FILE_FAILED:
+            case AgoraRTCErrorCode.READ_LOCAL_AUDIO_FILE_ERROR:
+            case AgoraRTCErrorCode.DECODE_AUDIO_FILE_FAILED:
+            case AgoraRTCErrorCode.LIVE_STREAMING_CDN_ERROR:
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_FAILED_LOAD_IMAGE:
+            case AgoraRTCErrorCode.WEBGL_INTERNAL_ERROR:
+            case AgoraRTCErrorCode.BEAUTY_PROCESSOR_INTERNAL_ERROR:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_WAIT_STATUS_ERROR:
+            case AgoraRTCErrorCode.CONVERTING_IMAGEDATA_TO_BLOB_FAILED:
+            case AgoraRTCErrorCode.CONVERTING_VIDEO_FRAME_TO_BLOB_FAILED:
+            case AgoraRTCErrorCode.IMAGE_MODERATION_UPLOAD_FAILED:
+            default:
+                return ERROR_CODE_TYPE.ERR_FAILED;
         }
     }
 }
@@ -315,4 +508,23 @@ export class Native2Web {
                 return AgoraRTCErrorCode.UNEXPECTED_ERROR;
         }
     }
+
+    public static VideoEncoderConfiguration(config: NativeVideoEncoderConfiguration): WebVideoEncoderConfiguration {
+        return {
+            width: config.dimensions.width,
+            height: config.dimensions.height,
+            frameRate: config.frameRate,
+            bitrateMin: config.minBitrate,
+            bitrateMax: config.bitrate,
+        };
+    }
+}
+
+export function isAgoraRTCError(e: unknown): boolean {
+    return (
+        e instanceof Error &&
+        "code" in e &&
+        typeof (e as IAgoraRTCError).code === "string" &&
+        (e as IAgoraRTCError).code !== undefined
+    );
 }
