@@ -413,7 +413,7 @@ export interface IRtcEngine {
 
     setLogFileSize(fileSizeInKBytes: number): Promise<number>;
 
-    uploadLogFile(requestId: string): Promise<number>;
+    uploadLogFile(): Promise<{ requestId: string; errorCode: number }>;
 
     writeLog(level: LOG_LEVEL, fmt: string): Promise<number>;
 

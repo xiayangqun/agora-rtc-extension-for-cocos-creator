@@ -539,6 +539,17 @@ export class Native2Web {
                 return AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
         }
     }
+
+    /* @param level The output log level.
+     * - 0: DEBUG. Output all API logs.
+     * - 1: INFO. Output logs of the INFO, WARNING and ERROR level.
+     * - 2: WARNING. Output logs of the WARNING and ERROR level.
+     * - 3: ERROR. Output logs of the ERROR level.
+     * - 4: NONE. Do not output any log.
+     */
+    public static LOG_LEVEL(level: LOG_LEVEL): number {
+        //ai todo
+    }
 }
 
 export function isAgoraRTCError(e: unknown): boolean {

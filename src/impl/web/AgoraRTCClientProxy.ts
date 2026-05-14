@@ -153,37 +153,37 @@ export class AgoraRTCClientProxy {
     // ==================== Video Stream Control ====================
 
     async setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
-        return this._client.setRemoteVideoStreamType(uid, streamType);
+        return await this._client.setRemoteVideoStreamType(uid, streamType);
     }
 
     async setRemoteDefaultVideoStreamType(streamType: RemoteStreamType): Promise<void> {
-        return this._client.setRemoteDefaultVideoStreamType(streamType);
+        return await this._client.setRemoteDefaultVideoStreamType(streamType);
     }
 
     async setDualStreamMode(mode: number, streamParameter?: any): Promise<void> {
-        return (this._client as any).setDualStreamMode(mode, streamParameter);
+        //ai todo
     }
 
     async setStreamFallbackOption(uid: UID, fallbackType: any): Promise<void> {
-        return (this._client as any).setStreamFallbackOption(uid, fallbackType);
+        //ai todo
     }
 
     // ==================== Subscription Filters ====================
 
-    setSubscribeAudioBlocklist(uidList: UID[]): void {
-        (this._client as any).setSubscribeAudioBlocklist?.(uidList);
+    async setSubscribeAudioBlocklist(uidList: UID[]): Promise<void> {
+        //ai todo
     }
 
-    setSubscribeAudioAllowlist(uidList: UID[]): void {
-        (this._client as any).setSubscribeAudioAllowlist?.(uidList);
+    async setSubscribeAudioAllowlist(uidList: UID[]): Promise<void> {
+        //ai todo
     }
 
-    setSubscribeVideoBlocklist(uidList: UID[]): void {
-        (this._client as any).setSubscribeVideoBlocklist?.(uidList);
+    async setSubscribeVideoBlocklist(uidList: UID[]): Promise<void> {
+        //ai todo
     }
 
-    setSubscribeVideoAllowlist(uidList: UID[]): void {
-        (this._client as any).setSubscribeVideoAllowlist?.(uidList);
+    async setSubscribeVideoAllowlist(uidList: UID[]): Promise<void> {
+        //ai todo
     }
 
     // ==================== Volume ====================
@@ -195,7 +195,7 @@ export class AgoraRTCClientProxy {
     // ==================== Encryption ====================
 
     setEncryptionConfig(encryptionMode: string, secret: string, salt?: Uint8Array, encryptDataStream?: boolean): void {
-        (this._client as any).setEncryptionConfig(encryptionMode, secret, salt, encryptDataStream);
+        //ai todo
     }
 
     // ==================== CDN Streaming ====================
@@ -205,7 +205,7 @@ export class AgoraRTCClientProxy {
     }
 
     async setLiveTranscoding(config: any): Promise<void> {
-        return (this._client as any).setLiveTranscoding(config);
+        //ai todo
     }
 
     async stopLiveStreaming(url: string): Promise<void> {
@@ -215,7 +215,7 @@ export class AgoraRTCClientProxy {
     // ==================== Channel Media Relay ====================
 
     async startChannelMediaRelay(config: any): Promise<void> {
-        return (this._client as any).startChannelMediaRelay(config);
+        //ai todo
     }
 
     async stopChannelMediaRelay(): Promise<void> {
@@ -947,6 +947,30 @@ export class AgoraRTCClientProxy {
         }
 
         return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async muteLocalAudioStream(mute: boolean): Promise<number> {
+        //ai todo
+    }
+
+    async muteLocalVideoStream(mute: boolean): Promise<number> {
+        //ai todo
+    }
+
+    async muteAllRemoteAudioStreams(mute: boolean): Promise<number> {
+        //ai todo
+    }
+
+    async muteRemoteAudioStream(uid: number, mute: boolean): Promise<number> {
+        //ai todo
+    }
+
+    async muteAllRemoteVideoStreams(mute: boolean): Promise<number> {
+        //ai todo
+    }
+
+    async muteRemoteVideoStream(uid: number, mute: boolean): Promise<number> {
+        //ai todo
     }
 
     // ==================== TrackManager Proxy Methods ====================

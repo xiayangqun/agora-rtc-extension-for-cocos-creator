@@ -169,11 +169,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
     public audioEnabled = true;
     public videoEnabled = false;
     public dualStreamEnabled = false;
-    public audioVolumeIndicationEnabled = false;
 
     public trackManager: TrackManager = new TrackManager();
 
-    private _localVideoTrack?: ILocalVideoTrack;
     private _mediaPlayerIdCounter = 0;
     private _mediaPlayers: Map<number, MediaPlayerWeb> = new Map();
 
@@ -699,135 +697,72 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableAudio(): Promise<number> {
         this.audioEnabled = true;
-        try {
-            if (!this._localAudioTrack) {
-                this._localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-            }
-            return ERR_OK;
-        } catch (e) {
-            console.error("enableAudio failed:", e);
-            return ERR_FAILED;
-        }
+        this.trackManager.enableAudio();
+        return ERR_OK;
     }
 
     async disableAudio(): Promise<number> {
         this.audioEnabled = false;
-        if (this._localAudioTrack) {
-            this._localAudioTrack.close();
-            this._localAudioTrack = undefined;
-        }
+        this.trackManager.disableAudio();
         return ERR_OK;
     }
 
     async setAudioProfile(profile: AUDIO_PROFILE_TYPE, scenario: AUDIO_SCENARIO_TYPE): Promise<number>;
     async setAudioProfile(profile: AUDIO_PROFILE_TYPE): Promise<number>;
     async setAudioProfile(profile: unknown, scenario?: unknown): Promise<number> {
-        return ERR_OK;
+        console.warn("setAudioProfile not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setAudioScenario(scenario: AUDIO_SCENARIO_TYPE): Promise<number> {
-        return ERR_OK;
+        console.warn("setAudioScenario not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async enableLocalAudio(enabled: boolean): Promise<number> {
-        try {
-            if (!this._localAudioTrack) {
-                if (enabled) {
-                    this._localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-                }
-            } else {
-                await this._localAudioTrack.setEnabled(enabled);
-            }
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        //do it for all client
+        this.trackManager.enableLocalAudio(enabled);
+        return ERR_OK;
     }
 
     async muteLocalAudioStream(mute: boolean): Promise<number> {
-        if (!this._localAudioTrack) {
-            return mute ? ERR_OK : ERR_NOT_READY;
-        }
-        try {
-            await this._localAudioTrack.setEnabled(!mute);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        this.mainClientProxy.muteLocalAudioStream(mute);
+        return ERR_OK;
     }
 
     async muteAllRemoteAudioStreams(mute: boolean): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        for (const user of this.mainClientProxy!.remoteUsers) {
-            if (user.audioTrack) {
-                user.audioTrack.setVolume(mute ? 0 : 100);
-            }
-        }
+        await this.mainClientProxy?.muteAllRemoteAudioStreams(mute);
         return ERR_OK;
     }
 
     async muteRemoteAudioStream(uid: number, mute: boolean): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
-        if (user?.audioTrack) {
-            user.audioTrack.setVolume(mute ? 0 : 100);
-        }
+        await this.mainClientProxy?.muteRemoteAudioStream(uid, mute);
         return ERR_OK;
     }
 
     async muteLocalVideoStream(mute: boolean): Promise<number> {
-        if (!this._localVideoTrack) {
-            return mute ? ERR_OK : ERR_NOT_READY;
-        }
-        try {
-            await this._localVideoTrack.setEnabled(!mute);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        await this.mainClientProxy.muteLocalVideoStream(mute);
+        return ERR_OK;
     }
 
     async enableLocalVideo(enabled: boolean): Promise<number> {
-        try {
-            if (!this._localVideoTrack) {
-                if (enabled) {
-                    this._localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-                }
-            } else {
-                await this._localVideoTrack.setEnabled(enabled);
-            }
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        await this.trackManager.enableLocalVideo(enabled);
+        return ERR_OK;
     }
 
     async muteAllRemoteVideoStreams(mute: boolean): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        for (const user of this.mainClientProxy!.remoteUsers) {
-            if (user.videoTrack) {
-                if (mute) {
-                    await this.mainClientProxy!.unsubscribe(user, "video").catch(() => {});
-                } else {
-                    await this.mainClientProxy!.subscribe(user, "video").catch(() => {});
-                }
-            }
-        }
+        this.mainClientProxy?.muteAllRemoteVideoStreams(mute);
         return ERR_OK;
     }
 
     async setRemoteDefaultVideoStreamType(streamType: VIDEO_STREAM_TYPE): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.setRemoteDefaultVideoStreamType(Native2Web.VideoStreamType(streamType));
+            const st = Native2Web.VideoStreamType(streamType);
+            await this.mainClientProxy?.setRemoteDefaultVideoStreamType(st);
+
+            this.subClientProxies.forEach((client) => {
+                client.setRemoteDefaultVideoStreamType(st);
+            });
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -835,43 +770,23 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async muteRemoteVideoStream(uid: number, mute: boolean): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
-        if (user) {
-            if (mute) {
-                await this.mainClientProxy!.unsubscribe(user, "video").catch(() => {});
-            } else {
-                await this.mainClientProxy!.subscribe(user, "video").catch(() => {});
-            }
-        }
+        await this.mainClientProxy.muteRemoteVideoStream(uid, mute);
         return ERR_OK;
     }
 
     async setRemoteVideoStreamType(uid: number, streamType: VIDEO_STREAM_TYPE): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            this.mainClientProxy!.setRemoteVideoStreamType(uid, Native2Web.VideoStreamType(streamType));
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        await this.mainClientProxy?.setRemoteVideoStreamType(uid, Native2Web.VideoStreamType(streamType));
+        return ERR_OK;
     }
 
     async setRemoteVideoSubscriptionOptions(uid: number, options: VideoSubscriptionOptions): Promise<number> {
-        console.warn("setRemoteVideoSubscriptionOptions not support in web");
-        return -ERR_NOT_SUPPORTED;
+        await this.mainClientProxy?.setRemoteVideoStreamType(uid, Native2Web.VideoStreamType(options.type));
+        return -ERR_OK;
     }
 
     async setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.setSubscribeAudioBlocklist(uidList);
+            await this.mainClientProxy?.setSubscribeAudioBlocklist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -879,11 +794,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.setSubscribeAudioAllowlist(uidList);
+            await this.mainClientProxy?.setSubscribeAudioAllowlist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -891,11 +803,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.setSubscribeVideoBlocklist(uidList);
+            await this.mainClientProxy?.setSubscribeVideoBlocklist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -903,11 +812,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.setSubscribeVideoAllowlist(uidList);
+            await this.mainClientProxy?.setSubscribeVideoAllowlist(uidList);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -915,13 +821,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        if (!this.audioVolumeIndicationEnabled) {
-            this.mainClientProxy!.enableAudioVolumeIndicator();
-            this.audioVolumeIndicationEnabled = true;
-        }
+        this.mainClientProxy?.enableAudioVolumeIndicator();
         return ERR_OK;
     }
 
@@ -977,13 +877,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async createMediaRecorder(info: RecorderStreamInfo): Promise<IMediaRecorder> {
-        console.warn("createMediaRecorder not support in web");
-        throw new Error("createMediaRecorder not support in web");
+        return new MediaRecorderWeb();
     }
 
     async destroyMediaRecorder(mediaRecorder: IMediaRecorder): Promise<number> {
-        console.warn("destroyMediaRecorder not support in web");
-        return -ERR_NOT_SUPPORTED;
+        //do nothing
+        return ERR_OK;
     }
 
     async startAudioMixing(filePath: string, loopback: boolean, cycle: number): Promise<number>;
@@ -1098,7 +997,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         publish: boolean,
         startPos: number,
     ): Promise<number> {
-        console.warn("playEffect not support in web");
+        console.warn("playEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
@@ -1109,112 +1008,112 @@ export class RtcEngineWeb implements IRtcEngineEx {
         gain: number,
         publish: boolean,
     ): Promise<number> {
-        console.warn("playAllEffects not support in web");
+        console.warn("playAllEffects not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async getVolumeOfEffect(soundId: number): Promise<number> {
-        console.warn("getVolumeOfEffect not support in web");
+        console.warn("getVolumeOfEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setVolumeOfEffect(soundId: number, volume: number): Promise<number> {
-        console.warn("setVolumeOfEffect not support in web");
+        console.warn("setVolumeOfEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async pauseEffect(soundId: number): Promise<number> {
-        console.warn("pauseEffect not support in web");
+        console.warn("pauseEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async pauseAllEffects(): Promise<number> {
-        console.warn("pauseAllEffects not support in web");
+        console.warn("pauseAllEffects not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async resumeEffect(soundId: number): Promise<number> {
-        console.warn("resumeEffect not support in web");
+        console.warn("resumeEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async resumeAllEffects(): Promise<number> {
-        console.warn("resumeAllEffects not support in web");
+        console.warn("resumeAllEffects not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async stopEffect(soundId: number): Promise<number> {
-        console.warn("stopEffect not support in web");
+        console.warn("stopEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async stopAllEffects(): Promise<number> {
-        console.warn("stopAllEffects not support in web");
+        console.warn("stopAllEffects not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async unloadEffect(soundId: number): Promise<number> {
-        console.warn("unloadEffect not support in web");
+        console.warn("unloadEffect not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async unloadAllEffects(): Promise<number> {
-        console.warn("unloadAllEffects not support in web");
+        console.warn("unloadAllEffects not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async getEffectDuration(filePath: string): Promise<number> {
-        console.warn("getEffectDuration not support in web");
+        console.warn("getEffectDuration not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setEffectPosition(soundId: number, pos: number): Promise<number> {
-        console.warn("setEffectPosition not support in web");
+        console.warn("setEffectPosition not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async getEffectCurrentPosition(soundId: number): Promise<number> {
-        console.warn("getEffectCurrentPosition not support in web");
+        console.warn("getEffectCurrentPosition not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async enableSoundPositionIndication(enabled: boolean): Promise<number> {
-        console.warn("enableSoundPositionIndication not support in web");
+        console.warn("enableSoundPositionIndication not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setRemoteVoicePosition(uid: number, pan: number, gain: number): Promise<number> {
-        console.warn("setRemoteVoicePosition not support in web");
+        console.warn("setRemoteVoicePosition not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async enableSpatialAudio(enabled: boolean): Promise<number> {
-        console.warn("enableSpatialAudio not support in web");
+        console.warn("enableSpatialAudio not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setRemoteUserSpatialAudioParams(uid: number, params: SpatialAudioParams): Promise<number> {
-        console.warn("setRemoteUserSpatialAudioParams not support in web");
+        console.warn("setRemoteUserSpatialAudioParams not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setVoiceBeautifierPreset(preset: VOICE_BEAUTIFIER_PRESET): Promise<number> {
-        console.warn("setVoiceBeautifierPreset not support in web");
+        console.warn("setVoiceBeautifierPreset not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setAudioEffectPreset(preset: AUDIO_EFFECT_PRESET): Promise<number> {
-        console.warn("setAudioEffectPreset not support in web");
+        console.warn("setAudioEffectPreset not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setVoiceConversionPreset(preset: VOICE_CONVERSION_PRESET): Promise<number> {
-        console.warn("setVoiceConversionPreset not support in web");
+        console.warn("setVoiceConversionPreset not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
     async setAudioEffectParameters(preset: AUDIO_EFFECT_PRESET, param1: number, param2: number): Promise<number> {
-        console.warn("setAudioEffectParameters not support in web");
+        console.warn("setAudioEffectParameters not support in web (will support later)");
         return -ERR_NOT_SUPPORTED;
     }
 
@@ -1285,26 +1184,34 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setLogLevel(level: LOG_LEVEL): Promise<number> {
-        const sdkLevel = level === 0 ? 4 : level <= 2 ? 3 : level <= 4 ? 2 : level <= 8 ? 1 : 4;
-        AgoraRTC.setLogLevel(sdkLevel as any);
+        const sdkLevel = Native2Web.LOG_LEVEL(level);
+        AgoraRTC.setLogLevel(sdkLevel);
         return ERR_OK;
     }
 
     async setLogFileSize(fileSizeInKBytes: number): Promise<number> {
-        return ERR_OK;
+        console.warn("setLogFileSize not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
-    async uploadLogFile(requestId: string): Promise<number> {
+    async uploadLogFile(): Promise<{ requestId: string; errorCode: number }> {
         try {
             AgoraRTC.enableLogUpload();
-            return ERR_OK;
+            return { requestId: "", errorCode: ERR_OK };
         } catch (e) {
-            return ERR_FAILED;
+            console.error("uploadLogFile failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), requestId: "" };
+            } else {
+                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, requestId: "" };
+            }
         }
     }
 
     async writeLog(level: LOG_LEVEL, fmt: string): Promise<number> {
-        return ERR_OK;
+        console.warn("writeLog not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     // ==================== Render ====================
@@ -1312,7 +1219,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async setLocalRenderMode(renderMode: RENDER_MODE_TYPE, mirrorMode: VIDEO_MIRROR_MODE_TYPE): Promise<number>;
     async setLocalRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number>;
     async setLocalRenderMode(renderMode: unknown, mirrorMode?: unknown): Promise<number> {
-        return ERR_OK;
+        console.warn("setLocalRenderMode not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setRemoteRenderMode(
@@ -1320,19 +1228,23 @@ export class RtcEngineWeb implements IRtcEngineEx {
         renderMode: RENDER_MODE_TYPE,
         mirrorMode: VIDEO_MIRROR_MODE_TYPE,
     ): Promise<number> {
-        return ERR_OK;
+        console.warn("setRemoteRenderMode not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setLocalRenderTargetFps(sourceType: VIDEO_SOURCE_TYPE, targetFps: number): Promise<number> {
-        return ERR_OK;
+        console.warn("setLocalRenderTargetFps not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setRemoteRenderTargetFps(targetFps: number): Promise<number> {
-        return ERR_OK;
+        console.warn("setRemoteRenderTargetFps not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setLocalVideoMirrorMode(mirrorMode: VIDEO_MIRROR_MODE_TYPE): Promise<number> {
-        return ERR_OK;
+        console.warn("setLocalVideoMirrorMode not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     // ==================== Dual Stream ====================
@@ -1340,35 +1252,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async enableDualStreamMode(enabled: boolean): Promise<number>;
     async enableDualStreamMode(enabled: boolean, streamConfig: SimulcastStreamConfig): Promise<number>;
     async enableDualStreamMode(enabled: unknown, streamConfig?: unknown): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            this.dualStreamEnabled = enabled as boolean;
-            if (enabled) {
-                await this.mainClientProxy!.setDualStreamMode(1 as any, streamConfig as any);
-            } else {
-                await this.mainClientProxy!.setDualStreamMode(0 as any);
-            }
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        console.warn("enableDualStreamMode not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setDualStreamMode(mode: SIMULCAST_STREAM_MODE): Promise<number>;
     async setDualStreamMode(mode: SIMULCAST_STREAM_MODE, streamConfig: SimulcastStreamConfig): Promise<number>;
     async setDualStreamMode(mode: unknown, streamConfig?: unknown): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            const webMode = Native2Web.SimulcastMode(mode as SIMULCAST_STREAM_MODE);
-            await this.mainClientProxy!.setDualStreamMode(webMode, streamConfig as any);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        console.warn("setDualStreamMode not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setSimulcastConfig(simulcastConfig: SimulcastConfig): Promise<number> {
@@ -1439,66 +1331,49 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Volume ====================
 
     async adjustRecordingSignalVolume(volume: number): Promise<number> {
-        if (this._localAudioTrack) {
-            this._localAudioTrack.setVolume(volume);
-        }
-        return ERR_OK;
+        console.warn("adjustRecordingSignalVolume not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async muteRecordingSignal(mute: boolean): Promise<number> {
-        if (this._localAudioTrack) {
-            await this._localAudioTrack.setEnabled(!mute);
-        }
+        await this.trackManager.MuteRecordingSignal(mute);
         return ERR_OK;
     }
 
     async adjustPlaybackSignalVolume(volume: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        for (const user of this.mainClientProxy!.remoteUsers) {
+        this.mainClientProxy?.remoteUsers.forEach((user) => {
             if (user.audioTrack) {
-                user.audioTrack.setVolume(volume);
+                user.audioTrack.setVolume(volume / 4);
             }
-        }
+        });
+
+        this.subClientProxies.forEach((subClientProxy) => {
+            const remoteUsers = subClientProxy.remoteUsers;
+            remoteUsers.forEach((user) => {
+                if (user.audioTrack) {
+                    user.audioTrack.setVolume(volume / 4);
+                }
+            });
+        });
         return ERR_OK;
     }
 
     async adjustUserPlaybackSignalVolume(uid: number, volume: number): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        const user = this.mainClientProxy!.remoteUsers.find((u) => u.uid === uid);
-        if (user?.audioTrack) {
-            user.audioTrack.setVolume(volume);
+        const remoteUser = this.mainClientProxy?.remoteUsers.find((u) => u.uid === uid);
+        if (remoteUser?.audioTrack) {
+            remoteUser.audioTrack.setVolume(volume);
         }
         return ERR_OK;
     }
 
     async setRemoteSubscribeFallbackOption(option: STREAM_FALLBACK_OPTIONS): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            this.mainClientProxy!.setStreamFallbackOption(0, Native2Web.StreamFallbackOption(option));
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        console.warn("setRemoteSubscribeFallbackOption not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setHighPriorityUserList(uidList: number[], uidNum: number, option: STREAM_FALLBACK_OPTIONS): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            for (const uid of uidList) {
-                this.mainClientProxy!.setStreamFallbackOption(uid, Native2Web.StreamFallbackOption(option));
-            }
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        console.warn("setHighPriorityUserList not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     // ==================== Extension ====================

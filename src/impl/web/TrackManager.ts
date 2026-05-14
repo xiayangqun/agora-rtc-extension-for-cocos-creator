@@ -37,6 +37,8 @@ export class TrackManager {
     // Custom video track (only one)
     localCustomVideoTrack: ILocalVideoTrack = null;
 
+    // Mute recording signal
+    private _isMuteRecordingSignal: boolean = false;
     /**
      * 关闭并清理所有本地轨道
      */
@@ -81,7 +83,7 @@ export class TrackManager {
         this.localFourthCameraTrack?.setEncoderConfiguration(encoderConfig);
     }
 
-    async createLocalFirstCameraVideoTrack(encoderConfig: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalFirstCameraVideoTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
         if (this.localFirstCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
@@ -91,7 +93,7 @@ export class TrackManager {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalSecondCameraVideoTrack(encoderConfig: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalSecondCameraVideoTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
         if (this.localSecondCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
@@ -101,7 +103,7 @@ export class TrackManager {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalThirdCameraVideoTrack(encoderConfig: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalThirdCameraVideoTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
         if (this.localThirdCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
@@ -111,7 +113,7 @@ export class TrackManager {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalFourthCameraVideoTrack(encoderConfig: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalFourthCameraVideoTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
         if (this.localFourthCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
@@ -126,6 +128,7 @@ export class TrackManager {
             return ERROR_CODE_TYPE.ERR_OK;
         }
         this.localMicrophoneTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        this.localMicrophoneTrack.setEnabled(!this._isMuteRecordingSignal);
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
@@ -140,10 +143,10 @@ export class TrackManager {
             if (!this.localMicrophoneTrack) {
                 await this.createLocalMicrophoneAudioTrack();
             }
-            this.localMicrophoneTrack.setEnabled(true);
+            await this.localMicrophoneTrack.setEnabled(true);
         } else {
             if (this.localMicrophoneTrack) {
-                this.localMicrophoneTrack.setEnabled(false);
+                await this.localMicrophoneTrack.setEnabled(false);
             }
         }
         return ERROR_CODE_TYPE.ERR_OK;
@@ -189,5 +192,38 @@ export class TrackManager {
         this.localThirdScreenAudioTrack?.setEnabled(false);
         this.localFourthScreenAudioTrack?.setEnabled(false);
         this.localCustomAudioTracks.forEach((track) => track.setEnabled(false));
+    }
+
+    async enableLocalAudio(enabled: boolean): Promise<number> {
+        if (enabled) {
+            if (!this.localMicrophoneTrack) {
+                await this.createLocalMicrophoneAudioTrack();
+            }
+            this.localMicrophoneTrack?.setEnabled(true);
+        } else {
+            this.localMicrophoneTrack?.setEnabled(false);
+        }
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async enableLocalVideo(enabled: boolean): Promise<number> {
+        if (enabled) {
+            if (!this.localFirstCameraTrack) {
+                await this.createLocalFirstCameraVideoTrack(undefined);
+            }
+            this.localFirstCameraTrack?.setEnabled(true);
+        } else {
+            this.localFirstCameraTrack?.setEnabled(false);
+            this.localSecondCameraTrack?.setEnabled(false);
+            this.localThirdCameraTrack?.setEnabled(false);
+            this.localFourthCameraTrack?.setEnabled(false);
+        }
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async MuteRecordingSignal(mute: boolean): Promise<number> {
+        this._isMuteRecordingSignal = mute;
+        await this.localMicrophoneTrack?.setEnabled(!mute);
+        return ERROR_CODE_TYPE.ERR_OK;
     }
 }
