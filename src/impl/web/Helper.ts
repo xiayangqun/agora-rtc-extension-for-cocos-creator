@@ -8,6 +8,8 @@ import {
     AREAS,
     IAgoraRTCError,
     VideoEncoderConfiguration as WebVideoEncoderConfiguration,
+    ClientRoleOptions as WebClientRoleOptions,
+    AudienceLatencyLevelType,
 } from "agora-rtc-sdk-ng";
 import {
     CONNECTION_CHANGED_REASON_TYPE,
@@ -24,6 +26,8 @@ import {
     ERROR_CODE_TYPE,
     VIDEO_CODEC_TYPE,
     VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
+    ClientRoleOptions as NativeClientRoleOptions,
+    AUDIENCE_LATENCY_LEVEL_TYPE,
 } from "../../types/AgoraBase";
 import { MEDIA_DEVICE_STATE_TYPE, STREAM_FALLBACK_OPTIONS } from "../../types/AgoraRtcEngine";
 import { SIMULCAST_STREAM_MODE } from "../../types/AgoraBase";
@@ -517,6 +521,23 @@ export class Native2Web {
             bitrateMin: config.minBitrate,
             bitrateMax: config.bitrate,
         };
+    }
+
+    public static ClientRoleOptions(config: NativeClientRoleOptions): WebClientRoleOptions {
+        return {
+            level: Native2Web.AudienceLatencyLevelType(config.audienceLatencyLevel),
+        };
+    }
+
+    public static AudienceLatencyLevelType(type: AUDIENCE_LATENCY_LEVEL_TYPE): AudienceLatencyLevelType {
+        switch (type) {
+            case AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_LOW_LATENCY:
+                return AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
+            case AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY:
+                return AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY;
+            default:
+                return AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
+        }
     }
 }
 

@@ -125,13 +125,16 @@ import AgoraRTC, {
     IAgoraRTCError,
 } from "agora-rtc-sdk-ng";
 import { AgoraRTCClientProxy } from "./AgoraRTCClientProxy";
+import { TrackManager } from "./TrackManager";
 import { isAgoraRTCError, Native2Web, Web2Native } from "./Helper";
 import { AudioDeviceManagerWeb } from "./AudioDeviceManagerWeb";
 import { VideoDeviceManagerWeb } from "./VideoDeviceManagerWeb";
 import { MusicContentCenterWeb } from "./MusicContentCenterWeb";
 import { MediaPlayerCacheManagerWeb } from "./MediaPlayerCacheManagerWeb";
+import { MediaPlayerWeb } from "./MediaPlayerWeb";
 import { LocalSpatialAudioEngineWeb } from "./LocalSpatialAudioEngineWeb";
 import { H265TranscoderWeb } from "./H265TranscoderWeb";
+import { set } from "../../../@types/packages/scene/@types/cce/utils/lodash";
 
 const ERR_OK = ERROR_CODE_TYPE.ERR_OK;
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -167,6 +170,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     public videoEnabled = false;
     public dualStreamEnabled = false;
     public audioVolumeIndicationEnabled = false;
+
+    public trackManager: TrackManager = new TrackManager();
+
+    private _localVideoTrack?: ILocalVideoTrack;
+    private _mediaPlayerIdCounter = 0;
+    private _mediaPlayers: Map<number, MediaPlayerWeb> = new Map();
 
     constructor() {
         AgoraRTC.on("camera-changed", this.onCameraChanged.bind(this));
@@ -270,7 +279,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             mode: Native2Web.ChannelProfile(this.channelProfile),
             codec: "vp8",
         };
-        this.mainClientProxy = new AgoraRTCClientProxy(config, this);
+        this.mainClientProxy = new AgoraRTCClientProxy(config, this, this.trackManager);
         this.mainClientProxy.init();
 
         return ERR_OK;
@@ -417,16 +426,21 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async leaveChannel(): Promise<number>;
     async leaveChannel(options: LeaveChannelOptions): Promise<number>;
     async leaveChannel(options?: unknown): Promise<number> {
-        if (!this.mainClientProxy) {
+        const mainClientProxy = this.mainClientProxy;
+        if (!mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this.mainClientProxy!.leave();
-            if (this.mainClientProxy!.channelName && this.mainClientProxy!.uid) {
+            if (options && (options as LeaveChannelOptions).stopMicrophoneRecording) {
+                await mainClientProxy.enableMicrophoneRecording(false);
+            }
+
+            await mainClientProxy.leave();
+            if (mainClientProxy.channelName && mainClientProxy.uid) {
                 this.rtcEngineEventHandler?.onLeaveChannel(
                     {
-                        channelId: this.mainClientProxy!.channelName,
-                        localUid: this.mainClientProxy!.uid as number,
+                        channelId: mainClientProxy.channelName,
+                        localUid: mainClientProxy.uid as number,
                     },
                     {} as any,
                 );
@@ -439,11 +453,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async renewToken(token: string): Promise<number> {
-        if (!this.mainClientProxy) {
+        const mainClientProxy = this.mainClientProxy;
+        if (mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
-            await this.mainClientProxy!.renewToken(token);
+            await mainClientProxy.renewToken(token);
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -451,25 +466,24 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setChannelProfile(profile: CHANNEL_PROFILE_TYPE): Promise<number> {
-        this.channelProfile = profile;
-        return ERR_OK;
+        console.warn("setChannelProfile can only set in initialize in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async setClientRole(role: CLIENT_ROLE_TYPE): Promise<number>;
     async setClientRole(role: CLIENT_ROLE_TYPE, options: ClientRoleOptions): Promise<number>;
     async setClientRole(role: unknown, options?: unknown): Promise<number> {
-        if (!this.mainClientProxy) {
+        const mainClientProxy = this.mainClientProxy;
+        if (mainClientProxy) {
             return ERR_NOT_READY;
         }
         try {
             const webRole = Native2Web.ClientRole(role as CLIENT_ROLE_TYPE);
             const opts = options as ClientRoleOptions | undefined;
             if (opts) {
-                await this.mainClientProxy!.setClientRole(webRole, {
-                    level: opts.audienceLatencyLevel as any,
-                });
+                await mainClientProxy.setClientRole(webRole, Native2Web.ClientRoleOptions(opts));
             } else {
-                await this.mainClientProxy!.setClientRole(webRole);
+                await mainClientProxy.setClientRole(webRole);
             }
             return ERR_OK;
         } catch (e) {
@@ -496,38 +510,63 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableVideo(): Promise<number> {
         this.videoEnabled = true;
+        this.trackManager.enableVideo();
         return ERR_OK;
     }
 
     async disableVideo(): Promise<number> {
         this.videoEnabled = false;
-        if (this._localVideoTrack) {
-            this._localVideoTrack.close();
-            this._localVideoTrack = undefined;
-        }
+        this.trackManager.disableVideo();
         return ERR_OK;
     }
 
     async startPreview(): Promise<number>;
     async startPreview(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
     async startPreview(sourceType?: unknown): Promise<number> {
-        try {
-            if (!this._localVideoTrack) {
-                this._localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-            }
-            return ERR_OK;
-        } catch (e) {
-            console.error("startPreview failed:", e);
-            return ERR_FAILED;
+        const vs = sourceType == null ? VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA : (sourceType as VIDEO_SOURCE_TYPE);
+        const encoderConfig = Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration);
+        switch (vs) {
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA:
+                await this.trackManager.createLocalFirstCameraVideoTrack(encoderConfig);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+                await this.trackManager.createLocalSecondCameraVideoTrack(encoderConfig);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+                await this.trackManager.createLocalThirdCameraVideoTrack(encoderConfig);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+                await this.trackManager.createLocalFourthCameraVideoTrack(encoderConfig);
+                break;
+            default:
+                return -ERR_INVALID_ARGUMENT;
+                break;
         }
+        return ERR_OK;
     }
 
     async stopPreview(): Promise<number>;
     async stopPreview(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
     async stopPreview(sourceType?: unknown): Promise<number> {
-        if (this._localVideoTrack) {
-            this._localVideoTrack.stop();
+        const vs = sourceType == null ? VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA : (sourceType as VIDEO_SOURCE_TYPE);
+        switch (vs) {
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA:
+                await this.trackManager.localFirstCameraTrack?.setEnabled(false);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+                await this.trackManager.localSecondCameraTrack?.setEnabled(false);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+                await this.trackManager.localThirdCameraTrack?.setEnabled(false);
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+                await this.trackManager.localFourthCameraTrack?.setEnabled(false);
+                break;
+            default:
+                return -ERR_INVALID_ARGUMENT;
+                break;
         }
+
         return ERR_OK;
     }
 
@@ -543,7 +582,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async setVideoEncoderConfiguration(config: NativeVideoEncoderConfiguration): Promise<number> {
         this.mainClientVideoEncoderConfiguration = config;
-        await this.mainClientProxy.setEncoderConfiguration(config);
+        await this.mainClientProxy.setVideoEncoderConfiguration(config);
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
@@ -912,13 +951,29 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async createMediaPlayer(): Promise<IMediaPlayer> {
-        console.warn("createMediaPlayer not support in web");
-        throw new Error("createMediaPlayer not support in web");
+        this._mediaPlayerIdCounter++;
+        const mediaPlayer = new MediaPlayerWeb(this._mediaPlayerIdCounter);
+        this._mediaPlayers.set(this._mediaPlayerIdCounter, mediaPlayer);
+        return mediaPlayer;
     }
 
     async destroyMediaPlayer(media_player: IMediaPlayer): Promise<number> {
-        console.warn("destroyMediaPlayer not support in web");
-        return -ERR_NOT_SUPPORTED;
+        const id = await media_player.getId();
+        const player = this._mediaPlayers.get(id);
+        if (player) {
+            await player.dispose();
+            this._mediaPlayers.delete(id);
+        }
+        return ERR_OK;
+    }
+
+    getMediaPlayerById(id: number): MediaPlayerWeb {
+        const player = this._mediaPlayers.get(id);
+        if (player) {
+            return player;
+        } else {
+            return null;
+        }
     }
 
     async createMediaRecorder(info: RecorderStreamInfo): Promise<IMediaRecorder> {
@@ -2333,7 +2388,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 mode: Native2Web.ChannelProfile(options.channelProfile || this.channelProfile),
                 codec: "vp8",
             };
-            const proxy = new AgoraRTCClientProxy(config, this);
+            const proxy = new AgoraRTCClientProxy(config, this, this.trackManager);
             proxy.init();
             const client = proxy.getClient();
 
@@ -2408,7 +2463,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         this.subClientVideoEncoderConfigurations.set(key, config);
 
         const client = this.subClientProxies.get(key);
-        client?.setEncoderConfiguration(config);
+        client?.setVideoEncoderConfiguration(config);
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
@@ -3006,7 +3061,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         const key = connectionKey(connection);
 
         if (this.subClientVideoEncoderConfigurations.has(key)) {
-            subClient.setEncoderConfiguration(this.subClientVideoEncoderConfigurations.get(key)!);
+            subClient.setVideoEncoderConfiguration(this.subClientVideoEncoderConfigurations.get(key)!);
         }
 
         return ERR_OK;

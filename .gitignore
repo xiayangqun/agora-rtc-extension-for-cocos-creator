@@ -11,3 +11,4 @@ dist
 rtc-sdk_cn.d.ts
 .claude
 .vscode
+agora-rtc-extension-for-cocos-creator.code-workspace

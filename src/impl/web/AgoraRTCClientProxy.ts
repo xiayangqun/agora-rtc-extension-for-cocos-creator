@@ -23,6 +23,7 @@ import AgoraRTC, {
 } from "agora-rtc-sdk-ng";
 import { RtcEngineWeb } from "./RtcEngineWeb";
 import { Native2Web, Web2Native } from "./Helper";
+import { TrackManager } from "./TrackManager";
 import { RtcConnection } from "../../types/AgoraRtcEngineEx";
 import {
     AUDIENCE_LATENCY_LEVEL_TYPE,
@@ -42,40 +43,13 @@ export class AgoraRTCClientProxy {
     private _client!: IAgoraRTCClient;
     private _rtcEngine!: RtcEngineWeb;
 
-    //local camera track
-    _localFirstCameraTrack: ICameraVideoTrack = null;
-    _localSecondCameraTrack: ICameraVideoTrack = null;
-    _localThirdCameraTrack: ICameraVideoTrack = null;
-    _localFourthCameraTrack: ICameraVideoTrack = null;
+    // TrackManager 引用，管理全局本地轨道
+    private _trackManager: TrackManager;
 
-    //local microphone track
-    _localMicrophoneTrack: IMicrophoneAudioTrack = null;
-
-    //local screen track （video, audio）
-    _localFirstScreenVideoTrack: ILocalVideoTrack = null;
-    _localFirstScreenAudioTrack: ILocalAudioTrack = null;
-
-    _localSecondScreenVideoTrack: ILocalVideoTrack = null;
-    _localSecondScreenAudioTrack: ILocalAudioTrack = null;
-
-    _localThirdScreenVideoTrack: ILocalVideoTrack = null;
-    _localThirdScreenAudioTrack: ILocalAudioTrack = null;
-
-    _localFourthScreenVideoTrack: ILocalVideoTrack = null;
-    _localFourthScreenAudioTrack: ILocalAudioTrack = null;
-
-    //local custom audio track (mult)
-    _localCustomAudioTracks: Map<number, ILocalAudioTrack> = new Map();
-
-    //local custom video track (only one)
-    _localCustomVideoTrack: ILocalVideoTrack = null;
-
-    //local media player track (video, audio)
-    _localMediaPlayerTracks: Map<number, { audio: ILocalAudioTrack; video: ILocalVideoTrack }> = new Map();
-
-    constructor(config: ClientConfig, rtcEngineWeb: RtcEngineWeb) {
+    constructor(config: ClientConfig, rtcEngineWeb: RtcEngineWeb, trackManager: TrackManager) {
         this._client = AgoraRTC.createClient(config);
         this._rtcEngine = rtcEngineWeb;
+        this._trackManager = trackManager;
     }
 
     async release(): Promise<void> {
@@ -314,7 +288,7 @@ export class AgoraRTCClientProxy {
         };
         const state = Web2Native.ConnectionState(curState);
         if (!reason) {
-            this._rtcEngine.rtcEngineEventHandler?.onConnectionStateChanged(con, state, reason);
+            this._rtcEngine.rtcEngineEventHandler?.onConnectionStateChanged(con, state);
         } else {
             const rea = Web2Native.ConnectionDisconnectedReason(reason);
             this._rtcEngine.rtcEngineEventHandler?.onConnectionStateChanged(con, state, rea);
@@ -584,13 +558,13 @@ export class AgoraRTCClientProxy {
         if (this._rtcEngine.videoEnabled) {
             if (options.publishCameraTrack !== undefined && options.publishCameraTrack !== this._publishCameraTrack) {
                 this._publishCameraTrack = options.publishCameraTrack;
-                if (!this._publishCameraTrack && this._localFirstCameraTrack) {
-                    this._client.unpublish(this._localFirstCameraTrack);
+                if (!this._publishCameraTrack && this._trackManager.localFirstCameraTrack) {
+                    this._client.unpublish(this._trackManager.localFirstCameraTrack);
                 } else {
-                    if (!this._localFirstCameraTrack) {
+                    if (!this._trackManager.localFirstCameraTrack) {
                         await this.createLocalFirstCameraVideoTrack();
                     }
-                    this._client.publish(this._localFirstCameraTrack);
+                    this._client.publish(this._trackManager.localFirstCameraTrack);
                 }
             }
 
@@ -599,10 +573,10 @@ export class AgoraRTCClientProxy {
                 options.publishSecondaryCameraTrack !== this._publishSecondaryCameraTrack
             ) {
                 this._publishSecondaryCameraTrack = options.publishSecondaryCameraTrack;
-                if (!this._publishSecondaryCameraTrack && this._localSecondCameraTrack) {
-                    this._client.unpublish(this._localSecondCameraTrack);
+                if (!this._publishSecondaryCameraTrack && this._trackManager.localSecondCameraTrack) {
+                    this._client.unpublish(this._trackManager.localSecondCameraTrack);
                 } else {
-                    if (!this._localSecondCameraTrack) {
+                    if (!this._trackManager.localSecondCameraTrack) {
                         console.warn("Secondary camera track is not created yet. call startCameraCapture first.");
                     }
                 }
@@ -613,10 +587,10 @@ export class AgoraRTCClientProxy {
                 options.publishThirdCameraTrack !== this._publishThirdCameraTrack
             ) {
                 this._publishThirdCameraTrack = options.publishThirdCameraTrack;
-                if (!this._publishThirdCameraTrack && this._localThirdCameraTrack) {
-                    this._client.unpublish(this._localThirdCameraTrack);
+                if (!this._publishThirdCameraTrack && this._trackManager.localThirdCameraTrack) {
+                    this._client.unpublish(this._trackManager.localThirdCameraTrack);
                 } else {
-                    if (!this._localThirdCameraTrack) {
+                    if (!this._trackManager.localThirdCameraTrack) {
                         console.warn("Third camera track is not created yet. call startCameraCapture first.");
                     }
                 }
@@ -627,10 +601,10 @@ export class AgoraRTCClientProxy {
                 options.publishFourthCameraTrack !== this._publishFourthCameraTrack
             ) {
                 this._publishFourthCameraTrack = options.publishFourthCameraTrack;
-                if (!this._publishFourthCameraTrack && this._localFourthCameraTrack) {
-                    this._client.unpublish(this._localFourthCameraTrack);
+                if (!this._publishFourthCameraTrack && this._trackManager.localFourthCameraTrack) {
+                    this._client.unpublish(this._trackManager.localFourthCameraTrack);
                 } else {
-                    if (!this._localFourthCameraTrack) {
+                    if (!this._trackManager.localFourthCameraTrack) {
                         console.warn("Fourth camera track is not created yet. call startCameraCapture first.");
                     }
                 }
@@ -644,13 +618,13 @@ export class AgoraRTCClientProxy {
             ) {
                 this._publishMicrophoneTrack = options.publishMicrophoneTrack;
                 if (this._publishMicrophoneTrack) {
-                    if (!this._localMicrophoneTrack) {
+                    if (!this._trackManager.localMicrophoneTrack) {
                         this.createLocalMicrophoneAudioTrack();
                     }
-                    this._client.publish(this._localMicrophoneTrack);
+                    this._client.publish(this._trackManager.localMicrophoneTrack);
                 } else {
-                    if (this._localMicrophoneTrack) {
-                        this._client.unpublish(this._localMicrophoneTrack);
+                    if (this._trackManager.localMicrophoneTrack) {
+                        this._client.unpublish(this._trackManager.localMicrophoneTrack);
                     }
                 }
             }
@@ -676,11 +650,15 @@ export class AgoraRTCClientProxy {
             if (options.publishScreenTrack !== undefined && options.publishScreenTrack !== this._publishScreenTrack) {
                 this._publishScreenTrack = options.publishScreenTrack;
                 if (this._publishScreenTrack) {
-                    this._localFirstScreenAudioTrack && this._client.publish(this._localFirstScreenAudioTrack);
-                    this._localFirstScreenVideoTrack && this._client.publish(this._localFirstScreenVideoTrack);
+                    this._trackManager.localFirstScreenAudioTrack &&
+                        this._client.publish(this._trackManager.localFirstScreenAudioTrack);
+                    this._trackManager.localFirstScreenVideoTrack &&
+                        this._client.publish(this._trackManager.localFirstScreenVideoTrack);
                 } else {
-                    this._localFirstScreenAudioTrack && this._client.unpublish(this._localFirstScreenAudioTrack);
-                    this._localFirstScreenVideoTrack && this._client.unpublish(this._localFirstScreenVideoTrack);
+                    this._trackManager.localFirstScreenAudioTrack &&
+                        this._client.unpublish(this._trackManager.localFirstScreenAudioTrack);
+                    this._trackManager.localFirstScreenVideoTrack &&
+                        this._client.unpublish(this._trackManager.localFirstScreenVideoTrack);
                 }
             }
 
@@ -690,11 +668,15 @@ export class AgoraRTCClientProxy {
             ) {
                 this._publishSecondaryScreenTrack = options.publishSecondaryScreenTrack;
                 if (this._publishSecondaryScreenTrack) {
-                    this._localSecondScreenAudioTrack && this._client.publish(this._localSecondScreenAudioTrack);
-                    this._localSecondScreenVideoTrack && this._client.publish(this._localSecondScreenVideoTrack);
+                    this._trackManager.localSecondScreenAudioTrack &&
+                        this._client.publish(this._trackManager.localSecondScreenAudioTrack);
+                    this._trackManager.localSecondScreenVideoTrack &&
+                        this._client.publish(this._trackManager.localSecondScreenVideoTrack);
                 } else {
-                    this._localSecondScreenAudioTrack && this._client.unpublish(this._localSecondScreenAudioTrack);
-                    this._localSecondScreenVideoTrack && this._client.unpublish(this._localSecondScreenVideoTrack);
+                    this._trackManager.localSecondScreenAudioTrack &&
+                        this._client.unpublish(this._trackManager.localSecondScreenAudioTrack);
+                    this._trackManager.localSecondScreenVideoTrack &&
+                        this._client.unpublish(this._trackManager.localSecondScreenVideoTrack);
                 }
             }
 
@@ -704,11 +686,15 @@ export class AgoraRTCClientProxy {
             ) {
                 this._publishThirdScreenTrack = options.publishThirdScreenTrack;
                 if (this._publishThirdScreenTrack) {
-                    this._localThirdScreenAudioTrack && this._client.publish(this._localThirdScreenAudioTrack);
-                    this._localThirdScreenVideoTrack && this._client.publish(this._localThirdScreenVideoTrack);
+                    this._trackManager.localThirdScreenAudioTrack &&
+                        this._client.publish(this._trackManager.localThirdScreenAudioTrack);
+                    this._trackManager.localThirdScreenVideoTrack &&
+                        this._client.publish(this._trackManager.localThirdScreenVideoTrack);
                 } else {
-                    this._localThirdScreenAudioTrack && this._client.unpublish(this._localThirdScreenAudioTrack);
-                    this._localThirdScreenVideoTrack && this._client.unpublish(this._localThirdScreenVideoTrack);
+                    this._trackManager.localThirdScreenAudioTrack &&
+                        this._client.unpublish(this._trackManager.localThirdScreenAudioTrack);
+                    this._trackManager.localThirdScreenVideoTrack &&
+                        this._client.unpublish(this._trackManager.localThirdScreenVideoTrack);
                 }
             }
 
@@ -718,11 +704,15 @@ export class AgoraRTCClientProxy {
             ) {
                 this._publishFourthScreenTrack = options.publishFourthScreenTrack;
                 if (this._publishFourthScreenTrack) {
-                    this._localFourthScreenAudioTrack && this._client.publish(this._localFourthScreenAudioTrack);
-                    this._localFourthScreenVideoTrack && this._client.publish(this._localFourthScreenVideoTrack);
+                    this._trackManager.localFourthScreenAudioTrack &&
+                        this._client.publish(this._trackManager.localFourthScreenAudioTrack);
+                    this._trackManager.localFourthScreenVideoTrack &&
+                        this._client.publish(this._trackManager.localFourthScreenVideoTrack);
                 } else {
-                    this._localFourthScreenAudioTrack && this._client.unpublish(this._localFourthScreenAudioTrack);
-                    this._localFourthScreenVideoTrack && this._client.unpublish(this._localFourthScreenVideoTrack);
+                    this._trackManager.localFourthScreenAudioTrack &&
+                        this._client.unpublish(this._trackManager.localFourthScreenAudioTrack);
+                    this._trackManager.localFourthScreenVideoTrack &&
+                        this._client.unpublish(this._trackManager.localFourthScreenVideoTrack);
                 }
             }
         }
@@ -735,7 +725,9 @@ export class AgoraRTCClientProxy {
                     options.publishCustomAudioTrack !== this._publishCustomAudioTrack)
             ) {
                 this._publishCustomAudioTrack = options.publishCustomAudioTrack;
-                const customAudioTrack = this._localCustomAudioTracks.get(options.publishCustomAudioTrackId);
+                const customAudioTrack = this._trackManager.localCustomAudioTracks.get(
+                    options.publishCustomAudioTrackId,
+                );
                 if (customAudioTrack) {
                     if (this._publishCustomAudioTrack) {
                         this._client.publish(customAudioTrack);
@@ -752,11 +744,11 @@ export class AgoraRTCClientProxy {
                 options.publishCustomVideoTrack !== this._publishCustomVideoTrack
             ) {
                 this._publishCustomVideoTrack = options.publishCustomVideoTrack;
-                if (this._localCustomVideoTrack) {
+                if (this._trackManager.localCustomVideoTrack) {
                     if (this._publishCustomVideoTrack) {
-                        this._client.publish(this._localCustomVideoTrack);
+                        this._client.publish(this._trackManager.localCustomVideoTrack);
                     } else {
-                        this._client.unpublish(this._localCustomVideoTrack);
+                        this._client.unpublish(this._trackManager.localCustomVideoTrack);
                     }
                 }
             }
@@ -778,13 +770,9 @@ export class AgoraRTCClientProxy {
                     options.publishMediaPlayerAudioTrack !== this._publishMediaPlayerAudioTrack)
             ) {
                 this._publishMediaPlayerAudioTrack = options.publishMediaPlayerAudioTrack;
-                const mediaPlayerTrack = this._localMediaPlayerTracks.get(options.publishMediaPlayerId);
-                if (mediaPlayerTrack) {
-                    if (this._publishMediaPlayerAudioTrack) {
-                        this._client.publish(mediaPlayerTrack.audio);
-                    } else {
-                        this._client.unpublish(mediaPlayerTrack.audio);
-                    }
+                const mediaPlayer = this._rtcEngine.getMediaPlayerById(options.publishMediaPlayerId);
+                if (mediaPlayer) {
+                    mediaPlayer.publishAudio(this, this._publishMediaPlayerAudioTrack);
                 }
             }
         }
@@ -797,15 +785,19 @@ export class AgoraRTCClientProxy {
                     options.publishMediaPlayerVideoTrack !== this._publishMediaPlayerVideoTrack)
             ) {
                 this._publishMediaPlayerVideoTrack = options.publishMediaPlayerVideoTrack;
-                const mediaPlayerTrack = this._localMediaPlayerTracks.get(options.publishMediaPlayerId);
-                if (mediaPlayerTrack) {
-                    if (this._publishMediaPlayerVideoTrack) {
-                        this._client.publish(mediaPlayerTrack.video);
-                    } else {
-                        this._client.unpublish(mediaPlayerTrack.video);
-                    }
+                const mediaPlayer = this._rtcEngine.getMediaPlayerById(options.publishMediaPlayerId);
+                if (mediaPlayer) {
+                    mediaPlayer.publishVideo(this, this._publishMediaPlayerVideoTrack);
                 }
             }
+        }
+
+        //not impl
+        if (
+            options.publishTranscodedVideoTrack !== undefined &&
+            options.publishTranscodedVideoTrack !== this._publishTranscodedVideoTrack
+        ) {
+            this._publishTranscodedVideoTrack = options.publishTranscodedVideoTrack;
         }
 
         //not impl
@@ -957,49 +949,44 @@ export class AgoraRTCClientProxy {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    _videoEncoderConfig: WebVideoEncoderConfiguration = undefined;
-    public async setEncoderConfiguration(videoEncoderConfig: NativeVideoEncoderConfiguration): Promise<void> {
-        this._videoEncoderConfig = Native2Web.VideoEncoderConfiguration(videoEncoderConfig);
+    // ==================== TrackManager Proxy Methods ====================
 
-        this._localFirstCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
-        this._localSecondCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
-        this._localThirdCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
-        this._localFourthCameraTrack?.setEncoderConfiguration(this._videoEncoderConfig);
+    private _videoEncoderConfig: WebVideoEncoderConfiguration = undefined;
+
+    async setVideoEncoderConfiguration(videoEncoderConfig: NativeVideoEncoderConfiguration): Promise<void> {
+        this._videoEncoderConfig = Native2Web.VideoEncoderConfiguration(videoEncoderConfig);
+        this._client.localTracks.forEach((track) => {
+            if ("setEncoderConfiguration" in track) {
+                (track as ICameraVideoTrack).setEncoderConfiguration(this._videoEncoderConfig);
+            }
+        });
     }
 
     async createLocalFirstCameraVideoTrack(): Promise<number> {
-        this._localFirstCameraTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: this._videoEncoderConfig,
-            //todo other options
-        });
-        return ERROR_CODE_TYPE.ERR_OK;
+        return this._trackManager.createLocalFirstCameraVideoTrack(this._videoEncoderConfig);
     }
+
     async createLocalSecondCameraVideoTrack(): Promise<number> {
-        this._localSecondCameraTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: this._videoEncoderConfig,
-            //todo other options
-        });
-        return ERROR_CODE_TYPE.ERR_OK;
+        return this._trackManager.createLocalSecondCameraVideoTrack(this._videoEncoderConfig);
     }
 
     async createLocalThirdCameraVideoTrack(): Promise<number> {
-        this._localThirdCameraTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: this._videoEncoderConfig,
-            //todo other options
-        });
-        return ERROR_CODE_TYPE.ERR_OK;
+        return this._trackManager.createLocalThirdCameraVideoTrack(this._videoEncoderConfig);
     }
 
     async createLocalFourthCameraVideoTrack(): Promise<number> {
-        this._localFourthCameraTrack = await AgoraRTC.createCameraVideoTrack({
-            encoderConfig: this._videoEncoderConfig,
-            //todo other options
-        });
-        return ERROR_CODE_TYPE.ERR_OK;
+        return this._trackManager.createLocalFourthCameraVideoTrack(this._videoEncoderConfig);
     }
 
     async createLocalMicrophoneAudioTrack(): Promise<number> {
-        this._localMicrophoneTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        return ERROR_CODE_TYPE.ERR_OK;
+        return this._trackManager.createLocalMicrophoneAudioTrack();
+    }
+
+    async closeLocalMicrophoneAudioTrack(): Promise<number> {
+        return this._trackManager.closeLocalMicrophoneAudioTrack();
+    }
+
+    async enableMicrophoneRecording(enabled: boolean): Promise<number> {
+        return this._trackManager.enableMicrophoneRecording(enabled);
     }
 }

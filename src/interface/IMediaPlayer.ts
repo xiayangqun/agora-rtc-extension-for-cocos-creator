@@ -26,13 +26,13 @@ export interface IMediaPlayer {
 
     setAudioPitch(pitch: number): Promise<number>;
 
-    getDuration(duration: number): Promise<number>;
+    getDuration(): Promise<{ duration: number; errorCode: number }>;
 
-    getPlayPosition(pos: number): Promise<number>;
+    getPlayPosition(): Promise<{ pos: number; errorCode: number }>;
 
-    getStreamCount(count: number): Promise<number>;
+    getStreamCount(): Promise<{ count: number; errorCode: number }>;
 
-    getStreamInfo(index: number, info: PlayerStreamInfo): Promise<number>;
+    getStreamInfo(index: number): Promise<{ info: PlayerStreamInfo; errorCode: number }>;
 
     setLoopCount(loopCount: number): Promise<number>;
 
@@ -56,15 +56,15 @@ export interface IMediaPlayer {
 
     mute(muted: boolean): Promise<number>;
 
-    getMute(muted: boolean): Promise<number>;
+    getMute(): Promise<{ muted: boolean; errorCode: number }>;
 
     adjustPlayoutVolume(volume: number): Promise<number>;
 
-    getPlayoutVolume(volume: number): Promise<number>;
+    getPlayoutVolume(): Promise<{ volume: number; errorCode: number }>;
 
     adjustPublishSignalVolume(volume: number): Promise<number>;
 
-    getPublishSignalVolume(volume: number): Promise<number>;
+    getPublishSignalVolume(): Promise<{ volume: number; errorCode: number }>;
 
     setView(view: any): Promise<number>;
 
@@ -106,5 +106,5 @@ export interface IMediaPlayer {
 
     setSoundPositionParams(pan: number, gain: number): Promise<number>;
 
-    getAudioBufferDelay(delayMs: number): Promise<number>;
+    getAudioBufferDelay(): Promise<{ delayMs: number; errorCode: number }>;
 }
