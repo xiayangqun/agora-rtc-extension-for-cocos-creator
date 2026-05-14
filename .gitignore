@@ -6,3 +6,8 @@ android/libs/
 ios/libs/
 mac/libs/
 windows/libs/
+node_modules
+dist
+rtc-sdk_cn.d.ts
+.claude
+.vscode

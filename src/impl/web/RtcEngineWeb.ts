@@ -128,6 +128,10 @@ import { AgoraRTCClientProxy } from "./AgoraRTCClientProxy";
 import { isAgoraRTCError, Native2Web, Web2Native } from "./Helper";
 import { AudioDeviceManagerWeb } from "./AudioDeviceManagerWeb";
 import { VideoDeviceManagerWeb } from "./VideoDeviceManagerWeb";
+import { MusicContentCenterWeb } from "./MusicContentCenterWeb";
+import { MediaPlayerCacheManagerWeb } from "./MediaPlayerCacheManagerWeb";
+import { LocalSpatialAudioEngineWeb } from "./LocalSpatialAudioEngineWeb";
+import { H265TranscoderWeb } from "./H265TranscoderWeb";
 
 const ERR_OK = ERROR_CODE_TYPE.ERR_OK;
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -151,6 +155,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
     public threadPriority: THREAD_PRIORITY_TYPE = THREAD_PRIORITY_TYPE.NORMAL;
     public useExternalEglContext = false;
     public domainLimit = false;
+
+    //copy from setLocalVideoDataSourcePosition parameters
+    public localVideoDataSourcePosition: VIDEO_MODULE_POSITION = VIDEO_MODULE_POSITION.POSITION_POST_CAPTURER;
 
     public mainClientProxy: AgoraRTCClientProxy;
     public mainClientVideoEncoderConfiguration: NativeVideoEncoderConfiguration;
@@ -209,33 +216,33 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async release(sync: boolean): Promise<void> {}
 
-    async getAudioDeviceManager(): Promise<IAudioDeviceManager> {}
+    async getAudioDeviceManager(): Promise<IAudioDeviceManager> {
+        return new AudioDeviceManagerWeb();
+    }
 
-    async getVideoDeviceManager(): Promise<IVideoDeviceManager> {}
+    async getVideoDeviceManager(): Promise<IVideoDeviceManager> {
+        return new VideoDeviceManagerWeb();
+    }
 
     async getMusicContentCenter(): Promise<IMusicContentCenter> {
-        console.warn("getMusicContentCenter not support in web");
-        throw new Error("getMusicContentCenter not support in web");
+        return new MusicContentCenterWeb();
     }
 
     async getMediaPlayerCacheManager(): Promise<IMediaPlayerCacheManager> {
-        console.warn("getMediaPlayerCacheManager not support in web");
-        throw new Error("getMediaPlayerCacheManager not support in web");
+        return new MediaPlayerCacheManagerWeb();
     }
 
     async getLocalSpatialAudioEngine(): Promise<ILocalSpatialAudioEngine> {
-        console.warn("getLocalSpatialAudioEngine not support in web");
-        throw new Error("getLocalSpatialAudioEngine not support in web");
+        return new LocalSpatialAudioEngineWeb();
     }
 
     async getH265Transcoder(): Promise<IH265Transcoder> {
-        console.warn("getH265Transcoder not support in web");
-        throw new Error("getH265Transcoder not support in web");
+        return new H265TranscoderWeb();
     }
 
     async setLocalVideoDataSourcePosition(position: VIDEO_MODULE_POSITION): Promise<number> {
-        console.warn("setLocalVideoDataSourcePosition not support in web");
-        return -ERR_NOT_SUPPORTED;
+        this.localVideoDataSourcePosition = position;
+        return ERR_OK;
     }
 
     async initialize(context: RtcEngineContext): Promise<number> {
@@ -309,7 +316,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async preloadChannel(token: string, channelId: string, uid: number): Promise<number> {
         try {
-            await AgoraRTC.preload(this._appId, channelId, token, uid);
+            await AgoraRTC.preload(this.appId, channelId, token, uid);
             return ERR_OK;
         } catch (e: any) {
             console.error("preloadChannel failed:", e.toString ? e.toString() : "");
@@ -324,7 +331,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async preloadChannelWithUserAccount(token: string, channelId: string, userAccount: string): Promise<number> {
         try {
-            await AgoraRTC.preload(this._appId, channelId, token, userAccount);
+            await AgoraRTC.preload(this.appId, channelId, token, userAccount);
             return ERR_OK;
         } catch (e: any) {
             console.error("preloadChannelWithUserAccount failed:", e.toString ? e.toString() : "");
@@ -352,16 +359,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
             const info = infoOrUid as string;
             const uid = uidOrOptions as number;
             try {
-                const selfUid = await this.mainClientProxy.join(
-                    this._appId,
-                    channelId as string,
-                    token as string,
-                    uid,
-                    {
-                        autoSubscribe: true,
-                        networkQualityProbe: true,
-                    },
-                );
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token as string, uid, {
+                    autoSubscribe: true,
+                    networkQualityProbe: true,
+                });
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
                     { channelId: channelId as string, localUid: selfUid as number },
                     0,
@@ -381,16 +382,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 const uid = infoOrUid as number;
                 const options = uidOrOptions as ChannelMediaOptions;
                 const autoSubscribe = (options.autoSubscribeVideo ?? true) || (options.autoSubscribeAudio ?? true);
-                const selfUid = await this.mainClientProxy.join(
-                    this._appId,
-                    channelId as string,
-                    token as string,
-                    uid,
-                    {
-                        autoSubscribe: autoSubscribe,
-                        networkQualityProbe: true,
-                    },
-                );
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token as string, uid, {
+                    autoSubscribe: autoSubscribe,
+                    networkQualityProbe: true,
+                });
+                await this.updateChannelMediaOptions(options);
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
                     { channelId: channelId as string, localUid: selfUid as number },
                     0,
@@ -409,14 +405,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async updateChannelMediaOptions(options: ChannelMediaOptions): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
+        try {
+            await this.mainClientProxy.updateChannelMediaOptions(options);
+            return ERR_OK;
+        } catch (e) {
+            console.error("updateChannelMediaOptions failed:", e.toString ? e.toString() : "");
+            return ERR_FAILED;
         }
-        if (options.clientRoleType) {
-            const webRole = Native2Web.ClientRole(options.clientRoleType);
-            await this.mainClientProxy!.setClientRole(webRole);
-        }
-        return ERR_OK;
     }
 
     async leaveChannel(): Promise<number>;
@@ -2329,7 +2324,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async joinChannelEx(token: string, connection: RtcConnection, options: ChannelMediaOptions): Promise<number> {
-        if (!this._appId) {
+        if (!this.appId) {
             return ERR_NOT_READY;
         }
         const key = connectionKey(connection);
@@ -2342,7 +2337,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             proxy.init();
             const client = proxy.getClient();
 
-            await client.join(this._appId, connection.channelId, token || null, connection.localUid);
+            await client.join(this.appId, connection.channelId, token || null, connection.localUid);
 
             this.subClients.set(key, client);
             this.subClientProxies.set(key, proxy);
