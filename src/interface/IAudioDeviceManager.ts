@@ -1,53 +1,56 @@
 import { DeviceInfo } from "../types/AgoraBase";
+import { IAudioDeviceCollection } from "./IAudioDeviceCollection";
 
 export interface IAudioDeviceManager {
-    enumeratePlaybackDevices(): Promise<DeviceInfo[]>;
+    enumeratePlaybackDevices(): Promise<IAudioDeviceCollection>;
 
-    enumerateRecordingDevices(): Promise<DeviceInfo[]>;
-
-    getPlaybackDefaultDevice(deviceId: string, deviceName: string): Promise<number>;
-
-    getPlaybackDefaultDevice(deviceId: string, deviceTypeName: string, deviceName: string): Promise<number>;
-
-    getRecordingDefaultDevice(deviceId: string, deviceName: string): Promise<number>;
-
-    getRecordingDefaultDevice(deviceId: string, deviceTypeName: string, deviceName: string): Promise<number>;
+    enumerateRecordingDevices(): Promise<IAudioDeviceCollection>;
 
     setPlaybackDevice(deviceId: string): Promise<number>;
 
-    getPlaybackDevice(deviceId: string): Promise<number>;
+    getPlaybackDevice(): Promise<{ deviceId: string; errorCode: number }>;
 
-    getPlaybackDeviceInfo(deviceId: string, deviceName: string): Promise<number>;
+    getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }>;
 
-    getPlaybackDeviceInfo(deviceId: string, deviceName: string, deviceTypeName: string): Promise<number>;
+    getPlaybackDeviceInfoType(): Promise<{
+        deviceId: string;
+        deviceName: string;
+        deviceTypeName: string;
+        errorCode: number;
+    }>;
 
     setPlaybackDeviceVolume(volume: number): Promise<number>;
 
-    getPlaybackDeviceVolume(volume: number): Promise<number>;
+    getPlaybackDeviceVolume(volume: number): Promise<{ volume: number; errorCode: number }>;
 
     setRecordingDevice(deviceId: string): Promise<number>;
 
-    getRecordingDevice(deviceId: string): Promise<number>;
+    getRecordingDevice(): Promise<{ deviceId: string; errorCode: number }>;
 
-    getRecordingDeviceInfo(deviceId: string, deviceName: string): Promise<number>;
+    getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }>;
 
-    getRecordingDeviceInfo(deviceId: string, deviceName: string, deviceTypeName: string): Promise<number>;
+    getRecordingDeviceInfoType(): Promise<{
+        deviceId: string;
+        deviceName: string;
+        deviceTypeName: string;
+        errorCode: number;
+    }>;
 
     setRecordingDeviceVolume(volume: number): Promise<number>;
 
-    getRecordingDeviceVolume(volume: number): Promise<number>;
+    getRecordingDeviceVolume(): Promise<{ volume: number; errorCode: number }>;
 
     setLoopbackDevice(deviceId: string): Promise<number>;
 
-    getLoopbackDevice(deviceId: string): Promise<number>;
+    getLoopbackDevice(): Promise<{ deviceId: string; errorCode: number }>;
 
     setPlaybackDeviceMute(mute: boolean): Promise<number>;
 
-    getPlaybackDeviceMute(mute: boolean): Promise<number>;
+    getPlaybackDeviceMute(): Promise<{ mute: boolean; errorCode: number }>;
 
     setRecordingDeviceMute(mute: boolean): Promise<number>;
 
-    getRecordingDeviceMute(mute: boolean): Promise<number>;
+    getRecordingDeviceMute(): Promise<{ mute: boolean; errorCode: number }>;
 
     startPlaybackDeviceTest(testAudioFilePath: string): Promise<number>;
 

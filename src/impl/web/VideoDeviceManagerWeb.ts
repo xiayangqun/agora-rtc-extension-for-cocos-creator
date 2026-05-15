@@ -5,36 +5,28 @@ import { DeviceInfo, ERROR_CODE_TYPE, VideoFormat } from "../../types/AgoraBase"
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
 export class VideoDeviceManagerWeb implements IVideoDeviceManager {
-    async enumerateVideoDevices(): Promise<DeviceInfo[]> {
-        const devices = await AgoraRTC.getCameras();
-        return devices.map(() => ({ isLowLatencyAudioSupported: false }) as DeviceInfo);
+    enumerateVideoDevices(): Promise<DeviceInfo[]> {
+        throw new Error("Method not implemented.");
     }
-
-    async setDevice(_deviceIdUTF8: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setDevice(deviceIdUTF8: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getDevice(_deviceIdUTF8: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getDevice(): Promise<{ deviceIdUTF8: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async numberOfCapabilities(_deviceIdUTF8: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    numberOfCapabilities(deviceIdUTF8: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getCapability(
-        _deviceIdUTF8: string,
-        _deviceCapabilityNumber: number,
-        _capability: VideoFormat,
-    ): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getCapability(
+        deviceIdUTF8: string,
+        deviceCapabilityNumber: number,
+    ): Promise<{ capability: VideoFormat; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async startDeviceTest(_hwnd: unknown): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    startDeviceTest(hwnd: unknown): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async stopDeviceTest(): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    stopDeviceTest(): Promise<number> {
+        throw new Error("Method not implemented.");
     }
 }

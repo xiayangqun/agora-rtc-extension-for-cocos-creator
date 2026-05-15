@@ -1,125 +1,106 @@
 import { IAudioDeviceManager } from "../../interface/IAudioDeviceManager";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import { DeviceInfo, ERROR_CODE_TYPE } from "../../types/AgoraBase";
+import { IAudioDeviceCollection } from "../../interface/IAudioDeviceCollection";
 
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
 export class AudioDeviceManagerWeb implements IAudioDeviceManager {
-    async enumeratePlaybackDevices(): Promise<DeviceInfo[]> {
-        await AgoraRTC.getPlaybackDevices();
-        return [{ isLowLatencyAudioSupported: false }] as DeviceInfo[];
+    enumeratePlaybackDevices(): Promise<IAudioDeviceCollection> {
+        throw new Error("Method not implemented.");
     }
-
-    async enumerateRecordingDevices(): Promise<DeviceInfo[]> {
-        await AgoraRTC.getMicrophones();
-        return [{ isLowLatencyAudioSupported: false }] as DeviceInfo[];
+    enumerateRecordingDevices(): Promise<IAudioDeviceCollection> {
+        throw new Error("Method not implemented.");
     }
-
-    async getPlaybackDefaultDevice(_deviceId: string, _deviceTypeName: string, _deviceName?: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setPlaybackDevice(deviceId: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getRecordingDefaultDevice(_deviceId: string, _deviceTypeName: string, _deviceName?: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getPlaybackDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async setPlaybackDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async getPlaybackDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getPlaybackDeviceInfoType(): Promise<{
+        deviceId: string;
+        deviceName: string;
+        deviceTypeName: string;
+        errorCode: number;
+    }> {
+        throw new Error("Method not implemented.");
     }
-
-    async getPlaybackDeviceInfo(_deviceId: string, _deviceTypeName: string, _deviceName?: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setPlaybackDeviceVolume(volume: number): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async setPlaybackDeviceVolume(_volume: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getPlaybackDeviceVolume(volume: number): Promise<{ volume: number; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async getPlaybackDeviceVolume(_volume: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setRecordingDevice(deviceId: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async setRecordingDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getRecordingDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async getRecordingDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async getRecordingDeviceInfo(_deviceId: string, _deviceTypeName: string, _deviceName?: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getRecordingDeviceInfoType(): Promise<{
+        deviceId: string;
+        deviceName: string;
+        deviceTypeName: string;
+        errorCode: number;
+    }> {
+        throw new Error("Method not implemented.");
     }
-
-    async setRecordingDeviceVolume(_volume: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setRecordingDeviceVolume(volume: number): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getRecordingDeviceVolume(_volume: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getRecordingDeviceVolume(): Promise<{ volume: number; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async setLoopbackDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setLoopbackDevice(deviceId: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getLoopbackDevice(_deviceId: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getLoopbackDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async setPlaybackDeviceMute(_mute: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setPlaybackDeviceMute(mute: boolean): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getPlaybackDeviceMute(_mute: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getPlaybackDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async setRecordingDeviceMute(_mute: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    setRecordingDeviceMute(mute: boolean): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async getRecordingDeviceMute(_mute: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    getRecordingDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
+        throw new Error("Method not implemented.");
     }
-
-    async startPlaybackDeviceTest(_testAudioFilePath: string): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    startPlaybackDeviceTest(testAudioFilePath: string): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async stopPlaybackDeviceTest(): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    stopPlaybackDeviceTest(): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async startRecordingDeviceTest(_indicationInterval: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    startRecordingDeviceTest(indicationInterval: number): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async stopRecordingDeviceTest(): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    stopRecordingDeviceTest(): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async startAudioDeviceLoopbackTest(_indicationInterval: number): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    startAudioDeviceLoopbackTest(indicationInterval: number): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async stopAudioDeviceLoopbackTest(): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    stopAudioDeviceLoopbackTest(): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async followSystemPlaybackDevice(_enable: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    followSystemPlaybackDevice(enable: boolean): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async followSystemRecordingDevice(_enable: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    followSystemRecordingDevice(enable: boolean): Promise<number> {
+        throw new Error("Method not implemented.");
     }
-
-    async followSystemLoopbackDevice(_enable: boolean): Promise<number> {
-        return ERR_NOT_SUPPORTED;
+    followSystemLoopbackDevice(enable: boolean): Promise<number> {
+        throw new Error("Method not implemented.");
     }
 }
