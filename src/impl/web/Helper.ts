@@ -554,11 +554,69 @@ export class Native2Web {
      * - 4: NONE. Do not output any log.
      */
     public static LOG_LEVEL(level: LOG_LEVEL): number {
-        //ai todo
+        switch (level) {
+            case LOG_LEVEL.LOG_LEVEL_DEBUG:
+                return 0;
+            case LOG_LEVEL.LOG_LEVEL_INFO:
+                return 1;
+            case LOG_LEVEL.LOG_LEVEL_WARN:
+                return 2;
+            case LOG_LEVEL.LOG_LEVEL_ERROR:
+                return 3;
+            case LOG_LEVEL.LOG_LEVEL_NONE:
+                return 4;
+            default:
+                return 1;
+        }
     }
 
     public static LiveTranscoding(config: LiveTranscoding): LiveStreamingTranscodingConfig {
-        //ai todo
+        return {
+            width: config.width,
+            height: config.height,
+            videoBitrate: config.videoBitrate,
+            videoFrameRate: config.videoFramerate,
+            lowLatency: config.lowLatency,
+            videoGop: config.videoGop,
+            videoCodecProfile: config.videoCodecProfile,
+            backgroundColor: config.backgroundColor,
+            audioSampleRate: config.audioSampleRate,
+            audioBitrate: config.audioBitrate,
+            audioChannels: config.audioChannels as 1 | 2 | 3 | 4 | 5,
+            transcodingUsers: config.transcodingUsers.map((user) => ({
+                uid: user.uid,
+                x: user.x,
+                y: user.y,
+                width: user.width,
+                height: user.height,
+                zOrder: user.zOrder,
+                alpha: user.alpha,
+                audioChannel: user.audioChannel,
+            })),
+            userConfigExtraInfo: config.transcodingExtraInfo,
+            images:
+                config.watermark.length > 0
+                    ? config.watermark.map((img) => ({
+                          url: img.url,
+                          x: img.x,
+                          y: img.y,
+                          width: img.width,
+                          height: img.height,
+                          alpha: img.alpha,
+                      }))
+                    : undefined,
+            backgroundImage:
+                config.backgroundImage.length > 0
+                    ? {
+                          url: config.backgroundImage[0].url,
+                          x: config.backgroundImage[0].x,
+                          y: config.backgroundImage[0].y,
+                          width: config.backgroundImage[0].width,
+                          height: config.backgroundImage[0].height,
+                          alpha: config.backgroundImage[0].alpha,
+                      }
+                    : undefined,
+        };
     }
 
     public static ChannelMediaRelayConfiguration(

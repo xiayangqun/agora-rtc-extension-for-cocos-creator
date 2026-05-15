@@ -102,15 +102,22 @@ export interface IRtcEngineEx extends IRtcEngine {
     enableEncryptionEx(connection: RtcConnection, enabled: boolean, config: EncryptionConfig): Promise<number>;
 
     createDataStreamEx(
-        streamId: number,
         reliable: boolean,
         ordered: boolean,
         connection: RtcConnection,
+    ): Promise<{ streamId: number; errorCode: number }>;
+
+    createDataStreamEx(
+        config: DataStreamConfig,
+        connection: RtcConnection,
+    ): Promise<{ streamId: number; errorCode: number }>;
+
+    sendStreamMessageEx(
+        streamId: number,
+        data: ArrayBuffer,
+        length: number,
+        connection: RtcConnection,
     ): Promise<number>;
-
-    createDataStreamEx(streamId: number, config: DataStreamConfig, connection: RtcConnection): Promise<number>;
-
-    sendStreamMessageEx(streamId: number, data: Uint8Array, length: number, connection: RtcConnection): Promise<number>;
 
     sendRdtMessageEx(
         uid: number,
