@@ -20,6 +20,9 @@ import AgoraRTC, {
     VideoEncoderConfiguration as WebVideoEncoderConfiguration,
     IMicrophoneAudioTrack,
     ILocalAudioTrack,
+    LiveStreamingTranscodingConfig,
+    EncryptionMode,
+    IChannelMediaRelayConfiguration,
 } from "agora-rtc-sdk-ng";
 import { RtcEngineWeb } from "./RtcEngineWeb";
 import { Native2Web, Web2Native } from "./Helper";
@@ -35,6 +38,7 @@ import {
     MultipathType,
     VIDEO_STREAM_TYPE,
     VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
+    UserInfo,
 } from "../../types/AgoraBase";
 import { ChannelMediaOptions } from "../../types/AgoraRtcEngine";
 import { ClientRequest } from "http";
@@ -45,6 +49,9 @@ export class AgoraRTCClientProxy {
 
     // TrackManager 引用，管理全局本地轨道
     private _trackManager: TrackManager;
+
+    private _streamIdCount: number = 0;
+    private _streamChannels: Map<number, ILocalDataChannel> = new Map();
 
     constructor(config: ClientConfig, rtcEngineWeb: RtcEngineWeb, trackManager: TrackManager) {
         this._client = AgoraRTC.createClient(config);
@@ -75,6 +82,28 @@ export class AgoraRTCClientProxy {
         return this._client.remoteUsers;
     }
 
+    getUserInfoByUserAccount(userAccount: string): UserInfo {
+        const user = this._client.remoteUsers.find((u) => u.uid === userAccount);
+        if (user) {
+            return {
+                uid: (user as any)._uintUid,
+                userAccount: user.uid as string,
+            };
+        }
+        return null;
+    }
+
+    getUserInfoByUid(uid: number): UserInfo {
+        const user = this._client.remoteUsers.find((u) => (u as any)._uintUid === uid);
+        if (user) {
+            return {
+                uid: (user as any)._uintUid,
+                userAccount: user.uid as string,
+            };
+        }
+        return null;
+    }
+
     get connectionState(): ConnectionState {
         return this._client.connectionState;
     }
@@ -85,6 +114,14 @@ export class AgoraRTCClientProxy {
 
     get uid(): UID {
         return this._client.uid;
+    }
+
+    get numberUid(): number {
+        return this._client.uid as number;
+    }
+
+    get stringUid(): string {
+        return this._client.uid as string;
     }
 
     // ==================== Connection ====================
@@ -117,14 +154,26 @@ export class AgoraRTCClientProxy {
         return await this._client.setClientRole(role);
     }
 
-    // ==================== Publish / Subscribe ====================
+    async createDataStream(reliable: boolean, ordered: boolean): Promise<number> {
+        this._streamIdCount++;
+        const streamId = this._streamIdCount;
+        const channel = await this._client.publish({
+            id: streamId,
+            ordered: ordered,
+            metadata: "",
+        });
 
-    async publish(tracks: ILocalTrack | ILocalTrack[]): Promise<void>;
-    async publish(config: any): Promise<ILocalDataChannel>;
-    async publish(params: ILocalTrack | ILocalTrack[] | any): Promise<void | ILocalDataChannel> {
-        return (this._client as any).publish(params);
+        this._streamChannels.set(streamId, channel);
+        return streamId;
     }
 
+    async sendData(streamId: number, data: ArrayBuffer): Promise<void> {
+        const channel = this._streamChannels.get(streamId);
+        if (channel) {
+            channel.send(data);
+        }
+    }
+    // ==================== Publish / Subscribe ====================
     async unpublish(tracks?: ILocalTrack | ILocalTrack[]): Promise<void> {
         return this._client.unpublish(tracks);
     }
@@ -194,44 +243,54 @@ export class AgoraRTCClientProxy {
 
     // ==================== Encryption ====================
 
-    setEncryptionConfig(encryptionMode: string, secret: string, salt?: Uint8Array, encryptDataStream?: boolean): void {
-        //ai todo
+    setEncryptionConfig(
+        encryptionMode: EncryptionMode,
+        secret: string,
+        salt?: Uint8Array,
+        encryptDataStream?: boolean,
+    ): void {
+        this._client.setEncryptionConfig(encryptionMode, secret, salt, encryptDataStream);
     }
 
     // ==================== CDN Streaming ====================
 
     async startLiveStreaming(url: string, transcodingEnabled?: boolean): Promise<void> {
-        return this._client.startLiveStreaming(url, transcodingEnabled);
+        return await this._client.startLiveStreaming(url, transcodingEnabled);
     }
 
-    async setLiveTranscoding(config: any): Promise<void> {
-        //ai todo
+    async setLiveTranscoding(config: LiveStreamingTranscodingConfig): Promise<void> {
+        return await this._client.setLiveTranscoding(config);
     }
 
     async stopLiveStreaming(url: string): Promise<void> {
-        return this._client.stopLiveStreaming(url);
+        return await this._client.stopLiveStreaming(url);
     }
 
     // ==================== Channel Media Relay ====================
 
-    async startChannelMediaRelay(config: any): Promise<void> {
-        //ai todo
+    _isChannelMediaRelayStarted = false;
+    async startOrUpdateChannelMediaRelay(config: IChannelMediaRelayConfiguration): Promise<void> {
+        if (this._isChannelMediaRelayStarted) {
+            return await this._client.updateChannelMediaRelay(config);
+        } else {
+            this._isChannelMediaRelayStarted = true;
+            return await this._client.startChannelMediaRelay(config);
+        }
     }
 
     async stopChannelMediaRelay(): Promise<void> {
-        return this._client.stopChannelMediaRelay();
+        this._isChannelMediaRelayStarted = false;
+        return await this._client.stopChannelMediaRelay();
     }
 
     // ==================== Proxy ====================
 
-    startProxyServer(mode?: number): void {
+    startProxyServer(mode: number): void {
         this._client.startProxyServer(mode);
     }
 
-    // ==================== Reporting ====================
-
-    sendCustomReportMessage(id: string, category: string, event: string, label: string, value: number): void {
-        (this._client as any).sendCustomReportMessage?.(id, category, event, label, value);
+    stopProxyServer(): void {
+        this._client.stopProxyServer();
     }
 
     init() {

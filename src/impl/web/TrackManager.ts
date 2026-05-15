@@ -87,8 +87,14 @@ export class TrackManager {
         if (this.localFirstCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
+        const devices = await AgoraRTC.getCameras();
+        if (devices.length < 1) {
+            console.warn("createLocalFirstCameraVideoTrack failed, no camera device found");
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
         this.localFirstCameraTrack = await AgoraRTC.createCameraVideoTrack({
             encoderConfig: encoderConfig,
+            cameraId: devices[0].deviceId,
         });
         return ERROR_CODE_TYPE.ERR_OK;
     }
@@ -97,8 +103,14 @@ export class TrackManager {
         if (this.localSecondCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
+        const devices = await AgoraRTC.getCameras();
+        if (devices.length < 2) {
+            console.warn("createLocalSecondCameraVideoTrack failed, no second camera device found");
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
         this.localSecondCameraTrack = await AgoraRTC.createCameraVideoTrack({
             encoderConfig: encoderConfig,
+            cameraId: devices[1].deviceId,
         });
         return ERROR_CODE_TYPE.ERR_OK;
     }
@@ -107,8 +119,14 @@ export class TrackManager {
         if (this.localThirdCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
+        const devices = await AgoraRTC.getCameras();
+        if (devices.length < 3) {
+            console.warn("createLocalThirdCameraVideoTrack failed, no third camera device found");
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
         this.localThirdCameraTrack = await AgoraRTC.createCameraVideoTrack({
             encoderConfig: encoderConfig,
+            cameraId: devices[2].deviceId,
         });
         return ERROR_CODE_TYPE.ERR_OK;
     }
@@ -117,9 +135,131 @@ export class TrackManager {
         if (this.localFourthCameraTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
+        const devices = await AgoraRTC.getCameras();
+        if (devices.length < 4) {
+            console.warn("createLocalFourthCameraVideoTrack failed, no fourth camera device found");
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
         this.localFourthCameraTrack = await AgoraRTC.createCameraVideoTrack({
             encoderConfig: encoderConfig,
+            cameraId: devices[3].deviceId,
         });
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalFirstCameraVideoTrack(): Promise<number> {
+        this.localFirstCameraTrack?.close();
+        this.localFirstCameraTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalSecondCameraVideoTrack(): Promise<number> {
+        this.localSecondCameraTrack?.close();
+        this.localSecondCameraTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalThirdCameraVideoTrack(): Promise<number> {
+        this.localThirdCameraTrack?.close();
+        this.localThirdCameraTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalFourthCameraVideoTrack(): Promise<number> {
+        this.localFourthCameraTrack?.close();
+        this.localFourthCameraTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async createLocalFirstScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+        if (this.localFirstScreenVideoTrack) {
+            return ERROR_CODE_TYPE.ERR_OK;
+        }
+        const tracks = await AgoraRTC.createScreenVideoTrack(
+            {
+                encoderConfig: encoderConfig,
+            },
+            "enable",
+        );
+        this.localFirstScreenVideoTrack = tracks[0];
+        this.localFirstScreenAudioTrack = tracks[1];
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async createLocalSecondScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+        if (this.localSecondScreenVideoTrack) {
+            return ERROR_CODE_TYPE.ERR_OK;
+        }
+        const tracks = await AgoraRTC.createScreenVideoTrack(
+            {
+                encoderConfig: encoderConfig,
+            },
+            "enable",
+        );
+        this.localSecondScreenVideoTrack = tracks[0];
+        this.localSecondScreenAudioTrack = tracks[1];
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async createLocalThirdScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+        if (this.localThirdScreenVideoTrack) {
+            return ERROR_CODE_TYPE.ERR_OK;
+        }
+        const tracks = await AgoraRTC.createScreenVideoTrack(
+            {
+                encoderConfig: encoderConfig,
+            },
+            "enable",
+        );
+        this.localThirdScreenVideoTrack = tracks[0];
+        this.localThirdScreenAudioTrack = tracks[1];
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async createLocalFourthScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+        if (this.localFourthScreenVideoTrack) {
+            return ERROR_CODE_TYPE.ERR_OK;
+        }
+        const tracks = await AgoraRTC.createScreenVideoTrack(
+            {
+                encoderConfig: encoderConfig,
+            },
+            "enable",
+        );
+        this.localFourthScreenVideoTrack = tracks[0];
+        this.localFourthScreenAudioTrack = tracks[1];
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalFirstScreenTrack() {
+        this.localFirstScreenVideoTrack?.close();
+        this.localFirstScreenAudioTrack?.close();
+        this.localFirstScreenVideoTrack = null;
+        this.localFirstScreenAudioTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalSecondScreenTrack() {
+        this.localSecondScreenVideoTrack?.close();
+        this.localSecondScreenAudioTrack?.close();
+        this.localSecondScreenVideoTrack = null;
+        this.localSecondScreenAudioTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalThirdScreenTrack() {
+        this.localThirdScreenVideoTrack?.close();
+        this.localThirdScreenAudioTrack?.close();
+        this.localThirdScreenVideoTrack = null;
+        this.localThirdScreenAudioTrack = null;
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async closeLocalFourthScreenTrack() {
+        this.localFourthScreenVideoTrack?.close();
+        this.localFourthScreenAudioTrack?.close();
+        this.localFourthScreenVideoTrack = null;
+        this.localFourthScreenAudioTrack = null;
         return ERROR_CODE_TYPE.ERR_OK;
     }
 

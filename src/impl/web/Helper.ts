@@ -1,4 +1,4 @@
-import {
+import AgoraRTC, {
     ConnectionState as WebConnectionState,
     ConnectionDisconnectedReason as WebConnectionDisconnectedReason,
     ChannelMediaRelayState as WebChannelMediaRelayState,
@@ -10,6 +10,9 @@ import {
     VideoEncoderConfiguration as WebVideoEncoderConfiguration,
     ClientRoleOptions as WebClientRoleOptions,
     AudienceLatencyLevelType,
+    LiveStreamingTranscodingConfig,
+    IChannelMediaRelayConfiguration,
+    ChannelMediaRelayInfo,
 } from "agora-rtc-sdk-ng";
 import {
     CONNECTION_CHANGED_REASON_TYPE,
@@ -28,8 +31,11 @@ import {
     VideoEncoderConfiguration as NativeVideoEncoderConfiguration,
     ClientRoleOptions as NativeClientRoleOptions,
     AUDIENCE_LATENCY_LEVEL_TYPE,
+    LiveTranscoding,
+    ChannelMediaRelayConfiguration,
+    ChannelMediaInfo,
 } from "../../types/AgoraBase";
-import { MEDIA_DEVICE_STATE_TYPE, STREAM_FALLBACK_OPTIONS } from "../../types/AgoraRtcEngine";
+import { CLOUD_PROXY_TYPE, MEDIA_DEVICE_STATE_TYPE, STREAM_FALLBACK_OPTIONS } from "../../types/AgoraRtcEngine";
 import { SIMULCAST_STREAM_MODE } from "../../types/AgoraBase";
 import { AgoraRTCErrorCode } from "@agora-js/shared";
 import { LOG_LEVEL } from "../../types/AgoraLog";
@@ -549,6 +555,43 @@ export class Native2Web {
      */
     public static LOG_LEVEL(level: LOG_LEVEL): number {
         //ai todo
+    }
+
+    public static LiveTranscoding(config: LiveTranscoding): LiveStreamingTranscodingConfig {
+        //ai todo
+    }
+
+    public static ChannelMediaRelayConfiguration(
+        config: ChannelMediaRelayConfiguration,
+    ): IChannelMediaRelayConfiguration {
+        const conf = AgoraRTC.createChannelMediaRelayConfiguration();
+        conf.setSrcChannelInfo({
+            channelName: config.srcInfo.channelName,
+            uid: config.srcInfo.uid,
+            token: config.srcInfo.token,
+        });
+
+        for (let i = 0; i < config.destInfos.length; i++) {
+            conf.addDestChannelInfo({
+                channelName: config.destInfos[i].channelName,
+                uid: config.destInfos[i].uid,
+                token: config.destInfos[i].token,
+            });
+        }
+        return conf;
+    }
+
+    public static CLOUD_PROXY_TYPE(type: CLOUD_PROXY_TYPE): number {
+        switch (type) {
+            case CLOUD_PROXY_TYPE.NONE_PROXY:
+                return 0;
+            case CLOUD_PROXY_TYPE.UDP_PROXY:
+                return 3;
+            case CLOUD_PROXY_TYPE.TCP_PROXY:
+                return 5;
+            default:
+                return 0;
+        }
     }
 }
 

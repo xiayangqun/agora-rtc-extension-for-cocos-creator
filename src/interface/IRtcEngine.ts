@@ -695,11 +695,11 @@ export interface IRtcEngine {
 
     enableEncryption(enabled: boolean, config: EncryptionConfig): Promise<number>;
 
-    createDataStream(streamId: number, reliable: boolean, ordered: boolean): Promise<number>;
+    createDataStream(reliable: boolean, ordered: boolean): Promise<{ streamId: number; errorCode: number }>;
 
-    createDataStream(streamId: number, config: DataStreamConfig): Promise<number>;
+    createDataStream(config: DataStreamConfig): Promise<{ streamId: number; errorCode: number }>;
 
-    sendStreamMessage(streamId: number, data: Uint8Array, length: number): Promise<number>;
+    sendStreamMessage(streamId: number, data: ArrayBuffer, length: number): Promise<number>;
 
     sendRdtMessage(uid: number, type: RdtStreamType, data: string, length: number): Promise<number>;
 
@@ -812,5 +812,5 @@ export interface IRtcEngine {
 
     sendAudioMetadata(metadata: Uint8Array, length: number): Promise<number>;
 
-    queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): Promise<number>;
+    queryHDRCapability(videoModule: VIDEO_MODULE_TYPE): Promise<{ errorCode: number; capability: HDR_CAPABILITY }>;
 }

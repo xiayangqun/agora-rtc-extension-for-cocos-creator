@@ -2361,9 +2361,9 @@ export enum ENCRYPTION_MODE {
 export interface EncryptionConfig {
     encryptionMode: ENCRYPTION_MODE;
 
-    encryptionKey: string | null;
+    encryptionKey: string;
 
-    encryptionKdfSalt: Uint8Array; // uint8_t[32] → Uint8Array 或 number[]
+    encryptionKdfSalt: Uint8Array; // uint8_t[32] → Uint8Array
 
     datastreamEncryptionEnabled: boolean;
 }

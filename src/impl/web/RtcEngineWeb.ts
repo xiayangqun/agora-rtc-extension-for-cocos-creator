@@ -110,6 +110,7 @@ import {
     FeatureType,
     ExtensionInfo,
     MEDIA_DEVICE_TYPE,
+    ScreenCaptureSourceType,
 } from "../../types/AgoraRtcEngine";
 import { RtcConnection } from "../../types/AgoraRtcEngineEx";
 import { IRtcEngineEventHandler } from "../../interface/IRtcEngineEventHandler";
@@ -141,6 +142,7 @@ const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 const ERR_NOT_READY = ERROR_CODE_TYPE.ERR_NOT_READY;
 const ERR_INVALID_ARGUMENT = ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
 const ERR_FAILED = ERROR_CODE_TYPE.ERR_FAILED;
+const ERR_INVALID_USER_ACCOUNT = ERROR_CODE_TYPE.ERR_INVALID_USER_ACCOUNT;
 
 function connectionKey(connection: RtcConnection): string {
     return `${connection.channelId}_${connection.localUid}`;
@@ -1633,8 +1635,37 @@ export class RtcEngineWeb implements IRtcEngineEx {
         iconSize: SIZE,
         includeScreen: boolean,
     ): Promise<ScreenCaptureSourceInfo[]> {
-        console.warn("getScreenCaptureSources not support in web");
-        throw new Error("getScreenCaptureSources not support in web");
+        console.warn("web screen capture sources wiill always return fake data");
+        const sources: ScreenCaptureSourceInfo[] = [];
+        sources.push({
+            type: ScreenCaptureSourceType.ScreenCaptureSourceType_Screen,
+            sourceId: 0,
+            sourceName: "Screen",
+            thumbImage: null,
+            iconImage: null,
+            processPath: "",
+            sourceTitle: "",
+            primaryMonitor: false,
+            isOccluded: false,
+            position: null,
+            minimizeWindow: false,
+            sourceDisplayId: 0,
+        });
+        sources.push({
+            type: ScreenCaptureSourceType.ScreenCaptureSourceType_Window,
+            sourceId: 1,
+            sourceName: "Window",
+            thumbImage: null,
+            iconImage: null,
+            processPath: "",
+            sourceTitle: "",
+            primaryMonitor: false,
+            isOccluded: false,
+            position: null,
+            minimizeWindow: false,
+            sourceDisplayId: 0,
+        });
+        return sources;
     }
 
     async setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): Promise<number> {
@@ -1647,8 +1678,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         regionRect: Rectangle,
         captureParams: ScreenCaptureParameters,
     ): Promise<number> {
-        console.warn("startScreenCaptureByDisplayId not support in web");
-        return -ERR_NOT_SUPPORTED;
+        await this.trackManager.createLocalFirstCameraVideoTrack(
+            Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+        );
+        return ERR_OK;
     }
 
     async startScreenCaptureByScreenRect(
@@ -1656,8 +1689,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         regionRect: Rectangle,
         captureParams: ScreenCaptureParameters,
     ): Promise<number> {
-        console.warn("startScreenCaptureByScreenRect not support in web");
-        return -ERR_NOT_SUPPORTED;
+        await this.trackManager.createLocalFirstCameraVideoTrack(
+            Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+        );
+        return ERR_OK;
     }
 
     async getAudioDeviceInfo(): Promise<{ errorCode: number; deviceInfo: DeviceInfo }> {
@@ -1692,16 +1727,36 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async startScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number>;
     async startScreenCapture(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): Promise<number>;
     async startScreenCapture(sourceType: unknown, config?: unknown): Promise<number> {
-        try {
-            this._screenTrack = await AgoraRTC.createScreenVideoTrack(config as any, "disable");
-            if (this.mainClientProxy && this.mainClientProxy.connectionState === "CONNECTED") {
-                await this.mainClientProxy!.publish([this._screenTrack]);
-            }
-            return ERR_OK;
-        } catch (e) {
-            console.error("startScreenCapture failed:", e);
-            return ERR_FAILED;
+        let st: VIDEO_SOURCE_TYPE = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
+        if (config) {
+            st = sourceType as VIDEO_SOURCE_TYPE;
         }
+        switch (st) {
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
+                await this.trackManager.createLocalFirstCameraVideoTrack(
+                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                );
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
+                await this.trackManager.createLocalSecondCameraVideoTrack(
+                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                );
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
+                await this.trackManager.createLocalThirdCameraVideoTrack(
+                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                );
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
+                await this.trackManager.createLocalFourthCameraVideoTrack(
+                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                );
+                break;
+            default:
+                return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+                break;
+        }
+        return ERR_OK;
     }
 
     async updateScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number> {
@@ -1732,12 +1787,26 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async stopScreenCapture(): Promise<number>;
     async stopScreenCapture(sourceType: VIDEO_SOURCE_TYPE): Promise<number>;
     async stopScreenCapture(sourceType?: unknown): Promise<number> {
-        if (this._screenTrack) {
-            if (this.mainClientProxy) {
-                await this.mainClientProxy.unpublish([this._screenTrack]).catch(() => {});
-            }
-            this._screenTrack.close();
-            this._screenTrack = undefined;
+        let st = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
+        if (sourceType) {
+            st = sourceType as VIDEO_SOURCE_TYPE;
+        }
+        switch (st) {
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
+                await this.trackManager.closeLocalFirstScreenTrack();
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
+                await this.trackManager.closeLocalSecondScreenTrack();
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
+                await this.trackManager.closeLocalThirdScreenTrack();
+                break;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
+                await this.trackManager.closeLocalFourthScreenTrack();
+                break;
+            default:
+                return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+                break;
         }
         return ERR_OK;
     }
@@ -1762,39 +1831,48 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== CDN Streaming ====================
 
     async startRtmpStreamWithoutTranscoding(url: string): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            await this.mainClientProxy!.startLiveStreaming(url, false);
+            await this.mainClientProxy?.startLiveStreaming(url, false);
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("startRtmpStreamWithoutTranscoding failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
     async startRtmpStreamWithTranscoding(url: string, transcoding: LiveTranscoding): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            await this.mainClientProxy!.startLiveStreaming(url, true);
-            await this.mainClientProxy!.setLiveTranscoding(transcoding as any);
+            await this.mainClientProxy?.setLiveTranscoding(Native2Web.LiveTranscoding(transcoding));
+            await this.mainClientProxy?.startLiveStreaming(url, true);
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("startRtmpStreamWithTranscoding failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
     async updateRtmpTranscoding(transcoding: LiveTranscoding): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            await this.mainClientProxy!.setLiveTranscoding(transcoding as any);
+            await this.mainClientProxy?.setLiveTranscoding(Native2Web.LiveTranscoding(transcoding));
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("updateRtmpTranscoding failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
@@ -1809,14 +1887,17 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async stopRtmpStream(url: string): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            await this.mainClientProxy!.stopLiveStreaming(url);
+            await this.mainClientProxy?.stopLiveStreaming(url);
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("stopRtmpStream failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
@@ -1841,13 +1922,63 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async startCameraCapture(sourceType: VIDEO_SOURCE_TYPE, config: CameraCapturerConfiguration): Promise<number> {
-        console.warn("startCameraCapture not support in web");
-        return -ERR_NOT_SUPPORTED;
+        try {
+            switch (sourceType) {
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY:
+                    await this.trackManager.createLocalFirstCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+                    await this.trackManager.createLocalSecondCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+                    await this.trackManager.createLocalThirdCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+                    await this.trackManager.createLocalFourthCameraVideoTrack();
+                    break;
+                default:
+                    return -ERR_INVALID_ARGUMENT;
+                    break;
+            }
+        } catch (e) {
+            console.error("startCameraCapture failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
+        }
     }
 
     async stopCameraCapture(sourceType: VIDEO_SOURCE_TYPE): Promise<number> {
-        console.warn("stopCameraCapture not support in web");
-        return -ERR_NOT_SUPPORTED;
+        try {
+            switch (sourceType) {
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY:
+                    await this.trackManager.closeLocalFirstCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+                    await this.trackManager.closeLocalSecondCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+                    await this.trackManager.closeLocalSecondCameraVideoTrack();
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+                    await this.trackManager.closeLocalFourthCameraVideoTrack();
+                    break;
+                default:
+                    return -ERR_INVALID_ARGUMENT;
+                    break;
+            }
+        } catch (e) {
+            console.error("startCameraCapture failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
+        }
     }
 
     async setCameraDeviceOrientation(type: VIDEO_SOURCE_TYPE, orientation: VIDEO_ORIENTATION): Promise<number> {
@@ -1862,8 +1993,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         if (!this.mainClientProxy) {
             return CONNECTION_STATE_TYPE.CONNECTION_STATE_DISCONNECTED;
         }
-        const { Web2Native } = await import("./Helper");
-        return Web2Native.ConnectionState(this.mainClientProxy!.connectionState);
+        return Web2Native.ConnectionState(this.mainClientProxy.connectionState);
     }
 
     async setRemoteUserPriority(uid: number, userPriority: PRIORITY_TYPE): Promise<number> {
@@ -1874,60 +2004,78 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Encryption ====================
 
     async enableEncryption(enabled: boolean, config: EncryptionConfig): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            if (enabled && config.encryptionKey) {
+            if (enabled) {
                 const webMode = Native2Web.EncryptionMode(config.encryptionMode);
-                this.mainClientProxy!.setEncryptionConfig(
+                this.mainClientProxy?.setEncryptionConfig(
                     webMode,
                     config.encryptionKey,
-                    config.encryptionKdfSalt || undefined,
+                    config.encryptionKdfSalt,
+                    config.datastreamEncryptionEnabled,
+                );
+            } else {
+                this.mainClientProxy?.setEncryptionConfig(
+                    "none",
+                    config.encryptionKey,
+                    config.encryptionKdfSalt,
                     config.datastreamEncryptionEnabled,
                 );
             }
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("enableEncryption failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
     // ==================== Data Stream ====================
 
-    async createDataStream(streamId: number, reliable: boolean, ordered: boolean): Promise<number>;
-    async createDataStream(streamId: number, config: DataStreamConfig): Promise<number>;
-    async createDataStream(_streamId: unknown, reliable: unknown, orderedParam?: unknown): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
+    async createDataStream(reliable: boolean, ordered: boolean): Promise<{ streamId: number; errorCode: number }>;
+    async createDataStream(config: DataStreamConfig): Promise<{ streamId: number; errorCode: number }>;
+    async createDataStream(
+        reliableParam: unknown,
+        orderedParam?: unknown,
+    ): Promise<{ streamId: number; errorCode: number }> {
         try {
-            let isOrdered: boolean;
-            if (typeof reliable === "boolean") {
-                isOrdered = orderedParam as boolean;
+            let reliable: boolean = true;
+            let ordered: boolean = true;
+            if (typeof reliableParam === "boolean") {
+                reliable = reliableParam as boolean;
+                ordered = orderedParam as boolean;
             } else {
-                const cfg = reliable as DataStreamConfig;
-                isOrdered = cfg.ordered;
+                const cfg = reliableParam as DataStreamConfig;
+                ordered = cfg.ordered;
             }
-            const id = this._nextDataStreamId++;
-            const dc = await this.mainClientProxy!.publish({ id, ordered: isOrdered, metadata: "" });
-            this._dataChannels.set(id, dc);
-            return id;
+            const streamId = await this.mainClientProxy?.createDataStream(reliable, ordered);
+            return { streamId, errorCode: ERR_OK };
         } catch (e) {
-            return ERR_FAILED;
+            console.error("createDataStream failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return { streamId: -1, errorCode: -Web2Native.AgoraRTCErrorCode(err.code) };
+            } else {
+                return { streamId: -1, errorCode: -ERROR_CODE_TYPE.ERR_FAILED };
+            }
         }
     }
 
-    async sendStreamMessage(streamId: number, data: Uint8Array, length: number): Promise<number> {
-        const dc = this._dataChannels.get(streamId);
-        if (!dc) {
-            return ERR_INVALID_ARGUMENT;
-        }
+    async sendStreamMessage(streamId: number, data: ArrayBuffer, length: number): Promise<number> {
         try {
-            dc.send(data.buffer);
+            await this.mainClientProxy?.sendData(streamId, data);
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("sendStreamMessage failed", e.toString?.());
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
@@ -1964,17 +2112,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Audio Pause/Resume ====================
 
     async pauseAudio(): Promise<number> {
-        if (this._localAudioTrack) {
-            await this._localAudioTrack.setEnabled(false);
-        }
-        return ERR_OK;
+        console.warn("pauseAudio not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async resumeAudio(): Promise<number> {
-        if (this._localAudioTrack) {
-            await this._localAudioTrack.setEnabled(true);
-        }
-        return ERR_OK;
+        console.warn("resumeAudio not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async enableWebSdkInteroperability(enabled: boolean): Promise<number> {
@@ -1990,15 +2134,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
         label: string,
         value: number,
     ): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
-        try {
-            this.mainClientProxy!.sendCustomReportMessage(id, category, event, label, value);
-            return ERR_OK;
-        } catch (e) {
-            return ERR_FAILED;
-        }
+        console.warn("sendCustomReportMessage not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async startAudioFrameDump(
@@ -2037,58 +2174,95 @@ export class RtcEngineWeb implements IRtcEngineEx {
         options: ChannelMediaOptions,
     ): Promise<number>;
     async joinChannelWithUserAccount(
-        token: unknown,
-        channelId: unknown,
-        userAccount: unknown,
-        options?: unknown,
+        token: string,
+        channelId: string,
+        userAccount: string,
+        optionsParam?: unknown,
     ): Promise<number> {
-        console.warn("joinChannelWithUserAccount not support in web");
-        return -ERR_NOT_SUPPORTED;
+        if (!optionsParam) {
+            try {
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId, token, userAccount, {
+                    autoSubscribe: true,
+                    networkQualityProbe: true,
+                });
+                this.rtcEngineEventHandler?.onJoinChannelSuccess(
+                    { channelId: channelId, localUid: this.mainClientProxy.numberUid },
+                    0,
+                );
+                return ERROR_CODE_TYPE.ERR_OK;
+            } catch (e: any) {
+                console.error("joinChannel failed:", e.toString ? e.toString() : "");
+                if (isAgoraRTCError(e)) {
+                    const err = e as IAgoraRTCError;
+                    return -Web2Native.AgoraRTCErrorCode(err.code);
+                } else {
+                    return -ERROR_CODE_TYPE.ERR_FAILED;
+                }
+            }
+        } else {
+            try {
+                const options = optionsParam as ChannelMediaOptions;
+                const autoSubscribe = (options.autoSubscribeVideo ?? true) || (options.autoSubscribeAudio ?? true);
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId, token, userAccount, {
+                    autoSubscribe: autoSubscribe,
+                    networkQualityProbe: true,
+                });
+                await this.updateChannelMediaOptions(options);
+                this.rtcEngineEventHandler?.onJoinChannelSuccess(
+                    { channelId: channelId, localUid: this.mainClientProxy.numberUid },
+                    0,
+                );
+                return ERROR_CODE_TYPE.ERR_OK;
+            } catch (e: any) {
+                console.error("joinChannel failed:", e.toString ? e.toString() : "");
+                if (isAgoraRTCError(e)) {
+                    const err = e as IAgoraRTCError;
+                    return -Web2Native.AgoraRTCErrorCode(err.code);
+                } else {
+                    return -ERROR_CODE_TYPE.ERR_FAILED;
+                }
+            }
+        }
     }
 
     async getUserInfoByUserAccount(userAccount: string): Promise<{ errorCode: number; userInfo: UserInfo }> {
-        console.warn("getUserInfoByUserAccount not support in web");
-        throw new Error("getUserInfoByUserAccount not support in web");
+        const userInfo = this.mainClientProxy.getUserInfoByUserAccount(userAccount);
+        if (userInfo) {
+            return { errorCode: ERR_OK, userInfo: userInfo };
+        } else {
+            return { errorCode: ERR_INVALID_USER_ACCOUNT, userInfo: null };
+        }
     }
 
     async getUserInfoByUid(uid: number): Promise<{ errorCode: number; userInfo: UserInfo }> {
-        console.warn("getUserInfoByUid not support in web");
-        throw new Error("getUserInfoByUid not support in web");
+        const userInfo = this.mainClientProxy.getUserInfoByUid(uid);
+        if (userInfo) {
+            return { errorCode: ERR_OK, userInfo: userInfo };
+        } else {
+            return { errorCode: ERR_INVALID_ARGUMENT, userInfo: null };
+        }
     }
 
     // ==================== Channel Media Relay ====================
-
     async startOrUpdateChannelMediaRelay(configuration: ChannelMediaRelayConfiguration): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            const webConfig: any = {
-                srcInfo: {
-                    channel: configuration.srcInfo.channelName,
-                    token: configuration.srcInfo.token,
-                    uid: configuration.srcInfo.uid,
-                },
-                destInfos: configuration.destInfos.map((info) => ({
-                    channel: info.channelName,
-                    token: info.token,
-                    uid: info.uid,
-                })),
-                channelCount: configuration.destInfos.length,
-            };
-            await this.mainClientProxy!.startChannelMediaRelay(webConfig);
+            const conf = Native2Web.ChannelMediaRelayConfiguration(configuration);
+            await this.mainClientProxy?.startOrUpdateChannelMediaRelay(conf);
             return ERR_OK;
         } catch (e) {
-            return ERR_FAILED;
+            console.error("startOrUpdateChannelMediaRelay failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
     }
 
     async stopChannelMediaRelay(): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            await this.mainClientProxy!.stopChannelMediaRelay();
+            await this.mainClientProxy?.stopChannelMediaRelay();
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2112,7 +2286,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async setDirectCdnStreamingVideoConfiguration(config: VideoEncoderConfiguration): Promise<number> {
+    async setDirectCdnStreamingVideoConfiguration(config: NativeVideoEncoderConfiguration): Promise<number> {
         console.warn("setDirectCdnStreamingVideoConfiguration not support in web");
         return -ERR_NOT_SUPPORTED;
     }
@@ -2176,11 +2350,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Cloud Proxy ====================
 
     async setCloudProxy(proxyType: CLOUD_PROXY_TYPE): Promise<number> {
-        if (!this.mainClientProxy) {
-            return ERR_NOT_READY;
-        }
         try {
-            this.mainClientProxy!.startProxyServer(proxyType);
+            if (proxyType == CLOUD_PROXY_TYPE.NONE_PROXY) {
+                this.mainClientProxy?.stopProxyServer();
+            } else {
+                const mode = Native2Web.CLOUD_PROXY_TYPE(proxyType);
+                this.mainClientProxy?.startProxyServer(mode);
+            }
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2216,15 +2392,18 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async setParameters(parameters: object): Promise<number> {
-        return ERR_OK;
+        console.warn("setParameters not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async startMediaRenderingTracing(): Promise<number> {
-        return ERR_OK;
+        console.warn("startMediaRenderingTracing not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async enableInstantMediaRendering(): Promise<number> {
-        return ERR_OK;
+        console.warn("enableInstantMediaRendering not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 
     async getNtpWallTimeInMs(): Promise<number> {
@@ -2232,6 +2411,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async isFeatureAvailableOnDevice(type: FeatureType): Promise<boolean> {
+        console.warn("isFeatureAvailableOnDevice not support in web");
         return true;
     }
 
@@ -2240,9 +2420,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async queryHDRCapability(videoModule: VIDEO_MODULE_TYPE, capability: HDR_CAPABILITY): Promise<number> {
+    async queryHDRCapability(
+        videoModule: VIDEO_MODULE_TYPE,
+    ): Promise<{ errorCode: number; capability: HDR_CAPABILITY }> {
         console.warn("queryHDRCapability not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { errorCode: -ERR_NOT_SUPPORTED, capability: HDR_CAPABILITY.HDR_CAPABILITY_UNKNOWN };
     }
 
     // ==================== Ex Methods ====================
