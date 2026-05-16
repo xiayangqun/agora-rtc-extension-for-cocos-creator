@@ -1,106 +1,170 @@
 import { IAudioDeviceManager } from "../../interface/IAudioDeviceManager";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { DeviceInfo, ERROR_CODE_TYPE } from "../../types/AgoraBase";
+import { ERROR_CODE_TYPE } from "../../types/AgoraBase";
 import { IAudioDeviceCollection } from "../../interface/IAudioDeviceCollection";
+import { AudioDeviceCollectionWeb } from "./AudioDeviceCollectionWeb";
 
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
 export class AudioDeviceManagerWeb implements IAudioDeviceManager {
-    enumeratePlaybackDevices(): Promise<IAudioDeviceCollection> {
-        throw new Error("Method not implemented.");
+    _playbackDevices: MediaDeviceInfo[] = null;
+    _recordingDevices: MediaDeviceInfo[] = null;
+
+    async init(): Promise<void> {
+        this._playbackDevices = await AgoraRTC.getPlaybackDevices();
+        this._recordingDevices = await AgoraRTC.getMicrophones();
     }
-    enumerateRecordingDevices(): Promise<IAudioDeviceCollection> {
-        throw new Error("Method not implemented.");
+
+    async enumeratePlaybackDevices(): Promise<IAudioDeviceCollection> {
+        return new AudioDeviceCollectionWeb(this._playbackDevices);
     }
-    setPlaybackDevice(deviceId: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async enumerateRecordingDevices(): Promise<IAudioDeviceCollection> {
+        return new AudioDeviceCollectionWeb(this._recordingDevices);
     }
-    getPlaybackDevice(): Promise<{ deviceId: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async setPlaybackDevice(deviceId: string): Promise<number> {
+        console.warn("setPlaybackDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getPlaybackDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        console.warn("getPlaybackDevice not support in web");
+        return { deviceId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    getPlaybackDeviceInfoType(): Promise<{
+
+    async getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
+        console.warn("getPlaybackDeviceInfo not support in web");
+        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
+    }
+
+    async getPlaybackDeviceInfoType(): Promise<{
         deviceId: string;
         deviceName: string;
         deviceTypeName: string;
         errorCode: number;
     }> {
-        throw new Error("Method not implemented.");
+        console.warn("getPlaybackDeviceInfoType not support in web");
+        return { deviceId: "", deviceName: "", deviceTypeName: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    setPlaybackDeviceVolume(volume: number): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setPlaybackDeviceVolume(volume: number): Promise<number> {
+        console.warn("setPlaybackDeviceVolume not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getPlaybackDeviceVolume(volume: number): Promise<{ volume: number; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getPlaybackDeviceVolume(volume: number): Promise<{ volume: number; errorCode: number }> {
+        console.warn("getPlaybackDeviceVolume not support in web");
+        return { volume: 0, errorCode: -ERR_NOT_SUPPORTED };
     }
-    setRecordingDevice(deviceId: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setRecordingDevice(deviceId: string): Promise<number> {
+        console.warn("setRecordingDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getRecordingDevice(): Promise<{ deviceId: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getRecordingDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        console.warn("getRecordingDevice not support in web");
+        return { deviceId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
+        console.warn("getRecordingDeviceInfo not support in web");
+        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    getRecordingDeviceInfoType(): Promise<{
+
+    async getRecordingDeviceInfoType(): Promise<{
         deviceId: string;
         deviceName: string;
         deviceTypeName: string;
         errorCode: number;
     }> {
-        throw new Error("Method not implemented.");
+        console.warn("getRecordingDeviceInfoType not support in web");
+        return { deviceId: "", deviceName: "", deviceTypeName: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    setRecordingDeviceVolume(volume: number): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setRecordingDeviceVolume(volume: number): Promise<number> {
+        console.warn("setRecordingDeviceVolume not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getRecordingDeviceVolume(): Promise<{ volume: number; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getRecordingDeviceVolume(): Promise<{ volume: number; errorCode: number }> {
+        console.warn("getRecordingDeviceVolume not support in web");
+        return { volume: 0, errorCode: -ERR_NOT_SUPPORTED };
     }
-    setLoopbackDevice(deviceId: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setLoopbackDevice(deviceId: string): Promise<number> {
+        console.warn("setLoopbackDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getLoopbackDevice(): Promise<{ deviceId: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getLoopbackDevice(): Promise<{ deviceId: string; errorCode: number }> {
+        console.warn("getLoopbackDevice not support in web");
+        return { deviceId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    setPlaybackDeviceMute(mute: boolean): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setPlaybackDeviceMute(mute: boolean): Promise<number> {
+        console.warn("setPlaybackDeviceMute not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getPlaybackDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getPlaybackDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
+        console.warn("getPlaybackDeviceMute not support in web");
+        return { mute: false, errorCode: -ERR_NOT_SUPPORTED };
     }
-    setRecordingDeviceMute(mute: boolean): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async setRecordingDeviceMute(mute: boolean): Promise<number> {
+        console.warn("setRecordingDeviceMute not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    getRecordingDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async getRecordingDeviceMute(): Promise<{ mute: boolean; errorCode: number }> {
+        console.warn("getRecordingDeviceMute not support in web");
+        return { mute: false, errorCode: -ERR_NOT_SUPPORTED };
     }
-    startPlaybackDeviceTest(testAudioFilePath: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async startPlaybackDeviceTest(testAudioFilePath: string): Promise<number> {
+        console.warn("startPlaybackDeviceTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    stopPlaybackDeviceTest(): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async stopPlaybackDeviceTest(): Promise<number> {
+        console.warn("stopPlaybackDeviceTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    startRecordingDeviceTest(indicationInterval: number): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async startRecordingDeviceTest(indicationInterval: number): Promise<number> {
+        console.warn("startRecordingDeviceTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    stopRecordingDeviceTest(): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async stopRecordingDeviceTest(): Promise<number> {
+        console.warn("stopRecordingDeviceTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    startAudioDeviceLoopbackTest(indicationInterval: number): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async startAudioDeviceLoopbackTest(indicationInterval: number): Promise<number> {
+        console.warn("startAudioDeviceLoopbackTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    stopAudioDeviceLoopbackTest(): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async stopAudioDeviceLoopbackTest(): Promise<number> {
+        console.warn("stopAudioDeviceLoopbackTest not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    followSystemPlaybackDevice(enable: boolean): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async followSystemPlaybackDevice(enable: boolean): Promise<number> {
+        console.warn("followSystemPlaybackDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    followSystemRecordingDevice(enable: boolean): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async followSystemRecordingDevice(enable: boolean): Promise<number> {
+        console.warn("followSystemRecordingDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    followSystemLoopbackDevice(enable: boolean): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async followSystemLoopbackDevice(enable: boolean): Promise<number> {
+        console.warn("followSystemLoopbackDevice not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
 }

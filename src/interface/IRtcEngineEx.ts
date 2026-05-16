@@ -44,7 +44,11 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     setVideoEncoderConfigurationEx(config: VideoEncoderConfiguration, connection: RtcConnection): Promise<number>;
 
-    setupRemoteVideoEx(canvas: VideoCanvas, connection: RtcConnection): Promise<number>;
+    setupRemoteVideoEx(
+        canvas: VideoCanvas,
+        connection: RtcConnection,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number>;
 
     muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number>;
 

@@ -1,32 +1,44 @@
 import { IVideoDeviceManager } from "../../interface/IVideoDeviceManager";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import { DeviceInfo, ERROR_CODE_TYPE, VideoFormat } from "../../types/AgoraBase";
+import { ERROR_CODE_TYPE, VideoFormat } from "../../types/AgoraBase";
+import { IVideoDeviceCollection } from "../../interface/IVideoDeviceCollection";
+import { VideoDeviceCollectionWeb } from "./VideoDeviceCollectionWeb";
 
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
 export class VideoDeviceManagerWeb implements IVideoDeviceManager {
-    enumerateVideoDevices(): Promise<DeviceInfo[]> {
-        throw new Error("Method not implemented.");
+    _devices: MediaDeviceInfo[] = null;
+
+    async init(): Promise<void> {
+        this._devices = await AgoraRTC.getCameras();
     }
-    setDevice(deviceIdUTF8: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async enumerateVideoDevices(): Promise<IVideoDeviceCollection> {
+        return new VideoDeviceCollectionWeb(this._devices);
     }
-    getDevice(): Promise<{ deviceIdUTF8: string; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async setDevice(deviceIdUTF8: string): Promise<number> {
+        console.warn("set Device not support in web");
+        return -ERR_NOT_SUPPORTED;
     }
-    numberOfCapabilities(deviceIdUTF8: string): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async getDevice(): Promise<{ deviceIdUTF8: string; errorCode: number }> {
+        return { deviceIdUTF8: "", errorCode: -ERR_NOT_SUPPORTED };
     }
-    getCapability(
-        deviceIdUTF8: string,
-        deviceCapabilityNumber: number,
-    ): Promise<{ capability: VideoFormat; errorCode: number }> {
-        throw new Error("Method not implemented.");
+
+    async numberOfCapabilities(): Promise<number> {
+        return -ERR_NOT_SUPPORTED;
     }
-    startDeviceTest(hwnd: unknown): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async getCapability(): Promise<{ capability: VideoFormat; errorCode: number }> {
+        return { capability: { width: 0, height: 0, fps: 0 }, errorCode: -ERR_NOT_SUPPORTED };
     }
-    stopDeviceTest(): Promise<number> {
-        throw new Error("Method not implemented.");
+
+    async startDeviceTest(): Promise<number> {
+        return -ERR_NOT_SUPPORTED;
+    }
+
+    async stopDeviceTest(): Promise<number> {
+        return -ERR_NOT_SUPPORTED;
     }
 }

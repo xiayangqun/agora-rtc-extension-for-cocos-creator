@@ -5,6 +5,7 @@ import {
     RENDER_MODE_TYPE,
     VIDEO_MODULE_POSITION,
 } from "./AgoraMediaBase";
+import { Texture2D } from "cc";
 
 export enum CHANNEL_PROFILE_TYPE {
     CHANNEL_PROFILE_COMMUNICATION = 0,
@@ -1781,7 +1782,7 @@ export interface VideoCanvas {
 
     subviewUid: number;
 
-    view: unknown;
+    view: Texture2D;
 
     backgroundColor: number;
 

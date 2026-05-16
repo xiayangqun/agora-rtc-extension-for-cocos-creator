@@ -135,6 +135,7 @@ import { MediaPlayerCacheManagerWeb } from "./MediaPlayerCacheManagerWeb";
 import { MediaPlayerWeb } from "./MediaPlayerWeb";
 import { LocalSpatialAudioEngineWeb } from "./LocalSpatialAudioEngineWeb";
 import { H265TranscoderWeb } from "./H265TranscoderWeb";
+import { VideoTextureManager } from "./VideoTextureManager";
 import { set } from "../../../@types/packages/scene/@types/cce/utils/lodash";
 
 const ERR_OK = ERROR_CODE_TYPE.ERR_OK;
@@ -212,6 +213,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     private _mediaPlayerIdCounter = 0;
     private _mediaPlayers: Map<number, MediaPlayerWeb> = new Map();
+    private _videoTextureManager: VideoTextureManager = new VideoTextureManager();
 
     constructor() {
         AgoraRTC.on("camera-changed", this.onCameraChanged.bind(this));
@@ -262,11 +264,15 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async release(sync: boolean): Promise<void> {}
 
     async getAudioDeviceManager(): Promise<IAudioDeviceManager> {
-        return new AudioDeviceManagerWeb();
+        const manager = new AudioDeviceManagerWeb();
+        await manager.init();
+        return manager;
     }
 
     async getVideoDeviceManager(): Promise<IVideoDeviceManager> {
-        return new VideoDeviceManagerWeb();
+        const manager = new VideoDeviceManagerWeb();
+        await manager.init();
+        return manager;
     }
 
     async getMusicContentCenter(): Promise<IMusicContentCenter> {
@@ -317,7 +323,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         };
         this.mainClientProxy = new AgoraRTCClientProxy(config, this, this.trackManager);
         this.mainClientProxy.init();
-
+        AgoraRTC.setAppType(10);
         return ERR_OK;
     }
 
@@ -706,14 +712,47 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async setupRemoteVideo(canvas: VideoCanvas): Promise<number> {
-        console.warn("setupRemoteVideo not support in web, use track.play() instead");
-        return ERR_OK;
+    async setupRemoteVideo(
+        canvas: VideoCanvas,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number> {
+        try {
+            const remoteUser = this.mainClientProxy?.remoteUsers.find((u) => u.uid === canvas.uid);
+            if (!remoteUser) {
+                return ERR_INVALID_ARGUMENT;
+            }
+            if (!remoteUser.videoTrack) {
+                await this.mainClientProxy.subscribe(remoteUser, "video");
+            }
+            if (remoteUser.videoTrack) {
+                await this._videoTextureManager.setupRemoteVideo(
+                    remoteUser.videoTrack,
+                    canvas.view,
+                    onAspectRatioChanged,
+                );
+            }
+            return ERR_OK;
+        } catch (e) {
+            console.error("setupRemoteVideo failed", e);
+            return ERR_FAILED;
+        }
     }
 
-    async setupLocalVideo(canvas: VideoCanvas): Promise<number> {
-        console.warn("setupLocalVideo not support in web, use track.play() instead");
-        return ERR_OK;
+    async setupLocalVideo(
+        canvas: VideoCanvas,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number> {
+        try {
+            const track = this.trackManager.localFirstCameraTrack;
+            if (!track) {
+                return ERR_NOT_READY;
+            }
+            await this._videoTextureManager.setupLocalVideo(track, canvas.view, onAspectRatioChanged);
+            return ERR_OK;
+        } catch (e) {
+            console.error("setupLocalVideo failed", e);
+            return ERR_FAILED;
+        }
     }
 
     async setVideoScenario(scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE): Promise<number> {
@@ -2756,8 +2795,36 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async setupRemoteVideoEx(canvas: VideoCanvas, connection: RtcConnection): Promise<number> {
-        return ERR_OK;
+    async setupRemoteVideoEx(
+        canvas: VideoCanvas,
+        connection: RtcConnection,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number> {
+        try {
+            const key = connectionKey(connection);
+            const proxy = this.subClientProxies.get(key);
+            if (!proxy) {
+                return ERR_NOT_READY;
+            }
+            const remoteUser = proxy.remoteUsers.find((u) => u.uid === canvas.uid);
+            if (!remoteUser) {
+                return ERR_INVALID_ARGUMENT;
+            }
+            if (!remoteUser.videoTrack) {
+                await proxy.subscribe(remoteUser, "video");
+            }
+            if (remoteUser.videoTrack) {
+                await this._videoTextureManager.setupRemoteVideo(
+                    remoteUser.videoTrack,
+                    canvas.view,
+                    onAspectRatioChanged,
+                );
+            }
+            return ERR_OK;
+        } catch (e) {
+            console.error("setupRemoteVideoEx failed", e);
+            return ERR_FAILED;
+        }
     }
 
     async muteRemoteAudioStreamEx(uid: number, mute: boolean, connection: RtcConnection): Promise<number> {

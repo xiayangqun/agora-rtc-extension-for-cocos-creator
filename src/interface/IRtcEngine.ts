@@ -224,9 +224,15 @@ export interface IRtcEngine {
         type: MEDIA_SOURCE_TYPE,
     ): Promise<number>;
 
-    setupRemoteVideo(canvas: VideoCanvas): Promise<number>;
+    setupRemoteVideo(
+        canvas: VideoCanvas,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number>;
 
-    setupLocalVideo(canvas: VideoCanvas): Promise<number>;
+    setupLocalVideo(
+        canvas: VideoCanvas,
+        onAspectRatioChanged?: (width: number, height: number) => void,
+    ): Promise<number>;
 
     setVideoScenario(scenarioType: VIDEO_APPLICATION_SCENARIO_TYPE): Promise<number>;
 
