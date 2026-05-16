@@ -1,0 +1,38 @@
+<div id="app">
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Agora RTC Plugin</h1>
+            <p class="subtitle">Web 实时音视频插件管理面板</p>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">SDK 依赖检查</h2>
+            <div class="dependency-card">
+                <div class="dependency-info">
+                    <span class="dependency-name">agora-rtc-sdk-ng</span>
+                    <span class="dependency-version">{{ displayVersion }}</span>
+                </div>
+                <div class="dependency-status">
+                    <span class="status-icon">{{ statusIcon }}</span>
+                    <span :class="['status-text', statusClass]">{{ statusText }}</span>
+                </div>
+                <div class="dependency-action">
+                    <div class="install-btn" v-show="showInstallBtn" @click="handleInstall" :class="{ disabled: installing }">
+                        {{ installBtnText }}
+                    </div>
+                </div>
+            </div>
+            <div class="hint">{{ hintText }}</div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">使用说明</h2>
+            <div class="usage">
+                <p>1. 确保依赖安装完成</p>
+                <p>2. 在代码中引入模块：</p>
+                <pre class="code-block">import { createRtcEngine } from "agora-rtc-extension-for-cocos-creator/agora-rtc";</pre>
+                <p>3. 调用 API 进行音视频通信</p>
+            </div>
+        </section>
+    </div>
+</div>

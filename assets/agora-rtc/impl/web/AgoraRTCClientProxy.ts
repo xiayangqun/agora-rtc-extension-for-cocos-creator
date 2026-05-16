@@ -41,7 +41,6 @@ import {
     UserInfo,
 } from "../../types/AgoraBase";
 import { ChannelMediaOptions } from "../../types/AgoraRtcEngine";
-import { ClientRequest } from "http";
 
 export class AgoraRTCClientProxy {
     private _client!: IAgoraRTCClient;
@@ -174,6 +173,10 @@ export class AgoraRTCClientProxy {
         }
     }
     // ==================== Publish / Subscribe ====================
+    async publish(tracks?: ILocalTrack | ILocalTrack[]): Promise<void> {
+        return this._client.publish(tracks);
+    }
+
     async unpublish(tracks?: ILocalTrack | ILocalTrack[]): Promise<void> {
         return this._client.unpublish(tracks);
     }
@@ -1009,27 +1012,27 @@ export class AgoraRTCClientProxy {
     }
 
     async muteLocalAudioStream(mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async muteLocalVideoStream(mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async muteAllRemoteAudioStreams(mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async muteRemoteAudioStream(uid: number, mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async muteAllRemoteVideoStreams(mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async muteRemoteVideoStream(uid: number, mute: boolean): Promise<number> {
-        //ai todo
+        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     // ==================== TrackManager Proxy Methods ====================

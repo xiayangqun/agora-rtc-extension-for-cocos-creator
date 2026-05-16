@@ -1,6 +1,8 @@
 import type { MusicCacheInfo, MusicContentCenterConfiguration } from "../types/AgoraMusicContentCenter";
 import { IMusicPlayer } from "./IMusicPlayer";
 
+import { IMusicContentCenterEventHandler } from "./IMusicContentCenterEventHandler";
+
 export interface IMusicContentCenter {
     initialize(configuration: MusicContentCenterConfiguration): Promise<number>;
 

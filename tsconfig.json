@@ -10,8 +10,7 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
+        "paths": {}
     },
-    "exclude": [
-        "./assets"
-    ]
+    "exclude": ["./assets", "./agora-sdk-export-test"]
 }

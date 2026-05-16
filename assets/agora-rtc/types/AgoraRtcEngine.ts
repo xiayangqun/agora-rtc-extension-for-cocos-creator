@@ -609,6 +609,8 @@ export enum VIDEO_EFFECT_ACTION {
     RESET = 2,
 }
 
+export type AREA_CODE_FLAG = number;
+
 export interface RtcEngineContext {
     eventHandler: IRtcEngineEventHandler;
 
@@ -622,7 +624,7 @@ export interface RtcEngineContext {
 
     audioScenario: AUDIO_SCENARIO_TYPE;
 
-    areaCode: AREA_CODE;
+    areaCode: AREA_CODE_FLAG;
 
     logConfig: LogConfig;
 

@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {}
+    },
+    "include": ["**/*.ts", "**/*.d.ts"]
+}

@@ -1,3 +1,5 @@
+import { H265_TRANSCODE_RESULT } from "../types/AgoraH265Transcoder";
+
 export abstract class IH265TranscoderObserver {
     abstract onEnableTranscode(result: H265_TRANSCODE_RESULT): void;
 

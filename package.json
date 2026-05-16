@@ -1,55 +1,93 @@
 {
-  "package_version": 2,
-  "version": "1.0.0",
-  "name": "agora-rtc-extension-for-cocos-creator",
-  "description": "i18n:agora-rtc-extension-for-cocos-creator.description",
-  "main": "./dist/main.js",
-  "devDependencies": {
-    "@types/node": "^16.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
-    "eslint": "^8.57.1",
-    "eslint-config-prettier": "^9.1.2",
-    "eslint-plugin-prettier": "^5.5.5",
-    "husky": "^9.1.7",
-    "lint-staged": "^15.5.2",
-    "prettier": "^3.8.3",
-    "typescript": "^4.3.4"
-  },
-  "author": "Cocos Creator",
-  "editor": ">=3.8.0",
-  "scripts": {
-    "build": "tsc -b",
-    "watch": "tsc -w",
-    "predownload": "node scripts/predownload.js",
-    "predownload:clear": "node scripts/predownload.js --clear",
-    "lint": "eslint src --ext .ts",
-    "lint:fix": "eslint src --ext .ts --fix",
-    "format": "prettier --write \"{src,assets}/**/*.ts\"",
-    "format:check": "prettier --check \"{src,assets}/**/*.ts\"",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.ts": [
-      "eslint --fix",
-      "prettier --write"
-    ]
-  },
-  "agora": {
-    "mac": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Mac_v4.6.2_FULL.zip",
-    "ios": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_iOS_v4.6.2_FULL.zip",
-    "android": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Android_v4.6.2_FULL.zip",
-    "windows": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Windows_v4.6.2_FULL.zip"
-  },
-  "dependencies": {
-    "agora-rtc-sdk-ng": "^4.24.3"
-  },
-  "contributions": {
+    "package_version": 2,
+    "version": "1.0.0",
+    "name": "agora-rtc-extension-for-cocos-creator",
+    "description": "i18n:agora-rtc-extension-for-cocos-creator.description",
+    "main": "./dist/main.js",
+    "author": "Cocos Creator",
+    "editor": ">=3.8.0",
+    "scripts": {
+        "build": "tsc -b",
+        "watch": "tsc -w",
+        "predownload": "node scripts/predownload.js",
+        "predownload:clear": "node scripts/predownload.js --clear",
+        "lint": "eslint src --ext .ts",
+        "lint:fix": "eslint src --ext .ts --fix",
+        "format": "prettier --write \"{src,assets}/**/*.ts\"",
+        "format:check": "prettier --check \"{src,assets}/**/*.ts\"",
+        "prepare": "husky"
+    },
+    "lint-staged": {
+        "*.ts": [
+            "eslint --fix",
+            "prettier --write"
+        ]
+    },
+    "agora": {
+        "mac": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Mac_v4.6.2_FULL.zip",
+        "ios": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_iOS_v4.6.2_FULL.zip",
+        "android": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Android_v4.6.2_FULL.zip",
+        "windows": "https://download.shengwang.cn/sdk/release/Shengwang_Native_SDK_for_Windows_v4.6.2_FULL.zip"
+    },
+    "devDependencies": {
+        "@types/node": "^16.0.1",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
+        "agora-rtc-sdk-ng": "^4.24.3",
+        "eslint": "^8.57.1",
+        "eslint-config-prettier": "^9.1.2",
+        "eslint-plugin-prettier": "^5.5.5",
+        "husky": "^9.1.7",
+        "lint-staged": "^15.5.2",
+        "prettier": "^3.8.3",
+        "typescript": "^4.3.4"
+    },
+    "panels": {
+        "agora-panel": {
+            "title": "i18n:agora-rtc-extension-for-cocos-creator.panel_title",
+            "type": "dockable",
+            "main": "dist/panels/agora-panel",
+            "size": {
+                "min-width": 400,
+                "min-height": 300,
+                "width": 500,
+                "height": 500
+            }
+        }
+    },
+    "contributions": {
         "asset-db": {
             "mount": {
                 "path": "./assets",
-                "readonly": true
+                "readonly": false
+            }
+        },
+        "menu": [
+            {
+                "path": "i18n:menu.extension/Agora RTC",
+                "label": "i18n:agora-rtc-extension-for-cocos-creator.open_panel",
+                "message": "open-panel"
+            }
+        ],
+        "messages": {
+            "open-panel": {
+                "methods": [
+                    "openPanel"
+                ]
+            },
+            "check-dependency": {
+                "methods": [
+                    "check-dependency"
+                ]
+            },
+            "install-dependency": {
+                "methods": [
+                    "install-dependency"
+                ]
             }
         }
+    },
+    "dependencies": {
+        "vue": "^3.5.34"
     }
 }

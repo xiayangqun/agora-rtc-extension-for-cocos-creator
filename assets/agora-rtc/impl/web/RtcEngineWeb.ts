@@ -5,6 +5,7 @@ import { ILocalSpatialAudioEngine } from "../../interface/ILocalSpatialAudioEngi
 import { IMediaPlayer } from "../../interface/IMediaPlayer";
 import { IMediaPlayerCacheManager } from "../../interface/IMediaPlayerCacheManager";
 import { IMediaRecorder } from "../../interface/IMediaRecorder";
+import { MediaRecordWeb } from "./MediaRecordWeb";
 import { IMusicContentCenter } from "../../interface/IMusicContentCenter";
 import { IRtcEngineEx } from "../../interface/IRtcEngineEx";
 import { IVideoDeviceManager } from "../../interface/IVideoDeviceManager";
@@ -136,7 +137,6 @@ import { MediaPlayerWeb } from "./MediaPlayerWeb";
 import { LocalSpatialAudioEngineWeb } from "./LocalSpatialAudioEngineWeb";
 import { H265TranscoderWeb } from "./H265TranscoderWeb";
 import { VideoTextureManager } from "./VideoTextureManager";
-import { set } from "../../../@types/packages/scene/@types/cce/utils/lodash";
 
 const ERR_OK = ERROR_CODE_TYPE.ERR_OK;
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -1045,7 +1045,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async createMediaRecorder(info: RecorderStreamInfo): Promise<IMediaRecorder> {
-        return new MediaRecorderWeb();
+        return new MediaRecordWeb();
     }
 
     async destroyMediaRecorder(mediaRecorder: IMediaRecorder): Promise<number> {
@@ -3423,7 +3423,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         const key = connectionKey(connection);
 
         if (this.subClientVideoEncoderConfigurations.has(key)) {
-            subClient.setVideoEncoderConfiguration(this.subClientVideoEncoderConfigurations.get(key)!);
+            const config = this.subClientVideoEncoderConfigurations.get(key);
+            if (config) {
+                subClient.setVideoEncoderConfiguration(config);
+            }
         }
 
         return ERR_OK;
