@@ -215,6 +215,47 @@ export class RtcEngineWeb implements IRtcEngineEx {
     private _mediaPlayers: Map<number, MediaPlayerWeb> = new Map();
     private _videoTextureManager: VideoTextureManager = new VideoTextureManager();
 
+    private _localVideoTextureKey(canvas: VideoCanvas): string {
+        if (canvas.sourceType === VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER) {
+            return `local_media_player_${canvas.mediaPlayerId}`;
+        }
+        return `local_${canvas.sourceType ?? VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA}`;
+    }
+
+    private _remoteVideoTextureKey(uid: UID, connection?: RtcConnection): string {
+        const connectionPart = connection ? connectionKey(connection) : "main";
+        return `remote_${connectionPart}_${uid}`;
+    }
+
+    private _getLocalVideoTrack(canvas: VideoCanvas): ILocalVideoTrack | null {
+        switch (canvas.sourceType ?? VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA) {
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA:
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY:
+                return this.trackManager.localFirstCameraTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
+                return this.trackManager.localSecondCameraTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
+                return this.trackManager.localThirdCameraTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
+                return this.trackManager.localFourthCameraTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN:
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
+                return this.trackManager.localFirstScreenVideoTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
+                return this.trackManager.localSecondScreenVideoTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
+                return this.trackManager.localThirdScreenVideoTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
+                return this.trackManager.localFourthScreenVideoTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM:
+                return this.trackManager.localCustomVideoTrack;
+            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER:
+                return this._mediaPlayers.get(canvas.mediaPlayerId)?.video ?? null;
+            default:
+                return null;
+        }
+    }
+
     constructor() {
         AgoraRTC.on("camera-changed", this.onCameraChanged.bind(this));
         AgoraRTC.on("microphone-changed", this.onMicrophoneChanged.bind(this));
@@ -261,7 +302,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     // ==================== Lifecycle ====================
 
-    async release(sync: boolean): Promise<void> {}
+    async release(sync: boolean): Promise<void> {
+        this._videoTextureManager.destroy();
+    }
 
     async getAudioDeviceManager(): Promise<IAudioDeviceManager> {
         const manager = new AudioDeviceManagerWeb();
@@ -415,6 +458,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
                     autoSubscribe: true,
                     networkQualityProbe: true,
                 });
+                const options: ChannelMediaOptions = {
+                    publishCameraTrack: true,
+                    publishMicrophoneTrack: true,
+                };
+                await this.updateChannelMediaOptions(options);
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
                     { channelId: channelId as string, localUid: selfUid as number },
                     0,
@@ -547,13 +595,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableVideo(): Promise<number> {
         this.videoEnabled = true;
-        this.trackManager.enableVideo();
+        await this.trackManager.enableVideo();
         return ERR_OK;
     }
 
     async disableVideo(): Promise<number> {
         this.videoEnabled = false;
-        this.trackManager.disableVideo();
+        await this.trackManager.disableVideo();
         return ERR_OK;
     }
 
@@ -717,20 +765,17 @@ export class RtcEngineWeb implements IRtcEngineEx {
         onAspectRatioChanged?: (width: number, height: number) => void,
     ): Promise<number> {
         try {
-            const remoteUser = this.mainClientProxy?.remoteUsers.find((u) => u.uid === canvas.uid);
-            if (!remoteUser) {
-                return ERR_INVALID_ARGUMENT;
+            const key = this._remoteVideoTextureKey(canvas.uid);
+            if (!canvas.view) {
+                this._videoTextureManager.removeVideo(key);
+                return ERR_OK;
             }
-            if (!remoteUser.videoTrack) {
-                await this.mainClientProxy.subscribe(remoteUser, "video");
-            }
-            if (remoteUser.videoTrack) {
-                await this._videoTextureManager.setupRemoteVideo(
-                    remoteUser.videoTrack,
-                    canvas.view,
-                    onAspectRatioChanged,
-                );
-            }
+            await this._videoTextureManager.setupRemoteVideo(
+                key,
+                () => this.mainClientProxy?.remoteUsers.find((u) => u.uid === canvas.uid)?.videoTrack,
+                canvas.view,
+                onAspectRatioChanged,
+            );
             return ERR_OK;
         } catch (e) {
             console.error("setupRemoteVideo failed", e);
@@ -738,16 +783,27 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
+    async setRtcVideoDebugViewEnabled(enabled: boolean): Promise<number> {
+        this._videoTextureManager.setDebugVisible(enabled);
+        return ERR_OK;
+    }
+
     async setupLocalVideo(
         canvas: VideoCanvas,
         onAspectRatioChanged?: (width: number, height: number) => void,
     ): Promise<number> {
         try {
-            const track = this.trackManager.localFirstCameraTrack;
-            if (!track) {
-                return ERR_NOT_READY;
+            const key = this._localVideoTextureKey(canvas);
+            if (!canvas.view) {
+                this._videoTextureManager.removeVideo(key);
+                return ERR_OK;
             }
-            await this._videoTextureManager.setupLocalVideo(track, canvas.view, onAspectRatioChanged);
+            await this._videoTextureManager.setupLocalVideo(
+                key,
+                () => this._getLocalVideoTrack(canvas),
+                canvas.view,
+                onAspectRatioChanged,
+            );
             return ERR_OK;
         } catch (e) {
             console.error("setupLocalVideo failed", e);
@@ -769,13 +825,13 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableAudio(): Promise<number> {
         this.audioEnabled = true;
-        this.trackManager.enableAudio();
+        await this.trackManager.enableAudio();
         return ERR_OK;
     }
 
     async disableAudio(): Promise<number> {
         this.audioEnabled = false;
-        this.trackManager.disableAudio();
+        await this.trackManager.disableAudio();
         return ERR_OK;
     }
 
@@ -793,7 +849,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async enableLocalAudio(enabled: boolean): Promise<number> {
         //do it for all client
-        this.trackManager.enableLocalAudio(enabled);
+        await this.trackManager.enableLocalAudio(enabled);
         return ERR_OK;
     }
 
@@ -806,7 +862,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
     }
 
     async __muteLocalAudioStream(proxy: AgoraRTCClientProxy, mute: boolean): Promise<number> {
-        proxy.muteLocalAudioStream(mute);
+        await proxy.muteLocalAudioStream(mute);
         return ERR_OK;
     }
 
@@ -872,9 +928,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
             const st = Native2Web.VideoStreamType(streamType);
             await this.mainClientProxy?.setRemoteDefaultVideoStreamType(st);
 
-            this.subClientProxies.forEach((client) => {
-                client.setRemoteDefaultVideoStreamType(st);
-            });
+            await Promise.all(
+                Array.from(this.subClientProxies.values()).map((client) => client.setRemoteDefaultVideoStreamType(st)),
+            );
             return ERR_OK;
         } catch (e) {
             return ERR_FAILED;
@@ -2697,12 +2753,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 };
                 proxy = new AgoraRTCClientProxy(config, this, this.trackManager);
                 proxy.init();
-                this.initSubClientProxy(proxy, connection);
+                await this.initSubClientProxy(proxy, connection);
                 this.subClientProxies.set(key, proxy);
             }
             await proxy.join(this.appId, connection.channelId, token, connection.localUid);
+            await this.__updateChannelMediaOptions(proxy, options);
             this.rtcEngineEventHandler?.onJoinChannelSuccess(connection, 0);
-            await proxy.updateChannelMediaOptions(options);
             return ERR_OK;
         } catch (e) {
             console.error("joinChannelEx failed:", e);
@@ -2791,7 +2847,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         this.subClientVideoEncoderConfigurations.set(key, config);
 
         const client = this.subClientProxies.get(key);
-        client?.setVideoEncoderConfiguration(config);
+        await client?.setVideoEncoderConfiguration(config);
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
@@ -2806,20 +2862,17 @@ export class RtcEngineWeb implements IRtcEngineEx {
             if (!proxy) {
                 return ERR_NOT_READY;
             }
-            const remoteUser = proxy.remoteUsers.find((u) => u.uid === canvas.uid);
-            if (!remoteUser) {
-                return ERR_INVALID_ARGUMENT;
+            const textureKey = this._remoteVideoTextureKey(canvas.uid, connection);
+            if (!canvas.view) {
+                this._videoTextureManager.removeVideo(textureKey);
+                return ERR_OK;
             }
-            if (!remoteUser.videoTrack) {
-                await proxy.subscribe(remoteUser, "video");
-            }
-            if (remoteUser.videoTrack) {
-                await this._videoTextureManager.setupRemoteVideo(
-                    remoteUser.videoTrack,
-                    canvas.view,
-                    onAspectRatioChanged,
-                );
-            }
+            await this._videoTextureManager.setupRemoteVideo(
+                textureKey,
+                () => proxy.remoteUsers.find((u) => u.uid === canvas.uid)?.videoTrack,
+                canvas.view,
+                onAspectRatioChanged,
+            );
             return ERR_OK;
         } catch (e) {
             console.error("setupRemoteVideoEx failed", e);
@@ -3425,7 +3478,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         if (this.subClientVideoEncoderConfigurations.has(key)) {
             const config = this.subClientVideoEncoderConfigurations.get(key);
             if (config) {
-                subClient.setVideoEncoderConfiguration(config);
+                await subClient.setVideoEncoderConfiguration(config);
             }
         }
 

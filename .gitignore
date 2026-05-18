@@ -14,3 +14,4 @@ rtc-sdk_cn.d.ts
 agora-rtc-extension-for-cocos-creator.code-workspace
 agora_web_moudle
 *.meta
+.trae

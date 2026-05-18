@@ -1780,27 +1780,27 @@ export enum VIDEO_VIEW_SETUP_MODE {
 export interface VideoCanvas {
     uid: number;
 
-    subviewUid: number;
+    subviewUid?: number;
 
     view: Texture2D;
 
-    backgroundColor: number;
+    backgroundColor?: number;
 
-    renderMode: RENDER_MODE_TYPE;
+    renderMode?: RENDER_MODE_TYPE;
 
-    mirrorMode: VIDEO_MIRROR_MODE_TYPE;
+    mirrorMode?: VIDEO_MIRROR_MODE_TYPE;
 
-    setupMode: VIDEO_VIEW_SETUP_MODE;
+    setupMode?: VIDEO_VIEW_SETUP_MODE;
 
     sourceType: VIDEO_SOURCE_TYPE;
 
     mediaPlayerId: number;
 
-    cropArea: Rectangle;
+    cropArea?: Rectangle;
 
-    enableAlphaMask: boolean;
+    enableAlphaMask?: boolean;
 
-    position: VIDEO_MODULE_POSITION;
+    position?: VIDEO_MODULE_POSITION;
 }
 
 export interface BeautyOptions {

@@ -292,46 +292,50 @@ export class TrackManager {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    enableVideo(): void {
-        this.localFirstCameraTrack?.setEnabled(true);
-        this.localSecondCameraTrack?.setEnabled(true);
-        this.localThirdCameraTrack?.setEnabled(true);
-        this.localFourthCameraTrack?.setEnabled(true);
-        this.localFirstScreenVideoTrack?.setEnabled(true);
-        this.localSecondScreenVideoTrack?.setEnabled(true);
-        this.localThirdScreenVideoTrack?.setEnabled(true);
-        this.localFourthScreenVideoTrack?.setEnabled(true);
-        this.localCustomVideoTrack?.setEnabled(true);
+    async enableVideo(): Promise<void> {
+        await this.localFirstCameraTrack?.setEnabled(true);
+        await this.localSecondCameraTrack?.setEnabled(true);
+        await this.localThirdCameraTrack?.setEnabled(true);
+        await this.localFourthCameraTrack?.setEnabled(true);
+        await this.localFirstScreenVideoTrack?.setEnabled(true);
+        await this.localSecondScreenVideoTrack?.setEnabled(true);
+        await this.localThirdScreenVideoTrack?.setEnabled(true);
+        await this.localFourthScreenVideoTrack?.setEnabled(true);
+        await this.localCustomVideoTrack?.setEnabled(true);
     }
 
-    disableVideo(): void {
-        this.localFirstCameraTrack?.setEnabled(false);
-        this.localSecondCameraTrack?.setEnabled(false);
-        this.localThirdCameraTrack?.setEnabled(false);
-        this.localFourthCameraTrack?.setEnabled(false);
-        this.localFirstScreenVideoTrack?.setEnabled(false);
-        this.localSecondScreenVideoTrack?.setEnabled(false);
-        this.localThirdScreenVideoTrack?.setEnabled(false);
-        this.localFourthScreenVideoTrack?.setEnabled(false);
-        this.localCustomVideoTrack?.setEnabled(false);
+    async disableVideo(): Promise<void> {
+        await this.localFirstCameraTrack?.setEnabled(false);
+        await this.localSecondCameraTrack?.setEnabled(false);
+        await this.localThirdCameraTrack?.setEnabled(false);
+        await this.localFourthCameraTrack?.setEnabled(false);
+        await this.localFirstScreenVideoTrack?.setEnabled(false);
+        await this.localSecondScreenVideoTrack?.setEnabled(false);
+        await this.localThirdScreenVideoTrack?.setEnabled(false);
+        await this.localFourthScreenVideoTrack?.setEnabled(false);
+        await this.localCustomVideoTrack?.setEnabled(false);
     }
 
-    enableAudio(): void {
-        this.localMicrophoneTrack?.setEnabled(true);
-        this.localFirstScreenAudioTrack?.setEnabled(true);
-        this.localSecondScreenAudioTrack?.setEnabled(true);
-        this.localThirdScreenAudioTrack?.setEnabled(true);
-        this.localFourthScreenAudioTrack?.setEnabled(true);
-        this.localCustomAudioTracks.forEach((track) => track.setEnabled(true));
+    async enableAudio(): Promise<void> {
+        await this.localMicrophoneTrack?.setEnabled(true);
+        await this.localFirstScreenAudioTrack?.setEnabled(true);
+        await this.localSecondScreenAudioTrack?.setEnabled(true);
+        await this.localThirdScreenAudioTrack?.setEnabled(true);
+        await this.localFourthScreenAudioTrack?.setEnabled(true);
+        for (const track of this.localCustomAudioTracks.values()) {
+            await track.setEnabled(true);
+        }
     }
 
-    disableAudio(): void {
-        this.localMicrophoneTrack?.setEnabled(false);
-        this.localFirstScreenAudioTrack?.setEnabled(false);
-        this.localSecondScreenAudioTrack?.setEnabled(false);
-        this.localThirdScreenAudioTrack?.setEnabled(false);
-        this.localFourthScreenAudioTrack?.setEnabled(false);
-        this.localCustomAudioTracks.forEach((track) => track.setEnabled(false));
+    async disableAudio(): Promise<void> {
+        await this.localMicrophoneTrack?.setEnabled(false);
+        await this.localFirstScreenAudioTrack?.setEnabled(false);
+        await this.localSecondScreenAudioTrack?.setEnabled(false);
+        await this.localThirdScreenAudioTrack?.setEnabled(false);
+        await this.localFourthScreenAudioTrack?.setEnabled(false);
+        for (const track of this.localCustomAudioTracks.values()) {
+            await track.setEnabled(false);
+        }
     }
 
     async enableLocalAudio(enabled: boolean): Promise<number> {

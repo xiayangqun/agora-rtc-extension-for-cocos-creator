@@ -224,6 +224,8 @@ export interface IRtcEngine {
         type: MEDIA_SOURCE_TYPE,
     ): Promise<number>;
 
+    setRtcVideoDebugViewEnabled(enabled: boolean): Promise<number>;
+
     setupRemoteVideo(
         canvas: VideoCanvas,
         onAspectRatioChanged?: (width: number, height: number) => void,
