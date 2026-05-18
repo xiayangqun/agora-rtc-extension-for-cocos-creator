@@ -179,26 +179,14 @@ export class VideoTextureManager {
     }
 
     private _configureVideoTexture(texture: Texture2D): void {
-        const textureCtor = Texture2D as unknown as {
-            Filter?: { LINEAR: number; NONE: number };
-            WrapMode?: { CLAMP_TO_EDGE: number };
-        };
-        if (textureCtor.Filter) {
-            texture.setFilters(textureCtor.Filter.LINEAR, textureCtor.Filter.LINEAR);
-            texture.setMipFilter(textureCtor.Filter.NONE);
-        }
-        if (textureCtor.WrapMode) {
-            texture.setWrapMode(textureCtor.WrapMode.CLAMP_TO_EDGE, textureCtor.WrapMode.CLAMP_TO_EDGE);
-        }
+        texture.setFilters(Texture2D.Filter.LINEAR, Texture2D.Filter.LINEAR);
+        texture.setMipFilter(Texture2D.Filter.NONE);
+        texture.setWrapMode(Texture2D.WrapMode.CLAMP_TO_EDGE, Texture2D.WrapMode.CLAMP_TO_EDGE);
     }
 
     private _releaseTextureDescriptorSetCache(texture: Texture2D): void {
-        const root = director.root as unknown as {
-            batcher2D?: {
-                _releaseDescriptorSetCache?: (textureHash: number) => void;
-            };
-        } | null;
-        root?.batcher2D?._releaseDescriptorSetCache?.(texture.getHash());
+        const batcher2D = director.root.batcher2D;
+        (batcher2D as any)?._releaseDescriptorSetCache?.(texture.getHash());
     }
 
     private _ensureDebugContainer(): HTMLElement {
