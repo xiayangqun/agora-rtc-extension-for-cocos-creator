@@ -227,6 +227,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return `remote_${connectionPart}_${uid}`;
     }
 
+    public clearRemoteVideoTrack(uid: UID, connection?: RtcConnection): void {
+        this._videoTextureManager.clearVideoTrack(this._remoteVideoTextureKey(uid, connection));
+    }
+
     private _getLocalVideoTrack(canvas: VideoCanvas): ILocalVideoTrack | null {
         switch (canvas.sourceType ?? VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA) {
             case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA:
@@ -447,20 +451,22 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async joinChannel(token: string, channelId: string, info: string, uid: number): Promise<number>;
     async joinChannel(token: string, channelId: string, uid: number, options: ChannelMediaOptions): Promise<number>;
-    async joinChannel(token: unknown, channelId: unknown, infoOrUid: unknown, uidOrOptions: unknown): Promise<number> {
+    async joinChannel(token: string, channelId: unknown, infoOrUid: unknown, uidOrOptions: unknown): Promise<number> {
         try {
             if (typeof infoOrUid === "string") {
                 console.warn("The 'info' parameter in joinChannel is not support in web");
                 const info = infoOrUid as string;
                 const uid = uidOrOptions as number;
-
-                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token as string, uid, {
-                    autoSubscribe: true,
+                token = token || null;
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token, uid, {
+                    autoSubscribe: false,
                     networkQualityProbe: true,
                 });
                 const options: ChannelMediaOptions = {
                     publishCameraTrack: true,
                     publishMicrophoneTrack: true,
+                    autoSubscribeVideo: true,
+                    autoSubscribeAudio: true,
                 };
                 await this.updateChannelMediaOptions(options);
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
@@ -471,9 +477,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
             } else {
                 const uid = infoOrUid as number;
                 const options = uidOrOptions as ChannelMediaOptions;
-                const autoSubscribe = (options.autoSubscribeVideo ?? true) || (options.autoSubscribeAudio ?? true);
                 const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token as string, uid, {
-                    autoSubscribe: autoSubscribe,
+                    autoSubscribe: false,
                     networkQualityProbe: true,
                 });
                 await this.updateChannelMediaOptions(options);
@@ -2459,8 +2464,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
     ): Promise<number> {
         if (!optionsParam) {
             try {
+                token = token || null;
                 const selfUid = await this.mainClientProxy.join(this.appId, channelId, token, userAccount, {
-                    autoSubscribe: true,
+                    autoSubscribe: false,
                     networkQualityProbe: true,
                 });
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
@@ -2480,9 +2486,8 @@ export class RtcEngineWeb implements IRtcEngineEx {
         } else {
             try {
                 const options = optionsParam as ChannelMediaOptions;
-                const autoSubscribe = (options.autoSubscribeVideo ?? true) || (options.autoSubscribeAudio ?? true);
                 const selfUid = await this.mainClientProxy.join(this.appId, channelId, token, userAccount, {
-                    autoSubscribe: autoSubscribe,
+                    autoSubscribe: false,
                     networkQualityProbe: true,
                 });
                 await this.updateChannelMediaOptions(options);
@@ -2756,6 +2761,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 await this.initSubClientProxy(proxy, connection);
                 this.subClientProxies.set(key, proxy);
             }
+            token = token || null;
             await proxy.join(this.appId, connection.channelId, token, connection.localUid);
             await this.__updateChannelMediaOptions(proxy, options);
             this.rtcEngineEventHandler?.onJoinChannelSuccess(connection, 0);

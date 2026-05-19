@@ -135,7 +135,10 @@ export class AgoraRTCClientProxy {
             networkQualityProbe?: boolean;
         },
     ): Promise<UID> {
-        return await this._client.join(appid, channel, token, uid, options);
+        return await this._client.join(appid, channel, token, uid, {
+            ...options,
+            autoSubscribe: false,
+        });
     }
 
     async leave(): Promise<void> {
@@ -180,28 +183,6 @@ export class AgoraRTCClientProxy {
     async unpublish(tracks?: ILocalTrack | ILocalTrack[]): Promise<void> {
         return this._client.unpublish(tracks);
     }
-
-    async subscribe(user: IAgoraRTCRemoteUser | UID, mediaType: "video"): Promise<any>;
-    async subscribe(user: IAgoraRTCRemoteUser | UID, mediaType: "audio"): Promise<any>;
-    async subscribe(
-        user: IAgoraRTCRemoteUser | UID,
-        mediaType: "video" | "audio" | "datachannel",
-        channelId?: number,
-    ): Promise<any> {
-        if (channelId !== undefined) {
-            return (this._client as any).subscribe(user, mediaType, channelId);
-        }
-        return (this._client as any).subscribe(user, mediaType);
-    }
-
-    async unsubscribe(
-        user: IAgoraRTCRemoteUser | UID,
-        mediaType?: "video" | "audio" | "datachannel",
-        channelId?: number,
-    ): Promise<void> {
-        return (this._client as any).unsubscribe(user, mediaType, channelId);
-    }
-
     // ==================== Video Stream Control ====================
 
     async setRemoteVideoStreamType(uid: UID, streamType: RemoteStreamType): Promise<void> {
@@ -222,20 +203,29 @@ export class AgoraRTCClientProxy {
 
     // ==================== Subscription Filters ====================
 
-    async setSubscribeAudioBlocklist(uidList: UID[]): Promise<void> {
-        //ai todo
+    private _subscribeAudioBlocklist: Set<number> = new Set();
+    private _subscribeAudioAllowlist: Set<number> = new Set();
+    private _subscribeVideoBlocklist: Set<number> = new Set();
+    private _subscribeVideoAllowlist: Set<number> = new Set();
+
+    async setSubscribeAudioBlocklist(uidList: number[]): Promise<void> {
+        this._subscribeAudioBlocklist = this._toUidSet(uidList);
+        await this._syncRemoteSubscriptions("audio");
     }
 
-    async setSubscribeAudioAllowlist(uidList: UID[]): Promise<void> {
-        //ai todo
+    async setSubscribeAudioAllowlist(uidList: number[]): Promise<void> {
+        this._subscribeAudioAllowlist = this._toUidSet(uidList);
+        await this._syncRemoteSubscriptions("audio");
     }
 
-    async setSubscribeVideoBlocklist(uidList: UID[]): Promise<void> {
-        //ai todo
+    async setSubscribeVideoBlocklist(uidList: number[]): Promise<void> {
+        this._subscribeVideoBlocklist = this._toUidSet(uidList);
+        await this._syncRemoteSubscriptions("video");
     }
 
-    async setSubscribeVideoAllowlist(uidList: UID[]): Promise<void> {
-        //ai todo
+    async setSubscribeVideoAllowlist(uidList: number[]): Promise<void> {
+        this._subscribeVideoAllowlist = this._toUidSet(uidList);
+        await this._syncRemoteSubscriptions("video");
     }
 
     // ==================== Volume ====================
@@ -356,7 +346,7 @@ export class AgoraRTCClientProxy {
             this._rtcEngine.rtcEngineEventHandler?.onConnectionStateChanged(con, state, rea);
         }
     }
-    onUserJoined(user: IAgoraRTCRemoteUser) {
+    async onUserJoined(user: IAgoraRTCRemoteUser) {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
@@ -366,6 +356,16 @@ export class AgoraRTCClientProxy {
 
         const uid = user.uid as number;
         this._rtcEngine.rtcEngineEventHandler?.onUserJoined(con, uid, 0);
+        try {
+            await this._syncRemoteSubscription(user, "audio");
+        } catch (e) {
+            console.warn("auto subscribe audio failed", e);
+        }
+        try {
+            await this._syncRemoteSubscription(user, "video");
+        } catch (e) {
+            console.warn("auto subscribe video failed", e);
+        }
     }
 
     onUserLeft(user: IAgoraRTCRemoteUser, reason: string) {
@@ -381,12 +381,33 @@ export class AgoraRTCClientProxy {
         this._rtcEngine.rtcEngineEventHandler?.onUserOffline(con, uid, rea);
     }
 
-    onUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
-        //todo
+    async onUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
+        try {
+            if (mediaType === "datachannel") {
+                await this._client.subscribe(user, mediaType);
+                return;
+            }
+            await this._syncRemoteSubscription(user, mediaType);
+        } catch (e) {
+            console.warn(`auto subscribe ${mediaType} failed`, e);
+        }
     }
 
-    onUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
-        //todo
+    async onUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
+        try {
+            if (mediaType === "datachannel") {
+                await this._client.unsubscribe(user, mediaType);
+                return;
+            }
+            if (this._isRemoteSubscribed(user, mediaType)) {
+                await this._client.unsubscribe(user, mediaType);
+            }
+            if (mediaType === "video") {
+                this._clearRemoteVideoTrack(user);
+            }
+        } catch (e) {
+            console.warn(`unsubscribe ${mediaType} failed`, e);
+        }
     }
 
     onUserInfoUpdated(
@@ -542,7 +563,7 @@ export class AgoraRTCClientProxy {
         //todo - no direct IRtcEngineEventHandler match (deprecated event)
     }
 
-    onPublishedUserList(users: IAgoraRTCRemoteUser[]) {
+    async onPublishedUserList(users: IAgoraRTCRemoteUser[]) {
         //todo - no direct IRtcEngineEventHandler match
     }
 
@@ -590,8 +611,8 @@ export class AgoraRTCClientProxy {
     _publishTranscodedVideoTrack: boolean = undefined;
     _publishMixedAudioTrack: boolean = undefined;
     _publishLipSyncTrack: boolean = undefined;
-    _autoSubscribeAudio: boolean = undefined;
-    _autoSubscribeVideo: boolean = undefined;
+    _autoSubscribeAudio: boolean = true;
+    _autoSubscribeVideo: boolean = true;
     _enableAudioRecordingOrPlayout: boolean = undefined;
     _publishMediaPlayerId: number = undefined;
     _clientRoleType: CLIENT_ROLE_TYPE = undefined;
@@ -611,6 +632,86 @@ export class AgoraRTCClientProxy {
     _uplinkMultipathMode: MultipathMode = undefined;
     _downlinkMultipathMode: MultipathMode = undefined;
     _preferMultipathType: MultipathType = undefined;
+
+    private _toUidSet(uidList: number[]): Set<number> {
+        const set = new Set<number>();
+        if (uidList) {
+            for (const uid of uidList || []) {
+                set.add(uid);
+            }
+        }
+        return set;
+    }
+
+    private _getRemoteUid(user: IAgoraRTCRemoteUser): number | undefined {
+        const uid = (user as any)._uintUid ?? user.uid;
+        const numberUid = Number(uid);
+        return Number.isNaN(numberUid) ? undefined : numberUid;
+    }
+
+    private _getRtcConnection(): RtcConnection | undefined {
+        if (this._client.uid === undefined || this._client.uid === null || !this._client.channelName) {
+            return undefined;
+        }
+        return {
+            localUid: this._client.uid as number,
+            channelId: this._client.channelName as string,
+        };
+    }
+
+    private _clearRemoteVideoTrack(user: IAgoraRTCRemoteUser): void {
+        const connection = this._rtcEngine.mainClientProxy === this ? undefined : this._getRtcConnection();
+        this._rtcEngine.clearRemoteVideoTrack(user.uid, connection);
+    }
+
+    private _isRemotePublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): boolean {
+        return mediaType === "audio" ? user.hasAudio : user.hasVideo;
+    }
+
+    private _isRemoteSubscribed(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): boolean {
+        return mediaType === "audio" ? !!user.audioTrack : !!user.videoTrack;
+    }
+
+    private _shouldSubscribeRemote(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): boolean {
+        const uid = this._getRemoteUid(user);
+        if (uid === undefined || !this._isRemotePublished(user, mediaType)) {
+            return false;
+        }
+
+        const autoSubscribe = mediaType === "audio" ? this._autoSubscribeAudio : this._autoSubscribeVideo;
+        if (!autoSubscribe) {
+            return false;
+        }
+
+        const allowlist = mediaType === "audio" ? this._subscribeAudioAllowlist : this._subscribeVideoAllowlist;
+        if (allowlist.size > 0 && !allowlist.has(uid)) {
+            return false;
+        }
+
+        const blocklist = mediaType === "audio" ? this._subscribeAudioBlocklist : this._subscribeVideoBlocklist;
+        return !blocklist.has(uid);
+    }
+
+    private async _syncRemoteSubscriptions(mediaType: "audio" | "video"): Promise<void> {
+        for (const user of this._client.remoteUsers) {
+            await this._syncRemoteSubscription(user, mediaType);
+        }
+    }
+
+    private async _syncRemoteSubscription(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): Promise<void> {
+        const shouldSubscribe = this._shouldSubscribeRemote(user, mediaType);
+        const subscribed = this._isRemoteSubscribed(user, mediaType);
+
+        if (shouldSubscribe && !subscribed) {
+            await this._client.subscribe(user, mediaType);
+            user.audioTrack?.play?.();
+            return;
+        }
+
+        if (!shouldSubscribe && subscribed) {
+            await this._client.unsubscribe(user, mediaType);
+        }
+    }
 
     async updateChannelMediaOptions(options: ChannelMediaOptions): Promise<number> {
         if (this._client.uid === undefined || this._client.channelName === undefined) {
@@ -883,14 +984,14 @@ export class AgoraRTCClientProxy {
             this._publishLipSyncTrack = options.publishLipSyncTrack;
         }
 
-        if (options.autoSubscribeAudio !== undefined && options.autoSubscribeAudio !== this._autoSubscribeAudio) {
+        if (options.autoSubscribeAudio !== undefined) {
             this._autoSubscribeAudio = options.autoSubscribeAudio;
-            console.warn("autoSubscribeAudio is not supported in Agora Web SDK, only can set when you joinChannel.");
+            await this._syncRemoteSubscriptions("audio");
         }
 
-        if (options.autoSubscribeVideo !== undefined && options.autoSubscribeVideo !== this._autoSubscribeVideo) {
+        if (options.autoSubscribeVideo !== undefined) {
             this._autoSubscribeVideo = options.autoSubscribeVideo;
-            console.warn("autoSubscribeVideo is not supported in Agora Web SDK, only can set when you joinChannel.");
+            await this._syncRemoteSubscriptions("video");
         }
 
         //not impl

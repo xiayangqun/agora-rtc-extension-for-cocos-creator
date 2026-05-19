@@ -61,6 +61,13 @@ export class VideoTextureManager {
         this._releaseEntry(key);
     }
 
+    clearVideoTrack(key: string): void {
+        const entry = this._entries.get(key);
+        if (entry) {
+            this._releaseVideoElement(entry);
+        }
+    }
+
     private async _setupVideo(
         key: string,
         getTrack: () => VideoTrack | null | undefined,
