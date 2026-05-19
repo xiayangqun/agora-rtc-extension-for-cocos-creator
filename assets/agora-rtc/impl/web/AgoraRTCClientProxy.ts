@@ -351,6 +351,14 @@ export class AgoraRTCClientProxy {
             this._rtcEngine.rtcEngineEventHandler?.onConnectionStateChanged(con, state, rea);
         }
     }
+
+    __getNumberUid(user: IAgoraRTCRemoteUser): number {
+        if (typeof user.uid === "number") {
+            return user.uid;
+        } else {
+            return (user as any)._uintUid;
+        }
+    }
     async onUserJoined(user: IAgoraRTCRemoteUser) {
         //fuck, this is a bug. the user joined event is triggered when the self joins the channel.
         if (this._client.uid === user.uid) return;
@@ -361,8 +369,8 @@ export class AgoraRTCClientProxy {
             localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
-        const uid = this.numberUid;
-        this._rtcEngine.rtcEngineEventHandler?.onUserJoined(con, uid, 0);
+
+        this._rtcEngine.rtcEngineEventHandler?.onUserJoined(con, this.__getNumberUid(user), 0);
     }
 
     onUserLeft(user: IAgoraRTCRemoteUser, reason: string) {
@@ -378,10 +386,13 @@ export class AgoraRTCClientProxy {
 
         const uid = user.uid as number;
         const rea = Web2Native.string2USER_OFFLINE_REASON_TYPE(reason);
-        this._rtcEngine.rtcEngineEventHandler?.onUserOffline(con, uid, rea);
+        this._rtcEngine.rtcEngineEventHandler?.onUserOffline(con, this.__getNumberUid(user), rea);
     }
 
     async onUserPublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
+        //fuck, this is a bug. the user published event is triggered when the self publishes the media.
+        if (this._client.uid === user.uid) return;
+
         try {
             if (mediaType === "datachannel") {
                 await this._client.subscribe(user, mediaType);
@@ -394,6 +405,9 @@ export class AgoraRTCClientProxy {
     }
 
     async onUserUnpublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video" | "datachannel") {
+        //fuck, this is a bug. the user unpublished event is triggered when the self unpublishes the media.
+        if (this._client.uid === user.uid) return;
+
         try {
             if (mediaType === "datachannel") {
                 await this._client.unsubscribe(user, mediaType);

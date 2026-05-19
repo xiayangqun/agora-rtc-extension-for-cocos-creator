@@ -1,4 +1,12 @@
-import { RtcStats, UserInfo } from "../../types/AgoraBase";
+import {
+    COMPRESSION_PREFERENCE,
+    DEGRADATION_PREFERENCE,
+    ENCODING_PREFERENCE,
+    ORIENTATION_MODE,
+    RtcStats,
+    UserInfo,
+    VIDEO_CODEC_TYPE,
+} from "../../types/AgoraBase";
 import { IAudioDeviceManager } from "../../interface/IAudioDeviceManager";
 import { IH265Transcoder } from "../../interface/IH265Transcoder";
 import { ILocalSpatialAudioEngine } from "../../interface/ILocalSpatialAudioEngine";
@@ -202,7 +210,24 @@ export class RtcEngineWeb implements IRtcEngineEx {
     public localVideoDataSourcePosition: VIDEO_MODULE_POSITION = VIDEO_MODULE_POSITION.POSITION_POST_CAPTURER;
 
     public mainClientProxy: AgoraRTCClientProxy;
-    public mainClientVideoEncoderConfiguration: NativeVideoEncoderConfiguration;
+    public mainClientVideoEncoderConfiguration: NativeVideoEncoderConfiguration = {
+        codecType: VIDEO_CODEC_TYPE.VIDEO_CODEC_H264,
+        dimensions: {
+            width: 640,
+            height: 360,
+        },
+        frameRate: 15,
+        bitrate: 0,
+        minBitrate: 0,
+        orientationMode: ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE,
+        degradationPreference: DEGRADATION_PREFERENCE.MAINTAIN_AUTO,
+        mirrorMode: VIDEO_MIRROR_MODE_TYPE.VIDEO_MIRROR_MODE_AUTO,
+        advanceOptions: {
+            encodingPreference: ENCODING_PREFERENCE.PREFER_AUTO,
+            compressionPreference: COMPRESSION_PREFERENCE.PREFER_COMPRESSION_AUTO,
+            encodeAlpha: true,
+        },
+    };
     public subClientProxies: Map<string, AgoraRTCClientProxy> = new Map();
     public subClientVideoEncoderConfigurations: Map<string, NativeVideoEncoderConfiguration> = new Map();
     public audioEnabled = true;
@@ -307,7 +332,34 @@ export class RtcEngineWeb implements IRtcEngineEx {
     // ==================== Lifecycle ====================
 
     async release(sync: boolean): Promise<void> {
-        this._videoTextureManager.destroy();
+        try {
+            for (const proxy of this.subClientProxies.values()) {
+                await proxy.release();
+            }
+            this.subClientProxies.clear();
+            this.subClientVideoEncoderConfigurations.clear();
+
+            await this.mainClientProxy?.release();
+            this.mainClientProxy = null;
+
+            for (const player of this._mediaPlayers.values()) {
+                await player.dispose();
+            }
+            this._mediaPlayers.clear();
+            this._mediaPlayerIdCounter = 0;
+
+            this.trackManager.clearAll();
+            this._videoTextureManager.destroy();
+
+            this.rtcEngineEventHandler = undefined;
+            this.mainClientVideoEncoderConfiguration = undefined;
+            this.localVideoDataSourcePosition = VIDEO_MODULE_POSITION.POSITION_POST_CAPTURER;
+            this.audioEnabled = true;
+            this.videoEnabled = false;
+            this.dualStreamEnabled = false;
+        } catch (e) {
+            console.error("RtcEngineWeb release failed", e);
+        }
     }
 
     async getAudioDeviceManager(): Promise<IAudioDeviceManager> {
