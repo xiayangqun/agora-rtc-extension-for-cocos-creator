@@ -116,7 +116,7 @@ export class AgoraRTCClientProxy {
     }
 
     get numberUid(): number {
-        return this._client.uid as number;
+        return this.numberUid;
     }
 
     get stringUid(): string {
@@ -335,7 +335,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         const state = Web2Native.ConnectionState(curState);
@@ -350,7 +350,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
 
@@ -372,7 +372,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
 
@@ -423,7 +423,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         const numberUid = uid as number;
@@ -481,7 +481,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         const speakers = result.map((item) => ({
@@ -499,7 +499,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         this._rtcEngine.rtcEngineEventHandler?.onEncryptionError(
@@ -512,7 +512,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         this._rtcEngine.rtcEngineEventHandler?.onTokenPrivilegeWillExpire(con, "");
@@ -522,7 +522,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         this._rtcEngine.rtcEngineEventHandler?.onRequestToken(con);
@@ -532,7 +532,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         this._rtcEngine.rtcEngineEventHandler?.onNetworkQuality(
@@ -583,7 +583,7 @@ export class AgoraRTCClientProxy {
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
         //can not get streamId and sentTs from agora-rtc-sdk-ng, so set to 0
@@ -654,7 +654,7 @@ export class AgoraRTCClientProxy {
             return undefined;
         }
         return {
-            localUid: this._client.uid as number,
+            localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
     }
