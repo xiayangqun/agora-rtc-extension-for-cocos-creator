@@ -59,12 +59,14 @@ export class AgoraRTCClientProxy {
     }
 
     async release(): Promise<void> {
-        this._client.localTracks.forEach((track) => track.close());
         await this._client.unpublish();
         for (const user of this._client.remoteUsers) {
             await this._client.unsubscribe(user);
+            await this._clearRemoteVideoTrack(user);
         }
         await this._client.leave();
+        this._client.removeAllListeners();
+        this._client = null;
     }
 
     getClient(): IAgoraRTCClient {
@@ -116,7 +118,10 @@ export class AgoraRTCClientProxy {
     }
 
     get numberUid(): number {
-        return this.numberUid;
+        if (typeof this._client.uid === "number") {
+            return this._client.uid;
+        }
+        return (this._client as any)._uintUid;
     }
 
     get stringUid(): string {
@@ -347,28 +352,23 @@ export class AgoraRTCClientProxy {
         }
     }
     async onUserJoined(user: IAgoraRTCRemoteUser) {
+        //fuck, this is a bug. the user joined event is triggered when the self joins the channel.
+        if (this._client.uid === user.uid) return;
+
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {
             localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
-
-        const uid = user.uid as number;
+        const uid = this.numberUid;
         this._rtcEngine.rtcEngineEventHandler?.onUserJoined(con, uid, 0);
-        try {
-            await this._syncRemoteSubscription(user, "audio");
-        } catch (e) {
-            console.warn("auto subscribe audio failed", e);
-        }
-        try {
-            await this._syncRemoteSubscription(user, "video");
-        } catch (e) {
-            console.warn("auto subscribe video failed", e);
-        }
     }
 
     onUserLeft(user: IAgoraRTCRemoteUser, reason: string) {
+        //fuck, this is a bug. the user left event is triggered when the self leaves the channel.
+        if (this._client.uid === user.uid) return;
+
         if (!this._client.uid || !this._client.channelName) return;
 
         const con: RtcConnection = {

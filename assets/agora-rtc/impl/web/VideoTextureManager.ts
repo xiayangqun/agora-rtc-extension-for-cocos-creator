@@ -137,7 +137,13 @@ export class VideoTextureManager {
                 entry.textureWidth = width;
                 entry.textureHeight = height;
             }
-            entry.texture.uploadData(videoElement as unknown as HTMLCanvasElement);
+            if (this._isWebGL2()) {
+                if (!this._uploadVideoFrameWebGL2(entry, videoElement)) {
+                    return false;
+                }
+            } else {
+                entry.texture.uploadData(videoElement as unknown as HTMLCanvasElement);
+            }
             entry.warnedUploadFailed = false;
             return true;
         } catch (e) {
@@ -147,6 +153,33 @@ export class VideoTextureManager {
             }
             return false;
         }
+    }
+
+    private _isWebGL2(): boolean {
+        const gl = (director.root as any)?.device?.gl;
+        return typeof WebGL2RenderingContext !== "undefined" && gl instanceof WebGL2RenderingContext;
+    }
+
+    private _uploadVideoFrameWebGL2(entry: VideoTextureEntry, videoElement: HTMLVideoElement): boolean {
+        const device = (director.root as any)?.device;
+        const gl = device?.gl as WebGL2RenderingContext | undefined;
+        const gfxTexture = entry.texture.getGFXTexture?.() as any;
+        const gpuTexture = gfxTexture?.gpuTexture;
+        const glTexture = gpuTexture?.glTexture;
+        if (!gl || !gpuTexture || !glTexture || gpuTexture.glTarget !== gl.TEXTURE_2D) {
+            return false;
+        }
+
+        const stateCache = device.stateCache;
+        const glTexUnit = stateCache?.glTexUnits?.[stateCache.texUnit ?? 0];
+        if (glTexUnit?.glTexture !== glTexture) {
+            gl.bindTexture(gpuTexture.glTarget, glTexture);
+            if (glTexUnit) {
+                glTexUnit.glTexture = glTexture;
+            }
+        }
+        gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, gpuTexture.glFormat, gpuTexture.glType, videoElement);
+        return true;
     }
 
     private _getTrackId(track: VideoTrack): string {
