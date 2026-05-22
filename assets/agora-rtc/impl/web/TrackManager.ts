@@ -183,63 +183,113 @@ export class TrackManager {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalFirstScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalFirstScreenTrack(
+        encoderConfig?: WebVideoEncoderConfiguration,
+        withAudio: boolean = false,
+    ): Promise<number> {
         if (this.localFirstScreenVideoTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
-        const tracks = await AgoraRTC.createScreenVideoTrack(
-            {
-                encoderConfig: encoderConfig,
-            },
-            "enable",
-        );
-        this.localFirstScreenVideoTrack = tracks[0];
-        this.localFirstScreenAudioTrack = tracks[1];
+
+        if (withAudio) {
+            const tracks = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "enable",
+            );
+            this.localFirstScreenVideoTrack = tracks[0];
+            this.localFirstScreenAudioTrack = tracks[1];
+        } else {
+            this.localFirstScreenVideoTrack = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "disable",
+            );
+        }
+
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalSecondScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalSecondScreenTrack(
+        encoderConfig?: WebVideoEncoderConfiguration,
+        withAudio: boolean = false,
+    ): Promise<number> {
         if (this.localSecondScreenVideoTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
-        const tracks = await AgoraRTC.createScreenVideoTrack(
-            {
-                encoderConfig: encoderConfig,
-            },
-            "enable",
-        );
-        this.localSecondScreenVideoTrack = tracks[0];
-        this.localSecondScreenAudioTrack = tracks[1];
-        return ERROR_CODE_TYPE.ERR_OK;
+
+        if (withAudio) {
+            const tracks = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "enable",
+            );
+            this.localSecondScreenVideoTrack = tracks[0];
+            this.localSecondScreenAudioTrack = tracks[1];
+        } else {
+            this.localSecondScreenVideoTrack = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "disable",
+            );
+        }
     }
 
-    async createLocalThirdScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalThirdScreenTrack(
+        encoderConfig?: WebVideoEncoderConfiguration,
+        withAudio: boolean = false,
+    ): Promise<number> {
         if (this.localThirdScreenVideoTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
-        const tracks = await AgoraRTC.createScreenVideoTrack(
-            {
-                encoderConfig: encoderConfig,
-            },
-            "enable",
-        );
-        this.localThirdScreenVideoTrack = tracks[0];
-        this.localThirdScreenAudioTrack = tracks[1];
+        if (withAudio) {
+            const tracks = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "enable",
+            );
+            this.localThirdScreenVideoTrack = tracks[0];
+            this.localThirdScreenAudioTrack = tracks[1];
+        } else {
+            this.localThirdScreenVideoTrack = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "disable",
+            );
+        }
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
-    async createLocalFourthScreenTrack(encoderConfig?: WebVideoEncoderConfiguration): Promise<number> {
+    async createLocalFourthScreenTrack(
+        encoderConfig?: WebVideoEncoderConfiguration,
+        withAudio: boolean = false,
+    ): Promise<number> {
         if (this.localFourthScreenVideoTrack) {
             return ERROR_CODE_TYPE.ERR_OK;
         }
-        const tracks = await AgoraRTC.createScreenVideoTrack(
-            {
-                encoderConfig: encoderConfig,
-            },
-            "enable",
-        );
-        this.localFourthScreenVideoTrack = tracks[0];
-        this.localFourthScreenAudioTrack = tracks[1];
+        if (withAudio) {
+            const tracks = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "enable",
+            );
+            this.localFourthScreenVideoTrack = tracks[0];
+            this.localFourthScreenAudioTrack = tracks[1];
+        } else {
+            this.localFourthScreenVideoTrack = await AgoraRTC.createScreenVideoTrack(
+                {
+                    encoderConfig: encoderConfig,
+                },
+                "disable",
+            );
+        }
         return ERROR_CODE_TYPE.ERR_OK;
     }
 

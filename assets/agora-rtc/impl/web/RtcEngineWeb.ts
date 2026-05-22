@@ -1991,10 +1991,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
         regionRect: Rectangle,
         captureParams: ScreenCaptureParameters,
     ): Promise<number> {
-        await this.trackManager.createLocalFirstCameraVideoTrack(
+        return await this.trackManager.createLocalFirstScreenTrack(
             Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
         );
-        return ERR_OK;
     }
 
     async startScreenCaptureByScreenRect(
@@ -2002,10 +2001,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
         regionRect: Rectangle,
         captureParams: ScreenCaptureParameters,
     ): Promise<number> {
-        await this.trackManager.createLocalFirstCameraVideoTrack(
+        return await this.trackManager.createLocalFirstScreenTrack(
             Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
         );
-        return ERR_OK;
     }
 
     async getAudioDeviceInfo(): Promise<{ errorCode: number; deviceInfo: DeviceInfo }> {
@@ -2018,8 +2016,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         regionRect: Rectangle,
         captureParams: ScreenCaptureParameters,
     ): Promise<number> {
-        console.warn("startScreenCaptureByWindowId not support in web");
-        return -ERR_NOT_SUPPORTED;
+        await this.trackManager.createLocalFirstCameraVideoTrack(
+            Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+        );
+        return ERR_OK;
     }
 
     async setScreenCaptureContentHint(contentHint: VIDEO_CONTENT_HINT): Promise<number> {
@@ -2040,36 +2040,46 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async startScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number>;
     async startScreenCapture(sourceType: VIDEO_SOURCE_TYPE, config: ScreenCaptureConfiguration): Promise<number>;
     async startScreenCapture(sourceType: unknown, config?: unknown): Promise<number> {
-        let st: VIDEO_SOURCE_TYPE = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
-        if (config) {
-            st = sourceType as VIDEO_SOURCE_TYPE;
+        try {
+            let st: VIDEO_SOURCE_TYPE = VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY;
+            if (config) {
+                st = sourceType as VIDEO_SOURCE_TYPE;
+            }
+            switch (st) {
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
+                    return await this.trackManager.createLocalFirstScreenTrack(
+                        Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                    );
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
+                    return await this.trackManager.createLocalSecondScreenTrack(
+                        Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                    );
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
+                    return await this.trackManager.createLocalThirdScreenTrack(
+                        Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                    );
+                    break;
+                case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
+                    return await this.trackManager.createLocalFourthScreenTrack(
+                        Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
+                    );
+                    break;
+                default:
+                    return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+                    break;
+            }
+            return ERR_OK;
+        } catch (e) {
+            console.error("startScreenCapture failed:", e.toString ? e.toString() : "");
+            if (isAgoraRTCError(e)) {
+                const err = e as IAgoraRTCError;
+                return -Web2Native.AgoraRTCErrorCode(err.code);
+            } else {
+                return -ERROR_CODE_TYPE.ERR_FAILED;
+            }
         }
-        switch (st) {
-            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_PRIMARY:
-                await this.trackManager.createLocalFirstCameraVideoTrack(
-                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
-                );
-                break;
-            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_SECONDARY:
-                await this.trackManager.createLocalSecondCameraVideoTrack(
-                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
-                );
-                break;
-            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_THIRD:
-                await this.trackManager.createLocalThirdCameraVideoTrack(
-                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
-                );
-                break;
-            case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_SCREEN_FOURTH:
-                await this.trackManager.createLocalFourthCameraVideoTrack(
-                    Native2Web.VideoEncoderConfiguration(this.mainClientVideoEncoderConfiguration),
-                );
-                break;
-            default:
-                return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
-                break;
-        }
-        return ERR_OK;
     }
 
     async updateScreenCapture(captureParams: ScreenCaptureParameters2): Promise<number> {
