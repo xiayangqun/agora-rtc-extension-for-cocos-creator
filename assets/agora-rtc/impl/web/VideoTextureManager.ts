@@ -6,11 +6,9 @@ type VideoTrack = ILocalVideoTrack | IRemoteVideoTrack;
 interface VideoTextureEntry {
     key: string;
     videoElement?: HTMLVideoElement;
-    videoFrameCallbackHandle?: number;
     texture: Texture2D;
     getTrack: () => VideoTrack | null | undefined;
     trackId?: string;
-    frameReady: boolean;
     lastWidth: number;
     lastHeight: number;
     textureWidth: number;
@@ -57,11 +55,11 @@ export class VideoTextureManager {
         return this._entries.has(key);
     }
 
-    removeVideo(key: string): void {
+    unbind(key: string): void {
         this._releaseEntry(key);
     }
 
-    clearVideoTrack(key: string): void {
+    detachTrack(key: string): void {
         const entry = this._entries.get(key);
         if (entry) {
             this._releaseVideoElement(entry);
@@ -79,7 +77,6 @@ export class VideoTextureManager {
             key,
             texture,
             getTrack,
-            frameReady: true,
             lastWidth: 0,
             lastHeight: 0,
             textureWidth: 0,
@@ -91,12 +88,20 @@ export class VideoTextureManager {
         await this._attachTrackIfNeeded(entry);
     }
 
-    removeLocalVideo(): void {
+    unbindLocal(): void {
         this._releaseEntry("local");
     }
 
-    removeRemoteVideo(trackId: string): void {
+    unbindRemote(trackId: string): void {
         this._releaseEntry(`remote_${trackId}`);
+    }
+
+    detachTracksByPrefix(prefix: string): void {
+        this._entries.forEach((entry, key) => {
+            if (key.startsWith(prefix)) {
+                this._releaseVideoElement(entry);
+            }
+        });
     }
 
     private _releaseEntry(key: string): void {
@@ -111,13 +116,11 @@ export class VideoTextureManager {
         if (!entry.videoElement) {
             return;
         }
-        this._cancelVideoFrameCallback(entry);
         entry.videoElement.pause();
         entry.videoElement.srcObject = null;
         entry.videoElement.remove();
         entry.videoElement = undefined;
         entry.trackId = undefined;
-        entry.frameReady = true;
         entry.lastWidth = 0;
         entry.lastHeight = 0;
     }
@@ -127,7 +130,8 @@ export class VideoTextureManager {
         const height = videoElement.videoHeight;
 
         try {
-            if (entry.textureWidth !== width || entry.textureHeight !== height) {
+            const resized = entry.textureWidth !== width || entry.textureHeight !== height;
+            if (resized) {
                 this._releaseTextureDescriptorSetCache(entry.texture);
                 entry.texture.reset({
                     width,
@@ -137,13 +141,17 @@ export class VideoTextureManager {
                 entry.textureWidth = width;
                 entry.textureHeight = height;
             }
-            if (this._isWebGL2()) {
+
+            if (!resized && this._isWebGL2()) {
+                // texSubImage2D for in-place updates - efficient, reuses GPU texture
                 if (!this._uploadVideoFrameWebGL2(entry, videoElement)) {
                     return false;
                 }
             } else {
+                // uploadData on first frame / after resize - creates GPU texture
                 entry.texture.uploadData(videoElement as unknown as HTMLCanvasElement);
             }
+
             entry.warnedUploadFailed = false;
             return true;
         } catch (e) {
@@ -153,6 +161,10 @@ export class VideoTextureManager {
             }
             return false;
         }
+    }
+
+    private _getTrackId(track: VideoTrack): string {
+        return track.getTrackId?.() || track.getMediaStreamTrack().id;
     }
 
     private _isWebGL2(): boolean {
@@ -182,10 +194,6 @@ export class VideoTextureManager {
         return true;
     }
 
-    private _getTrackId(track: VideoTrack): string {
-        return track.getTrackId?.() || track.getMediaStreamTrack().id;
-    }
-
     private async _attachTrackIfNeeded(entry: VideoTextureEntry): Promise<void> {
         const track = entry.getTrack();
         if (!track) {
@@ -212,10 +220,8 @@ export class VideoTextureManager {
         this._ensureDebugContainer().appendChild(videoElement);
         entry.videoElement = videoElement;
         entry.trackId = trackId;
-        entry.frameReady = true;
         this._configureVideoTexture(entry.texture);
         await videoElement.play();
-        this._requestNextVideoFrame(entry, videoElement);
     }
 
     private _configureVideoTexture(texture: Texture2D): void {
@@ -281,32 +287,6 @@ export class VideoTextureManager {
         container.style.display = this._debugVisible ? "flex" : "none";
     }
 
-    private _requestNextVideoFrame(entry: VideoTextureEntry, videoElement: HTMLVideoElement): void {
-        const requestVideoFrameCallback = videoElement.requestVideoFrameCallback;
-        if (!requestVideoFrameCallback) {
-            return;
-        }
-
-        entry.videoFrameCallbackHandle = requestVideoFrameCallback.call(videoElement, () => {
-            if (entry.videoElement !== videoElement) {
-                return;
-            }
-            entry.videoFrameCallbackHandle = undefined;
-            entry.frameReady = true;
-            this._requestNextVideoFrame(entry, videoElement);
-        });
-    }
-
-    private _cancelVideoFrameCallback(entry: VideoTextureEntry): void {
-        const videoElement = entry.videoElement;
-        if (!videoElement || entry.videoFrameCallbackHandle === undefined) {
-            return;
-        }
-
-        videoElement.cancelVideoFrameCallback?.(entry.videoFrameCallbackHandle);
-        entry.videoFrameCallbackHandle = undefined;
-    }
-
     private _updateTextures(): void {
         this._entries.forEach((entry) => {
             this._attachTrackIfNeeded(entry).catch((e) => {
@@ -319,14 +299,10 @@ export class VideoTextureManager {
             if (!(v.videoWidth > 0 && v.videoHeight > 0)) {
                 return;
             }
-            if (v.requestVideoFrameCallback && !entry.frameReady) {
-                return;
-            }
 
             if (!this._uploadVideoFrame(entry, v)) {
                 return;
             }
-            entry.frameReady = false;
 
             if (v.videoWidth !== entry.lastWidth || v.videoHeight !== entry.lastHeight) {
                 entry.lastWidth = v.videoWidth;

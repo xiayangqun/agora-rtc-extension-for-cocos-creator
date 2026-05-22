@@ -128,6 +128,7 @@ import AgoraRTC, {
     ILocalAudioTrack,
     ILocalVideoTrack,
     ILocalDataChannel,
+    IAgoraRTCRemoteUser,
     ClientConfig,
     UID,
     DeviceInfo as WebDeviceInfo,
@@ -252,8 +253,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return `remote_${connectionPart}_${uid}`;
     }
 
+    private _findRemoteUserByUid(proxy: AgoraRTCClientProxy | undefined, uid: UID): IAgoraRTCRemoteUser | undefined {
+        return proxy?.remoteUsers.find((user) => {
+            return user.uid === uid || (user as any)._uintUid === uid || String(user.uid) === String(uid);
+        });
+    }
+
     public clearRemoteVideoTrack(uid: UID, connection?: RtcConnection): void {
-        this._videoTextureManager.clearVideoTrack(this._remoteVideoTextureKey(uid, connection));
+        this._videoTextureManager.detachTrack(this._remoteVideoTextureKey(uid, connection));
     }
 
     private _getLocalVideoTrack(canvas: VideoCanvas): ILocalVideoTrack | null {
@@ -517,17 +524,18 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 console.warn("The 'info' parameter in joinChannel is not support in web");
                 const info = infoOrUid as string;
                 const uid = uidOrOptions as number;
-                token = token || null;
-                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token, uid, {
-                    autoSubscribe: false,
-                    networkQualityProbe: true,
-                });
                 const options: ChannelMediaOptions = {
                     publishCameraTrack: true,
                     publishMicrophoneTrack: true,
                     autoSubscribeVideo: true,
                     autoSubscribeAudio: true,
                 };
+                this.mainClientProxy.applyAutoSubscribeOptions(options);
+                token = token || null;
+                const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token, uid, {
+                    autoSubscribe: false,
+                    networkQualityProbe: true,
+                });
                 await this.updateChannelMediaOptions(options);
                 this.rtcEngineEventHandler?.onJoinChannelSuccess(
                     { channelId: channelId as string, localUid: selfUid as number },
@@ -537,6 +545,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             } else {
                 const uid = infoOrUid as number;
                 const options = uidOrOptions as ChannelMediaOptions;
+                this.mainClientProxy.applyAutoSubscribeOptions(options);
                 const selfUid = await this.mainClientProxy.join(this.appId, channelId as string, token as string, uid, {
                     autoSubscribe: false,
                     networkQualityProbe: true,
@@ -586,6 +595,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             }
 
             await mainClientProxy.leave();
+            this._videoTextureManager.detachTracksByPrefix("remote_main_");
             if (mainClientProxy.channelName && mainClientProxy.uid) {
                 this.rtcEngineEventHandler?.onLeaveChannel(
                     {
@@ -832,12 +842,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
         try {
             const key = this._remoteVideoTextureKey(canvas.uid);
             if (!canvas.view) {
-                this._videoTextureManager.removeVideo(key);
+                this._videoTextureManager.unbind(key);
                 return ERR_OK;
             }
             await this._videoTextureManager.setupRemoteVideo(
                 key,
-                () => this.mainClientProxy?.remoteUsers.find((u) => u.uid === canvas.uid)?.videoTrack,
+                () => this._findRemoteUserByUid(this.mainClientProxy, canvas.uid)?.videoTrack,
                 canvas.view,
                 onAspectRatioChanged,
             );
@@ -860,7 +870,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         try {
             const key = this._localVideoTextureKey(canvas);
             if (!canvas.view) {
-                this._videoTextureManager.removeVideo(key);
+                this._videoTextureManager.unbind(key);
                 return ERR_OK;
             }
             await this._videoTextureManager.setupLocalVideo(
@@ -2248,16 +2258,16 @@ export class RtcEngineWeb implements IRtcEngineEx {
         try {
             switch (sourceType) {
                 case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_PRIMARY:
-                    await this.trackManager.createLocalFirstCameraVideoTrack();
+                    return await this.trackManager.createLocalFirstCameraVideoTrack();
                     break;
                 case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_SECONDARY:
-                    await this.trackManager.createLocalSecondCameraVideoTrack();
+                    return await this.trackManager.createLocalSecondCameraVideoTrack();
                     break;
                 case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_THIRD:
-                    await this.trackManager.createLocalThirdCameraVideoTrack();
+                    return await this.trackManager.createLocalThirdCameraVideoTrack();
                     break;
                 case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA_FOURTH:
-                    await this.trackManager.createLocalFourthCameraVideoTrack();
+                    return await this.trackManager.createLocalFourthCameraVideoTrack();
                     break;
                 default:
                     return -ERR_INVALID_ARGUMENT;
@@ -2822,6 +2832,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 this.subClientProxies.set(key, proxy);
             }
             token = token || null;
+            proxy.applyAutoSubscribeOptions(options);
             await proxy.join(this.appId, connection.channelId, token, connection.localUid);
             await this.__updateChannelMediaOptions(proxy, options);
             this.rtcEngineEventHandler?.onJoinChannelSuccess(connection, 0);
@@ -2850,6 +2861,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 await proxy.enableMicrophoneRecording(false);
             }
             await proxy.leave();
+            this._videoTextureManager.detachTracksByPrefix(`remote_${key}_`);
             this.rtcEngineEventHandler?.onLeaveChannel(connection as RtcConnection, {} as any);
             return ERR_OK;
         } catch (e) {
@@ -2865,9 +2877,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
     ): Promise<number>;
     async leaveChannelWithUserAccountEx(channelId: unknown, userAccount: unknown, options?: unknown): Promise<number> {
         let proxy: AgoraRTCClientProxy = null;
-        for (const p of this.subClientProxies.values()) {
+        let proxyKey: string = "";
+        for (const [key, p] of this.subClientProxies.entries()) {
             if (p.channelName === channelId && p.uid === userAccount) {
                 proxy = p;
+                proxyKey = key;
                 break;
             }
         }
@@ -2880,6 +2894,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             await proxy.enableMicrophoneRecording(false);
         }
         await proxy.leave();
+        this._videoTextureManager.detachTracksByPrefix(`remote_${proxyKey}_`);
         this.rtcEngineEventHandler?.onLeaveChannel(
             {
                 channelId: proxy.channelName,
@@ -2930,12 +2945,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
             }
             const textureKey = this._remoteVideoTextureKey(canvas.uid, connection);
             if (!canvas.view) {
-                this._videoTextureManager.removeVideo(textureKey);
+                this._videoTextureManager.unbind(textureKey);
                 return ERR_OK;
             }
             await this._videoTextureManager.setupRemoteVideo(
                 textureKey,
-                () => proxy.remoteUsers.find((u) => u.uid === canvas.uid)?.videoTrack,
+                () => this._findRemoteUserByUid(proxy, canvas.uid)?.videoTrack,
                 canvas.view,
                 onAspectRatioChanged,
             );

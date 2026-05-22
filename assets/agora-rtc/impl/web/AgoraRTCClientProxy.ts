@@ -213,6 +213,18 @@ export class AgoraRTCClientProxy {
     private _subscribeVideoBlocklist: Set<number> = new Set();
     private _subscribeVideoAllowlist: Set<number> = new Set();
 
+    applyAutoSubscribeOptions(options?: ChannelMediaOptions): void {
+        if (!options) {
+            return;
+        }
+        if (options.autoSubscribeAudio !== undefined) {
+            this._autoSubscribeAudio = options.autoSubscribeAudio;
+        }
+        if (options.autoSubscribeVideo !== undefined) {
+            this._autoSubscribeVideo = options.autoSubscribeVideo;
+        }
+    }
+
     async setSubscribeAudioBlocklist(uidList: number[]): Promise<void> {
         this._subscribeAudioBlocklist = this._toUidSet(uidList);
         await this._syncRemoteSubscriptions("audio");
@@ -724,6 +736,9 @@ export class AgoraRTCClientProxy {
 
         if (!shouldSubscribe && subscribed) {
             await this._client.unsubscribe(user, mediaType);
+            if (mediaType === "video") {
+                this._clearRemoteVideoTrack(user);
+            }
         }
     }
 
@@ -731,12 +746,14 @@ export class AgoraRTCClientProxy {
         if (this._client.uid === undefined || this._client.channelName === undefined) {
             return -ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL;
         }
+        this.applyAutoSubscribeOptions(options);
 
         if (this._rtcEngine.videoEnabled) {
             if (options.publishCameraTrack !== undefined && options.publishCameraTrack !== this._publishCameraTrack) {
                 this._publishCameraTrack = options.publishCameraTrack;
-                if (!this._publishCameraTrack && this._trackManager.localFirstCameraTrack) {
-                    await this._client.unpublish(this._trackManager.localFirstCameraTrack);
+                if (!this._publishCameraTrack) {
+                    if (this._trackManager.localFirstCameraTrack)
+                        await this._client.unpublish(this._trackManager.localFirstCameraTrack);
                 } else {
                     if (!this._trackManager.localFirstCameraTrack) {
                         await this.createLocalFirstCameraVideoTrack();
@@ -750,11 +767,14 @@ export class AgoraRTCClientProxy {
                 options.publishSecondaryCameraTrack !== this._publishSecondaryCameraTrack
             ) {
                 this._publishSecondaryCameraTrack = options.publishSecondaryCameraTrack;
-                if (!this._publishSecondaryCameraTrack && this._trackManager.localSecondCameraTrack) {
-                    await this._client.unpublish(this._trackManager.localSecondCameraTrack);
+                if (!this._publishSecondaryCameraTrack) {
+                    if (this._trackManager.localSecondCameraTrack)
+                        await this._client.unpublish(this._trackManager.localSecondCameraTrack);
                 } else {
                     if (!this._trackManager.localSecondCameraTrack) {
                         console.warn("Secondary camera track is not created yet. call startCameraCapture first.");
+                    } else {
+                        await this._client.publish(this._trackManager.localSecondCameraTrack);
                     }
                 }
             }
@@ -764,11 +784,14 @@ export class AgoraRTCClientProxy {
                 options.publishThirdCameraTrack !== this._publishThirdCameraTrack
             ) {
                 this._publishThirdCameraTrack = options.publishThirdCameraTrack;
-                if (!this._publishThirdCameraTrack && this._trackManager.localThirdCameraTrack) {
-                    await this._client.unpublish(this._trackManager.localThirdCameraTrack);
+                if (!this._publishThirdCameraTrack) {
+                    if (this._trackManager.localThirdCameraTrack)
+                        await this._client.unpublish(this._trackManager.localThirdCameraTrack);
                 } else {
                     if (!this._trackManager.localThirdCameraTrack) {
                         console.warn("Third camera track is not created yet. call startCameraCapture first.");
+                    } else {
+                        await this._client.publish(this._trackManager.localThirdCameraTrack);
                     }
                 }
             }
@@ -778,11 +801,14 @@ export class AgoraRTCClientProxy {
                 options.publishFourthCameraTrack !== this._publishFourthCameraTrack
             ) {
                 this._publishFourthCameraTrack = options.publishFourthCameraTrack;
-                if (!this._publishFourthCameraTrack && this._trackManager.localFourthCameraTrack) {
-                    await this._client.unpublish(this._trackManager.localFourthCameraTrack);
+                if (!this._publishFourthCameraTrack) {
+                    if (this._trackManager.localFourthCameraTrack)
+                        await this._client.unpublish(this._trackManager.localFourthCameraTrack);
                 } else {
                     if (!this._trackManager.localFourthCameraTrack) {
                         console.warn("Fourth camera track is not created yet. call startCameraCapture first.");
+                    } else {
+                        await this._client.publish(this._trackManager.localFourthCameraTrack);
                     }
                 }
             }
@@ -802,6 +828,8 @@ export class AgoraRTCClientProxy {
                 } else {
                     if (this._trackManager.localMicrophoneTrack) {
                         await this._client.unpublish(this._trackManager.localMicrophoneTrack);
+                    } else {
+                        console.warn("Microphone track is not created yet. call startMicrophoneCapture first.");
                     }
                 }
             }
@@ -995,12 +1023,10 @@ export class AgoraRTCClientProxy {
         }
 
         if (options.autoSubscribeAudio !== undefined) {
-            this._autoSubscribeAudio = options.autoSubscribeAudio;
             await this._syncRemoteSubscriptions("audio");
         }
 
         if (options.autoSubscribeVideo !== undefined) {
-            this._autoSubscribeVideo = options.autoSubscribeVideo;
             await this._syncRemoteSubscriptions("video");
         }
 
