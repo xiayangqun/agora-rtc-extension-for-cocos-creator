@@ -947,10 +947,8 @@ export class AgoraRTCClientProxy {
                     options.publishMediaPlayerAudioTrack !== this._publishMediaPlayerAudioTrack)
             ) {
                 this._publishMediaPlayerAudioTrack = options.publishMediaPlayerAudioTrack;
-                const mediaPlayer = this._rtcEngine.getMediaPlayerById(options.publishMediaPlayerId);
-                if (mediaPlayer) {
-                    await mediaPlayer.publishAudio(this, this._publishMediaPlayerAudioTrack);
-                }
+                this._publishMediaPlayerId = options.publishMediaPlayerId;
+                await this.publishMediaPlayerAudio(this._publishMediaPlayerId, this._publishMediaPlayerAudioTrack);
             }
         }
 
@@ -962,10 +960,8 @@ export class AgoraRTCClientProxy {
                     options.publishMediaPlayerVideoTrack !== this._publishMediaPlayerVideoTrack)
             ) {
                 this._publishMediaPlayerVideoTrack = options.publishMediaPlayerVideoTrack;
-                const mediaPlayer = this._rtcEngine.getMediaPlayerById(options.publishMediaPlayerId);
-                if (mediaPlayer) {
-                    await mediaPlayer.publishVideo(this, this._publishMediaPlayerVideoTrack);
-                }
+                this._publishMediaPlayerId = options.publishMediaPlayerId;
+                await this.publishMediaPlayerVideo(this._publishMediaPlayerId, this._publishMediaPlayerVideoTrack);
             }
         }
 
@@ -1189,5 +1185,71 @@ export class AgoraRTCClientProxy {
 
     async enableMicrophoneRecording(enabled: boolean): Promise<number> {
         return this._trackManager.enableMicrophoneRecording(enabled);
+    }
+
+    // ==================== MediaPlayer Publish ====================
+
+    async publishMediaPlayerAudio(playerId: number, publish: boolean): Promise<number> {
+        if (publish && playerId === undefined) {
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
+
+        const track = this._trackManager.getMediaPlayerAudioTrack(playerId);
+
+        if (publish) {
+            if (track) {
+                await this._client.publish(track);
+            }
+        } else {
+            if (track) {
+                await this._client.unpublish(track);
+            }
+        }
+
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    async publishMediaPlayerVideo(playerId: number, publish: boolean): Promise<number> {
+        if (publish && playerId === undefined) {
+            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
+        }
+
+        const track = this._trackManager.getMediaPlayerVideoTrack(playerId);
+
+        if (publish) {
+            if (track) {
+                await this._client.publish(track);
+            }
+        } else {
+            if (track) {
+                await this._client.unpublish(track);
+            }
+        }
+
+        return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    /**
+     * Called when a MediaPlayer audio track is replaced (e.g. via selectAudioTrack).
+     * Re-publishes the new track if this client was publishing the old one.
+     */
+    async syncMediaPlayerTrackPublish(playerId: number): Promise<void> {
+        if (this._publishMediaPlayerId !== playerId) {
+            return;
+        }
+
+        if (this._publishMediaPlayerAudioTrack) {
+            const audioTrack = this._trackManager.getMediaPlayerAudioTrack(playerId);
+            if (audioTrack) {
+                await this._client.publish(audioTrack);
+            }
+        }
+
+        if (this._publishMediaPlayerVideoTrack) {
+            const videoTrack = this._trackManager.getMediaPlayerVideoTrack(playerId);
+            if (videoTrack) {
+                await this._client.publish(videoTrack);
+            }
+        }
     }
 }

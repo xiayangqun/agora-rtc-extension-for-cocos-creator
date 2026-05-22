@@ -422,6 +422,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
         };
         this.mainClientProxy = new AgoraRTCClientProxy(config, this, this.trackManager);
         this.mainClientProxy.init();
+
+        // When a MediaPlayer audio track is replaced (e.g. selectAudioTrack),
+        // notify all client proxies so they re-publish the new track.
+        this.trackManager.onMediaPlayerAudioTrackReplaced = (playerId: number) => {
+            this.mainClientProxy?.syncMediaPlayerTrackPublish(playerId);
+            this.subClientProxies.forEach((proxy) => proxy.syncMediaPlayerTrackPublish(playerId));
+        };
+
         AgoraRTC.setAppType(10);
         return ERR_OK;
     }
@@ -1133,7 +1141,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async createMediaPlayer(): Promise<IMediaPlayer> {
         this._mediaPlayerIdCounter++;
-        const mediaPlayer = new MediaPlayerWeb(this._mediaPlayerIdCounter);
+        const mediaPlayer = new MediaPlayerWeb(this._mediaPlayerIdCounter, this.trackManager);
         this._mediaPlayers.set(this._mediaPlayerIdCounter, mediaPlayer);
         return mediaPlayer;
     }

@@ -1,4 +1,4 @@
-import AgoraRTC, { ILocalAudioTrack, ILocalVideoTrack } from "agora-rtc-sdk-ng";
+import AgoraRTC from "agora-rtc-sdk-ng";
 import { IMediaPlayer } from "../../interface/IMediaPlayer";
 import { IMediaPlayerSourceObserver } from "../../interface/IMediaPlayerSourceObserver";
 import {
@@ -11,10 +11,11 @@ import {
 import { SpatialAudioParams } from "../../types/AgoraBase";
 import { RENDER_MODE_TYPE, AUDIO_DUAL_MONO_MODE } from "../../types/AgoraMediaBase";
 import { ERROR_CODE_TYPE } from "../../types/AgoraBase";
-import { AgoraRTCClientProxy } from "./AgoraRTCClientProxy";
+import { TrackManager } from "./TrackManager";
 
 export class MediaPlayerWeb implements IMediaPlayer {
     private _id: number;
+    private _trackManager: TrackManager;
     private _eventHandler?: IMediaPlayerSourceObserver;
     private _videoElement: HTMLVideoElement;
     private _mediaStream?: MediaStream;
@@ -30,14 +31,9 @@ export class MediaPlayerWeb implements IMediaPlayer {
     private _audioTrackIndex = 0;
     private _audioTracks: MediaStreamTrack[] = [];
 
-    private _audioPublishedClient: AgoraRTCClientProxy = null;
-    private _videoPublishedClient: AgoraRTCClientProxy = null;
-
-    public audio: ILocalAudioTrack = null;
-    public video: ILocalVideoTrack = null;
-
-    constructor(id: number) {
+    constructor(id: number, trackManager: TrackManager) {
         this._id = id;
+        this._trackManager = trackManager;
         this._videoElement = document.createElement("video");
         this._videoElement.muted = true;
         this._videoElement.playsInline = true;
@@ -132,18 +128,20 @@ export class MediaPlayerWeb implements IMediaPlayer {
         const videoStreamTrack = this._mediaStream.getVideoTracks()[0];
 
         if (videoStreamTrack) {
-            this.video = AgoraRTC.createCustomVideoTrack({
-                mediaStreamTrack: videoStreamTrack,
-            });
+            this._trackManager.setMediaPlayerVideoTrack(
+                this._id,
+                AgoraRTC.createCustomVideoTrack({
+                    mediaStreamTrack: videoStreamTrack,
+                }),
+            );
         }
 
-        // 根据当前选中的 index 创建 audio track
         await this._updateAudioTrack();
     }
 
     private async _updateAudioTrack(): Promise<void> {
         if (!this._audioTracks || this._audioTracks.length === 0) {
-            this.audio = null;
+            this._trackManager.setMediaPlayerAudioTrack(this._id, null);
             return;
         }
 
@@ -151,94 +149,17 @@ export class MediaPlayerWeb implements IMediaPlayer {
         const audioStreamTrack = this._audioTracks[trackIndex];
 
         if (audioStreamTrack) {
-            this.audio = AgoraRTC.createCustomAudioTrack({
-                mediaStreamTrack: audioStreamTrack,
-            });
+            this._trackManager.setMediaPlayerAudioTrack(
+                this._id,
+                AgoraRTC.createCustomAudioTrack({
+                    mediaStreamTrack: audioStreamTrack,
+                }),
+            );
         }
-    }
-
-    /**
-     * 发布/取消发布 MediaPlayer 的音频轨道到指定 client
-     * @param client 目标 AgoraRTCClientProxy
-     * @param publish true 表示发布，false 表示取消发布
-     */
-    async publishAudio(client: AgoraRTCClientProxy, publish: boolean = true): Promise<number> {
-        if (publish && !client) {
-            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
-        }
-
-        // 如果之前发布到了其他 client，先取消发布
-        if (publish && this._audioPublishedClient && this._audioPublishedClient !== client) {
-            if (this.audio) {
-                await this._audioPublishedClient.unpublish(this.audio);
-            }
-        }
-
-        if (publish) {
-            this._audioPublishedClient = client;
-        }
-
-        if (publish && this.audio) {
-            if (!this._audioPublishedClient) {
-                await client.publish(this.audio);
-                this._audioPublishedClient = client;
-            }
-        } else if (!publish && this.audio && this._audioPublishedClient) {
-            await this._audioPublishedClient.unpublish(this.audio);
-            this._audioPublishedClient = null;
-        }
-
-        return ERROR_CODE_TYPE.ERR_OK;
-    }
-
-    /**
-     * 发布/取消发布 MediaPlayer 的视频轨道到指定 client
-     * @param client 目标 AgoraRTCClientProxy
-     * @param publish true 表示发布，false 表示取消发布
-     */
-    async publishVideo(client: AgoraRTCClientProxy, publish: boolean = true): Promise<number> {
-        if (publish && !client) {
-            return -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
-        }
-
-        // 如果之前发布到了其他 client，先取消发布
-        if (publish && this._videoPublishedClient && this._videoPublishedClient !== client) {
-            if (this.video) {
-                await this._videoPublishedClient.unpublish(this.video);
-            }
-        }
-
-        if (publish) {
-            this._videoPublishedClient = client;
-        }
-
-        if (publish && this.video) {
-            if (!this._videoPublishedClient) {
-                await client.publish(this.video);
-                this._videoPublishedClient = client;
-            }
-        } else if (!publish && this.video && this._videoPublishedClient) {
-            await this._videoPublishedClient.unpublish(this.video);
-            this._videoPublishedClient = null;
-        }
-
-        return ERROR_CODE_TYPE.ERR_OK;
     }
 
     private async _replaceAudioTrack(): Promise<void> {
-        const clientProxy = this._audioPublishedClient;
-        const isPublished = !!clientProxy;
-
-        // 如果已发布，先 unpublish
-        if (isPublished && clientProxy && this.audio) {
-            await clientProxy.unpublish(this.audio);
-        }
-
-        // 关闭旧的 track
-        this.audio?.close();
-
         // 尝试重新获取 audio tracks
-        // 先尝试从现有 MediaStream 获取
         let audioTracks = this._mediaStream.getAudioTracks();
 
         // 如果 track 数量不对，重新 capture stream
@@ -249,12 +170,18 @@ export class MediaPlayerWeb implements IMediaPlayer {
 
         this._audioTracks = audioTracks;
 
-        // 创建新的 audio track
-        await this._updateAudioTrack();
+        if (!this._audioTracks || this._audioTracks.length === 0) {
+            return;
+        }
 
-        // 如果之前在发布，重新 publish
-        if (isPublished && clientProxy && this.audio) {
-            await clientProxy.publish(this.audio);
+        const trackIndex = Math.min(this._audioTrackIndex, this._audioTracks.length - 1);
+        const audioStreamTrack = this._audioTracks[trackIndex];
+
+        if (audioStreamTrack) {
+            const newTrack = AgoraRTC.createCustomAudioTrack({
+                mediaStreamTrack: audioStreamTrack,
+            });
+            this._trackManager.replaceMediaPlayerAudioTrack(this._id, newTrack);
         }
     }
 
@@ -263,26 +190,7 @@ export class MediaPlayerWeb implements IMediaPlayer {
         this._videoElement.src = "";
         this._videoElement.load();
 
-        // 从已发布的 client 取消发布 audio
-        if (this._audioPublishedClient) {
-            if (this.audio) {
-                await this._audioPublishedClient.unpublish(this.audio);
-            }
-            this._audioPublishedClient = null;
-        }
-
-        // 从已发布的 client 取消发布 video
-        if (this._videoPublishedClient) {
-            if (this.video) {
-                await this._videoPublishedClient.unpublish(this.video);
-            }
-            this._videoPublishedClient = null;
-        }
-
-        this.audio?.close();
-        this.video?.close();
-        this.audio = null;
-        this.video = null;
+        this._trackManager.clearMediaPlayerTracks(this._id);
 
         this._mediaStream?.getTracks().forEach((track) => track.stop());
         this._mediaStream = undefined;
@@ -358,26 +266,7 @@ export class MediaPlayerWeb implements IMediaPlayer {
         this._videoElement.currentTime = 0;
         this._currentLoop = 0;
 
-        // 从已发布的 client 取消发布 audio
-        if (this._audioPublishedClient) {
-            if (this.audio) {
-                await this._audioPublishedClient.unpublish(this.audio);
-            }
-            this._audioPublishedClient = null;
-        }
-
-        // 从已发布的 client 取消发布 video
-        if (this._videoPublishedClient) {
-            if (this.video) {
-                await this._videoPublishedClient.unpublish(this.video);
-            }
-            this._videoPublishedClient = null;
-        }
-
-        this.audio?.close();
-        this.video?.close();
-        this.audio = null;
-        this.video = null;
+        this._trackManager.clearMediaPlayerTracks(this._id);
 
         this._mediaStream?.getTracks().forEach((track) => track.stop());
         this._mediaStream = undefined;
@@ -558,8 +447,9 @@ export class MediaPlayerWeb implements IMediaPlayer {
 
     async adjustPublishSignalVolume(volume: number): Promise<number> {
         this._publishSignalVolume = volume;
-        if (this.audio) {
-            this.audio.setVolume(volume);
+        const audio = this._trackManager.getMediaPlayerAudioTrack(this._id);
+        if (audio) {
+            audio.setVolume(volume);
         }
         return ERROR_CODE_TYPE.ERR_OK;
     }

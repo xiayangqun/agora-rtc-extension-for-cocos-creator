@@ -37,6 +37,14 @@ export class TrackManager {
     // Custom video track (only one)
     localCustomVideoTrack: ILocalVideoTrack = null;
 
+    // MediaPlayer tracks (keyed by mediaPlayerId)
+    private _mediaPlayerAudioTracks: Map<number, ILocalAudioTrack> = new Map();
+    private _mediaPlayerVideoTracks: Map<number, ILocalVideoTrack> = new Map();
+
+    // Callback invoked when a MediaPlayer audio track is replaced, so the engine
+    // can re-publish the new track through the appropriate client proxy.
+    onMediaPlayerAudioTrackReplaced?: (playerId: number) => void;
+
     // Mute recording signal
     private _isMuteRecordingSignal: boolean = false;
     /**
@@ -58,6 +66,8 @@ export class TrackManager {
         this.localFourthScreenAudioTrack?.close();
         this.localCustomAudioTracks.forEach((track) => track.close());
         this.localCustomVideoTrack?.close();
+        this._mediaPlayerAudioTracks.forEach((track) => track.close());
+        this._mediaPlayerVideoTracks.forEach((track) => track.close());
 
         this.localFirstCameraTrack = null;
         this.localSecondCameraTrack = null;
@@ -74,6 +84,8 @@ export class TrackManager {
         this.localFourthScreenAudioTrack = null;
         this.localCustomAudioTracks.clear();
         this.localCustomVideoTrack = null;
+        this._mediaPlayerAudioTracks.clear();
+        this._mediaPlayerVideoTracks.clear();
     }
 
     async setEncoderConfiguration(encoderConfig: WebVideoEncoderConfiguration): Promise<void> {
@@ -369,5 +381,46 @@ export class TrackManager {
         this._isMuteRecordingSignal = mute;
         await this.localMicrophoneTrack?.setEnabled(!mute);
         return ERROR_CODE_TYPE.ERR_OK;
+    }
+
+    // ==================== MediaPlayer Track Storage ====================
+    // TrackManager only stores tracks. Publish/unpublish is handled by AgoraRTCClientProxy.
+
+    setMediaPlayerAudioTrack(playerId: number, track: ILocalAudioTrack | null): void {
+        if (track) {
+            this._mediaPlayerAudioTracks.set(playerId, track);
+        } else {
+            this._mediaPlayerAudioTracks.delete(playerId);
+        }
+    }
+
+    getMediaPlayerAudioTrack(playerId: number): ILocalAudioTrack | null {
+        return this._mediaPlayerAudioTracks.get(playerId) || null;
+    }
+
+    setMediaPlayerVideoTrack(playerId: number, track: ILocalVideoTrack | null): void {
+        if (track) {
+            this._mediaPlayerVideoTracks.set(playerId, track);
+        } else {
+            this._mediaPlayerVideoTracks.delete(playerId);
+        }
+    }
+
+    getMediaPlayerVideoTrack(playerId: number): ILocalVideoTrack | null {
+        return this._mediaPlayerVideoTracks.get(playerId) || null;
+    }
+
+    replaceMediaPlayerAudioTrack(playerId: number, newTrack: ILocalAudioTrack): void {
+        const oldTrack = this._mediaPlayerAudioTracks.get(playerId);
+        oldTrack?.close();
+        this._mediaPlayerAudioTracks.set(playerId, newTrack);
+        this.onMediaPlayerAudioTrackReplaced?.(playerId);
+    }
+
+    clearMediaPlayerTracks(playerId: number): void {
+        this._mediaPlayerAudioTracks.get(playerId)?.close();
+        this._mediaPlayerVideoTracks.get(playerId)?.close();
+        this._mediaPlayerAudioTracks.delete(playerId);
+        this._mediaPlayerVideoTracks.delete(playerId);
     }
 }
