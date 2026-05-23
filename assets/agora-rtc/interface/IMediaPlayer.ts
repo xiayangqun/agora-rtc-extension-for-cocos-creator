@@ -4,8 +4,6 @@ import { RENDER_MODE_TYPE, RAW_AUDIO_FRAME_OP_MODE_TYPE, AUDIO_DUAL_MONO_MODE } 
 import { IMediaPlayerSourceObserver } from "./IMediaPlayerSourceObserver";
 
 export interface IMediaPlayer {
-    dispose(): Promise<void>;
-
     getId(): Promise<number>;
 
     initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): Promise<number>;

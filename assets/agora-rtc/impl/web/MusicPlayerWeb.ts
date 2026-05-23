@@ -9,10 +9,6 @@ import { MusicPlayMode } from "../../types/AgoraMusicContentCenter";
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
 export class MusicPlayerWeb implements IMusicPlayer {
-    async dispose(): Promise<void> {
-        console.warn("dispose not support in web");
-    }
-
     async getId(): Promise<number> {
         console.warn("getId not support in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;

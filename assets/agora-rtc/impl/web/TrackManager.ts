@@ -41,9 +41,9 @@ export class TrackManager {
     private _mediaPlayerAudioTracks: Map<number, ILocalAudioTrack> = new Map();
     private _mediaPlayerVideoTracks: Map<number, ILocalVideoTrack> = new Map();
 
-    // Callback invoked when a MediaPlayer audio track is replaced, so the engine
-    // can re-publish the new track through the appropriate client proxy.
-    onMediaPlayerAudioTrackReplaced?: (playerId: number) => void;
+    // Callback invoked when a MediaPlayer track is created or replaced, so the
+    // engine can publish tracks that were requested before open() reached canplay.
+    onMediaPlayerTrackUpdated?: (playerId: number) => void;
 
     // Mute recording signal
     private _isMuteRecordingSignal: boolean = false;
@@ -439,6 +439,7 @@ export class TrackManager {
     setMediaPlayerAudioTrack(playerId: number, track: ILocalAudioTrack | null): void {
         if (track) {
             this._mediaPlayerAudioTracks.set(playerId, track);
+            this.onMediaPlayerTrackUpdated?.(playerId);
         } else {
             this._mediaPlayerAudioTracks.delete(playerId);
         }
@@ -451,6 +452,7 @@ export class TrackManager {
     setMediaPlayerVideoTrack(playerId: number, track: ILocalVideoTrack | null): void {
         if (track) {
             this._mediaPlayerVideoTracks.set(playerId, track);
+            this.onMediaPlayerTrackUpdated?.(playerId);
         } else {
             this._mediaPlayerVideoTracks.delete(playerId);
         }
@@ -464,7 +466,7 @@ export class TrackManager {
         const oldTrack = this._mediaPlayerAudioTracks.get(playerId);
         oldTrack?.close();
         this._mediaPlayerAudioTracks.set(playerId, newTrack);
-        this.onMediaPlayerAudioTrackReplaced?.(playerId);
+        this.onMediaPlayerTrackUpdated?.(playerId);
     }
 
     clearMediaPlayerTracks(playerId: number): void {

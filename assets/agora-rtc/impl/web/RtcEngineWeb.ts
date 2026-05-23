@@ -286,7 +286,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
             case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CUSTOM:
                 return this.trackManager.localCustomVideoTrack;
             case VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER:
-                return this._mediaPlayers.get(canvas.mediaPlayerId)?.video ?? null;
+                // MediaPlayerWeb stores its captured tracks in TrackManager.
+                // Do not replace this with a player.video lookup; that field does not exist.
+                return this.trackManager.getMediaPlayerVideoTrack(canvas.mediaPlayerId);
             default:
                 return null;
         }
@@ -350,7 +352,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
             this.mainClientProxy = null;
 
             for (const player of this._mediaPlayers.values()) {
-                await player.dispose();
+                await player.destroy();
             }
             this._mediaPlayers.clear();
             this._mediaPlayerIdCounter = 0;
@@ -430,9 +432,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
         this.mainClientProxy = new AgoraRTCClientProxy(config, this, this.trackManager);
         this.mainClientProxy.init();
 
-        // When a MediaPlayer audio track is replaced (e.g. selectAudioTrack),
-        // notify all client proxies so they re-publish the new track.
-        this.trackManager.onMediaPlayerAudioTrackReplaced = (playerId: number) => {
+        // MediaPlayer tracks are created after open() reaches canplay, which can
+        // be later than updateChannelMediaOptions(). Do not remove: this fills
+        // the timing gap and publishes requested media-player tracks once ready.
+        this.trackManager.onMediaPlayerTrackUpdated = (playerId: number) => {
             this.mainClientProxy?.syncMediaPlayerTrackPublish(playerId);
             this.subClientProxies.forEach((proxy) => proxy.syncMediaPlayerTrackPublish(playerId));
         };
@@ -1160,10 +1163,25 @@ export class RtcEngineWeb implements IRtcEngineEx {
         const id = await media_player.getId();
         const player = this._mediaPlayers.get(id);
         if (player) {
-            await player.dispose();
+            await this._unpublishMediaPlayerTracks(id);
+            await player.destroy();
             this._mediaPlayers.delete(id);
         }
         return ERR_OK;
+    }
+
+    private async _unpublishMediaPlayerTracks(playerId: number): Promise<void> {
+        const proxies = [this.mainClientProxy, ...this.subClientProxies.values()].filter(
+            (proxy): proxy is AgoraRTCClientProxy => !!proxy,
+        );
+
+        for (const proxy of proxies) {
+            try {
+                await proxy.unpublishMediaPlayerTracks(playerId);
+            } catch (error) {
+                console.warn("unpublish media player tracks before destroy failed", error);
+            }
+        }
     }
 
     getMediaPlayerById(id: number): MediaPlayerWeb {

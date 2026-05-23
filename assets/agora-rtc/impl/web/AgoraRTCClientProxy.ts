@@ -655,6 +655,8 @@ export class AgoraRTCClientProxy {
     _autoSubscribeVideo: boolean = true;
     _enableAudioRecordingOrPlayout: boolean = undefined;
     _publishMediaPlayerId: number = undefined;
+    _publishMediaPlayerAudioId: number = undefined;
+    _publishMediaPlayerVideoId: number = undefined;
     _clientRoleType: CLIENT_ROLE_TYPE = undefined;
     _audienceLatencyLevel: AUDIENCE_LATENCY_LEVEL_TYPE = undefined;
     _defaultVideoStreamType: VIDEO_STREAM_TYPE = undefined;
@@ -704,16 +706,34 @@ export class AgoraRTCClientProxy {
         this._rtcEngine.clearRemoteVideoTrack(user.uid, connection);
     }
 
-    private _isLocalVideoTrack(track: ILocalTrack): track is ILocalVideoTrack {
-        return (
-            (track as any)?.trackMediaType === "video" ||
-            (track as ILocalVideoTrack)?.getMediaStreamTrack?.()?.kind === "video"
-        );
+    private _getMediaStreamTrack(track: ILocalTrack | null | undefined): MediaStreamTrack | null {
+        try {
+            return track?.getMediaStreamTrack?.() ?? null;
+        } catch {
+            return null;
+        }
     }
 
-    private _isSameTrack(left: ILocalTrack, right: ILocalTrack): boolean {
-        const leftTrackId = left.getTrackId?.() || left.getMediaStreamTrack?.()?.id;
-        const rightTrackId = right.getTrackId?.() || right.getMediaStreamTrack?.()?.id;
+    private _getTrackId(track: ILocalTrack | null | undefined): string | undefined {
+        return track?.getTrackId?.() || this._getMediaStreamTrack(track)?.id;
+    }
+
+    private _getLocalTrackMediaType(track: ILocalTrack | null | undefined): "audio" | "video" | undefined {
+        const explicitType = (track as any)?.trackMediaType;
+        if (explicitType === "audio" || explicitType === "video") {
+            return explicitType;
+        }
+        const kind = this._getMediaStreamTrack(track)?.kind;
+        return kind === "audio" || kind === "video" ? kind : undefined;
+    }
+
+    private _isLocalVideoTrack(track: ILocalTrack | null | undefined): track is ILocalVideoTrack {
+        return this._getLocalTrackMediaType(track) === "video";
+    }
+
+    private _isSameTrack(left: ILocalTrack | null | undefined, right: ILocalTrack | null | undefined): boolean {
+        const leftTrackId = this._getTrackId(left);
+        const rightTrackId = this._getTrackId(right);
         return !!leftTrackId && leftTrackId === rightTrackId;
     }
 
@@ -725,9 +745,84 @@ export class AgoraRTCClientProxy {
             return;
         }
         for (const localTrack of publishedVideoTracks) {
-            await this._client.unpublish(localTrack);
+            try {
+                await this._client.unpublish(localTrack);
+            } catch (error) {
+                console.warn("unpublish previous video track before publish failed", error);
+            }
+            this._markVideoTrackUnpublished(localTrack);
         }
         await this._client.publish(track);
+    }
+
+    private async _unpublishTrackIfPublished(track: ILocalTrack | null | undefined): Promise<void> {
+        if (!track) {
+            return;
+        }
+        const isPublished = this._client.localTracks.some((localTrack) => this._isSameTrack(localTrack, track));
+        if (!isPublished) {
+            return;
+        }
+        await this._client.unpublish(track);
+    }
+
+    private async _unpublishPublishedMediaPlayerTracks(
+        playerId: number,
+        mediaType?: "audio" | "video",
+        exceptTrack?: ILocalTrack,
+    ): Promise<void> {
+        const tracks = this._client.localTracks.filter((localTrack) => {
+            if ((localTrack as any)?.__agoraCocosMediaPlayerId !== playerId) {
+                return false;
+            }
+            if (exceptTrack && this._isSameTrack(localTrack, exceptTrack)) {
+                return false;
+            }
+            return !mediaType || this._getLocalTrackMediaType(localTrack) === mediaType;
+        });
+
+        for (const track of tracks) {
+            try {
+                await this._client.unpublish(track);
+            } catch (error) {
+                console.warn("unpublish previous media player track before publish failed", error);
+            }
+        }
+    }
+
+    private _markVideoTrackUnpublished(track: ILocalVideoTrack): void {
+        if (
+            this._trackManager.localFirstCameraTrack &&
+            this._isSameTrack(track, this._trackManager.localFirstCameraTrack)
+        ) {
+            this._publishCameraTrack = false;
+        }
+        if (
+            this._trackManager.localSecondCameraTrack &&
+            this._isSameTrack(track, this._trackManager.localSecondCameraTrack)
+        ) {
+            this._publishSecondaryCameraTrack = false;
+        }
+        if (
+            this._trackManager.localThirdCameraTrack &&
+            this._isSameTrack(track, this._trackManager.localThirdCameraTrack)
+        ) {
+            this._publishThirdCameraTrack = false;
+        }
+        if (
+            this._trackManager.localFourthCameraTrack &&
+            this._isSameTrack(track, this._trackManager.localFourthCameraTrack)
+        ) {
+            this._publishFourthCameraTrack = false;
+        }
+        const mediaPlayerVideoTrack =
+            this._publishMediaPlayerVideoId !== undefined
+                ? this._trackManager.getMediaPlayerVideoTrack(this._publishMediaPlayerVideoId)
+                : null;
+        if (mediaPlayerVideoTrack && this._isSameTrack(track, mediaPlayerVideoTrack)) {
+            this._publishMediaPlayerVideoTrack = false;
+            this._publishMediaPlayerVideoId = undefined;
+        }
     }
 
     private _isRemotePublished(user: IAgoraRTCRemoteUser, mediaType: "audio" | "video"): boolean {
@@ -1008,28 +1103,53 @@ export class AgoraRTCClientProxy {
         }
 
         if (this._rtcEngine.audioEnabled) {
+            const nextMediaPlayerAudioTrack =
+                options.publishMediaPlayerAudioTrack ?? this._publishMediaPlayerAudioTrack;
+            const nextMediaPlayerAudioId = options.publishMediaPlayerId ?? this._publishMediaPlayerAudioId;
             if (
-                (options.publishMediaPlayerId !== undefined &&
-                    options.publishMediaPlayerId !== this._publishMediaPlayerId) ||
+                (nextMediaPlayerAudioTrack &&
+                    nextMediaPlayerAudioId !== undefined &&
+                    nextMediaPlayerAudioId !== this._publishMediaPlayerAudioId) ||
                 (options.publishMediaPlayerAudioTrack !== undefined &&
                     options.publishMediaPlayerAudioTrack !== this._publishMediaPlayerAudioTrack)
             ) {
-                this._publishMediaPlayerAudioTrack = options.publishMediaPlayerAudioTrack;
-                this._publishMediaPlayerId = options.publishMediaPlayerId;
-                await this.publishMediaPlayerAudio(this._publishMediaPlayerId, this._publishMediaPlayerAudioTrack);
+                const previousMediaPlayerAudioId = this._publishMediaPlayerAudioId;
+                const isSwitchingMediaPlayerAudio =
+                    nextMediaPlayerAudioTrack &&
+                    previousMediaPlayerAudioId !== undefined &&
+                    previousMediaPlayerAudioId !== nextMediaPlayerAudioId;
+                if (isSwitchingMediaPlayerAudio) {
+                    await this.publishMediaPlayerAudio(previousMediaPlayerAudioId, false);
+                }
+                this._publishMediaPlayerAudioTrack = nextMediaPlayerAudioTrack;
+                this._publishMediaPlayerAudioId = nextMediaPlayerAudioTrack ? nextMediaPlayerAudioId : undefined;
+                this._publishMediaPlayerId = options.publishMediaPlayerId ?? this._publishMediaPlayerId;
+                await this.publishMediaPlayerAudio(
+                    nextMediaPlayerAudioTrack ? nextMediaPlayerAudioId : previousMediaPlayerAudioId,
+                    nextMediaPlayerAudioTrack,
+                );
             }
         }
 
         if (this._rtcEngine.videoEnabled) {
+            const nextMediaPlayerVideoTrack =
+                options.publishMediaPlayerVideoTrack ?? this._publishMediaPlayerVideoTrack;
+            const nextMediaPlayerVideoId = options.publishMediaPlayerId ?? this._publishMediaPlayerVideoId;
             if (
-                (options.publishMediaPlayerId !== undefined &&
-                    options.publishMediaPlayerId !== this._publishMediaPlayerId) ||
+                (nextMediaPlayerVideoTrack &&
+                    nextMediaPlayerVideoId !== undefined &&
+                    nextMediaPlayerVideoId !== this._publishMediaPlayerVideoId) ||
                 (options.publishMediaPlayerVideoTrack !== undefined &&
                     options.publishMediaPlayerVideoTrack !== this._publishMediaPlayerVideoTrack)
             ) {
-                this._publishMediaPlayerVideoTrack = options.publishMediaPlayerVideoTrack;
-                this._publishMediaPlayerId = options.publishMediaPlayerId;
-                await this.publishMediaPlayerVideo(this._publishMediaPlayerId, this._publishMediaPlayerVideoTrack);
+                const previousMediaPlayerVideoId = this._publishMediaPlayerVideoId;
+                this._publishMediaPlayerVideoTrack = nextMediaPlayerVideoTrack;
+                this._publishMediaPlayerVideoId = nextMediaPlayerVideoTrack ? nextMediaPlayerVideoId : undefined;
+                this._publishMediaPlayerId = options.publishMediaPlayerId ?? this._publishMediaPlayerId;
+                await this.publishMediaPlayerVideo(
+                    nextMediaPlayerVideoTrack ? nextMediaPlayerVideoId : previousMediaPlayerVideoId,
+                    nextMediaPlayerVideoTrack,
+                );
             }
         }
 
@@ -1264,6 +1384,7 @@ export class AgoraRTCClientProxy {
 
         if (publish) {
             if (track) {
+                await this._unpublishPublishedMediaPlayerTracks(playerId, "audio", track);
                 await this._client.publish(track);
             }
         } else {
@@ -1284,6 +1405,7 @@ export class AgoraRTCClientProxy {
 
         if (publish) {
             if (track) {
+                await this._unpublishPublishedMediaPlayerTracks(playerId, "video", track);
                 await this._publishVideoTrack(track);
             }
         } else {
@@ -1295,23 +1417,39 @@ export class AgoraRTCClientProxy {
         return ERROR_CODE_TYPE.ERR_OK;
     }
 
+    async unpublishMediaPlayerTracks(playerId: number): Promise<void> {
+        const audioTrack = this._trackManager.getMediaPlayerAudioTrack(playerId);
+        const videoTrack = this._trackManager.getMediaPlayerVideoTrack(playerId);
+
+        await this._unpublishTrackIfPublished(audioTrack);
+        await this._unpublishTrackIfPublished(videoTrack);
+
+        if (this._publishMediaPlayerAudioId === playerId) {
+            this._publishMediaPlayerAudioTrack = false;
+            this._publishMediaPlayerAudioId = undefined;
+        }
+        if (this._publishMediaPlayerVideoId === playerId) {
+            this._publishMediaPlayerVideoTrack = false;
+            this._publishMediaPlayerVideoId = undefined;
+        }
+        if (this._publishMediaPlayerAudioId === undefined && this._publishMediaPlayerVideoId === undefined) {
+            this._publishMediaPlayerId = undefined;
+        }
+    }
+
     /**
      * Called when a MediaPlayer audio track is replaced (e.g. via selectAudioTrack).
      * Re-publishes the new track if this client was publishing the old one.
      */
     async syncMediaPlayerTrackPublish(playerId: number): Promise<void> {
-        if (this._publishMediaPlayerId !== playerId) {
-            return;
-        }
-
-        if (this._publishMediaPlayerAudioTrack) {
+        if (this._publishMediaPlayerAudioTrack && this._publishMediaPlayerAudioId === playerId) {
             const audioTrack = this._trackManager.getMediaPlayerAudioTrack(playerId);
             if (audioTrack) {
                 await this._client.publish(audioTrack);
             }
         }
 
-        if (this._publishMediaPlayerVideoTrack) {
+        if (this._publishMediaPlayerVideoTrack && this._publishMediaPlayerVideoId === playerId) {
             const videoTrack = this._trackManager.getMediaPlayerVideoTrack(playerId);
             if (videoTrack) {
                 await this._publishVideoTrack(videoTrack);
