@@ -30,33 +30,31 @@ export class MusicContentCenterWeb implements IMusicContentCenter {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getMusicCharts(requestId: string): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getMusicCharts(): Promise<{ requestId: string; errorCode: number }> {
+        return { requestId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async getMusicCollectionByMusicChartId(
-        requestId: string,
         musicChartId: number,
         page: number,
         pageSize: number,
         jsonOption: string,
-    ): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    ): Promise<{ requestId: string; errorCode: number }> {
+        return { requestId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async searchMusic(
-        requestId: string,
         keyWord: string,
         page: number,
         pageSize: number,
         jsonOption: string,
-    ): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    ): Promise<{ requestId: string; errorCode: number }> {
+        return { requestId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async preload(songCode: number, jsonOption: string): Promise<number>;
-    async preload(requestId: string, songCode: number): Promise<number>;
-    async preload(param1: unknown, param2: unknown): Promise<number> {
+    async preload(songCode: number): Promise<{ requestId: string; errorCode: number }>;
+    async preload(param1: unknown, param2?: unknown): Promise<number | { requestId: string; errorCode: number }> {
         return -ERR_NOT_SUPPORTED;
     }
 
@@ -64,23 +62,28 @@ export class MusicContentCenterWeb implements IMusicContentCenter {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getCaches(cacheInfo: MusicCacheInfo[], cacheInfoSize: number): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getCaches(
+        cacheInfoSize: number,
+    ): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[]; cacheInfoSize: number }> {
+        return { errorCode: -ERR_NOT_SUPPORTED, cacheInfo: [], cacheInfoSize: 0 };
     }
 
     async isPreloaded(songCode: number): Promise<number> {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getLyric(requestId: string, songCode: number, lyricType: number): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getLyric(songCode: number, lyricType: number): Promise<{ requestId: string; errorCode: number }> {
+        return { requestId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
-    async getSongSimpleInfo(requestId: string, songCode: number): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getSongSimpleInfo(songCode: number): Promise<{ requestId: string; errorCode: number }> {
+        return { requestId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
-    async getInternalSongCode(songCode: number, jsonOption: string, internalSongCode: number): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getInternalSongCode(
+        songCode: number,
+        jsonOption: string,
+    ): Promise<{ errorCode: number; internalSongCode: number }> {
+        return { errorCode: -ERR_NOT_SUPPORTED, internalSongCode: 0 };
     }
 }

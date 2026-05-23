@@ -16,37 +16,37 @@ export interface IMusicContentCenter {
 
     destroyMusicPlayer(music_player: IMusicPlayer): Promise<number>;
 
-    getMusicCharts(requestId: string): Promise<number>;
+    getMusicCharts(): Promise<{ requestId: string; errorCode: number }>;
 
     getMusicCollectionByMusicChartId(
-        requestId: string,
         musicChartId: number,
         page: number,
         pageSize: number,
         jsonOption: string,
-    ): Promise<number>;
+    ): Promise<{ requestId: string; errorCode: number }>;
 
     searchMusic(
-        requestId: string,
         keyWord: string,
         page: number,
         pageSize: number,
         jsonOption: string,
-    ): Promise<number>;
+    ): Promise<{ requestId: string; errorCode: number }>;
 
     preload(songCode: number, jsonOption: string): Promise<number>;
 
-    preload(requestId: string, songCode: number): Promise<number>;
+    preload(songCode: number): Promise<{ requestId: string; errorCode: number }>;
 
     removeCache(songCode: number): Promise<number>;
 
-    getCaches(cacheInfo: MusicCacheInfo[], cacheInfoSize: number): Promise<number>;
+    getCaches(
+        cacheInfoSize: number,
+    ): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[]; cacheInfoSize: number }>;
 
     isPreloaded(songCode: number): Promise<number>;
 
-    getLyric(requestId: string, songCode: number, lyricType: number): Promise<number>;
+    getLyric(songCode: number, lyricType: number): Promise<{ requestId: string; errorCode: number }>;
 
-    getSongSimpleInfo(requestId: string, songCode: number): Promise<number>;
+    getSongSimpleInfo(songCode: number): Promise<{ requestId: string; errorCode: number }>;
 
-    getInternalSongCode(songCode: number, jsonOption: string, internalSongCode: number): Promise<number>;
+    getInternalSongCode(songCode: number, jsonOption: string): Promise<{ errorCode: number; internalSongCode: number }>;
 }

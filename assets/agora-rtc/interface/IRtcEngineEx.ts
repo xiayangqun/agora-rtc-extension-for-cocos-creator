@@ -180,9 +180,12 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     resumeAllChannelMediaRelayEx(connection: RtcConnection): Promise<number>;
 
-    getUserInfoByUserAccountEx(userAccount: string, userInfo: UserInfo, connection: RtcConnection): Promise<number>;
+    getUserInfoByUserAccountEx(
+        userAccount: string,
+        connection: RtcConnection,
+    ): Promise<{ errorCode: number; userInfo: UserInfo }>;
 
-    getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): Promise<number>;
+    getUserInfoByUidEx(uid: number, connection: RtcConnection): Promise<{ errorCode: number; userInfo: UserInfo }>;
 
     enableDualStreamModeEx(
         enabled: boolean,
@@ -215,7 +218,7 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     setParametersEx(connection: RtcConnection, parameters: string): Promise<number>;
 
-    getCallIdEx(callId: string, connection: RtcConnection): Promise<number>;
+    getCallIdEx(connection: RtcConnection): Promise<{ callId: string; errorCode: number }>;
 
     sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): Promise<number>;
 

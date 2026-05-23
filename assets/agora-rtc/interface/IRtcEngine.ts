@@ -131,7 +131,7 @@ export interface IRtcEngine {
 
     getErrorDescription(code: number): Promise<string>;
 
-    queryCodecCapability(): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }>;
+    queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[]; size: number }>;
 
     queryDeviceScore(): Promise<number>;
 
@@ -193,13 +193,12 @@ export interface IRtcEngine {
 
     setFaceShapeAreaOptions(options: FaceShapeAreaOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
-    getFaceShapeBeautyOptions(options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
+    getFaceShapeBeautyOptions(type: MEDIA_SOURCE_TYPE): Promise<{ errorCode: number; options: FaceShapeBeautyOptions }>;
 
     getFaceShapeAreaOptions(
         shapeArea: FACE_SHAPE_AREA,
-        options: FaceShapeAreaOptions,
         type: MEDIA_SOURCE_TYPE,
-    ): Promise<number>;
+    ): Promise<{ errorCode: number; options: FaceShapeAreaOptions }>;
 
     setFilterEffectOptions(enabled: boolean, options: FilterEffectOptions, type: MEDIA_SOURCE_TYPE): Promise<number>;
 
@@ -651,7 +650,9 @@ export interface IRtcEngine {
 
     queryScreenCaptureCapability(): Promise<number>;
 
-    queryCameraFocalLengthCapability(focalLengthInfos: FocalLengthInfo[], size: number): Promise<number>;
+    queryCameraFocalLengthCapability(
+        size: number,
+    ): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[]; size: number }>;
 
     setExternalMediaProjection(mediaProjection: unknown): Promise<number>;
 
@@ -659,7 +660,7 @@ export interface IRtcEngine {
 
     stopScreenCapture(): Promise<number>;
 
-    getCallId(callId: string): Promise<number>;
+    getCallId(): Promise<{ callId: string; errorCode: number }>;
 
     rate(callId: string, rating: number, description: string): Promise<number>;
 

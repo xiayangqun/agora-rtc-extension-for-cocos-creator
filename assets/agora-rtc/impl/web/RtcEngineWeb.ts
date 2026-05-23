@@ -452,7 +452,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return Native2Web.ERROR_CODE_TYPE(code);
     }
 
-    async queryCodecCapability(): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }> {
+    async queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[]; size: number }> {
         try {
             const webCodecs = await AgoraRTC.getSupportedCodec();
             const codecInfo: CodecCapInfo[] = webCodecs.video.map((video) => {
@@ -465,14 +465,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
                     },
                 };
             });
-            return { errorCode: ERR_OK, codecInfo };
+            return { errorCode: ERR_OK, codecInfo, size: codecInfo.length };
         } catch (e: any) {
             console.error("queryCodecCapability failed:", e.toString ? e.toString() : "");
             if (isAgoraRTCError(e)) {
                 const err = e as IAgoraRTCError;
-                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), codecInfo: [] };
+                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), codecInfo: [], size: 0 };
             } else {
-                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, codecInfo: [] };
+                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, codecInfo: [], size: 0 };
             }
         }
     }
@@ -768,18 +768,19 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getFaceShapeBeautyOptions(options: FaceShapeBeautyOptions, type: MEDIA_SOURCE_TYPE): Promise<number> {
+    async getFaceShapeBeautyOptions(
+        type: MEDIA_SOURCE_TYPE,
+    ): Promise<{ errorCode: number; options: FaceShapeBeautyOptions }> {
         console.warn("getFaceShapeBeautyOptions not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { errorCode: -ERR_NOT_SUPPORTED, options: null };
     }
 
     async getFaceShapeAreaOptions(
         shapeArea: FACE_SHAPE_AREA,
-        options: FaceShapeAreaOptions,
         type: MEDIA_SOURCE_TYPE,
-    ): Promise<number> {
+    ): Promise<{ errorCode: number; options: FaceShapeAreaOptions }> {
         console.warn("getFaceShapeAreaOptions not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { errorCode: -ERR_NOT_SUPPORTED, options: null };
     }
 
     async setFilterEffectOptions(
@@ -2110,9 +2111,11 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async queryCameraFocalLengthCapability(focalLengthInfos: FocalLengthInfo[], size: number): Promise<number> {
+    async queryCameraFocalLengthCapability(
+        size: number,
+    ): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[]; size: number }> {
         console.warn("queryCameraFocalLengthCapability not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { errorCode: -ERR_NOT_SUPPORTED, focalLengthInfos: [], size: 0 };
     }
 
     async setExternalMediaProjection(mediaProjection: unknown): Promise<number> {
@@ -2154,9 +2157,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     // ==================== Misc ====================
 
-    async getCallId(callId: string): Promise<number> {
+    async getCallId(): Promise<{ callId: string; errorCode: number }> {
         console.warn("getCallId not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { callId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async rate(callId: string, rating: number, description: string): Promise<number> {
@@ -3471,26 +3474,26 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async getUserInfoByUserAccountEx(
         userAccount: string,
-        userInfo: UserInfo,
         connection: RtcConnection,
-    ): Promise<number> {
+    ): Promise<{ errorCode: number; userInfo: UserInfo }> {
         const key = connectionKey(connection);
         const proxy = this.subClientProxies.get(key);
         if (!proxy) {
-            return ERR_NOT_READY;
+            return { errorCode: ERR_NOT_READY, userInfo: null };
         }
-        const result = await this.__getUserInfoByUserAccount(proxy, userAccount);
-        return result.errorCode;
+        return await this.__getUserInfoByUserAccount(proxy, userAccount);
     }
 
-    async getUserInfoByUidEx(uid: number, userInfo: UserInfo, connection: RtcConnection): Promise<number> {
+    async getUserInfoByUidEx(
+        uid: number,
+        connection: RtcConnection,
+    ): Promise<{ errorCode: number; userInfo: UserInfo }> {
         const key = connectionKey(connection);
         const proxy = this.subClientProxies.get(key);
         if (!proxy) {
-            return ERR_NOT_READY;
+            return { errorCode: ERR_NOT_READY, userInfo: null };
         }
-        const result = await this.__getUserInfoByUid(proxy, uid);
-        return result.errorCode;
+        return await this.__getUserInfoByUid(proxy, uid);
     }
 
     async enableDualStreamModeEx(
@@ -3546,9 +3549,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async getCallIdEx(callId: string, connection: RtcConnection): Promise<number> {
+    async getCallIdEx(connection: RtcConnection): Promise<{ callId: string; errorCode: number }> {
         console.warn("getCallIdEx not support in web");
-        return -ERR_NOT_SUPPORTED;
+        return { callId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): Promise<number> {
