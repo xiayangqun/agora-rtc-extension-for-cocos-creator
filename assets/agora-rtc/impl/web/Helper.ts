@@ -13,8 +13,7 @@ import AgoraRTC, {
     IChannelMediaRelayConfiguration,
     AREAS,
     AgoraRTCErrorCode,
-} from "agora-rtc-sdk-ng";
-import { AgoraRTCErrorCode_FAKE, AREAS_FAKE, AudienceLatencyLevelType_FAKE } from "./rtc-sdk-ext";
+} from "./AgoraRTC";
 import {
     CONNECTION_CHANGED_REASON_TYPE,
     CONNECTION_STATE_TYPE,
@@ -164,167 +163,167 @@ export class Web2Native {
     public static AgoraRTCErrorCode(code: AgoraRTCErrorCode): ERROR_CODE_TYPE {
         switch (code) {
             // 参数非法
-            case AgoraRTCErrorCode_FAKE.INVALID_PARAMS:
-            case AgoraRTCErrorCode_FAKE.MEDIA_OPTION_INVALID:
-            case AgoraRTCErrorCode_FAKE.INVALID_LOCAL_TRACK:
-            case AgoraRTCErrorCode_FAKE.INVALID_TRACK:
-            case AgoraRTCErrorCode_FAKE.SENDER_NOT_FOUND:
-            case AgoraRTCErrorCode_FAKE.INVALID_UINT_UID_FROM_STRING_UID:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_INVALID_ARGUMENT:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_INVALID_RAW_STREAM:
-            case AgoraRTCErrorCode_FAKE.INVALID_PLUGIN:
+            case AgoraRTCErrorCode.INVALID_PARAMS:
+            case AgoraRTCErrorCode.MEDIA_OPTION_INVALID:
+            case AgoraRTCErrorCode.INVALID_LOCAL_TRACK:
+            case AgoraRTCErrorCode.INVALID_TRACK:
+            case AgoraRTCErrorCode.SENDER_NOT_FOUND:
+            case AgoraRTCErrorCode.INVALID_UINT_UID_FROM_STRING_UID:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INVALID_ARGUMENT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INVALID_RAW_STREAM:
+            case AgoraRTCErrorCode.INVALID_PLUGIN:
                 return ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT;
 
             // 状态非法/未就绪
-            case AgoraRTCErrorCode_FAKE.INVALID_OPERATION:
-            case AgoraRTCErrorCode_FAKE.TRACK_IS_DISABLED:
-            case AgoraRTCErrorCode_FAKE.TRACK_STATE_UNREACHABLE:
-            case AgoraRTCErrorCode_FAKE.EXIST_DISABLED_VIDEO_TRACK:
+            case AgoraRTCErrorCode.INVALID_OPERATION:
+            case AgoraRTCErrorCode.TRACK_IS_DISABLED:
+            case AgoraRTCErrorCode.TRACK_STATE_UNREACHABLE:
+            case AgoraRTCErrorCode.EXIST_DISABLED_VIDEO_TRACK:
                 return ERROR_CODE_TYPE.ERR_INVALID_STATE;
 
             // 不支持
-            case AgoraRTCErrorCode_FAKE.NOT_SUPPORTED:
-            case AgoraRTCErrorCode_FAKE.CONSTRAINT_NOT_SATISFIED:
-            case AgoraRTCErrorCode_FAKE.ELECTRON_IS_NULL:
-            case AgoraRTCErrorCode_FAKE.ELECTRON_DESKTOP_CAPTURER_GET_SOURCES_ERROR:
-            case AgoraRTCErrorCode_FAKE.CHROME_PLUGIN_NO_RESPONSE:
-            case AgoraRTCErrorCode_FAKE.CHROME_PLUGIN_NOT_INSTALL:
-            case AgoraRTCErrorCode_FAKE.GET_LOCAL_CAPABILITIES_FAILED:
-            case AgoraRTCErrorCode_FAKE.CAN_NOT_PUBLISH_MULTIPLE_VIDEO_TRACKS:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_TRANSCODING_NOT_SUPPORTED:
+            case AgoraRTCErrorCode.NOT_SUPPORTED:
+            case AgoraRTCErrorCode.CONSTRAINT_NOT_SATISFIED:
+            case AgoraRTCErrorCode.ELECTRON_IS_NULL:
+            case AgoraRTCErrorCode.ELECTRON_DESKTOP_CAPTURER_GET_SOURCES_ERROR:
+            case AgoraRTCErrorCode.CHROME_PLUGIN_NO_RESPONSE:
+            case AgoraRTCErrorCode.CHROME_PLUGIN_NOT_INSTALL:
+            case AgoraRTCErrorCode.GET_LOCAL_CAPABILITIES_FAILED:
+            case AgoraRTCErrorCode.CAN_NOT_PUBLISH_MULTIPLE_VIDEO_TRACKS:
+            case AgoraRTCErrorCode.LIVE_STREAMING_TRANSCODING_NOT_SUPPORTED:
                 return ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 
             // 权限不足
-            case AgoraRTCErrorCode_FAKE.PERMISSION_DENIED:
-            case AgoraRTCErrorCode_FAKE.SHARE_AUDIO_NOT_ALLOWED:
+            case AgoraRTCErrorCode.PERMISSION_DENIED:
+            case AgoraRTCErrorCode.SHARE_AUDIO_NOT_ALLOWED:
                 return ERROR_CODE_TYPE.ERR_NO_PERMISSION;
 
             // 超时
-            case AgoraRTCErrorCode_FAKE.TIMEOUT:
-            case AgoraRTCErrorCode_FAKE.NETWORK_TIMEOUT:
-            case AgoraRTCErrorCode_FAKE.API_INVOKE_TIMEOUT:
-            case AgoraRTCErrorCode_FAKE.INIT_DATACHANNEL_TIMEOUT:
-            case AgoraRTCErrorCode_FAKE.DATACHANNEL_CONNECTION_TIMEOUT:
+            case AgoraRTCErrorCode.TIMEOUT:
+            case AgoraRTCErrorCode.NETWORK_TIMEOUT:
+            case AgoraRTCErrorCode.API_INVOKE_TIMEOUT:
+            case AgoraRTCErrorCode.INIT_DATACHANNEL_TIMEOUT:
+            case AgoraRTCErrorCode.DATACHANNEL_CONNECTION_TIMEOUT:
                 return ERROR_CODE_TYPE.ERR_TIMEDOUT;
 
             // 操作被取消/中止
-            case AgoraRTCErrorCode_FAKE.OPERATION_ABORTED:
+            case AgoraRTCErrorCode.OPERATION_ABORTED:
                 return ERROR_CODE_TYPE.ERR_ABORTED;
 
             // 网络错误
-            case AgoraRTCErrorCode_FAKE.NETWORK_ERROR:
-            case AgoraRTCErrorCode_FAKE.NETWORK_RESPONSE_ERROR:
-            case AgoraRTCErrorCode_FAKE.WS_ERR:
+            case AgoraRTCErrorCode.NETWORK_ERROR:
+            case AgoraRTCErrorCode.NETWORK_RESPONSE_ERROR:
+            case AgoraRTCErrorCode.WS_ERR:
                 return ERROR_CODE_TYPE.ERR_NET_DOWN;
 
             // 连接断开/中断 (P2P/WebSocket层)
-            case AgoraRTCErrorCode_FAKE.PC_CLOSED:
-            case AgoraRTCErrorCode_FAKE.GATEWAY_P2P_LOST:
-            case AgoraRTCErrorCode_FAKE.WS_ABORT:
-            case AgoraRTCErrorCode_FAKE.WS_DISCONNECT:
-            case AgoraRTCErrorCode_FAKE.EXTERNAL_SIGNAL_ABORT:
-            case AgoraRTCErrorCode_FAKE.DISCONNECT_P2P:
-            case AgoraRTCErrorCode_FAKE.CROSS_CHANNEL_FAILED_PACKET_SENT_TO_DEST:
-            case AgoraRTCErrorCode_FAKE.P2P_MESSAGE_FAILED:
+            case AgoraRTCErrorCode.PC_CLOSED:
+            case AgoraRTCErrorCode.GATEWAY_P2P_LOST:
+            case AgoraRTCErrorCode.WS_ABORT:
+            case AgoraRTCErrorCode.WS_DISCONNECT:
+            case AgoraRTCErrorCode.EXTERNAL_SIGNAL_ABORT:
+            case AgoraRTCErrorCode.DISCONNECT_P2P:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_PACKET_SENT_TO_DEST:
+            case AgoraRTCErrorCode.P2P_MESSAGE_FAILED:
                 return ERROR_CODE_TYPE.ERR_CONNECTION_LOST;
 
             // P2P 信令交互失败
-            case AgoraRTCErrorCode_FAKE.EXCHANGE_SDP_FAILED:
-            case AgoraRTCErrorCode_FAKE.ADD_CANDIDATE_FAILED:
-            case AgoraRTCErrorCode_FAKE.CREATE_OFFER_FAILED:
-            case AgoraRTCErrorCode_FAKE.SET_ANSWER_FAILED:
-            case AgoraRTCErrorCode_FAKE.ICE_FAILED:
-            case AgoraRTCErrorCode_FAKE.NO_ICE_CANDIDATE:
+            case AgoraRTCErrorCode.EXCHANGE_SDP_FAILED:
+            case AgoraRTCErrorCode.ADD_CANDIDATE_FAILED:
+            case AgoraRTCErrorCode.CREATE_OFFER_FAILED:
+            case AgoraRTCErrorCode.SET_ANSWER_FAILED:
+            case AgoraRTCErrorCode.ICE_FAILED:
+            case AgoraRTCErrorCode.NO_ICE_CANDIDATE:
                 return ERROR_CODE_TYPE.ERR_CONNECTION_INTERRUPTED;
 
             // 拒绝/安全策略
-            case AgoraRTCErrorCode_FAKE.WEB_SECURITY_RESTRICT:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_PUBLISH_STREAM_NOT_AUTHORIZED:
+            case AgoraRTCErrorCode.WEB_SECURITY_RESTRICT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_PUBLISH_STREAM_NOT_AUTHORIZED:
                 return ERROR_CODE_TYPE.ERR_REFUSED;
 
             // DataChannel / 数据流
-            case AgoraRTCErrorCode_FAKE.DATACHANNEL_FAILED:
-            case AgoraRTCErrorCode_FAKE.CREATE_DATACHANNEL_ERROR:
+            case AgoraRTCErrorCode.DATACHANNEL_FAILED:
+            case AgoraRTCErrorCode.CREATE_DATACHANNEL_ERROR:
                 return ERROR_CODE_TYPE.ERR_DATASTREAM_DECRYPTION_FAILED;
 
             // 资源受限/设备不可用
-            case AgoraRTCErrorCode_FAKE.NOT_READABLE:
-            case AgoraRTCErrorCode_FAKE.ENUMERATE_DEVICES_FAILED:
-            case AgoraRTCErrorCode_FAKE.DEVICE_NOT_FOUND:
-            case AgoraRTCErrorCode_FAKE.LOCAL_AEC_ERROR:
+            case AgoraRTCErrorCode.NOT_READABLE:
+            case AgoraRTCErrorCode.ENUMERATE_DEVICES_FAILED:
+            case AgoraRTCErrorCode.DEVICE_NOT_FOUND:
+            case AgoraRTCErrorCode.LOCAL_AEC_ERROR:
                 return ERROR_CODE_TYPE.ERR_RESOURCE_LIMITED;
 
             // 服务器资源不足 / 网关不可用
-            case AgoraRTCErrorCode_FAKE.CAN_NOT_GET_PROXY_SERVER:
-            case AgoraRTCErrorCode_FAKE.CAN_NOT_GET_GATEWAY_SERVER:
-            case AgoraRTCErrorCode_FAKE.VOID_GATEWAY_ADDRESS:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_INTERNAL_SERVER_ERROR:
-            case AgoraRTCErrorCode_FAKE.CROSS_CHANNEL_SERVER_ERROR_RESPONSE:
+            case AgoraRTCErrorCode.CAN_NOT_GET_PROXY_SERVER:
+            case AgoraRTCErrorCode.CAN_NOT_GET_GATEWAY_SERVER:
+            case AgoraRTCErrorCode.VOID_GATEWAY_ADDRESS:
+            case AgoraRTCErrorCode.LIVE_STREAMING_INTERNAL_SERVER_ERROR:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_SERVER_ERROR_RESPONSE:
                 return ERROR_CODE_TYPE.ERR_NO_SERVER_RESOURCES;
 
             // Token 过期
-            case AgoraRTCErrorCode_FAKE.TOKEN_EXPIRE:
+            case AgoraRTCErrorCode.TOKEN_EXPIRE:
                 return ERROR_CODE_TYPE.ERR_TOKEN_EXPIRED;
 
             // UID 冲突
-            case AgoraRTCErrorCode_FAKE.UID_CONFLICT:
+            case AgoraRTCErrorCode.UID_CONFLICT:
                 return ERROR_CODE_TYPE.ERR_LOGIN_ALREADY_LOGIN;
 
             // 远端用户不存在/未就绪
-            case AgoraRTCErrorCode_FAKE.INVALID_REMOTE_USER:
+            case AgoraRTCErrorCode.INVALID_REMOTE_USER:
                 return ERROR_CODE_TYPE.ERR_INVALID_USER_ID;
-            case AgoraRTCErrorCode_FAKE.REMOTE_USER_IS_NOT_PUBLISHED:
+            case AgoraRTCErrorCode.REMOTE_USER_IS_NOT_PUBLISHED:
                 return ERROR_CODE_TYPE.ERR_RDT_USER_NOT_READY;
 
             // 已被占用
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_TASK_CONFLICT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_TASK_CONFLICT:
                 return ERROR_CODE_TYPE.ERR_ALREADY_IN_USE;
 
             // 频率/数量超限
-            case AgoraRTCErrorCode_FAKE.CUSTOM_REPORT_FREQUENCY_TOO_HIGH:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_WARN_FREQUENT_REQUEST:
+            case AgoraRTCErrorCode.CUSTOM_REPORT_FREQUENCY_TOO_HIGH:
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_FREQUENT_REQUEST:
                 return ERROR_CODE_TYPE.ERR_TOO_OFTEN;
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_WARN_STREAM_NUM_REACH_LIMIT:
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_STREAM_NUM_REACH_LIMIT:
                 return ERROR_CODE_TYPE.ERR_TOO_MANY_DATA_STREAMS;
 
             // 数据过大
-            case AgoraRTCErrorCode_FAKE.METADATA_OUT_OF_RANGE:
+            case AgoraRTCErrorCode.METADATA_OUT_OF_RANGE:
                 return ERROR_CODE_TYPE.ERR_SIZE_TOO_LARGE;
 
             // 禁止的操作
-            case AgoraRTCErrorCode_FAKE.PROHIBITED_OPERATION:
+            case AgoraRTCErrorCode.PROHIBITED_OPERATION:
                 return ERROR_CODE_TYPE.ERR_FUNC_IS_PROHIBITED;
 
             // 跨频道加入失败
-            case AgoraRTCErrorCode_FAKE.CROSS_CHANNEL_FAILED_JOIN_SRC:
-            case AgoraRTCErrorCode_FAKE.CROSS_CHANNEL_FAILED_JOIN_DEST:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_JOIN_SRC:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_FAILED_JOIN_DEST:
                 return ERROR_CODE_TYPE.ERR_JOIN_CHANNEL_REJECTED;
 
             // 其余全部兜底到 ERR_FAILED
-            case AgoraRTCErrorCode_FAKE.UNEXPECTED_ERROR:
-            case AgoraRTCErrorCode_FAKE.UNEXPECTED_RESPONSE:
-            case AgoraRTCErrorCode_FAKE.PB_ERROR:
-            case AgoraRTCErrorCode_FAKE.GET_VIDEO_ELEMENT_VISIBLE_ERROR:
-            case AgoraRTCErrorCode_FAKE.LOW_STREAM_ENCODING_ERROR:
-            case AgoraRTCErrorCode_FAKE.SET_ENCODING_PARAMETER_ERROR:
-            case AgoraRTCErrorCode_FAKE.MULTI_UNILBS_RESPONSE_ERROR:
-            case AgoraRTCErrorCode_FAKE.UPDATE_TICKET_FAILED:
-            case AgoraRTCErrorCode_FAKE.SENDER_REPLACE_FAILED:
-            case AgoraRTCErrorCode_FAKE.GET_LOCAL_CONNECTION_PARAMS_FAILED:
-            case AgoraRTCErrorCode_FAKE.SUBSCRIBE_FAILED:
-            case AgoraRTCErrorCode_FAKE.UNSUBSCRIBE_FAILED:
-            case AgoraRTCErrorCode_FAKE.CUSTOM_REPORT_SEND_FAILED:
-            case AgoraRTCErrorCode_FAKE.FETCH_AUDIO_FILE_FAILED:
-            case AgoraRTCErrorCode_FAKE.READ_LOCAL_AUDIO_FILE_ERROR:
-            case AgoraRTCErrorCode_FAKE.DECODE_AUDIO_FILE_FAILED:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_CDN_ERROR:
-            case AgoraRTCErrorCode_FAKE.LIVE_STREAMING_WARN_FAILED_LOAD_IMAGE:
-            case AgoraRTCErrorCode_FAKE.WEBGL_INTERNAL_ERROR:
-            case AgoraRTCErrorCode_FAKE.BEAUTY_PROCESSOR_INTERNAL_ERROR:
-            case AgoraRTCErrorCode_FAKE.CROSS_CHANNEL_WAIT_STATUS_ERROR:
-            case AgoraRTCErrorCode_FAKE.CONVERTING_IMAGEDATA_TO_BLOB_FAILED:
-            case AgoraRTCErrorCode_FAKE.CONVERTING_VIDEO_FRAME_TO_BLOB_FAILED:
-            case AgoraRTCErrorCode_FAKE.IMAGE_MODERATION_UPLOAD_FAILED:
+            case AgoraRTCErrorCode.UNEXPECTED_ERROR:
+            case AgoraRTCErrorCode.UNEXPECTED_RESPONSE:
+            case AgoraRTCErrorCode.PB_ERROR:
+            case AgoraRTCErrorCode.GET_VIDEO_ELEMENT_VISIBLE_ERROR:
+            case AgoraRTCErrorCode.LOW_STREAM_ENCODING_ERROR:
+            case AgoraRTCErrorCode.SET_ENCODING_PARAMETER_ERROR:
+            case AgoraRTCErrorCode.MULTI_UNILBS_RESPONSE_ERROR:
+            case AgoraRTCErrorCode.UPDATE_TICKET_FAILED:
+            case AgoraRTCErrorCode.SENDER_REPLACE_FAILED:
+            case AgoraRTCErrorCode.GET_LOCAL_CONNECTION_PARAMS_FAILED:
+            case AgoraRTCErrorCode.SUBSCRIBE_FAILED:
+            case AgoraRTCErrorCode.UNSUBSCRIBE_FAILED:
+            case AgoraRTCErrorCode.CUSTOM_REPORT_SEND_FAILED:
+            case AgoraRTCErrorCode.FETCH_AUDIO_FILE_FAILED:
+            case AgoraRTCErrorCode.READ_LOCAL_AUDIO_FILE_ERROR:
+            case AgoraRTCErrorCode.DECODE_AUDIO_FILE_FAILED:
+            case AgoraRTCErrorCode.LIVE_STREAMING_CDN_ERROR:
+            case AgoraRTCErrorCode.LIVE_STREAMING_WARN_FAILED_LOAD_IMAGE:
+            case AgoraRTCErrorCode.WEBGL_INTERNAL_ERROR:
+            case AgoraRTCErrorCode.BEAUTY_PROCESSOR_INTERNAL_ERROR:
+            case AgoraRTCErrorCode.CROSS_CHANNEL_WAIT_STATUS_ERROR:
+            case AgoraRTCErrorCode.CONVERTING_IMAGEDATA_TO_BLOB_FAILED:
+            case AgoraRTCErrorCode.CONVERTING_VIDEO_FRAME_TO_BLOB_FAILED:
+            case AgoraRTCErrorCode.IMAGE_MODERATION_UPLOAD_FAILED:
             default:
                 return ERROR_CODE_TYPE.ERR_FAILED;
         }
@@ -394,52 +393,52 @@ export class Native2Web {
     }
 
     public static AreaCode(areaCode: AREA_CODE | AREA_CODE_EX): AREAS {
-        let webArea = AREAS_FAKE.GLOBAL;
+        let webArea = AREAS.GLOBAL;
         switch (areaCode) {
             case AREA_CODE.AREA_CODE_CN:
-                webArea = AREAS_FAKE.CHINA;
+                webArea = AREAS.CHINA;
                 break;
             case AREA_CODE.AREA_CODE_NA:
-                webArea = AREAS_FAKE.NORTH_AMERICA;
+                webArea = AREAS.NORTH_AMERICA;
                 break;
             case AREA_CODE.AREA_CODE_EU:
-                webArea = AREAS_FAKE.EUROPE;
+                webArea = AREAS.EUROPE;
                 break;
             case AREA_CODE.AREA_CODE_AS:
-                webArea = AREAS_FAKE.ASIA;
+                webArea = AREAS.ASIA;
                 break;
             case AREA_CODE.AREA_CODE_JP:
-                webArea = AREAS_FAKE.JAPAN;
+                webArea = AREAS.JAPAN;
                 break;
             case AREA_CODE.AREA_CODE_IN:
-                webArea = AREAS_FAKE.INDIA;
+                webArea = AREAS.INDIA;
                 break;
             case AREA_CODE_EX.AREA_CODE_OC:
-                webArea = AREAS_FAKE.OCEANIA;
+                webArea = AREAS.OCEANIA;
                 break;
             case AREA_CODE_EX.AREA_CODE_SA:
-                webArea = AREAS_FAKE.SOUTH_AMERICA;
+                webArea = AREAS.SOUTH_AMERICA;
                 break;
             case AREA_CODE_EX.AREA_CODE_AF:
-                webArea = AREAS_FAKE.AFRICA;
+                webArea = AREAS.AFRICA;
                 break;
             case AREA_CODE_EX.AREA_CODE_KR:
-                webArea = AREAS_FAKE.KOREA;
+                webArea = AREAS.KOREA;
                 break;
             case AREA_CODE_EX.AREA_CODE_HKMC:
-                webArea = AREAS_FAKE.HKMC;
+                webArea = AREAS.HKMC;
                 break;
             case AREA_CODE_EX.AREA_CODE_US:
-                webArea = AREAS_FAKE.US;
+                webArea = AREAS.US;
                 break;
             case AREA_CODE_EX.AREA_CODE_OVS:
-                webArea = AREAS_FAKE.OVERSEA;
+                webArea = AREAS.OVERSEA;
                 break;
             case AREA_CODE.AREA_CODE_GLOB:
-                webArea = AREAS_FAKE.GLOBAL;
+                webArea = AREAS.GLOBAL;
                 break;
             default:
-                webArea = AREAS_FAKE.GLOBAL;
+                webArea = AREAS.GLOBAL;
                 break;
         }
         return webArea as unknown as AREAS;
@@ -492,47 +491,47 @@ export class Native2Web {
             case ERROR_CODE_TYPE.ERR_INVALID_TOKEN:
             case ERROR_CODE_TYPE.ERR_INVALID_USER_ID:
             case ERROR_CODE_TYPE.ERR_INVALID_USER_ACCOUNT:
-                return AgoraRTCErrorCode_FAKE.INVALID_PARAMS;
+                return AgoraRTCErrorCode.INVALID_PARAMS;
             case ERROR_CODE_TYPE.ERR_NOT_READY:
             case ERROR_CODE_TYPE.ERR_NOT_INITIALIZED:
             case ERROR_CODE_TYPE.ERR_INVALID_STATE:
             case ERROR_CODE_TYPE.ERR_NOT_IN_CHANNEL:
-                return AgoraRTCErrorCode_FAKE.INVALID_OPERATION;
+                return AgoraRTCErrorCode.INVALID_OPERATION;
             case ERROR_CODE_TYPE.ERR_NOT_SUPPORTED:
-                return AgoraRTCErrorCode_FAKE.NOT_SUPPORTED;
+                return AgoraRTCErrorCode.NOT_SUPPORTED;
             case ERROR_CODE_TYPE.ERR_NO_PERMISSION:
             case ERROR_CODE_TYPE.ERR_SET_CLIENT_ROLE_NOT_AUTHORIZED:
             case ERROR_CODE_TYPE.ERR_ENCRYPTED_STREAM_NOT_ALLOWED_PUBLISH:
             case ERROR_CODE_TYPE.ERR_VDM_CAMERA_NOT_AUTHORIZED:
-                return AgoraRTCErrorCode_FAKE.PERMISSION_DENIED;
+                return AgoraRTCErrorCode.PERMISSION_DENIED;
             case ERROR_CODE_TYPE.ERR_TIMEDOUT:
             case ERROR_CODE_TYPE.ERR_STREAM_MESSAGE_TIMEOUT:
-                return AgoraRTCErrorCode_FAKE.TIMEOUT;
+                return AgoraRTCErrorCode.TIMEOUT;
             case ERROR_CODE_TYPE.ERR_CANCELED:
             case ERROR_CODE_TYPE.ERR_ABORTED:
-                return AgoraRTCErrorCode_FAKE.OPERATION_ABORTED;
+                return AgoraRTCErrorCode.OPERATION_ABORTED;
             case ERROR_CODE_TYPE.ERR_BIND_SOCKET:
             case ERROR_CODE_TYPE.ERR_NET_DOWN:
             case ERROR_CODE_TYPE.ERR_INIT_NET_ENGINE:
             case ERROR_CODE_TYPE.ERR_CONNECTION_INTERRUPTED:
             case ERROR_CODE_TYPE.ERR_CONNECTION_LOST:
-                return AgoraRTCErrorCode_FAKE.NETWORK_ERROR;
+                return AgoraRTCErrorCode.NETWORK_ERROR;
             case ERROR_CODE_TYPE.ERR_FUNC_IS_PROHIBITED:
-                return AgoraRTCErrorCode_FAKE.PROHIBITED_OPERATION;
+                return AgoraRTCErrorCode.PROHIBITED_OPERATION;
             case ERROR_CODE_TYPE.ERR_NO_SERVER_RESOURCES:
-                return AgoraRTCErrorCode_FAKE.CAN_NOT_GET_GATEWAY_SERVER;
+                return AgoraRTCErrorCode.CAN_NOT_GET_GATEWAY_SERVER;
             case ERROR_CODE_TYPE.ERR_TOKEN_EXPIRED:
-                return AgoraRTCErrorCode_FAKE.TOKEN_EXPIRE;
+                return AgoraRTCErrorCode.TOKEN_EXPIRE;
             case ERROR_CODE_TYPE.ERR_RDT_USER_NOT_EXIST:
-                return AgoraRTCErrorCode_FAKE.INVALID_REMOTE_USER;
+                return AgoraRTCErrorCode.INVALID_REMOTE_USER;
             case ERROR_CODE_TYPE.ERR_RDT_USER_NOT_READY:
-                return AgoraRTCErrorCode_FAKE.REMOTE_USER_IS_NOT_PUBLISHED;
+                return AgoraRTCErrorCode.REMOTE_USER_IS_NOT_PUBLISHED;
             case ERROR_CODE_TYPE.ERR_RDT_DATA_BLOCKED:
-                return AgoraRTCErrorCode_FAKE.DATACHANNEL_FAILED;
+                return AgoraRTCErrorCode.DATACHANNEL_FAILED;
             case ERROR_CODE_TYPE.ERR_LOGIN_ALREADY_LOGIN:
-                return AgoraRTCErrorCode_FAKE.UID_CONFLICT;
+                return AgoraRTCErrorCode.UID_CONFLICT;
             default:
-                return AgoraRTCErrorCode_FAKE.UNEXPECTED_ERROR;
+                return AgoraRTCErrorCode.UNEXPECTED_ERROR;
         }
     }
 
@@ -553,16 +552,16 @@ export class Native2Web {
     }
 
     public static AudienceLatencyLevelType(type: AUDIENCE_LATENCY_LEVEL_TYPE): AudienceLatencyLevelType {
-        let level = AudienceLatencyLevelType_FAKE.AUDIENCE_LEVEL_LOW_LATENCY;
+        let level = AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
         switch (type) {
             case AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_LOW_LATENCY:
-                level = AudienceLatencyLevelType_FAKE.AUDIENCE_LEVEL_LOW_LATENCY;
+                level = AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
                 break;
             case AUDIENCE_LATENCY_LEVEL_TYPE.AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY:
-                level = AudienceLatencyLevelType_FAKE.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY;
+                level = AudienceLatencyLevelType.AUDIENCE_LEVEL_ULTRA_LOW_LATENCY;
                 break;
             default:
-                level = AudienceLatencyLevelType_FAKE.AUDIENCE_LEVEL_LOW_LATENCY;
+                level = AudienceLatencyLevelType.AUDIENCE_LEVEL_LOW_LATENCY;
                 break;
         }
         return level as unknown as AudienceLatencyLevelType;

@@ -16,6 +16,9 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:prettier/recommended"
     ],
+    "ignorePatterns": [
+        "assets/agora-rtc/impl/web/lib/AgoraRTC.d.ts"
+    ],
     "rules": {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/no-empty-function": "off",

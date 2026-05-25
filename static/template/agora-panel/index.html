@@ -2,37 +2,60 @@
     <div class="container">
         <header class="header">
             <h1 class="title">Agora RTC Plugin</h1>
-            <p class="subtitle">Web 实时音视频插件管理面板</p>
+            <p class="subtitle">实时音视频插件管理面板</p>
         </header>
 
         <section class="section">
-            <h2 class="section-title">SDK 依赖检查</h2>
-            <div class="dependency-card">
-                <div class="dependency-info">
-                    <span class="dependency-name">agora-rtc-sdk-ng</span>
-                    <span class="dependency-version">{{ displayVersion }}</span>
-                </div>
-                <div class="dependency-status">
-                    <span class="status-icon">{{ statusIcon }}</span>
-                    <span :class="['status-text', statusClass]">{{ statusText }}</span>
-                </div>
-                <div class="dependency-action">
-                    <div class="install-btn" v-show="showInstallBtn" @click="handleInstall" :class="{ disabled: installing }">
-                        {{ installBtnText }}
+            <h2 class="section-title">平台 SDK 管理</h2>
+            <div class="platform-card">
+                <div v-for="p in platforms" :key="p.name" class="platform-row">
+                    <span class="platform-name">{{ p.label }}</span>
+                    <span class="status-icon">{{ p.statusIcon }}</span>
+                    <span :class="['status-text', p.statusClass]">{{ p.statusText }}</span>
+                    <div
+                        class="install-btn platform-download-btn"
+                        @click="handleDownload(p.name)"
+                        :class="{ disabled: p.downloading }"
+                    >
+                        {{ p.btnText }}
                     </div>
                 </div>
             </div>
-            <div class="hint">{{ hintText }}</div>
+            <div class="platform-delete-area">
+                <div
+                    class="install-btn delete-btn"
+                    @click="handleDeleteAllSdks"
+                    :class="{ disabled: deletingAll }"
+                >
+                    {{ deletingAll ? '删除中...' : '删除所有原生平台 SDK' }}
+                </div>
+            </div>
         </section>
 
         <section class="section">
-            <h2 class="section-title">使用说明</h2>
-            <div class="usage">
-                <p>1. 确保依赖安装完成</p>
-                <p>2. 在代码中引入模块：</p>
-                <pre class="code-block">import { createRtcEngine } from "agora-rtc-extension-for-cocos-creator/agora-rtc";</pre>
-                <p>3. 调用 API 进行音视频通信</p>
+            <h2 class="section-title">Native Binding 生成</h2>
+            <div class="native-card">
+                <label class="field-label" for="engine-root">Cocos engine 根目录</label>
+                <div class="native-row">
+                    <input
+                        id="engine-root"
+                        class="path-input"
+                        v-model="engineRoot"
+                        placeholder="/absolute/path/to/cocos-engine"
+                        :disabled="generatingNativeBindings"
+                    />
+                    <div
+                        class="install-btn native-generate-btn"
+                        @click="handleGenerateNativeBindings"
+                        :class="{ disabled: generatingNativeBindings }"
+                    >
+                        {{ generateBtnText }}
+                    </div>
+                </div>
             </div>
+            <div :class="['hint', generateStatusClass]">{{ generateHintText }}</div>
         </section>
+
+
     </div>
 </div>

@@ -1,0 +1,14 @@
+{
+    "name": "agora-rtc-extension-for-cocos-creator",
+    "version": "1.0.0",
+    "author": "Agora",
+    "description": "Agora RTC native binding for Cocos Creator",
+    "engine-version": ">=3.8.0",
+    "modules": [
+        {
+            "target": "AgoraRtcExtension",
+            "depends": []
+        }
+    ],
+    "platforms": ["mac"]
+}

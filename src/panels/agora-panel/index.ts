@@ -26,81 +26,152 @@ export = Editor.Panel.define({
 
         const app = createApp({
             data() {
+                const platformDefs = [
+                    { name: "mac", label: "macOS" },
+                    { name: "ios", label: "iOS" },
+                    { name: "android", label: "Android" },
+                    { name: "windows", label: "Windows" },
+                ];
                 return {
-                    statusIcon: "⏳",
-                    statusText: "正在检查...",
-                    statusClass: "",
-                    displayVersion: "--",
-                    showInstallBtn: true,
-                    installing: false,
-                    installBtnText: "安装依赖",
-                    hintText: "提示：安装完成后，请确保在项目的 package.json 中可以看到 agora-rtc-sdk-ng 依赖。",
+                    engineRoot: "",
+                    generatingNativeBindings: false,
+                    generateBtnText: "生成 Native Binding",
+                    generateHintText:
+                        "从当前项目 temp/declarations/cc.d.ts 自动读取 Cocos engine 根目录；也可以手动修改后生成。",
+                    generateStatusClass: "",
+                    platforms: platformDefs.map((p) => ({
+                        ...p,
+                        statusIcon: "⏳",
+                        statusText: "检测中...",
+                        statusClass: "",
+                        downloading: false,
+                        btnText: "下载 SDK",
+                    })),
+                    deletingAll: false,
                 };
             },
             async mounted() {
-                await (this as any).checkDependency();
+                await (this as any).loadCocosEngineRoot();
+                await (this as any).checkSdkStatus();
             },
             methods: {
-                async checkDependency() {
+                async loadCocosEngineRoot() {
                     try {
-                        const result = await Editor.Message.request(packageName, "check-dependency");
-                        if (result.hasDependency) {
-                            this.showInstallBtn = false;
-                            this.statusIcon = "✅";
-                            this.statusText = "依赖正常";
-                            this.statusClass = "ok";
-                            this.displayVersion = `v${result.version}`;
-                            this.hintText = "依赖已安装，可以直接在项目中使用 Agora RTC API。";
-                        } else {
-                            this.showInstallBtn = true;
-                            this.statusIcon = "❌";
-                            this.statusText = "未安装";
-                            this.statusClass = "missing";
-                            this.displayVersion = `需要 v${result.requiredVersion}`;
-                            this.installBtnText = "安装依赖";
-                            this.hintText = "当前项目未安装 agora-rtc-sdk-ng，点击下方按钮安装。";
+                        const result = await Editor.Message.request(packageName, "query-cocos-engine-root");
+                        this.engineRoot = result.engineRoot || "";
+                        if (!this.engineRoot) {
+                            this.generateHintText =
+                                "未找到 temp/declarations/cc.d.ts 或无法解析 Cocos engine 根目录，请手动填写后生成。";
+                            this.generateStatusClass = "missing";
                         }
                     } catch (err: any) {
-                        this.showInstallBtn = false;
-                        this.statusIcon = "⚠️";
-                        this.statusText = "检查失败";
-                        this.statusClass = "missing";
-                        this.displayVersion = "--";
-                        this.hintText = `检查失败: ${err.message || err}`;
+                        this.generateHintText = `读取 Cocos engine 根目录失败: ${err.message || err}`;
+                        this.generateStatusClass = "missing";
                     }
                 },
-                formatInstallError(error: string): string {
-                    const manualSteps =
-                        "手动安装步骤：\n1. 打开终端\n2. cd 到项目根目录\n3. 执行 npm install agora-rtc-sdk-ng@4.24.3";
-                    return `安装失败，请手动安装：\n${manualSteps}`;
-                },
-                async handleInstall() {
-                    if (this.installing) return;
-                    this.installing = true;
-                    this.installBtnText = "安装中...";
-                    this.statusIcon = "⏳";
-                    this.statusText = "正在安装...";
-                    this.statusClass = "";
-
+                async checkSdkStatus() {
                     try {
-                        const result = await Editor.Message.request(packageName, "install-dependency");
-                        if (result.success) {
-                            await (this as any).checkDependency();
-                        } else {
-                            this.statusIcon = "❌";
-                            this.statusText = "安装失败";
-                            this.statusClass = "missing";
-                            this.hintText = this.formatInstallError(result.error || "未知错误");
-                            this.installing = false;
-                            this.installBtnText = "重试安装";
+                        const result = await Editor.Message.request(packageName, "query-sdk-status");
+                        for (const p of this.platforms) {
+                            const info = result[p.name];
+                            if (info && info.exists) {
+                                p.statusIcon = "✅";
+                                p.statusText = "已下载";
+                                p.statusClass = "ok";
+                                p.btnText = "重新下载";
+                            } else {
+                                p.statusIcon = "❌";
+                                p.statusText = "未下载";
+                                p.statusClass = "missing";
+                                p.btnText = "下载 SDK";
+                            }
                         }
                     } catch (err: any) {
-                        this.statusIcon = "❌";
-                        this.statusText = "安装失败";
-                        this.statusClass = "missing";
-                        this.hintText = this.formatInstallError(err.message || String(err));
-                        this.installing = false;
-                        this.installBtnText = "重试安装";
+                        for (const p of this.platforms) {
+                            p.statusIcon = "⚠️";
+                            p.statusText = "检测失败";
+                            p.statusClass = "missing";
+                        }
+                    }
+                },
+                async handleDownload(platformName: string) {
+                    const p = this.platforms.find((x: any) => x.name === platformName);
+                    if (!p || p.downloading) return;
+                    p.downloading = true;
+                    p.statusIcon = "⏳";
+                    p.statusText = "下载中...";
+                    p.statusClass = "";
+                    p.btnText = "下载中...";
+
+                    try {
+                        const result = await Editor.Message.request(packageName, "download-sdk", platformName);
+                        if (result.success) {
+                            await (this as any).checkSdkStatus();
+                        } else {
+                            p.statusIcon = "❌";
+                            p.statusText = "下载失败";
+                            p.statusClass = "missing";
+                            p.btnText = "重试";
+                        }
+                    } catch (err: any) {
+                        p.statusIcon = "❌";
+                        p.statusText = "下载失败";
+                        p.statusClass = "missing";
+                        p.btnText = "重试";
+                    } finally {
+                        p.downloading = false;
+                    }
+                },
+                async handleDeleteAllSdks() {
+                    if (this.deletingAll) return;
+                    this.deletingAll = true;
+                    try {
+                        const result = await Editor.Message.request(packageName, "delete-all-sdks");
+                        if (result.success) {
+                            await (this as any).checkSdkStatus();
+                        }
+                    } catch (err: any) {
+                        // 删除失败静默处理，刷新状态即可
+                        await (this as any).checkSdkStatus();
+                    } finally {
+                        this.deletingAll = false;
+                    }
+                },
+                async handleGenerateNativeBindings() {
+                    if (this.generatingNativeBindings) return;
+                    if (!this.engineRoot.trim()) {
+                        this.generateHintText = "请先填写 Cocos engine 根目录。";
+                        this.generateStatusClass = "missing";
+                        return;
+                    }
+
+                    this.generatingNativeBindings = true;
+                    this.generateBtnText = "生成中...";
+                    this.generateHintText = "正在调用 Cocos SWIG 生成工具...";
+                    this.generateStatusClass = "";
+
+                    try {
+                        const result = await Editor.Message.request(
+                            packageName,
+                            "generate-native-bindings",
+                            this.engineRoot.trim(),
+                        );
+                        if (result.success) {
+                            this.generateHintText = "Native binding 生成完成。";
+                            this.generateStatusClass = "ok";
+                        } else {
+                            this.generateHintText =
+                                result.stderr ||
+                                result.error ||
+                                "Native binding 生成失败，请检查 Cocos engine 根目录。";
+                            this.generateStatusClass = "missing";
+                        }
+                    } catch (err: any) {
+                        this.generateHintText = `Native binding 生成失败: ${err.message || String(err)}`;
+                        this.generateStatusClass = "missing";
+                    } finally {
+                        this.generatingNativeBindings = false;
+                        this.generateBtnText = "生成 Native Binding";
                     }
                 },
             },

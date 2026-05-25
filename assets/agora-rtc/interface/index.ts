@@ -1,20 +1,14 @@
 import { sys } from "cc";
 import { IRtcEngineEx } from "./IRtcEngineEx";
 import { RtcEngineWeb } from "../impl/web/RtcEngineWeb";
-
-// // #if CC_EDITOR || CC_JSB
-// export function createRtcEngine(): null {
-//     console.warn("[Agora RTC] createRtcEngine is only supported in Web browser build.");
-//     return null;
-// }
-// // #else
-// import { RtcEngineWeb } from "../impl/web/RtcEngineWeb";
+import { isRtcEngineNativeAvailable, RtcEngineNative } from "../impl/native/RtcEngineNative";
 
 export function createRtcEngine(): IRtcEngineEx {
     if (sys.isBrowser) {
         return new RtcEngineWeb();
-    } else {
-        return null;
     }
+    if (isRtcEngineNativeAvailable()) {
+        return new RtcEngineNative() as unknown as IRtcEngineEx;
+    }
+    return null;
 }
-// #end

@@ -134,7 +134,7 @@ import AgoraRTC, {
     DeviceInfo as WebDeviceInfo,
     AREAS,
     IAgoraRTCError,
-} from "agora-rtc-sdk-ng";
+} from "./AgoraRTC";
 import { AgoraRTCClientProxy } from "./AgoraRTCClientProxy";
 import { TrackManager } from "./TrackManager";
 import { isAgoraRTCError, Native2Web, Web2Native } from "./Helper";

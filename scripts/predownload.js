@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { execSync } = require('child_process');
+const { copyDirContentsSync, ensureDir } = require('./predownload-utils');
 
 const ROOT = path.resolve(__dirname, '..');
 const TEMP_DIR = path.join(ROOT, 'temp');
@@ -9,21 +10,14 @@ const PKG = require(path.join(ROOT, 'package.json'));
 
 // ─── 工具函数 ───────────────────────────────────────────────
 
-function ensureDir(dir) {
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-    }
-}
-
 function copyFileSync(src, dest) {
     ensureDir(path.dirname(dest));
     fs.copyFileSync(src, dest);
 }
 
 function copyDirSync(src, dest) {
-    ensureDir(dest);
-    // 使用 cp -R 以正确处理符号链接（macOS .framework 内含 symlink）
-    execSync(`cp -R "${src}" "${dest}"`);
+    // 使用 cp -R src/. dest 以正确处理符号链接，同时避免 Foo.xcframework/Foo.xcframework 嵌套。
+    copyDirContentsSync(src, dest);
 }
 
 function findFilesRecursive(dir, ext) {
@@ -118,6 +112,28 @@ function clearTemp() {
         removed++;
     }
     console.log(`  已清理 ${removed} 个项目`);
+}
+
+function clearPlatformSdks(platforms = ['mac', 'ios', 'android', 'windows']) {
+    console.log('清理平台 SDK...');
+    for (const p of platforms) {
+        const libsDir = path.join(ROOT, p, 'libs');
+        const includeDir = path.join(ROOT, p, 'include');
+        let cleaned = false;
+        if (fs.existsSync(libsDir)) {
+            fs.rmSync(libsDir, { recursive: true, force: true });
+            cleaned = true;
+        }
+        if (fs.existsSync(includeDir)) {
+            fs.rmSync(includeDir, { recursive: true, force: true });
+            cleaned = true;
+        }
+        if (cleaned) {
+            console.log(`  ${p}: 已清理 libs/ 和 include/`);
+        } else {
+            console.log(`  ${p}: 无 SDK 文件，跳过`);
+        }
+    }
 }
 
 // ─── 清理目标目录 ─────────────────────────────────────────
@@ -267,9 +283,21 @@ function copyAndroid(extractedDir) {
 
 async function main() {
     const isClear = process.argv.includes('--clear');
+    const VALID_PLATFORMS = ['mac', 'ios', 'android', 'windows'];
+
+    // 解析 --platform 参数
+    const platformIdx = process.argv.indexOf('--platform');
+    const targetPlatform = platformIdx >= 0 ? process.argv[platformIdx + 1] : null;
+    if (targetPlatform && !VALID_PLATFORMS.includes(targetPlatform)) {
+        console.error(`错误: 无效的平台 "${targetPlatform}"，可选: ${VALID_PLATFORMS.join(', ')}`);
+        process.exit(1);
+    }
 
     if (isClear) {
         clearTemp();
+        // 清理平台 SDK：若指定 --platform 则只清理该平台
+        const clearPlatforms = targetPlatform ? [targetPlatform] : VALID_PLATFORMS;
+        clearPlatformSdks(clearPlatforms);
         return;
     }
 
@@ -281,7 +309,11 @@ async function main() {
 
     ensureDir(TEMP_DIR);
 
-    const platforms = ['mac', 'ios', 'android', 'windows'];
+    let platforms = ['mac', 'ios', 'android', 'windows'];
+    if (targetPlatform) {
+        platforms = platforms.filter(p => p === targetPlatform);
+        console.log(`仅处理平台: ${targetPlatform}`);
+    }
     const copyFns = { mac: copyMac, ios: copyiOS, android: copyAndroid, windows: copyWindows };
 
     for (const platform of platforms) {

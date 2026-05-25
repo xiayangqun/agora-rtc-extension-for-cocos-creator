@@ -4,7 +4,7 @@ import AgoraRTC, {
     ILocalAudioTrack,
     IMicrophoneAudioTrack,
     VideoEncoderConfiguration as WebVideoEncoderConfiguration,
-} from "agora-rtc-sdk-ng";
+} from "./AgoraRTC";
 import { ERROR_CODE_TYPE } from "../../types/AgoraBase";
 
 /**

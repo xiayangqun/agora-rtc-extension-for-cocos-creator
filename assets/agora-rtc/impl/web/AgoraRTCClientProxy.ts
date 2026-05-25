@@ -23,7 +23,7 @@ import AgoraRTC, {
     LiveStreamingTranscodingConfig,
     EncryptionMode,
     IChannelMediaRelayConfiguration,
-} from "agora-rtc-sdk-ng";
+} from "./AgoraRTC";
 import { RtcEngineWeb } from "./RtcEngineWeb";
 import { Native2Web, Web2Native } from "./Helper";
 import { TrackManager } from "./TrackManager";
@@ -59,12 +59,28 @@ export class AgoraRTCClientProxy {
     }
 
     async release(): Promise<void> {
-        await this._client.unpublish();
-        for (const user of this._client.remoteUsers) {
-            await this._client.unsubscribe(user);
-            await this._clearRemoteVideoTrack(user);
+        if (!this._client) {
+            return;
         }
-        await this._client.leave();
+
+        const shouldLeave =
+            this._client.connectionState === "CONNECTED" ||
+            this._client.connectionState === "CONNECTING" ||
+            this._client.connectionState === "RECONNECTING";
+
+        if (shouldLeave) {
+            if (this._client.localTracks.length > 0) {
+                await this._client.unpublish();
+            }
+
+            for (const user of this._client.remoteUsers) {
+                await this._client.unsubscribe(user);
+                await this._clearRemoteVideoTrack(user);
+            }
+
+            await this._client.leave();
+        }
+
         this._client.removeAllListeners();
         this._client = null;
     }
@@ -626,7 +642,7 @@ export class AgoraRTCClientProxy {
             localUid: this.numberUid,
             channelId: this._client.channelName as string,
         };
-        //can not get streamId and sentTs from agora-rtc-sdk-ng, so set to 0
+        //can not get streamId and sentTs from AgoraRTC Web SDK, so set to 0
         this._rtcEngine.rtcEngineEventHandler?.onStreamMessage(con, uid as number, 0, payload, payload.length, 0);
     }
 

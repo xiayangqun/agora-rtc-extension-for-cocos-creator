@@ -1,5 +1,5 @@
 import { IAudioDeviceManager } from "../../interface/IAudioDeviceManager";
-import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTC from "./AgoraRTC";
 import { ERROR_CODE_TYPE } from "../../types/AgoraBase";
 import { IAudioDeviceCollection } from "../../interface/IAudioDeviceCollection";
 import { AudioDeviceCollectionWeb } from "./AudioDeviceCollectionWeb";

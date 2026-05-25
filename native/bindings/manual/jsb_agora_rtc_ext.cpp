@@ -1,0 +1,6001 @@
+// clang-format off
+/****************************************************************************
+ Copyright (c) 2022-2023 Xiamen Yaji Software Co., Ltd.
+
+ http://www.cocos.com
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+****************************************************************************/
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-variable"
+#elif defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#elif defined(_MSC_VER)
+#pragma warning(push)
+#pragma warning(disable : 4101)
+#endif
+
+#include <cassert>
+#include "jsb_agora_rtc_ext.h"
+#include "bindings/manual/jsb_conversions.h"
+#include "bindings/manual/jsb_global.h"
+
+// include agora rtc sdk headers
+#include "IAgoraRtcEngine.h"
+#include "IAgoraRtcEngineEx.h"
+#include "AgoraBase.h"
+
+// AUTO-GENERATED IMPLEMENTATIONS START
+
+bool sevalue_to_native(const se::Value &from, agora::UserInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("hasAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->hasAudio), ctx);
+    }
+
+    json->getProperty("hasVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->hasVideo), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoDimensions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SenderOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("ccMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ccMode), ctx);
+    }
+
+    json->getProperty("codecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecType), ctx);
+    }
+
+    json->getProperty("targetBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->targetBitrate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::EncodedAudioFrameAdvancedSettings *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("speech", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speech), ctx);
+    }
+
+    json->getProperty("sendEvenIfEmpty", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sendEvenIfEmpty), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::EncodedAudioFrameInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("codec", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codec), ctx);
+    }
+
+    json->getProperty("sampleRateHz", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sampleRateHz), ctx);
+    }
+
+    json->getProperty("samplesPerChannel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->samplesPerChannel), ctx);
+    }
+
+    json->getProperty("numberOfChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->numberOfChannels), ctx);
+    }
+
+    json->getProperty("advancedSettings", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->advancedSettings), ctx);
+    }
+
+    json->getProperty("captureTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureTimeMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioPcmDataInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("samplesPerChannel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->samplesPerChannel), ctx);
+    }
+
+    json->getProperty("channelNum", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelNum), ctx);
+    }
+
+    json->getProperty("samplesOut", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->samplesOut), ctx);
+    }
+
+    json->getProperty("elapsedTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->elapsedTimeMs), ctx);
+    }
+
+    json->getProperty("ntpTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ntpTimeMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoSubscriptionOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("encodedFrameOnly", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encodedFrameOnly), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::EncodedVideoFrameInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("codecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecType), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("framesPerSecond", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framesPerSecond), ctx);
+    }
+
+    json->getProperty("frameType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameType), ctx);
+    }
+
+    json->getProperty("rotation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rotation), ctx);
+    }
+
+    json->getProperty("trackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->trackId), ctx);
+    }
+
+    json->getProperty("captureTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureTimeMs), ctx);
+    }
+
+    json->getProperty("decodeTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decodeTimeMs), ctx);
+    }
+
+    json->getProperty("streamType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->streamType), ctx);
+    }
+
+    json->getProperty("presentationMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->presentationMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AdvanceOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("encodingPreference", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encodingPreference), ctx);
+    }
+
+    json->getProperty("compressionPreference", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->compressionPreference), ctx);
+    }
+
+    json->getProperty("encodeAlpha", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encodeAlpha), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::CodecCapLevels *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("hwDecodingLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->hwDecodingLevel), ctx);
+    }
+
+    json->getProperty("swDecodingLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->swDecodingLevel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::CodecCapInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("codecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecType), ctx);
+    }
+
+    json->getProperty("codecCapMask", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecCapMask), ctx);
+    }
+
+    json->getProperty("codecLevels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecLevels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::FocalLengthInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("cameraDirection", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cameraDirection), ctx);
+    }
+
+    json->getProperty("focalLengthType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->focalLengthType), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoEncoderConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("codecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecType), ctx);
+    }
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("frameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameRate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    json->getProperty("minBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->minBitrate), ctx);
+    }
+
+    json->getProperty("orientationMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->orientationMode), ctx);
+    }
+
+    json->getProperty("degradationPreference", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->degradationPreference), ctx);
+    }
+
+    json->getProperty("mirrorMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mirrorMode), ctx);
+    }
+
+    json->getProperty("advanceOptions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->advanceOptions), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DataStreamConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("syncWithAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->syncWithAudio), ctx);
+    }
+
+    json->getProperty("ordered", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ordered), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastStreamConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("kBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->kBitrate), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("configs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->configs), ctx);
+    }
+
+    json->getProperty("publish_fallback_enable", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publish_fallback_enable), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::StreamLayerConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("enable", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enable), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Rectangle *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkRatio *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("xRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->xRatio), ctx);
+    }
+
+    json->getProperty("yRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->yRatio), ctx);
+    }
+
+    json->getProperty("widthRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->widthRatio), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("visibleInPreview", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->visibleInPreview), ctx);
+    }
+
+    json->getProperty("positionInLandscapeMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->positionInLandscapeMode), ctx);
+    }
+
+    json->getProperty("positionInPortraitMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->positionInPortraitMode), ctx);
+    }
+
+    json->getProperty("watermarkRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->watermarkRatio), ctx);
+    }
+
+    json->getProperty("mode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mode), ctx);
+    }
+
+    json->getProperty("zOrder", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zOrder), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkTimestamp *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("fontSize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fontSize), ctx);
+    }
+
+    json->getProperty("fontFilePath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fontFilePath), ctx);
+    }
+
+    json->getProperty("strokeWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->strokeWidth), ctx);
+    }
+
+    json->getProperty("format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->format), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkLiteral *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("fontSize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fontSize), ctx);
+    }
+
+    json->getProperty("strokeWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->strokeWidth), ctx);
+    }
+
+    json->getProperty("wmLiteral", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->wmLiteral), ctx);
+    }
+
+    json->getProperty("fontFilePath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fontFilePath), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkBuffer *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("length", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->length), ctx);
+    }
+
+    json->getProperty("format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->format), ctx);
+    }
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::WatermarkConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->id), ctx);
+    }
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    json->getProperty("options", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->options), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::PathStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("txKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txKBitRate), ctx);
+    }
+
+    json->getProperty("rxKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxKBitRate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MultipathStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("lanTxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lanTxBytes), ctx);
+    }
+
+    json->getProperty("lanRxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lanRxBytes), ctx);
+    }
+
+    json->getProperty("wifiTxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->wifiTxBytes), ctx);
+    }
+
+    json->getProperty("wifiRxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->wifiRxBytes), ctx);
+    }
+
+    json->getProperty("mobileTxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mobileTxBytes), ctx);
+    }
+
+    json->getProperty("mobileRxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mobileRxBytes), ctx);
+    }
+
+    json->getProperty("activePathNum", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->activePathNum), ctx);
+    }
+
+    json->getProperty("pathStats", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->pathStats), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtcStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("duration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->duration), ctx);
+    }
+
+    json->getProperty("txBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txBytes), ctx);
+    }
+
+    json->getProperty("rxBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxBytes), ctx);
+    }
+
+    json->getProperty("txAudioBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txAudioBytes), ctx);
+    }
+
+    json->getProperty("txVideoBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txVideoBytes), ctx);
+    }
+
+    json->getProperty("rxAudioBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxAudioBytes), ctx);
+    }
+
+    json->getProperty("rxVideoBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxVideoBytes), ctx);
+    }
+
+    json->getProperty("txKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txKBitRate), ctx);
+    }
+
+    json->getProperty("rxKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxKBitRate), ctx);
+    }
+
+    json->getProperty("rxAudioKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxAudioKBitRate), ctx);
+    }
+
+    json->getProperty("txAudioKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txAudioKBitRate), ctx);
+    }
+
+    json->getProperty("rxVideoKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxVideoKBitRate), ctx);
+    }
+
+    json->getProperty("txVideoKBitRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txVideoKBitRate), ctx);
+    }
+
+    json->getProperty("lastmileDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lastmileDelay), ctx);
+    }
+
+    json->getProperty("userCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userCount), ctx);
+    }
+
+    json->getProperty("cpuAppUsage", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cpuAppUsage), ctx);
+    }
+
+    json->getProperty("cpuTotalUsage", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cpuTotalUsage), ctx);
+    }
+
+    json->getProperty("gatewayRtt", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->gatewayRtt), ctx);
+    }
+
+    json->getProperty("memoryAppUsageRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->memoryAppUsageRatio), ctx);
+    }
+
+    json->getProperty("memoryTotalUsageRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->memoryTotalUsageRatio), ctx);
+    }
+
+    json->getProperty("memoryAppUsageInKbytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->memoryAppUsageInKbytes), ctx);
+    }
+
+    json->getProperty("connectTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->connectTimeMs), ctx);
+    }
+
+    json->getProperty("firstAudioPacketDuration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstAudioPacketDuration), ctx);
+    }
+
+    json->getProperty("firstVideoPacketDuration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoPacketDuration), ctx);
+    }
+
+    json->getProperty("firstVideoKeyFramePacketDuration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoKeyFramePacketDuration), ctx);
+    }
+
+    json->getProperty("packetsBeforeFirstKeyFramePacket", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packetsBeforeFirstKeyFramePacket), ctx);
+    }
+
+    json->getProperty("firstAudioPacketDurationAfterUnmute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstAudioPacketDurationAfterUnmute), ctx);
+    }
+
+    json->getProperty("firstVideoPacketDurationAfterUnmute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoPacketDurationAfterUnmute), ctx);
+    }
+
+    json->getProperty("firstVideoKeyFramePacketDurationAfterUnmute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoKeyFramePacketDurationAfterUnmute), ctx);
+    }
+
+    json->getProperty("firstVideoKeyFrameDecodedDurationAfterUnmute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoKeyFrameDecodedDurationAfterUnmute), ctx);
+    }
+
+    json->getProperty("firstVideoKeyFrameRenderedDurationAfterUnmute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->firstVideoKeyFrameRenderedDurationAfterUnmute), ctx);
+    }
+
+    json->getProperty("txPacketLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txPacketLossRate), ctx);
+    }
+
+    json->getProperty("rxPacketLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxPacketLossRate), ctx);
+    }
+
+    json->getProperty("lanAccelerateState", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lanAccelerateState), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ClientRoleOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("audienceLatencyLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audienceLatencyLevel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoFormat *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("fps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fps), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoTrackInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("isLocal", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isLocal), ctx);
+    }
+
+    json->getProperty("ownerUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ownerUid), ctx);
+    }
+
+    json->getProperty("trackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->trackId), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("codecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codecType), ctx);
+    }
+
+    json->getProperty("encodedFrameOnly", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encodedFrameOnly), ctx);
+    }
+
+    json->getProperty("sourceType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceType), ctx);
+    }
+
+    json->getProperty("observationPosition", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->observationPosition), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioVolumeInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("volume", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->volume), ctx);
+    }
+
+    json->getProperty("vad", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->vad), ctx);
+    }
+
+    json->getProperty("voicePitch", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->voicePitch), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DeviceInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("isLowLatencyAudioSupported", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isLowLatencyAudioSupported), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Packet *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    json->getProperty("size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->size), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalAudioStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("numChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->numChannels), ctx);
+    }
+
+    json->getProperty("sentSampleRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sentSampleRate), ctx);
+    }
+
+    json->getProperty("sentBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sentBitrate), ctx);
+    }
+
+    json->getProperty("internalCodec", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->internalCodec), ctx);
+    }
+
+    json->getProperty("txPacketLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txPacketLossRate), ctx);
+    }
+
+    json->getProperty("audioDeviceDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioDeviceDelay), ctx);
+    }
+
+    json->getProperty("audioPlayoutDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioPlayoutDelay), ctx);
+    }
+
+    json->getProperty("earMonitorDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->earMonitorDelay), ctx);
+    }
+
+    json->getProperty("aecEstimatedDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->aecEstimatedDelay), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LiveStreamAdvancedFeature *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("featureName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->featureName), ctx);
+    }
+
+    json->getProperty("opened", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->opened), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::TranscodingUser *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("zOrder", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zOrder), ctx);
+    }
+
+    json->getProperty("alpha", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->alpha), ctx);
+    }
+
+    json->getProperty("audioChannel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioChannel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LiveTranscoding *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("videoBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoBitrate), ctx);
+    }
+
+    json->getProperty("videoFramerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoFramerate), ctx);
+    }
+
+    json->getProperty("lowLatency", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lowLatency), ctx);
+    }
+
+    json->getProperty("videoGop", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoGop), ctx);
+    }
+
+    json->getProperty("videoCodecProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoCodecProfile), ctx);
+    }
+
+    json->getProperty("backgroundColor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->backgroundColor), ctx);
+    }
+
+    json->getProperty("videoCodecType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoCodecType), ctx);
+    }
+
+    json->getProperty("userCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userCount), ctx);
+    }
+
+    json->getProperty("transcodingUsers", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->transcodingUsers), ctx);
+    }
+
+    json->getProperty("transcodingExtraInfo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->transcodingExtraInfo), ctx);
+    }
+
+    json->getProperty("metadata", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->metadata), ctx);
+    }
+
+    json->getProperty("watermark", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->watermark), ctx);
+    }
+
+    json->getProperty("watermarkCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->watermarkCount), ctx);
+    }
+
+    json->getProperty("backgroundImage", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->backgroundImage), ctx);
+    }
+
+    json->getProperty("backgroundImageCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->backgroundImageCount), ctx);
+    }
+
+    json->getProperty("audioSampleRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioSampleRate), ctx);
+    }
+
+    json->getProperty("audioBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioBitrate), ctx);
+    }
+
+    json->getProperty("audioChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioChannels), ctx);
+    }
+
+    json->getProperty("audioCodecProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioCodecProfile), ctx);
+    }
+
+    json->getProperty("advancedFeatures", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->advancedFeatures), ctx);
+    }
+
+    json->getProperty("advancedFeatureCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->advancedFeatureCount), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::TranscodingVideoStream *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("sourceType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceType), ctx);
+    }
+
+    json->getProperty("remoteUserUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteUserUid), ctx);
+    }
+
+    json->getProperty("imageUrl", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->imageUrl), ctx);
+    }
+
+    json->getProperty("mediaPlayerId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mediaPlayerId), ctx);
+    }
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("zOrder", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zOrder), ctx);
+    }
+
+    json->getProperty("alpha", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->alpha), ctx);
+    }
+
+    json->getProperty("mirror", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mirror), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalTranscoderConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("streamCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->streamCount), ctx);
+    }
+
+    json->getProperty("videoInputStreams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoInputStreams), ctx);
+    }
+
+    json->getProperty("videoOutputConfiguration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoOutputConfiguration), ctx);
+    }
+
+    json->getProperty("syncWithPrimaryCamera", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->syncWithPrimaryCamera), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MixedAudioStream *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("sourceType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceType), ctx);
+    }
+
+    json->getProperty("remoteUserUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteUserUid), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("trackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->trackId), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalAudioMixerConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("streamCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->streamCount), ctx);
+    }
+
+    json->getProperty("audioInputStreams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioInputStreams), ctx);
+    }
+
+    json->getProperty("syncWithLocalMic", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->syncWithLocalMic), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LastmileProbeConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("probeUplink", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->probeUplink), ctx);
+    }
+
+    json->getProperty("probeDownlink", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->probeDownlink), ctx);
+    }
+
+    json->getProperty("expectedUplinkBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->expectedUplinkBitrate), ctx);
+    }
+
+    json->getProperty("expectedDownlinkBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->expectedDownlinkBitrate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LastmileProbeOneWayResult *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("packetLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packetLossRate), ctx);
+    }
+
+    json->getProperty("jitter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->jitter), ctx);
+    }
+
+    json->getProperty("availableBandwidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->availableBandwidth), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LastmileProbeResult *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("state", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->state), ctx);
+    }
+
+    json->getProperty("uplinkReport", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uplinkReport), ctx);
+    }
+
+    json->getProperty("downlinkReport", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->downlinkReport), ctx);
+    }
+
+    json->getProperty("rtt", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rtt), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoCanvas *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("subviewUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->subviewUid), ctx);
+    }
+
+    json->getProperty("view", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->view), ctx);
+    }
+
+    json->getProperty("backgroundColor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->backgroundColor), ctx);
+    }
+
+    json->getProperty("renderMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->renderMode), ctx);
+    }
+
+    json->getProperty("mirrorMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mirrorMode), ctx);
+    }
+
+    json->getProperty("setupMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->setupMode), ctx);
+    }
+
+    json->getProperty("sourceType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceType), ctx);
+    }
+
+    json->getProperty("mediaPlayerId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mediaPlayerId), ctx);
+    }
+
+    json->getProperty("cropArea", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cropArea), ctx);
+    }
+
+    json->getProperty("enableAlphaMask", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableAlphaMask), ctx);
+    }
+
+    json->getProperty("position", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->position), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::BeautyOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("lighteningContrastLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lighteningContrastLevel), ctx);
+    }
+
+    json->getProperty("lighteningLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lighteningLevel), ctx);
+    }
+
+    json->getProperty("smoothnessLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->smoothnessLevel), ctx);
+    }
+
+    json->getProperty("rednessLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rednessLevel), ctx);
+    }
+
+    json->getProperty("sharpnessLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sharpnessLevel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::FaceShapeAreaOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("shapeArea", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->shapeArea), ctx);
+    }
+
+    json->getProperty("shapeIntensity", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->shapeIntensity), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::FaceShapeBeautyOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("shapeStyle", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->shapeStyle), ctx);
+    }
+
+    json->getProperty("styleIntensity", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->styleIntensity), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::FilterEffectOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("path", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->path), ctx);
+    }
+
+    json->getProperty("strength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->strength), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LowlightEnhanceOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("mode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mode), ctx);
+    }
+
+    json->getProperty("level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->level), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoDenoiserOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("mode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mode), ctx);
+    }
+
+    json->getProperty("level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->level), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ColorEnhanceOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("strengthLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->strengthLevel), ctx);
+    }
+
+    json->getProperty("skinProtectLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->skinProtectLevel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VirtualBackgroundSource *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("background_source_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->background_source_type), ctx);
+    }
+
+    json->getProperty("color", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->color), ctx);
+    }
+
+    json->getProperty("source", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->source), ctx);
+    }
+
+    json->getProperty("blur_degree", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->blur_degree), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SegmentationProperty *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("modelType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->modelType), ctx);
+    }
+
+    json->getProperty("greenCapacity", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->greenCapacity), ctx);
+    }
+
+    json->getProperty("screenColorType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->screenColorType), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioTrackConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("enableLocalPlayback", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableLocalPlayback), ctx);
+    }
+
+    json->getProperty("enableAudioProcessing", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableAudioProcessing), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenAudioParameters *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("sampleRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sampleRate), ctx);
+    }
+
+    json->getProperty("channels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channels), ctx);
+    }
+
+    json->getProperty("captureSignalVolume", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureSignalVolume), ctx);
+    }
+
+    json->getProperty("excludeCurrentProcessAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->excludeCurrentProcessAudio), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureParameters *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("captureAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureAudio), ctx);
+    }
+
+    json->getProperty("audioParams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioParams), ctx);
+    }
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("frameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameRate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    json->getProperty("captureMouseCursor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureMouseCursor), ctx);
+    }
+
+    json->getProperty("windowFocus", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->windowFocus), ctx);
+    }
+
+    json->getProperty("excludeWindowList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->excludeWindowList), ctx);
+    }
+
+    json->getProperty("excludeWindowCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->excludeWindowCount), ctx);
+    }
+
+    json->getProperty("highLightWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->highLightWidth), ctx);
+    }
+
+    json->getProperty("highLightColor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->highLightColor), ctx);
+    }
+
+    json->getProperty("enableHighLight", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableHighLight), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioRecordingConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("filePath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->filePath), ctx);
+    }
+
+    json->getProperty("encode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encode), ctx);
+    }
+
+    json->getProperty("sampleRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sampleRate), ctx);
+    }
+
+    json->getProperty("fileRecordingType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fileRecordingType), ctx);
+    }
+
+    json->getProperty("quality", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->quality), ctx);
+    }
+
+    json->getProperty("recordingChannel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->recordingChannel), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioEncodedFrameObserverConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("postionType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->postionType), ctx);
+    }
+
+    json->getProperty("encodingType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encodingType), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("channelName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelName), ctx);
+    }
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->token), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaRelayConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("srcInfo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->srcInfo), ctx);
+    }
+
+    json->getProperty("destInfos", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->destInfos), ctx);
+    }
+
+    json->getProperty("destCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->destCount), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::UplinkNetworkInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("video_encoder_target_bitrate_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->video_encoder_target_bitrate_bps), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DownlinkNetworkInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("lastmile_buffer_delay_time_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lastmile_buffer_delay_time_ms), ctx);
+    }
+
+    json->getProperty("bandwidth_estimation_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bandwidth_estimation_bps), ctx);
+    }
+
+    json->getProperty("total_downscale_level_count", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_downscale_level_count), ctx);
+    }
+
+    json->getProperty("peer_downlink_info", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->peer_downlink_info), ctx);
+    }
+
+    json->getProperty("total_received_video_count", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_received_video_count), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::PeerDownlinkInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("stream_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stream_type), ctx);
+    }
+
+    json->getProperty("current_downscale_level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->current_downscale_level), ctx);
+    }
+
+    json->getProperty("expected_bitrate_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->expected_bitrate_bps), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::EncryptionConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("encryptionMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encryptionMode), ctx);
+    }
+
+    json->getProperty("encryptionKey", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encryptionKey), ctx);
+    }
+
+    json->getProperty("encryptionKdfSalt", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encryptionKdfSalt), ctx);
+    }
+
+    json->getProperty("datastreamEncryptionEnabled", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->datastreamEncryptionEnabled), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::EchoTestConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("view", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->view), ctx);
+    }
+
+    json->getProperty("enableAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableAudio), ctx);
+    }
+
+    json->getProperty("enableVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableVideo), ctx);
+    }
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->token), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("intervalInSeconds", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->intervalInSeconds), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::UserInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("userAccount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userAccount), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenVideoParameters *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("frameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameRate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    json->getProperty("contentHint", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->contentHint), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureParameters2 *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("captureAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureAudio), ctx);
+    }
+
+    json->getProperty("audioParams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioParams), ctx);
+    }
+
+    json->getProperty("captureVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->captureVideo), ctx);
+    }
+
+    json->getProperty("videoParams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoParams), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoRenderingTracingInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("elapsedTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->elapsedTime), ctx);
+    }
+
+    json->getProperty("start2JoinChannel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->start2JoinChannel), ctx);
+    }
+
+    json->getProperty("join2JoinSuccess", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->join2JoinSuccess), ctx);
+    }
+
+    json->getProperty("joinSuccess2RemoteJoined", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->joinSuccess2RemoteJoined), ctx);
+    }
+
+    json->getProperty("remoteJoined2SetView", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteJoined2SetView), ctx);
+    }
+
+    json->getProperty("remoteJoined2UnmuteVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteJoined2UnmuteVideo), ctx);
+    }
+
+    json->getProperty("remoteJoined2PacketReceived", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteJoined2PacketReceived), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LogUploadServerInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("serverDomain", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->serverDomain), ctx);
+    }
+
+    json->getProperty("serverPath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->serverPath), ctx);
+    }
+
+    json->getProperty("serverPort", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->serverPort), ctx);
+    }
+
+    json->getProperty("serverHttps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->serverHttps), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AdvancedConfigInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("logUploadServer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->logUploadServer), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalAccessPointConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("ipList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ipList), ctx);
+    }
+
+    json->getProperty("ipListSize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ipListSize), ctx);
+    }
+
+    json->getProperty("domainList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->domainList), ctx);
+    }
+
+    json->getProperty("domainListSize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->domainListSize), ctx);
+    }
+
+    json->getProperty("verifyDomainName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->verifyDomainName), ctx);
+    }
+
+    json->getProperty("mode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mode), ctx);
+    }
+
+    json->getProperty("advancedConfig", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->advancedConfig), ctx);
+    }
+
+    json->getProperty("disableAut", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->disableAut), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RecorderStreamInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::SpatialAudioParams *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("speaker_azimuth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speaker_azimuth), ctx);
+    }
+
+    json->getProperty("speaker_elevation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speaker_elevation), ctx);
+    }
+
+    json->getProperty("speaker_distance", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speaker_distance), ctx);
+    }
+
+    json->getProperty("speaker_orientation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speaker_orientation), ctx);
+    }
+
+    json->getProperty("enable_blur", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enable_blur), ctx);
+    }
+
+    json->getProperty("enable_air_absorb", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enable_air_absorb), ctx);
+    }
+
+    json->getProperty("speaker_attenuation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->speaker_attenuation), ctx);
+    }
+
+    json->getProperty("enable_doppler", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enable_doppler), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::VideoLayout *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("strUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->strUid), ctx);
+    }
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("videoState", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoState), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionVersion *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("major_v", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->major_v), ctx);
+    }
+
+    json->getProperty("minor_v", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->minor_v), ctx);
+    }
+
+    json->getProperty("micro_v", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->micro_v), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IExtensionProvider> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IExtensionProviderV2> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IAudioFilter> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IAudioFilterV2> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IExtensionVideoFilter> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInterfaceVersion<IScreenCaptureSource> *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoEncoderSettings *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("bitrate_kbps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate_kbps), ctx);
+    }
+
+    json->getProperty("key_frame_interval", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->key_frame_interval), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoDecoderSettings *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("prefer_data_format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->prefer_data_format), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionContext *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("isValid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isValid), ctx);
+    }
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("providerName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->providerName), ctx);
+    }
+
+    json->getProperty("extensionName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->extensionName), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioParameters *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("sample_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sample_rate), ctx);
+    }
+
+    json->getProperty("channels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channels), ctx);
+    }
+
+    json->getProperty("frames_per_buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frames_per_buffer), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ImagePayloadData *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("seqid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->seqid), ctx);
+    }
+
+    json->getProperty("size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->size), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("timestamp", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->timestamp), ctx);
+    }
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    json->getProperty("privdata", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->privdata), ctx);
+    }
+
+    json->getProperty("privsize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->privsize), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::InputSeiData *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("timestamp", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->timestamp), ctx);
+    }
+
+    json->getProperty("frame_index", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frame_index), ctx);
+    }
+
+    json->getProperty("private_data", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->private_data), ctx);
+    }
+
+    json->getProperty("data_size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data_size), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MusicCacheInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("songCode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->songCode), ctx);
+    }
+
+    json->getProperty("status", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->status), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MvProperty *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("resolution", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->resolution), ctx);
+    }
+
+    json->getProperty("bandwidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bandwidth), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ClimaxSegment *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("startTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->startTimeMs), ctx);
+    }
+
+    json->getProperty("endTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->endTimeMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Music *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("songCode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->songCode), ctx);
+    }
+
+    json->getProperty("name", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->name), ctx);
+    }
+
+    json->getProperty("singer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->singer), ctx);
+    }
+
+    json->getProperty("poster", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->poster), ctx);
+    }
+
+    json->getProperty("releaseTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->releaseTime), ctx);
+    }
+
+    json->getProperty("durationS", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->durationS), ctx);
+    }
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("pitchType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->pitchType), ctx);
+    }
+
+    json->getProperty("lyricCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lyricCount), ctx);
+    }
+
+    json->getProperty("lyricList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lyricList), ctx);
+    }
+
+    json->getProperty("climaxSegmentCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->climaxSegmentCount), ctx);
+    }
+
+    json->getProperty("climaxSegmentList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->climaxSegmentList), ctx);
+    }
+
+    json->getProperty("mvPropertyCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mvPropertyCount), ctx);
+    }
+
+    json->getProperty("mvPropertyList", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mvPropertyList), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MusicContentCenterConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("appId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->appId), ctx);
+    }
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->token), ctx);
+    }
+
+    json->getProperty("mccUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mccUid), ctx);
+    }
+
+    json->getProperty("maxCacheSize", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->maxCacheSize), ctx);
+    }
+
+    json->getProperty("mccDomain", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mccDomain), ctx);
+    }
+
+    json->getProperty("eventHandler", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->eventHandler), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AgoraRhythmPlayerConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("beatsPerMeasure", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->beatsPerMeasure), ctx);
+    }
+
+    json->getProperty("beatsPerMinute", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->beatsPerMinute), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVideoStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("delay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay), ctx);
+    }
+
+    json->getProperty("e2eDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->e2eDelay), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("receivedBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->receivedBitrate), ctx);
+    }
+
+    json->getProperty("decoderInputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoderInputFrameRate), ctx);
+    }
+
+    json->getProperty("decoderOutputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoderOutputFrameRate), ctx);
+    }
+
+    json->getProperty("rendererOutputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rendererOutputFrameRate), ctx);
+    }
+
+    json->getProperty("frameLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameLossRate), ctx);
+    }
+
+    json->getProperty("packetLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packetLossRate), ctx);
+    }
+
+    json->getProperty("rxStreamType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxStreamType), ctx);
+    }
+
+    json->getProperty("totalFrozenTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->totalFrozenTime), ctx);
+    }
+
+    json->getProperty("frozenRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozenRate), ctx);
+    }
+
+    json->getProperty("avSyncTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->avSyncTimeMs), ctx);
+    }
+
+    json->getProperty("totalActiveTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->totalActiveTime), ctx);
+    }
+
+    json->getProperty("publishDuration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishDuration), ctx);
+    }
+
+    json->getProperty("mosValue", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mosValue), ctx);
+    }
+
+    json->getProperty("rxVideoBytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxVideoBytes), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoCompositingLayout *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("canvasWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->canvasWidth), ctx);
+    }
+
+    json->getProperty("canvasHeight", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->canvasHeight), ctx);
+    }
+
+    json->getProperty("backgroundColor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->backgroundColor), ctx);
+    }
+
+    json->getProperty("regions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regions), ctx);
+    }
+
+    json->getProperty("regionCount", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regionCount), ctx);
+    }
+
+    json->getProperty("appData", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->appData), ctx);
+    }
+
+    json->getProperty("appDataLength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->appDataLength), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Region *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("zOrder", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zOrder), ctx);
+    }
+
+    json->getProperty("alpha", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->alpha), ctx);
+    }
+
+    json->getProperty("renderMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->renderMode), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::InjectStreamConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("videoGop", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoGop), ctx);
+    }
+
+    json->getProperty("videoFramerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoFramerate), ctx);
+    }
+
+    json->getProperty("videoBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoBitrate), ctx);
+    }
+
+    json->getProperty("audioSampleRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioSampleRate), ctx);
+    }
+
+    json->getProperty("audioBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioBitrate), ctx);
+    }
+
+    json->getProperty("audioChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioChannels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::PublisherConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    json->getProperty("defaultLayout", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->defaultLayout), ctx);
+    }
+
+    json->getProperty("lifecycle", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->lifecycle), ctx);
+    }
+
+    json->getProperty("owner", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->owner), ctx);
+    }
+
+    json->getProperty("injectStreamWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->injectStreamWidth), ctx);
+    }
+
+    json->getProperty("injectStreamHeight", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->injectStreamHeight), ctx);
+    }
+
+    json->getProperty("injectStreamUrl", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->injectStreamUrl), ctx);
+    }
+
+    json->getProperty("publishUrl", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishUrl), ctx);
+    }
+
+    json->getProperty("rawStreamUrl", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rawStreamUrl), ctx);
+    }
+
+    json->getProperty("extraInfo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->extraInfo), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("cameraDirection", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cameraDirection), ctx);
+    }
+
+    json->getProperty("cameraFocalLengthType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cameraFocalLengthType), ctx);
+    }
+
+    json->getProperty("cameraId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->cameraId), ctx);
+    }
+
+    json->getProperty("followEncodeDimensionRatio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->followEncodeDimensionRatio), ctx);
+    }
+
+    json->getProperty("format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->format), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("isCaptureWindow", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isCaptureWindow), ctx);
+    }
+
+    json->getProperty("displayId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->displayId), ctx);
+    }
+
+    json->getProperty("screenRect", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->screenRect), ctx);
+    }
+
+    json->getProperty("windowId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->windowId), ctx);
+    }
+
+    json->getProperty("params", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->params), ctx);
+    }
+
+    json->getProperty("regionRect", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regionRect), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SIZE *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ThumbImageBuffer *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    json->getProperty("length", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->length), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureSourceInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("sourceId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceId), ctx);
+    }
+
+    json->getProperty("sourceName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceName), ctx);
+    }
+
+    json->getProperty("thumbImage", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->thumbImage), ctx);
+    }
+
+    json->getProperty("iconImage", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->iconImage), ctx);
+    }
+
+    json->getProperty("processPath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->processPath), ctx);
+    }
+
+    json->getProperty("sourceTitle", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceTitle), ctx);
+    }
+
+    json->getProperty("primaryMonitor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->primaryMonitor), ctx);
+    }
+
+    json->getProperty("isOccluded", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isOccluded), ctx);
+    }
+
+    json->getProperty("position", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->position), ctx);
+    }
+
+    json->getProperty("minimizeWindow", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->minimizeWindow), ctx);
+    }
+
+    json->getProperty("sourceDisplayId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sourceDisplayId), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AdvancedAudioOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("audioProcessingChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioProcessingChannels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ImageTrackOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("imageUrl", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->imageUrl), ctx);
+    }
+
+    json->getProperty("fps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fps), ctx);
+    }
+
+    json->getProperty("mirrorMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mirrorMode), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("publishCameraTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCameraTrack), ctx);
+    }
+
+    json->getProperty("publishSecondaryCameraTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishSecondaryCameraTrack), ctx);
+    }
+
+    json->getProperty("publishThirdCameraTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishThirdCameraTrack), ctx);
+    }
+
+    json->getProperty("publishFourthCameraTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishFourthCameraTrack), ctx);
+    }
+
+    json->getProperty("publishMicrophoneTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMicrophoneTrack), ctx);
+    }
+
+    json->getProperty("publishScreenCaptureAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishScreenCaptureAudio), ctx);
+    }
+
+    json->getProperty("publishScreenCaptureVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishScreenCaptureVideo), ctx);
+    }
+
+    json->getProperty("publishCustomAudioTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCustomAudioTrack), ctx);
+    }
+
+    json->getProperty("publishCustomAudioTrackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCustomAudioTrackId), ctx);
+    }
+
+    json->getProperty("publishCustomVideoTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCustomVideoTrack), ctx);
+    }
+
+    json->getProperty("publishEncodedVideoTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishEncodedVideoTrack), ctx);
+    }
+
+    json->getProperty("publishMediaPlayerAudioTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMediaPlayerAudioTrack), ctx);
+    }
+
+    json->getProperty("publishMediaPlayerVideoTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMediaPlayerVideoTrack), ctx);
+    }
+
+    json->getProperty("publishTranscodedVideoTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishTranscodedVideoTrack), ctx);
+    }
+
+    json->getProperty("publishMixedAudioTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMixedAudioTrack), ctx);
+    }
+
+    json->getProperty("publishLipSyncTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishLipSyncTrack), ctx);
+    }
+
+    json->getProperty("autoSubscribeAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->autoSubscribeAudio), ctx);
+    }
+
+    json->getProperty("autoSubscribeVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->autoSubscribeVideo), ctx);
+    }
+
+    json->getProperty("enableAudioRecordingOrPlayout", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableAudioRecordingOrPlayout), ctx);
+    }
+
+    json->getProperty("publishMediaPlayerId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMediaPlayerId), ctx);
+    }
+
+    json->getProperty("clientRoleType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->clientRoleType), ctx);
+    }
+
+    json->getProperty("audienceLatencyLevel", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audienceLatencyLevel), ctx);
+    }
+
+    json->getProperty("defaultVideoStreamType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->defaultVideoStreamType), ctx);
+    }
+
+    json->getProperty("channelProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelProfile), ctx);
+    }
+
+    json->getProperty("audioDelayMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioDelayMs), ctx);
+    }
+
+    json->getProperty("mediaPlayerAudioDelayMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mediaPlayerAudioDelayMs), ctx);
+    }
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->token), ctx);
+    }
+
+    json->getProperty("enableBuiltInMediaEncryption", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableBuiltInMediaEncryption), ctx);
+    }
+
+    json->getProperty("publishRhythmPlayerTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishRhythmPlayerTrack), ctx);
+    }
+
+    json->getProperty("isInteractiveAudience", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isInteractiveAudience), ctx);
+    }
+
+    json->getProperty("customVideoTrackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->customVideoTrackId), ctx);
+    }
+
+    json->getProperty("isAudioFilterable", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isAudioFilterable), ctx);
+    }
+
+    json->getProperty("parameters", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->parameters), ctx);
+    }
+
+    json->getProperty("enableMultipath", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableMultipath), ctx);
+    }
+
+    json->getProperty("uplinkMultipathMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uplinkMultipathMode), ctx);
+    }
+
+    json->getProperty("downlinkMultipathMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->downlinkMultipathMode), ctx);
+    }
+
+    json->getProperty("preferMultipathType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->preferMultipathType), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LeaveChannelOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("stopAudioMixing", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stopAudioMixing), ctx);
+    }
+
+    json->getProperty("stopAllEffect", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stopAllEffect), ctx);
+    }
+
+    json->getProperty("stopMicrophoneRecording", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stopMicrophoneRecording), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtcEngineContext *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("eventHandler", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->eventHandler), ctx);
+    }
+
+    json->getProperty("appId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->appId), ctx);
+    }
+
+    json->getProperty("context", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->context), ctx);
+    }
+
+    json->getProperty("channelProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelProfile), ctx);
+    }
+
+    json->getProperty("license", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->license), ctx);
+    }
+
+    json->getProperty("audioScenario", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioScenario), ctx);
+    }
+
+    json->getProperty("areaCode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->areaCode), ctx);
+    }
+
+    json->getProperty("logConfig", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->logConfig), ctx);
+    }
+
+    json->getProperty("threadPriority", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->threadPriority), ctx);
+    }
+
+    json->getProperty("useExternalEglContext", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->useExternalEglContext), ctx);
+    }
+
+    json->getProperty("domainLimit", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->domainLimit), ctx);
+    }
+
+    json->getProperty("autoRegisterAgoraExtensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->autoRegisterAgoraExtensions), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Metadata *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->size), ctx);
+    }
+
+    json->getProperty("buffer", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffer), ctx);
+    }
+
+    json->getProperty("timeStampMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->timeStampMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("videoWidth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoWidth), ctx);
+    }
+
+    json->getProperty("videoHeight", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoHeight), ctx);
+    }
+
+    json->getProperty("fps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fps), ctx);
+    }
+
+    json->getProperty("videoBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoBitrate), ctx);
+    }
+
+    json->getProperty("audioBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioBitrate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("publishCameraTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCameraTrack), ctx);
+    }
+
+    json->getProperty("publishMicrophoneTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMicrophoneTrack), ctx);
+    }
+
+    json->getProperty("publishCustomAudioTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCustomAudioTrack), ctx);
+    }
+
+    json->getProperty("publishCustomVideoTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishCustomVideoTrack), ctx);
+    }
+
+    json->getProperty("publishMediaPlayerAudioTrack", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMediaPlayerAudioTrack), ctx);
+    }
+
+    json->getProperty("publishMediaPlayerId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishMediaPlayerId), ctx);
+    }
+
+    json->getProperty("customVideoTrackId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->customVideoTrackId), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("mediaSourceType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mediaSourceType), ctx);
+    }
+
+    json->getProperty("remoteUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->remoteUid), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("localUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->localUid), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtcConnection *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("localUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->localUid), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::DataChannelConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("syncWithMedia", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->syncWithMedia), ctx);
+    }
+
+    json->getProperty("ordered", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ordered), ctx);
+    }
+
+    json->getProperty("compressionLength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->compressionLength), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("priority", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->priority), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::TConnectionInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->id), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("state", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->state), ctx);
+    }
+
+    json->getProperty("localUserId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->localUserId), ctx);
+    }
+
+    json->getProperty("internalUid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->internalUid), ctx);
+    }
+
+    json->getProperty("proxyType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->proxyType), ctx);
+    }
+
+    json->getProperty("connectionIp", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->connectionIp), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtcConnectionConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("autoSubscribeAudio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->autoSubscribeAudio), ctx);
+    }
+
+    json->getProperty("autoSubscribeVideo", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->autoSubscribeVideo), ctx);
+    }
+
+    json->getProperty("enableAudioRecordingOrPlayout", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enableAudioRecordingOrPlayout), ctx);
+    }
+
+    json->getProperty("maxSendBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->maxSendBitrate), ctx);
+    }
+
+    json->getProperty("minPort", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->minPort), ctx);
+    }
+
+    json->getProperty("maxPort", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->maxPort), ctx);
+    }
+
+    json->getProperty("clientRoleType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->clientRoleType), ctx);
+    }
+
+    json->getProperty("channelProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelProfile), ctx);
+    }
+
+    json->getProperty("audioRecvEncodedFrame", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioRecvEncodedFrame), ctx);
+    }
+
+    json->getProperty("audioRecvMediaPacket", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioRecvMediaPacket), ctx);
+    }
+
+    json->getProperty("videoRecvMediaPacket", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoRecvMediaPacket), ctx);
+    }
+
+    json->getProperty("isInteractiveAudience", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isInteractiveAudience), ctx);
+    }
+
+    json->getProperty("isDataChannelOnly", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isDataChannelOnly), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtmpConnectionConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("audioConfig", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioConfig), ctx);
+    }
+
+    json->getProperty("videoConfig", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->videoConfig), ctx);
+    }
+
+    json->getProperty("audioOnly", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioOnly), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioEncoderConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("audioProfile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioProfile), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVoicePositionInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("position", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->position), ctx);
+    }
+
+    json->getProperty("forward", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->forward), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SpatialAudioZone *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("zoneSetId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zoneSetId), ctx);
+    }
+
+    json->getProperty("position", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->position), ctx);
+    }
+
+    json->getProperty("forward", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->forward), ctx);
+    }
+
+    json->getProperty("right", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->right), ctx);
+    }
+
+    json->getProperty("up", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->up), ctx);
+    }
+
+    json->getProperty("forwardLength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->forwardLength), ctx);
+    }
+
+    json->getProperty("rightLength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rightLength), ctx);
+    }
+
+    json->getProperty("upLength", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->upLength), ctx);
+    }
+
+    json->getProperty("audioAttenuation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audioAttenuation), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalSpatialAudioConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("rtcEngine", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rtcEngine), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioDeviceInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("deviceName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deviceName), ctx);
+    }
+
+    json->getProperty("deviceTypeName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deviceTypeName), ctx);
+    }
+
+    json->getProperty("deviceId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deviceId), ctx);
+    }
+
+    json->getProperty("isCurrentSelected", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isCurrentSelected), ctx);
+    }
+
+    json->getProperty("isPlayoutDevice", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->isPlayoutDevice), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LoopbackRecordingOption *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("deviceName", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->deviceName), ctx);
+    }
+
+    json->getProperty("allowDeviceChange", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->allowDeviceChange), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioSinkWants *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("samplesPerSec", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->samplesPerSec), ctx);
+    }
+
+    json->getProperty("channels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalAudioTrackStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("source_id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->source_id), ctx);
+    }
+
+    json->getProperty("buffered_pcm_data_list_size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->buffered_pcm_data_list_size), ctx);
+    }
+
+    json->getProperty("missed_audio_frames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->missed_audio_frames), ctx);
+    }
+
+    json->getProperty("sent_audio_frames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sent_audio_frames), ctx);
+    }
+
+    json->getProperty("pushed_audio_frames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->pushed_audio_frames), ctx);
+    }
+
+    json->getProperty("dropped_audio_frames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dropped_audio_frames), ctx);
+    }
+
+    json->getProperty("playout_audio_frames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->playout_audio_frames), ctx);
+    }
+
+    json->getProperty("effect_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->effect_type), ctx);
+    }
+
+    json->getProperty("hw_ear_monitor", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->hw_ear_monitor), ctx);
+    }
+
+    json->getProperty("enabled", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enabled), ctx);
+    }
+
+    json->getProperty("audio_volume", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audio_volume), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteAudioTrackStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("quality", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->quality), ctx);
+    }
+
+    json->getProperty("network_transport_delay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->network_transport_delay), ctx);
+    }
+
+    json->getProperty("jitter_buffer_delay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->jitter_buffer_delay), ctx);
+    }
+
+    json->getProperty("audio_loss_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audio_loss_rate), ctx);
+    }
+
+    json->getProperty("num_channels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->num_channels), ctx);
+    }
+
+    json->getProperty("received_sample_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->received_sample_rate), ctx);
+    }
+
+    json->getProperty("received_bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->received_bitrate), ctx);
+    }
+
+    json->getProperty("total_frozen_time", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_frozen_time), ctx);
+    }
+
+    json->getProperty("frozen_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_rate), ctx);
+    }
+
+    json->getProperty("received_bytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->received_bytes), ctx);
+    }
+
+    json->getProperty("mean_waiting_time", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mean_waiting_time), ctx);
+    }
+
+    json->getProperty("expanded_speech_samples", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->expanded_speech_samples), ctx);
+    }
+
+    json->getProperty("expanded_noise_samples", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->expanded_noise_samples), ctx);
+    }
+
+    json->getProperty("timestamps_since_last_report", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->timestamps_since_last_report), ctx);
+    }
+
+    json->getProperty("min_sequence_number", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->min_sequence_number), ctx);
+    }
+
+    json->getProperty("max_sequence_number", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->max_sequence_number), ctx);
+    }
+
+    json->getProperty("audio_level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audio_level), ctx);
+    }
+
+    json->getProperty("downlink_process_time_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->downlink_process_time_ms), ctx);
+    }
+
+    json->getProperty("packet_expired_loss", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packet_expired_loss), ctx);
+    }
+
+    json->getProperty("packet_max_expired_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packet_max_expired_ms), ctx);
+    }
+
+    json->getProperty("burst_peak_num", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->burst_peak_num), ctx);
+    }
+
+    json->getProperty("burst_jitter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->burst_jitter), ctx);
+    }
+
+    json->getProperty("target_level_base_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_level_base_ms), ctx);
+    }
+
+    json->getProperty("target_level_prefered_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_level_prefered_ms), ctx);
+    }
+
+    json->getProperty("accelerate_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->accelerate_rate), ctx);
+    }
+
+    json->getProperty("preemptive_expand_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->preemptive_expand_rate), ctx);
+    }
+
+    json->getProperty("frozen_count_80_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_count_80_ms), ctx);
+    }
+
+    json->getProperty("frozen_time_80_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_time_80_ms), ctx);
+    }
+
+    json->getProperty("frozen_count_200_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_count_200_ms), ctx);
+    }
+
+    json->getProperty("frozen_time_200_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_time_200_ms), ctx);
+    }
+
+    json->getProperty("frozen_count_by_custom", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_count_by_custom), ctx);
+    }
+
+    json->getProperty("frozen_time_ms_by_custom", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_time_ms_by_custom), ctx);
+    }
+
+    json->getProperty("full_frozen_time_80_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->full_frozen_time_80_ms), ctx);
+    }
+
+    json->getProperty("full_frozen_time_200_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->full_frozen_time_200_ms), ctx);
+    }
+
+    json->getProperty("delay_estimate_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay_estimate_ms), ctx);
+    }
+
+    json->getProperty("mos_value", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mos_value), ctx);
+    }
+
+    json->getProperty("frozen_rate_by_custom_plc_count", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_rate_by_custom_plc_count), ctx);
+    }
+
+    json->getProperty("plc_count", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->plc_count), ctx);
+    }
+
+    json->getProperty("fec_decode_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fec_decode_ms), ctx);
+    }
+
+    json->getProperty("frozen_count_10_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozen_count_10_ms), ctx);
+    }
+
+    json->getProperty("total_active_time", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_active_time), ctx);
+    }
+
+    json->getProperty("publish_duration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publish_duration), ctx);
+    }
+
+    json->getProperty("e2e_delay_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->e2e_delay_ms), ctx);
+    }
+
+    json->getProperty("new_e2e_delay_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->new_e2e_delay_ms), ctx);
+    }
+
+    json->getProperty("qoe_quality", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->qoe_quality), ctx);
+    }
+
+    json->getProperty("quality_changed_reason", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->quality_changed_reason), ctx);
+    }
+
+    json->getProperty("downlink_effect_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->downlink_effect_type), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioEncFrameRecvParams *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("receive_mode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->receive_mode), ctx);
+    }
+
+    json->getProperty("target_codec", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_codec), ctx);
+    }
+
+    json->getProperty("target_sample_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_sample_rate), ctx);
+    }
+
+    json->getProperty("target_num_channels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_num_channels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::DataChannelInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dataChannelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dataChannelId), ctx);
+    }
+
+    json->getProperty("metadata", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->metadata), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::UserDataChannelInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("infos", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->infos), ctx);
+    }
+
+    json->getProperty("info_size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->info_size), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::Capabilities *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("audio", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audio), ctx);
+    }
+
+    json->getProperty("video", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->video), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionMetaInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("extension_name", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->extension_name), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionVideoCodecInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("codec_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codec_type), ctx);
+    }
+
+    json->getProperty("is_hw_accelerated", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->is_hw_accelerated), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalVideoTrackStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("number_of_streams", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->number_of_streams), ctx);
+    }
+
+    json->getProperty("bytes_major_stream", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bytes_major_stream), ctx);
+    }
+
+    json->getProperty("bytes_minor_stream", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bytes_minor_stream), ctx);
+    }
+
+    json->getProperty("frames_encoded", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frames_encoded), ctx);
+    }
+
+    json->getProperty("ssrc_major_stream", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ssrc_major_stream), ctx);
+    }
+
+    json->getProperty("ssrc_minor_stream", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ssrc_minor_stream), ctx);
+    }
+
+    json->getProperty("capture_frame_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->capture_frame_rate), ctx);
+    }
+
+    json->getProperty("regulated_capture_frame_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regulated_capture_frame_rate), ctx);
+    }
+
+    json->getProperty("input_frame_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->input_frame_rate), ctx);
+    }
+
+    json->getProperty("encode_frame_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encode_frame_rate), ctx);
+    }
+
+    json->getProperty("render_frame_rate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->render_frame_rate), ctx);
+    }
+
+    json->getProperty("target_media_bitrate_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->target_media_bitrate_bps), ctx);
+    }
+
+    json->getProperty("media_bitrate_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->media_bitrate_bps), ctx);
+    }
+
+    json->getProperty("total_bitrate_bps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_bitrate_bps), ctx);
+    }
+
+    json->getProperty("capture_width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->capture_width), ctx);
+    }
+
+    json->getProperty("capture_height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->capture_height), ctx);
+    }
+
+    json->getProperty("regulated_capture_width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regulated_capture_width), ctx);
+    }
+
+    json->getProperty("regulated_capture_height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->regulated_capture_height), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("encoder_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encoder_type), ctx);
+    }
+
+    json->getProperty("hw_encoder_accelerating", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->hw_encoder_accelerating), ctx);
+    }
+
+    json->getProperty("encoder_frame_depth", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encoder_frame_depth), ctx);
+    }
+
+    json->getProperty("encoder_vender_id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encoder_vender_id), ctx);
+    }
+
+    json->getProperty("uplink_cost_time_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uplink_cost_time_ms), ctx);
+    }
+
+    json->getProperty("quality_adapt_indication", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->quality_adapt_indication), ctx);
+    }
+
+    json->getProperty("txPacketLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->txPacketLossRate), ctx);
+    }
+
+    json->getProperty("capture_brightness_level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->capture_brightness_level), ctx);
+    }
+
+    json->getProperty("simulcast_stream_profile", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->simulcast_stream_profile), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVideoTrackStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("uid", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uid), ctx);
+    }
+
+    json->getProperty("delay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay), ctx);
+    }
+
+    json->getProperty("e2eDelay", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->e2eDelay), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("receivedBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->receivedBitrate), ctx);
+    }
+
+    json->getProperty("decoderInputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoderInputFrameRate), ctx);
+    }
+
+    json->getProperty("decoderOutputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoderOutputFrameRate), ctx);
+    }
+
+    json->getProperty("rendererOutputFrameRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rendererOutputFrameRate), ctx);
+    }
+
+    json->getProperty("frameLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frameLossRate), ctx);
+    }
+
+    json->getProperty("packetLossRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packetLossRate), ctx);
+    }
+
+    json->getProperty("rxStreamType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rxStreamType), ctx);
+    }
+
+    json->getProperty("totalFrozenTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->totalFrozenTime), ctx);
+    }
+
+    json->getProperty("frozenRate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frozenRate), ctx);
+    }
+
+    json->getProperty("received_bytes", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->received_bytes), ctx);
+    }
+
+    json->getProperty("totalDecodedFrames", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->totalDecodedFrames), ctx);
+    }
+
+    json->getProperty("avSyncTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->avSyncTimeMs), ctx);
+    }
+
+    json->getProperty("downlink_process_time_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->downlink_process_time_ms), ctx);
+    }
+
+    json->getProperty("frame_render_delay_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frame_render_delay_ms), ctx);
+    }
+
+    json->getProperty("totalActiveTime", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->totalActiveTime), ctx);
+    }
+
+    json->getProperty("publishDuration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publishDuration), ctx);
+    }
+
+    json->getProperty("vqa_mos", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->vqa_mos), ctx);
+    }
+
+    json->getProperty("vqa_avg_cost_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->vqa_avg_cost_ms), ctx);
+    }
+
+    json->getProperty("decoder_vender_id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoder_vender_id), ctx);
+    }
+
+    json->getProperty("decoder_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->decoder_type), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ANAStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("bitrate_action_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate_action_counter), ctx);
+    }
+
+    json->getProperty("channel_action_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channel_action_counter), ctx);
+    }
+
+    json->getProperty("dtx_action_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dtx_action_counter), ctx);
+    }
+
+    json->getProperty("fec_action_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fec_action_counter), ctx);
+    }
+
+    json->getProperty("frame_length_increase_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frame_length_increase_counter), ctx);
+    }
+
+    json->getProperty("frame_length_decrease_counter", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frame_length_decrease_counter), ctx);
+    }
+
+    json->getProperty("uplink_packet_loss_fraction", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->uplink_packet_loss_fraction), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioProcessingStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("echo_return_loss", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->echo_return_loss), ctx);
+    }
+
+    json->getProperty("echo_return_loss_enhancement", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->echo_return_loss_enhancement), ctx);
+    }
+
+    json->getProperty("divergent_filter_fraction", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->divergent_filter_fraction), ctx);
+    }
+
+    json->getProperty("delay_median_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay_median_ms), ctx);
+    }
+
+    json->getProperty("delay_standard_deviation_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay_standard_deviation_ms), ctx);
+    }
+
+    json->getProperty("residual_echo_likelihood", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->residual_echo_likelihood), ctx);
+    }
+
+    json->getProperty("residual_echo_likelihood_recent_max", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->residual_echo_likelihood_recent_max), ctx);
+    }
+
+    json->getProperty("delay_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->delay_ms), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::LocalAudioDetailedStats *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("local_ssrc", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->local_ssrc), ctx);
+    }
+
+    json->getProperty("bytes_sent", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bytes_sent), ctx);
+    }
+
+    json->getProperty("packets_sent", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packets_sent), ctx);
+    }
+
+    json->getProperty("packets_lost", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->packets_lost), ctx);
+    }
+
+    json->getProperty("fraction_lost", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fraction_lost), ctx);
+    }
+
+    json->getProperty("codec_name", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codec_name), ctx);
+    }
+
+    json->getProperty("codec_payload_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->codec_payload_type), ctx);
+    }
+
+    json->getProperty("ext_seqnum", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ext_seqnum), ctx);
+    }
+
+    json->getProperty("jitter_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->jitter_ms), ctx);
+    }
+
+    json->getProperty("rtt_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rtt_ms), ctx);
+    }
+
+    json->getProperty("audio_level", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->audio_level), ctx);
+    }
+
+    json->getProperty("total_input_energy", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_input_energy), ctx);
+    }
+
+    json->getProperty("total_input_duration", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->total_input_duration), ctx);
+    }
+
+    json->getProperty("typing_noise_detected", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->typing_noise_detected), ctx);
+    }
+
+    json->getProperty("ana_statistics", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->ana_statistics), ctx);
+    }
+
+    json->getProperty("apm_statistics", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->apm_statistics), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AudioVolumeInformation *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("volume", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->volume), ctx);
+    }
+
+    json->getProperty("vad", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->vad), ctx);
+    }
+
+    json->getProperty("voicePitch", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->voicePitch), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::TConnectSettings *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->token), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->channelId), ctx);
+    }
+
+    json->getProperty("userId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->userId), ctx);
+    }
+
+    json->getProperty("info", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->info), ctx);
+    }
+
+    json->getProperty("appDefinedStartTimeMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->appDefinedStartTimeMs), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtmpStreamingAudioConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("sampleRateHz", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->sampleRateHz), ctx);
+    }
+
+    json->getProperty("bytesPerSample", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bytesPerSample), ctx);
+    }
+
+    json->getProperty("numberOfChannels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->numberOfChannels), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtmpStreamingVideoConfiguration *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    json->getProperty("maxBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->maxBitrate), ctx);
+    }
+
+    json->getProperty("minBitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->minBitrate), ctx);
+    }
+
+    json->getProperty("gopInMs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->gopInMs), ctx);
+    }
+
+    json->getProperty("encoderHwSwMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encoderHwSwMode), ctx);
+    }
+
+    json->getProperty("encoderBitrateControlMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->encoderBitrateControlMode), ctx);
+    }
+
+    json->getProperty("orientationMode", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->orientationMode), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtmpConnectionInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("state", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->state), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RawPixelBuffer *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("Format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->Format), ctx);
+    }
+
+    json->getProperty("format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->format), ctx);
+    }
+
+    json->getProperty("data", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data), ctx);
+    }
+
+    json->getProperty("size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->size), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::PaddedRawPixelBuffer *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->format), ctx);
+    }
+
+    json->getProperty("data_y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data_y), ctx);
+    }
+
+    json->getProperty("stride_y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stride_y), ctx);
+    }
+
+    json->getProperty("data_u", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data_u), ctx);
+    }
+
+    json->getProperty("stride_u", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stride_u), ctx);
+    }
+
+    json->getProperty("data_v", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data_v), ctx);
+    }
+
+    json->getProperty("stride_v", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->stride_v), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::TextureInfo *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("TextureType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->TextureType), ctx);
+    }
+
+    json->getProperty("EglContextType", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->EglContextType), ctx);
+    }
+
+    json->getProperty("texture_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->texture_type), ctx);
+    }
+
+    json->getProperty("context_type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->context_type), ctx);
+    }
+
+    json->getProperty("shared_context", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->shared_context), ctx);
+    }
+
+    json->getProperty("texture_id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->texture_id), ctx);
+    }
+
+    json->getProperty("fence_object", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->fence_object), ctx);
+    }
+
+    json->getProperty("frame_buffer_id", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->frame_buffer_id), ctx);
+    }
+
+    json->getProperty("transform_matrix", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->transform_matrix), ctx);
+    }
+
+    json->getProperty("raw_data_format", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->raw_data_format), ctx);
+    }
+
+    json->getProperty("raw_data", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->raw_data), ctx);
+    }
+
+    json->getProperty("raw_data_size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->raw_data_size), ctx);
+    }
+
+    json->getProperty("raw_data_stride", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->raw_data_stride), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoFrameData *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("Type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->Type), ctx);
+    }
+
+    json->getProperty("type", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->type), ctx);
+    }
+
+    json->getProperty("texture", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->texture), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("rotation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rotation), ctx);
+    }
+
+    json->getProperty("color_space", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->color_space), ctx);
+    }
+
+    json->getProperty("timestamp_ms", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->timestamp_ms), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoFrameDataV2 *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("padded_pixels", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->padded_pixels), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AlphaChannel *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("data", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->data), ctx);
+    }
+
+    json->getProperty("size", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->size), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MixerLayoutConfig *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("x", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->x), ctx);
+    }
+
+    json->getProperty("y", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->y), ctx);
+    }
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("zOrder", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->zOrder), ctx);
+    }
+
+    json->getProperty("alpha", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->alpha), ctx);
+    }
+
+    json->getProperty("mirror", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->mirror), ctx);
+    }
+
+    json->getProperty("image_path", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->image_path), ctx);
+    }
+
+    json->getProperty("rotation", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->rotation), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::StreamLayerConfigInternal *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("dimensions", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->dimensions), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("bitrate_kbps", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate_kbps), ctx);
+    }
+
+    json->getProperty("enable", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->enable), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastConfigInternal *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("simulcastlayerConfigs", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->simulcastlayerConfigs), ctx);
+    }
+
+    json->getProperty("publish_fallback_enable", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publish_fallback_enable), ctx);
+    }
+
+    json->getProperty("publish_on_demand", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->publish_on_demand), ctx);
+    }
+
+    return ok;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastStreamProfile *to, se::Object *ctx)
+{
+    assert(from.isObject());
+    se::Object *json = from.toObject();
+    se::Value field;
+    bool ok = true;
+
+    json->getProperty("width", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->width), ctx);
+    }
+
+    json->getProperty("height", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->height), ctx);
+    }
+
+    json->getProperty("framerate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->framerate), ctx);
+    }
+
+    json->getProperty("bitrate", &field, true);
+    if (!field.isNullOrUndefined()) {
+        ok &= sevalue_to_native(field, &(to->bitrate), ctx);
+    }
+
+    return ok;
+}
+// AUTO-GENERATED IMPLEMENTATIONS END
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__) || defined(__GNUG__)
+#pragma GCC diagnostic pop
+#elif defined(_MSC_VER)
+#pragma warning(pop)
+#endif

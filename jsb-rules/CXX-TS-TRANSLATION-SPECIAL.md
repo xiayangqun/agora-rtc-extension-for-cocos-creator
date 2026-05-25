@@ -1,16 +1,20 @@
-> **⚠️ JSB WARNING**: Because the TS interface definitions and C++ native definitions are **not** always 1:1 consistent, when writing the JSB bridge layer you **must** handle these functions specially. The parameter/return-value mapping differs from the C++ signatures — see each function's row for the exact C++-to-TS translation details.
+> **⚠️ JSB WARNING**: Because the TS interface definitions and C++ Bridge definitions are **not** always 1:1 consistent, when writing the JSB bridge layer you **must** handle these functions specially. The parameter/return-value mapping differs from the C++ Bridge signatures — see each function's row for the exact C++-to-TS translation details.
 
-# C++ → TypeScript Translation: Special Functions
+# Bridge (C++) → TypeScript Translation: Special Functions
 
-> **Purpose**: Documents all functions in `assets/agora-rtc/interface/` that are **not** a straightforward 1:1 translation from C++ to TypeScript.
-> **Audience**: AI agents and developers reading the interface code — this file explains the C++ semantics behind each special TS signature.
-> **Reference C++ Headers**: `windows/include/rtc/`
+> **Purpose**: Documents all functions in `assets/agora-rtc/interface/` that are **not** a straightforward 1:1 translation from the C++ Bridge layer to TypeScript.
+> **Audience**: AI agents and developers reading the interface code — this file explains the C++ Bridge semantics behind each special TS signature.
+> **Reference Files**:
+> - **Bridge C++ Header**: `native/agora/IRtcEngineExBridge.h`
+> - **Bridge C++ Impl**: `native/agora/IRtcEngineExBridge.cpp`
+> - **TS Interface**: `assets/agora-rtc/interface/IRtcEngine.ts`, `IRtcEngineEx.ts`
+> - **C++ SDK Headers**: `mac/include/rtc/IAgoraRtcEngine.h`, `IAgoraRtcEngineEx.h`
 
 ---
 
 ## Special Pattern Overview
 
-This plugin translates the Agora RTC Native SDK's C++ interface into TypeScript. Most functions are a direct 1:1 mapping, but three special patterns exist:
+This plugin translates the Agora RTC Native SDK's C++ interface through a Bridge layer into TypeScript. Most functions are a direct 1:1 mapping, but **four** special patterns exist:
 
 ### Pattern A — Out-param wrapped into return value
 
@@ -44,6 +48,162 @@ C++:  virtual int registerObserver(IObserver* observer) = 0;
                                            observer pointer
 TS:   registerObserver(observer: IObserver): Promise<number>;
 ```
+
+### Pattern D — Function Overloads（情况4：函数重载）
+
+> **⚠️ CRITICAL**: The C++ SDK extensively uses **function overloading** — multiple methods with the **same name** but **different parameter lists**. Since the Bridge itself is C++ code, it should also use **native C++ overloading** (same method name, different parameter types/counts). The TS layer uses **TS-level overload signatures** (compile-time only) to route to a single runtime implementation that dispatches to the correct Bridge overload.
+
+#### Key Rules
+
+1. **Bridge (C++)**: Use **native C++ overloading**. Same method name, different parameter types/counts:
+   ```cpp
+   int leaveChannel();                                    // overload 1
+   int leaveChannel(const AgoraRtcNativeLeaveChannelOptions& options); // overload 2
+   ```
+
+2. **JSB binding (C++ manual binding)**: Each Bridge overload gets its own `SE_BIND_FUNC`. If C++ overloads are distinguishable by parameter count/types at the binding level, they can map directly. If two overloads have the **same parameter count and indistinguishable types** after simplification (e.g., both become `(int, int)`), use numbered suffixes in the JSB binding function name only — **not** in the Bridge:
+   ```cpp
+   // Bridge: native C++ overloading
+   int enableExtension(const std::string &provider, const std::string &extension, bool enable);          // overload 1
+   int enableExtension(const std::string &provider, const std::string &extension, bool enable, int type); // overload 2 — distinguishable
+   
+   // JSB binding: if two overloads collapse to same param types, use suffix in binding function name
+   SE_BIND_FUNC(js_agora_RtcEngineNative_enableExtension)     // → Bridge::enableExtension(3 params)
+   SE_BIND_FUNC(js_agora_RtcEngineNative_enableExtension_2)   // → Bridge::enableExtension(4 params)
+   ```
+
+3. **TS side**: Declare all overload signatures, then implement ONE runtime method that dispatches based on arg count/types:
+   ```ts
+   enableExtension(provider: string, extension: string, enable: boolean): Promise<number>;
+   enableExtension(provider: string, extension: string, enable: boolean, type: number): Promise<number>;
+   async enableExtension(provider: string, extension: string, enable: boolean, type?: number): Promise<number> { ... }
+   ```
+
+4. **Ambiguous overloads**: If two SDK overloads simplify to the **exact same parameter types** (e.g., both become `(int, int)`), the Bridge MUST use different method names (e.g., `methodNameEx`). This is rare and documented below.
+
+---
+
+#### Current Bridge Overloads (`IRtcEngineExBridge.h`, 18 methods)
+
+This is the source-of-truth overload list for the current C++ Bridge header. Keep this table in sync with `native/agora/IRtcEngineExBridge.h` whenever Bridge signatures change.
+
+| # | Method | Bridge overload signatures | Notes |
+|---|--------|----------------------------|-------|
+| 1 | `createDataStream` | `createDataStream(bool reliable, bool ordered)`<br>`createDataStream(int config)` | SDK out-param `streamId` is wrapped into result |
+| 2 | `enableDualStreamMode` | `enableDualStreamMode(bool enabled)`<br>`enableDualStreamMode(bool enabled, int streamConfig)` | `SimulcastStreamConfig` simplified to `int` |
+| 3 | `enableExtension` | `enableExtension(string provider, string extension, int extensionInfo, bool enable)`<br>`enableExtension(string provider, string extension, bool enable, int type)` | Same arg count after simplification risk; binding must dispatch by arg types/order |
+| 4 | `joinChannel` | `joinChannel(string token, string channelId, string info, uid_t uid)`<br>`joinChannel(string token, string channelId, uid_t uid, AgoraRtcNativeChannelMediaOptions options)` | Native C++ overloads |
+| 5 | `joinChannelWithUserAccount` | `joinChannelWithUserAccount(string token, string channelId, string userAccount)`<br>`joinChannelWithUserAccount(string token, string channelId, string userAccount, AgoraRtcNativeChannelMediaOptions options)` | Native C++ overloads |
+| 6 | `leaveChannel` | `leaveChannel()`<br>`leaveChannel(AgoraRtcNativeLeaveChannelOptions options)` | Mirrors SDK `LeaveChannelOptions` fields |
+| 7 | `setAudioProfile` | `setAudioProfile(int profile, int scenario)`<br>`setAudioProfile(int profile)` | Native C++ overloads |
+| 8 | `setClientRole` | `setClientRole(int role)`<br>`setClientRole(int role, int audienceLatencyLevel)` | `ClientRoleOptions` simplified to latency level |
+| 9 | `setDualStreamMode` | `setDualStreamMode(int mode)`<br>`setDualStreamMode(int mode, int streamConfig)` | `SimulcastStreamConfig` simplified to `int` |
+| 10 | `setLocalRenderMode` | `setLocalRenderMode(int renderMode, int mirrorMode)`<br>`setLocalRenderMode(int renderMode)` | Native C++ overloads |
+| 11 | `setPlaybackAudioFrameBeforeMixingParameters` | `setPlaybackAudioFrameBeforeMixingParameters(int sampleRate, int channel)`<br>`setPlaybackAudioFrameBeforeMixingParameters(int sampleRate, int channel, int samplesPerCall)` | Native C++ overloads |
+| 12 | `startAudioMixing` | `startAudioMixing(string filePath, bool loopback, int cycle)`<br>`startAudioMixing(string filePath, bool loopback, int cycle, int startPos)` | Native C++ overloads |
+| 13 | `startAudioRecording` | `startAudioRecording(string filePath, int quality)`<br>`startAudioRecording(string filePath, int sampleRate, int quality)`<br>`startAudioRecording(int config)` | `AudioRecordingConfiguration` simplified to `int` |
+| 14 | `startPreview` | `startPreview()`<br>`startPreview(int sourceType)` | Native C++ overloads |
+| 15 | `startScreenCapture` | `startScreenCapture()`<br>`startScreenCapture(int sourceType)` | Bridge exposes source-type overload; full SDK config overload is stubbed/simplified |
+| 16 | `stopPreview` | `stopPreview()`<br>`stopPreview(int sourceType)` | Native C++ overloads |
+| 17 | `stopScreenCapture` | `stopScreenCapture()`<br>`stopScreenCapture(int sourceType)` | Native C++ overloads |
+| 18 | `takeSnapshot` | `takeSnapshot(uid_t uid, string filePath)`<br>`takeSnapshot(uid_t uid, int config)` | SDK `SnapshotConfig` simplified to `int` |
+
+#### SDK `IRtcEngine` Overloads (21 methods) — Bridge Strategy
+
+Methods in `IAgoraRtcEngine.h` (`class IRtcEngine`) with multiple overloads, and how the Bridge handles them:
+
+| # | Method | Overloads | Bridge Strategy | Notes |
+|---|--------|-----------|-----------------|-------|
+| 1 | `addVideoWatermark` | 3 | ⚠️ 3 stub methods: params collapse to `()` / `(string)` / `()` → **need different names** (1st & 3rd both `()`) | `addVideoWatermark()`, `addVideoWatermarkByUrl(string)`, `addVideoWatermarkByConfig()` |
+| 2 | `createDataStream` | 2 | ✅ C++ overloading: `(bool, bool)` vs `(int)` — distinguishable | `createDataStream(bool, bool)`, `createDataStream(int)` (config as int) |
+| 3 | `enableDualStreamMode` | 2 | ✅ C++ overloading: `(bool)` vs `(bool, int)` | `enableDualStreamMode(bool)`, `enableDualStreamMode(bool, int)` |
+| 4 | `enableExtension` | 2 | ⚠️ After simplification: `(string, string, bool)` vs `(string, string, bool, int)` — ✅ distinguishable | C++ overloading works |
+| 5 | `getExtensionProperty` | 2 | ⚠️ After simplification: 6 params vs 6 params with different types at pos 3 — ✅ distinguishable | `getExtensionProperty(string,string,int,string,string,int)` vs `getExtensionProperty(string,string,string,string,int,int)` |
+| 6 | `joinChannel` | 2 | ✅ Already using C++ overloading | `joinChannel(string,string,string,uid_t)` vs `joinChannel(string,string,uid_t,options&)` |
+| 7 | `joinChannelWithUserAccount` | 2 | ✅ Already using C++ overloading | Params differ by count |
+| 8 | `leaveChannel` | 2 | ✅ C++ overloading: `()` vs `(LeaveChannelOptions)` | `leaveChannel()`, `leaveChannel(AgoraRtcNativeLeaveChannelOptions options)` |
+| 9 | `setAudioProfile` | 2 | ✅ Already using C++ overloading | `setAudioProfile(int,int)` vs `setAudioProfile(int)` |
+| 10 | `setClientRole` | 2 | ✅ Already using C++ overloading | `setClientRole(int)` vs `setClientRole(int,int)` |
+| 11 | `setDualStreamMode` | 2 | ✅ C++ overloading: `(int)` vs `(int, int)` | Different param count |
+| 12 | `setExtensionProperty` | 2 | ⚠️ After simplification: 5 params vs 5 params with different types at pos 3 — ✅ distinguishable | C++ overloading works |
+| 13 | `setLocalRenderMode` | 2 | ✅ C++ overloading: `(int, int)` vs `(int)` | `setLocalRenderMode(int,int)`, `setLocalRenderMode(int)` |
+| 14 | `setPlaybackAudioFrameBeforeMixingParameters` | 2 | ✅ C++ overloading: `(int, int)` vs `(int, int, int)` | Different param count |
+| 15 | `startAudioMixing` | 2 | ✅ Already using C++ overloading | `(string,bool,int)` vs `(string,bool,int,int)` |
+| 16 | `startAudioRecording` | 3 | ✅ C++ overloading: `(string,int)` vs `(string,int,int)` vs `(int)` — distinguishable | 3 overloads |
+| 17 | `startPreview` | 2 | ✅ Already using C++ overloading | `()` vs `(int)` |
+| 18 | `startScreenCapture` | 2 | ✅ C++ overloading: `(int)` vs `(int, int)` | `startScreenCapture(int)` vs `startScreenCapture(int, int)` |
+| 19 | `stopPreview` | 2 | ✅ Already using C++ overloading | `()` vs `(int)` |
+| 20 | `stopScreenCapture` | 2 | ✅ C++ overloading: `()` vs `(int)` | Different param count |
+| 21 | `takeSnapshot` | 2 | ✅ C++ overloading: `(uid_t, string)` vs `(uid_t, int)` | Different 2nd param type |
+
+#### SDK `IRtcEngineEx` Overloads (5 methods)
+
+| # | Method | Overloads | Bridge Strategy | Notes |
+|---|--------|-----------|-----------------|-------|
+| 1 | `addVideoWatermarkEx` | 2 | ⚠️ need different names: both stubs with indistinguishable params | `addVideoWatermarkExByUrl(string)`, `addVideoWatermarkExByConfig(int)` |
+| 2 | `createDataStreamEx` | 2 | ✅ C++ overloading: different param counts | `createDataStreamEx(bool,bool,int)`, `createDataStreamEx(int,int)` |
+| 3 | `leaveChannelEx` | 2 | ✅ C++ overloading: `(int)` vs `(int, int)` | Different param count |
+| 4 | `leaveChannelWithUserAccountEx` | 2 | ✅ C++ overloading: `(string,string)` vs `(string,string,int)` | Different param count |
+| 5 | `takeSnapshotEx` | 2 | ✅ C++ overloading: `(int,uid_t,string)` vs `(int,uid_t,int)` | Different 3rd param type |
+
+#### IRtcEngineEx Parallel Methods (52 "Ex" variants)
+
+These are **NOT** C++ overloads (different method name with `Ex` suffix), but are multi-channel counterparts that append `const RtcConnection& connection`. The Bridge should expose them as separate methods:
+
+| IRtcEngineEx method | Line | Corresponding IRtcEngine method |
+|---|---|---|
+| `joinChannelEx` | 1167 | `joinChannel` |
+| `leaveChannelEx` | 1205 | `leaveChannel` |
+| `leaveChannelWithUserAccountEx` | 1272 | N/A (pure IRtcEngineEx) |
+| `updateChannelMediaOptionsEx` | 1316 | `updateChannelMediaOptions` |
+| `setVideoEncoderConfigurationEx` | 1337 | `setVideoEncoderConfiguration` |
+| `setupRemoteVideoEx` | 1367 | `setupRemoteVideo` |
+| `muteRemoteAudioStreamEx` | 1386 | `muteRemoteAudioStream` |
+| `muteRemoteVideoStreamEx` | 1405 | `muteRemoteVideoStream` |
+| `setRemoteVideoStreamTypeEx` | 1445 | `setRemoteVideoStreamType` |
+| `muteLocalAudioStreamEx` | 1465 | `muteLocalAudioStream` |
+| `muteLocalVideoStreamEx` | 1485 | `muteLocalVideoStream` |
+| `muteAllRemoteAudioStreamsEx` | 1509 | `muteAllRemoteAudioStreams` |
+| `muteAllRemoteVideoStreamsEx` | 1527 | `muteAllRemoteVideoStreams` |
+| `setSubscribeAudioBlocklistEx` | 1558 | `setSubscribeAudioBlocklist` |
+| `setSubscribeAudioAllowlistEx` | 1587 | `setSubscribeAudioAllowlist` |
+| `setSubscribeVideoBlocklistEx` | 1617 | `setSubscribeVideoBlocklist` |
+| `setSubscribeVideoAllowlistEx` | 1646 | `setSubscribeVideoAllowlist` |
+| `setRemoteVideoSubscriptionOptionsEx` | 1662 | `setRemoteVideoSubscriptionOptions` |
+| `setRemoteVoicePositionEx` | 1690 | `setRemoteVoicePosition` |
+| `setRemoteUserSpatialAudioParamsEx` | 1701 | `setRemoteUserSpatialAudioParams` |
+| `enableLoopbackRecordingEx` | 1752 | `enableLoopbackRecording` |
+| `adjustRecordingSignalVolumeEx` | 1768 | `adjustRecordingSignalVolume` |
+| `muteRecordingSignalEx` | 1783 | `muteRecordingSignal` |
+| `adjustUserPlaybackSignalVolumeEx` | 1805 | `adjustUserPlaybackSignalVolume` |
+| `getConnectionStateEx` | 1818 | `getConnectionState` |
+| `enableEncryptionEx` | 1843 | `enableEncryption` |
+| `createDataStreamEx` | 1878 | `createDataStream` |
+| `sendStreamMessageEx` | 1941 | `sendStreamMessage` |
+| `sendRdtMessageEx` | 1957 | `sendRdtMessage` |
+| `sendMediaControlMessageEx` | 1972 | `sendMediaControlMessage` |
+| `addVideoWatermarkEx` | 2017 | `addVideoWatermark` |
+| `removeVideoWatermarkEx` | 2051 | `removeVideoWatermark` |
+| `clearVideoWatermarkEx` | 2062 | `clearVideoWatermarks` |
+| `enableAudioVolumeIndicationEx` | 2110 | `enableAudioVolumeIndication` |
+| `startRtmpStreamWithoutTranscodingEx` | 2143 | `startRtmpStreamWithoutTranscoding` |
+| `startRtmpStreamWithTranscodingEx` | 2178 | `startRtmpStreamWithTranscoding` |
+| `updateRtmpTranscodingEx` | 2197 | `updateRtmpTranscoding` |
+| `stopRtmpStreamEx` | 2219 | `stopRtmpStream` |
+| `startOrUpdateChannelMediaRelayEx` | 2257 | `startOrUpdateChannelMediaRelay` |
+| `stopChannelMediaRelayEx` | 2281 | `stopChannelMediaRelay` |
+| `pauseAllChannelMediaRelayEx` | 2300 | `pauseAllChannelMediaRelay` |
+| `resumeAllChannelMediaRelayEx` | 2318 | `resumeAllChannelMediaRelay` |
+| `getUserInfoByUserAccountEx` | 2333 | `getUserInfoByUserAccount` |
+| `getUserInfoByUidEx` | 2348 | `getUserInfoByUid` |
+| `takeSnapshotEx` | 2495 | `takeSnapshot` |
+| `enableContentInspectEx` | 2550 | `enableContentInspect` |
+| `startMediaRenderingTracingEx` | 2582 | `startMediaRenderingTracing` |
+| `setParametersEx` | 2592 | `setParameters` |
+| `getCallIdEx` | 2607 | `getCallId` |
+| `sendAudioMetadataEx` | 2620 | `sendAudioMetadata` |
+| `preloadEffectEx` | 2652 | `preloadEffect` |
+| `playEffectEx` | 2701 | `playEffect` |
 
 ---
 

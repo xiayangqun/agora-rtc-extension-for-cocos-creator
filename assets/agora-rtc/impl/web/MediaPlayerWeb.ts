@@ -1,4 +1,4 @@
-import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTC from "./AgoraRTC";
 import { IMediaPlayer } from "../../interface/IMediaPlayer";
 import { IMediaPlayerSourceObserver } from "../../interface/IMediaPlayerSourceObserver";
 import {

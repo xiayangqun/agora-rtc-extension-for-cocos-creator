@@ -1,5 +1,5 @@
 import { Texture2D, director, Director } from "cc";
-import { ILocalVideoTrack, IRemoteVideoTrack } from "agora-rtc-sdk-ng";
+import { ILocalVideoTrack, IRemoteVideoTrack } from "./AgoraRTC";
 
 type VideoTrack = ILocalVideoTrack | IRemoteVideoTrack;
 

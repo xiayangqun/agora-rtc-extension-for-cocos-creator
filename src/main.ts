@@ -1,38 +1,10 @@
-import { readFileSync, existsSync } from "fs";
-import { join, dirname } from "path";
-import { exec } from "child_process";
+import { existsSync, rmSync } from "fs";
+import { join, dirname, resolve } from "path";
+import { execFile } from "child_process";
 import { promisify } from "util";
 
-const execAsync = promisify(exec);
-
-function getPluginPackageJson(): any {
-    const pluginDir = dirname(__dirname);
-    const pkgPath = join(pluginDir, "package.json");
-    return JSON.parse(readFileSync(pkgPath, "utf-8"));
-}
-
-function getRequiredSdkVersion(): string {
-    const pkg = getPluginPackageJson();
-    const dep = pkg.dependencies?.["agora-rtc-sdk-ng"];
-    if (!dep) return "4.24.3";
-    // 去掉 ^ 或 ~ 前缀，取纯版本号
-    return dep.replace(/^[\^~]/, "");
-}
-
-function getProjectPackageJsonPath(): string {
-    const projectPath = (Editor as any).Project.path;
-    return join(projectPath, "package.json");
-}
-
-function readProjectPackageJson(): any | null {
-    const path = getProjectPackageJsonPath();
-    if (!existsSync(path)) return null;
-    try {
-        return JSON.parse(readFileSync(path, "utf-8"));
-    } catch {
-        return null;
-    }
-}
+const execFileAsync = promisify(execFile);
+import nativeBindingUtils = require("../scripts/native-binding-utils");
 
 /**
  * @en Registration method for the main process of Extension
@@ -43,32 +15,82 @@ export const methods: { [key: string]: (...any: any[]) => any } = {
         Editor.Panel.open("agora-rtc-extension-for-cocos-creator.agora-panel");
     },
 
-    async "check-dependency"() {
-        const requiredVersion = getRequiredSdkVersion();
-        const projectPkg = readProjectPackageJson();
-        if (!projectPkg) {
-            return { hasDependency: false, requiredVersion };
-        }
-        const installedVersion =
-            projectPkg.dependencies?.["agora-rtc-sdk-ng"] || projectPkg.devDependencies?.["agora-rtc-sdk-ng"] || null;
+    async "query-cocos-engine-root"() {
+        const projectPath = (Editor as any).Project.path;
         return {
-            hasDependency: !!installedVersion,
-            version: installedVersion ? installedVersion.replace(/^[\^~]/, "") : null,
-            requiredVersion,
+            engineRoot: nativeBindingUtils.readEngineRootFromCcDts(projectPath),
         };
     },
 
-    async "install-dependency"() {
-        const requiredVersion = getRequiredSdkVersion();
-        const projectPath = (Editor as any).Project.path;
+    async "query-sdk-status"() {
+        const pluginDir = dirname(__dirname);
+        const platforms = ["mac", "ios", "android", "windows"];
+        const result: Record<string, { exists: boolean }> = {};
+        for (const p of platforms) {
+            const libsDir = join(pluginDir, p, "libs");
+            result[p] = { exists: existsSync(libsDir) };
+        }
+        return result;
+    },
+
+    async "download-sdk"(platform: string) {
+        const pluginDir = dirname(__dirname);
+        const scriptPath = resolve(pluginDir, "scripts", "predownload.js");
         try {
-            const { stdout, stderr } = await execAsync(`npm install agora-rtc-sdk-ng@${requiredVersion}`, {
-                cwd: projectPath,
-                timeout: 120000,
+            const { stdout, stderr } = await execFileAsync("node", [scriptPath, "--platform", platform], {
+                cwd: pluginDir,
+                timeout: 300000,
+                maxBuffer: 1024 * 1024 * 4,
             });
             return { success: true, stdout, stderr };
         } catch (err: any) {
-            return { success: false, error: err.message || String(err) };
+            return {
+                success: false,
+                stdout: err.stdout || "",
+                stderr: err.stderr || "",
+                error: err.message || String(err),
+            };
+        }
+    },
+
+    async "delete-all-sdks"() {
+        const pluginDir = dirname(__dirname);
+        const platforms = ["mac", "ios", "android", "windows"];
+        // 直接删除平台 libs/ 和 include/ 目录，不通过子进程
+        for (const p of platforms) {
+            const libsDir = join(pluginDir, p, "libs");
+            const includeDir = join(pluginDir, p, "include");
+            try {
+                if (existsSync(libsDir)) rmSync(libsDir, { recursive: true, force: true });
+            } catch (_) {
+                /* 忽略单平台清理失败，继续清理其他 */
+            }
+            try {
+                if (existsSync(includeDir)) rmSync(includeDir, { recursive: true, force: true });
+            } catch (_) {
+                /* 忽略 */
+            }
+        }
+        return { success: true };
+    },
+
+    async "generate-native-bindings"(engineRoot: string) {
+        const pluginDir = dirname(__dirname);
+        const scriptPath = resolve(pluginDir, "scripts", "genbindings.js");
+        try {
+            const { stdout, stderr } = await execFileAsync("node", [scriptPath, engineRoot], {
+                cwd: pluginDir,
+                timeout: 120000,
+                maxBuffer: 1024 * 1024 * 4,
+            });
+            return { success: true, stdout, stderr };
+        } catch (err: any) {
+            return {
+                success: false,
+                stdout: err.stdout || "",
+                stderr: err.stderr || "",
+                error: err.message || String(err),
+            };
         }
     },
 };

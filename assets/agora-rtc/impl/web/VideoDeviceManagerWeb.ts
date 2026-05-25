@@ -1,5 +1,5 @@
 import { IVideoDeviceManager } from "../../interface/IVideoDeviceManager";
-import AgoraRTC from "agora-rtc-sdk-ng";
+import AgoraRTC from "./AgoraRTC";
 import { ERROR_CODE_TYPE, VideoFormat } from "../../types/AgoraBase";
 import { IVideoDeviceCollection } from "../../interface/IVideoDeviceCollection";
 import { VideoDeviceCollectionWeb } from "./VideoDeviceCollectionWeb";
