@@ -1,6 +1,6 @@
-#include "agora/IRtcEngineExBridge.h"
+#include "agora/RtcEngineExBridge.h"
 
-#include "agora/IRtcEngineEventHandlerBridge.h"
+#include "agora/RtcEngineEventHandlerExBridge.h"
 
 namespace {
 const char *nullableCString(const std::string &value) {
@@ -12,9 +12,9 @@ const char *nullableCString(const std::string &value) {
 // Constructor / Destructor
 // =============================================================================
 
-IRtcEngineExBridge::IRtcEngineExBridge() = default;
+RtcEngineExBridge::RtcEngineExBridge() = default;
 
-IRtcEngineExBridge::~IRtcEngineExBridge() {
+RtcEngineExBridge::~RtcEngineExBridge() {
     release(true);
 }
 
@@ -22,8 +22,14 @@ IRtcEngineExBridge::~IRtcEngineExBridge() {
 // 0. release (SDK: static void release in IRtcEngine, first method)
 // =============================================================================
 
-void IRtcEngineExBridge::release(bool sync) {
+void RtcEngineExBridge::release(bool sync) {
     (void)sync;
+    if (_eventHandler != nullptr) {
+        // Stop already queued Cocos-thread callbacks before releasing the SDK
+        // object. Those lambdas may still hold the handler bridge alive, but
+        // they must not call back into the TS engine after release().
+        _eventHandler->invalidateCallbacks();
+    }
     if (_engine != nullptr) {
         agora::rtc::IRtcEngine::release(nullptr);
         _engine = nullptr;
@@ -36,7 +42,7 @@ void IRtcEngineExBridge::release(bool sync) {
 // 1. initialize
 // =============================================================================
 
-int IRtcEngineExBridge::initialize(
+int RtcEngineExBridge::initialize(
     const AgoraRtcNativeContext &context,
     se::Object *eventHandler) {
     release(true);
@@ -46,7 +52,7 @@ int IRtcEngineExBridge::initialize(
         return -1;
     }
 
-    _eventHandler = std::make_shared<IRtcEngineEventHandlerBridge>(eventHandler);
+    _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
     _appId = context.appId;
 
     agora::rtc::RtcEngineContext rtcContext;
@@ -64,7 +70,7 @@ int IRtcEngineExBridge::initialize(
 // 2. queryInterface — stub
 // =============================================================================
 
-int IRtcEngineExBridge::queryInterface(int /*iid*/) {
+int RtcEngineExBridge::queryInterface(int /*iid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -72,7 +78,7 @@ int IRtcEngineExBridge::queryInterface(int /*iid*/) {
 // 3. getVersion
 // =============================================================================
 
-GetVersionResult IRtcEngineExBridge::getVersion() {
+GetVersionResult RtcEngineExBridge::getVersion() {
     GetVersionResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -89,7 +95,7 @@ GetVersionResult IRtcEngineExBridge::getVersion() {
 // 4. getErrorDescription
 // =============================================================================
 
-const char *IRtcEngineExBridge::getErrorDescription(int code) {
+const char *RtcEngineExBridge::getErrorDescription(int code) {
     if (_engine == nullptr) { return ""; }
     return _engine->getErrorDescription(code);
 }
@@ -98,7 +104,7 @@ const char *IRtcEngineExBridge::getErrorDescription(int code) {
 // 5. queryCodecCapability
 // =============================================================================
 
-QueryCodecCapabilityResult IRtcEngineExBridge::queryCodecCapability() {
+QueryCodecCapabilityResult RtcEngineExBridge::queryCodecCapability() {
     QueryCodecCapabilityResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -114,7 +120,7 @@ QueryCodecCapabilityResult IRtcEngineExBridge::queryCodecCapability() {
 // 6. queryDeviceScore
 // =============================================================================
 
-int IRtcEngineExBridge::queryDeviceScore() {
+int RtcEngineExBridge::queryDeviceScore() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->queryDeviceScore();
 }
@@ -123,7 +129,7 @@ int IRtcEngineExBridge::queryDeviceScore() {
 // 7. preloadChannel
 // =============================================================================
 
-int IRtcEngineExBridge::preloadChannel(
+int RtcEngineExBridge::preloadChannel(
     const std::string &token,
     const std::string &channelId,
     agora::rtc::uid_t uid) {
@@ -135,7 +141,7 @@ int IRtcEngineExBridge::preloadChannel(
 // 8. preloadChannelWithUserAccount
 // =============================================================================
 
-int IRtcEngineExBridge::preloadChannelWithUserAccount(
+int RtcEngineExBridge::preloadChannelWithUserAccount(
     const std::string &token,
     const std::string &channelId,
     const std::string &userAccount) {
@@ -148,7 +154,7 @@ int IRtcEngineExBridge::preloadChannelWithUserAccount(
 // 9. updatePreloadChannelToken
 // =============================================================================
 
-int IRtcEngineExBridge::updatePreloadChannelToken(const std::string &token) {
+int RtcEngineExBridge::updatePreloadChannelToken(const std::string &token) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updatePreloadChannelToken(token.c_str());
 }
@@ -157,7 +163,7 @@ int IRtcEngineExBridge::updatePreloadChannelToken(const std::string &token) {
 // 10–11. joinChannel (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::joinChannel(
+int RtcEngineExBridge::joinChannel(
     const std::string &token,
     const std::string &channelId,
     const std::string &info,
@@ -166,7 +172,7 @@ int IRtcEngineExBridge::joinChannel(
     return _engine->joinChannel(nullableCString(token), channelId.c_str(), nullableCString(info), uid);
 }
 
-int IRtcEngineExBridge::joinChannel(
+int RtcEngineExBridge::joinChannel(
     const std::string &token,
     const std::string &channelId,
     agora::rtc::uid_t uid,
@@ -179,7 +185,7 @@ int IRtcEngineExBridge::joinChannel(
 // 12. updateChannelMediaOptions
 // =============================================================================
 
-int IRtcEngineExBridge::updateChannelMediaOptions(const agora::rtc::ChannelMediaOptions &options) {
+int RtcEngineExBridge::updateChannelMediaOptions(const agora::rtc::ChannelMediaOptions &options) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updateChannelMediaOptions(options);
 }
@@ -188,7 +194,7 @@ int IRtcEngineExBridge::updateChannelMediaOptions(const agora::rtc::ChannelMedia
 // 13. leaveChannel
 // =============================================================================
 
-int IRtcEngineExBridge::leaveChannel() {
+int RtcEngineExBridge::leaveChannel() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->leaveChannel();
 }
@@ -197,7 +203,7 @@ int IRtcEngineExBridge::leaveChannel() {
 // 14. leaveChannel (with LeaveChannelOptions)
 // =============================================================================
 
-int IRtcEngineExBridge::leaveChannel(const agora::rtc::LeaveChannelOptions &options) {
+int RtcEngineExBridge::leaveChannel(const agora::rtc::LeaveChannelOptions &options) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->leaveChannel(options);
 }
@@ -206,7 +212,7 @@ int IRtcEngineExBridge::leaveChannel(const agora::rtc::LeaveChannelOptions &opti
 // 15. renewToken
 // =============================================================================
 
-int IRtcEngineExBridge::renewToken(const std::string &token) {
+int RtcEngineExBridge::renewToken(const std::string &token) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->renewToken(token.c_str());
 }
@@ -215,7 +221,7 @@ int IRtcEngineExBridge::renewToken(const std::string &token) {
 // 16. setChannelProfile
 // =============================================================================
 
-int IRtcEngineExBridge::setChannelProfile(int profile) {
+int RtcEngineExBridge::setChannelProfile(int profile) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setChannelProfile(static_cast<agora::CHANNEL_PROFILE_TYPE>(profile));
 }
@@ -224,12 +230,12 @@ int IRtcEngineExBridge::setChannelProfile(int profile) {
 // 17–18. setClientRole (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::setClientRole(int role) {
+int RtcEngineExBridge::setClientRole(int role) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setClientRole(static_cast<agora::rtc::CLIENT_ROLE_TYPE>(role));
 }
 
-int IRtcEngineExBridge::setClientRole(int role, int audienceLatencyLevel) {
+int RtcEngineExBridge::setClientRole(int role, int audienceLatencyLevel) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     agora::rtc::ClientRoleOptions opt;
     opt.audienceLatencyLevel = static_cast<agora::rtc::AUDIENCE_LATENCY_LEVEL_TYPE>(audienceLatencyLevel);
@@ -240,7 +246,7 @@ int IRtcEngineExBridge::setClientRole(int role, int audienceLatencyLevel) {
 // 19. startEchoTest — stub
 // =============================================================================
 
-int IRtcEngineExBridge::startEchoTest(const agora::rtc::EchoTestConfiguration &config) {
+int RtcEngineExBridge::startEchoTest(const agora::rtc::EchoTestConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startEchoTest(config);
 }
@@ -249,7 +255,7 @@ int IRtcEngineExBridge::startEchoTest(const agora::rtc::EchoTestConfiguration &c
 // 20. stopEchoTest
 // =============================================================================
 
-int IRtcEngineExBridge::stopEchoTest() {
+int RtcEngineExBridge::stopEchoTest() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopEchoTest();
 }
@@ -258,7 +264,7 @@ int IRtcEngineExBridge::stopEchoTest() {
 // 21. enableMultiCamera — stub
 // =============================================================================
 
-int IRtcEngineExBridge::enableMultiCamera(bool enabled, const agora::rtc::CameraCapturerConfiguration &config) {
+int RtcEngineExBridge::enableMultiCamera(bool enabled, const agora::rtc::CameraCapturerConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
 #if defined(__APPLE__) && TARGET_OS_IOS
     return _engine->enableMultiCamera(enabled, config);
@@ -273,7 +279,7 @@ int IRtcEngineExBridge::enableMultiCamera(bool enabled, const agora::rtc::Camera
 // 22. enableVideo
 // =============================================================================
 
-int IRtcEngineExBridge::enableVideo() {
+int RtcEngineExBridge::enableVideo() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableVideo();
 }
@@ -282,7 +288,7 @@ int IRtcEngineExBridge::enableVideo() {
 // 23. disableVideo
 // =============================================================================
 
-int IRtcEngineExBridge::disableVideo() {
+int RtcEngineExBridge::disableVideo() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->disableVideo();
 }
@@ -291,12 +297,12 @@ int IRtcEngineExBridge::disableVideo() {
 // 24–25. startPreview (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::startPreview() {
+int RtcEngineExBridge::startPreview() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startPreview();
 }
 
-int IRtcEngineExBridge::startPreview(int sourceType) {
+int RtcEngineExBridge::startPreview(int sourceType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startPreview(static_cast<agora::rtc::VIDEO_SOURCE_TYPE>(sourceType));
 }
@@ -305,12 +311,12 @@ int IRtcEngineExBridge::startPreview(int sourceType) {
 // 26–27. stopPreview (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::stopPreview() {
+int RtcEngineExBridge::stopPreview() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopPreview();
 }
 
-int IRtcEngineExBridge::stopPreview(int sourceType) {
+int RtcEngineExBridge::stopPreview(int sourceType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopPreview(static_cast<agora::rtc::VIDEO_SOURCE_TYPE>(sourceType));
 }
@@ -319,7 +325,7 @@ int IRtcEngineExBridge::stopPreview(int sourceType) {
 // 28. startLastmileProbeTest — stub
 // =============================================================================
 
-int IRtcEngineExBridge::startLastmileProbeTest(const agora::rtc::LastmileProbeConfig &config) {
+int RtcEngineExBridge::startLastmileProbeTest(const agora::rtc::LastmileProbeConfig &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startLastmileProbeTest(config);
 }
@@ -328,7 +334,7 @@ int IRtcEngineExBridge::startLastmileProbeTest(const agora::rtc::LastmileProbeCo
 // 29. stopLastmileProbeTest
 // =============================================================================
 
-int IRtcEngineExBridge::stopLastmileProbeTest() {
+int RtcEngineExBridge::stopLastmileProbeTest() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopLastmileProbeTest();
 }
@@ -337,7 +343,7 @@ int IRtcEngineExBridge::stopLastmileProbeTest() {
 // 30. setVideoEncoderConfiguration — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setVideoEncoderConfiguration(const agora::rtc::VideoEncoderConfiguration &config) {
+int RtcEngineExBridge::setVideoEncoderConfiguration(const agora::rtc::VideoEncoderConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVideoEncoderConfiguration(config);
 }
@@ -346,69 +352,69 @@ int IRtcEngineExBridge::setVideoEncoderConfiguration(const agora::rtc::VideoEnco
 // 31–42: Beauty / filter / video effect — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::setBeautyEffectOptions(
+int RtcEngineExBridge::setBeautyEffectOptions(
     bool enabled, const agora::rtc::BeautyOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setBeautyEffectOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::setFaceShapeBeautyOptions(
+int RtcEngineExBridge::setFaceShapeBeautyOptions(
     bool enabled, const agora::rtc::FaceShapeBeautyOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setFaceShapeBeautyOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::setFaceShapeAreaOptions(
+int RtcEngineExBridge::setFaceShapeAreaOptions(
     const agora::rtc::FaceShapeAreaOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setFaceShapeAreaOptions(options, type);
 }
 
-GetFaceShapeBeautyOptionsResult IRtcEngineExBridge::getFaceShapeBeautyOptions(int /*type*/) {
+GetFaceShapeBeautyOptionsResult RtcEngineExBridge::getFaceShapeBeautyOptions(int /*type*/) {
     GetFaceShapeBeautyOptionsResult result{};
     result.errorCode = -agora::ERR_NOT_SUPPORTED;
     return result;
 }
 
-GetFaceShapeAreaOptionsResult IRtcEngineExBridge::getFaceShapeAreaOptions(int /*shapeArea*/, int /*type*/) {
+GetFaceShapeAreaOptionsResult RtcEngineExBridge::getFaceShapeAreaOptions(int /*shapeArea*/, int /*type*/) {
     GetFaceShapeAreaOptionsResult result{};
     result.errorCode = -agora::ERR_NOT_SUPPORTED;
     return result;
 }
 
-int IRtcEngineExBridge::setFilterEffectOptions(
+int RtcEngineExBridge::setFilterEffectOptions(
     bool enabled, const agora::rtc::FilterEffectOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setFilterEffectOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::createVideoEffectObject(const std::string & /*bundlePath*/, int /*type*/) {
+int RtcEngineExBridge::createVideoEffectObject(const std::string & /*bundlePath*/, int /*type*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::destroyVideoEffectObject(int /*videoEffectObject*/) {
+int RtcEngineExBridge::destroyVideoEffectObject(int /*videoEffectObject*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setLowlightEnhanceOptions(
+int RtcEngineExBridge::setLowlightEnhanceOptions(
     bool enabled, const agora::rtc::LowlightEnhanceOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLowlightEnhanceOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::setVideoDenoiserOptions(
+int RtcEngineExBridge::setVideoDenoiserOptions(
     bool enabled, const agora::rtc::VideoDenoiserOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVideoDenoiserOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::setColorEnhanceOptions(
+int RtcEngineExBridge::setColorEnhanceOptions(
     bool enabled, const agora::rtc::ColorEnhanceOptions &options, agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setColorEnhanceOptions(enabled, options, type);
 }
 
-int IRtcEngineExBridge::enableVirtualBackground(
+int RtcEngineExBridge::enableVirtualBackground(
     bool enabled,
     const agora::rtc::VirtualBackgroundSource &backgroundSource,
     const agora::rtc::SegmentationProperty &segproperty,
@@ -421,7 +427,7 @@ int IRtcEngineExBridge::enableVirtualBackground(
 // 43. setupRemoteVideo — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setupRemoteVideo(const agora::rtc::VideoCanvas &canvas) {
+int RtcEngineExBridge::setupRemoteVideo(const agora::rtc::VideoCanvas &canvas) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setupRemoteVideo(canvas);
 }
@@ -430,7 +436,7 @@ int IRtcEngineExBridge::setupRemoteVideo(const agora::rtc::VideoCanvas &canvas) 
 // 44. setupLocalVideo — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setupLocalVideo(const agora::rtc::VideoCanvas &canvas) {
+int RtcEngineExBridge::setupLocalVideo(const agora::rtc::VideoCanvas &canvas) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setupLocalVideo(canvas);
 }
@@ -439,7 +445,7 @@ int IRtcEngineExBridge::setupLocalVideo(const agora::rtc::VideoCanvas &canvas) {
 // 45. setVideoScenario
 // =============================================================================
 
-int IRtcEngineExBridge::setVideoScenario(int scenarioType) {
+int RtcEngineExBridge::setVideoScenario(int scenarioType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVideoScenario(
         static_cast<agora::rtc::VIDEO_APPLICATION_SCENARIO_TYPE>(scenarioType));
@@ -449,7 +455,7 @@ int IRtcEngineExBridge::setVideoScenario(int scenarioType) {
 // 46. setVideoQoEPreference
 // =============================================================================
 
-int IRtcEngineExBridge::setVideoQoEPreference(int qoePreference) {
+int RtcEngineExBridge::setVideoQoEPreference(int qoePreference) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVideoQoEPreference(
         static_cast<agora::rtc::VIDEO_QOE_PREFERENCE_TYPE>(qoePreference));
@@ -459,7 +465,7 @@ int IRtcEngineExBridge::setVideoQoEPreference(int qoePreference) {
 // 47. enableAudio
 // =============================================================================
 
-int IRtcEngineExBridge::enableAudio() {
+int RtcEngineExBridge::enableAudio() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableAudio();
 }
@@ -468,7 +474,7 @@ int IRtcEngineExBridge::enableAudio() {
 // 48. disableAudio
 // =============================================================================
 
-int IRtcEngineExBridge::disableAudio() {
+int RtcEngineExBridge::disableAudio() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->disableAudio();
 }
@@ -477,7 +483,7 @@ int IRtcEngineExBridge::disableAudio() {
 // 49. setAudioProfile (deprecated, 2 params)
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioProfile(int profile, int scenario) {
+int RtcEngineExBridge::setAudioProfile(int profile, int scenario) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioProfile(
         static_cast<agora::rtc::AUDIO_PROFILE_TYPE>(profile),
@@ -488,7 +494,7 @@ int IRtcEngineExBridge::setAudioProfile(int profile, int scenario) {
 // 50. setAudioProfile (1 param)
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioProfile(int profile) {
+int RtcEngineExBridge::setAudioProfile(int profile) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioProfile(
         static_cast<agora::rtc::AUDIO_PROFILE_TYPE>(profile));
@@ -498,7 +504,7 @@ int IRtcEngineExBridge::setAudioProfile(int profile) {
 // 51. setAudioScenario
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioScenario(int scenario) {
+int RtcEngineExBridge::setAudioScenario(int scenario) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioScenario(
         static_cast<agora::rtc::AUDIO_SCENARIO_TYPE>(scenario));
@@ -508,7 +514,7 @@ int IRtcEngineExBridge::setAudioScenario(int scenario) {
 // 52. enableLocalAudio
 // =============================================================================
 
-int IRtcEngineExBridge::enableLocalAudio(bool enabled) {
+int RtcEngineExBridge::enableLocalAudio(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableLocalAudio(enabled);
 }
@@ -517,7 +523,7 @@ int IRtcEngineExBridge::enableLocalAudio(bool enabled) {
 // 53. muteLocalAudioStream
 // =============================================================================
 
-int IRtcEngineExBridge::muteLocalAudioStream(bool mute) {
+int RtcEngineExBridge::muteLocalAudioStream(bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteLocalAudioStream(mute);
 }
@@ -526,7 +532,7 @@ int IRtcEngineExBridge::muteLocalAudioStream(bool mute) {
 // 54. muteAllRemoteAudioStreams
 // =============================================================================
 
-int IRtcEngineExBridge::muteAllRemoteAudioStreams(bool mute) {
+int RtcEngineExBridge::muteAllRemoteAudioStreams(bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteAllRemoteAudioStreams(mute);
 }
@@ -535,7 +541,7 @@ int IRtcEngineExBridge::muteAllRemoteAudioStreams(bool mute) {
 // 55. muteRemoteAudioStream
 // =============================================================================
 
-int IRtcEngineExBridge::muteRemoteAudioStream(agora::rtc::uid_t uid, bool mute) {
+int RtcEngineExBridge::muteRemoteAudioStream(agora::rtc::uid_t uid, bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteRemoteAudioStream(uid, mute);
 }
@@ -544,7 +550,7 @@ int IRtcEngineExBridge::muteRemoteAudioStream(agora::rtc::uid_t uid, bool mute) 
 // 56. muteLocalVideoStream
 // =============================================================================
 
-int IRtcEngineExBridge::muteLocalVideoStream(bool mute) {
+int RtcEngineExBridge::muteLocalVideoStream(bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteLocalVideoStream(mute);
 }
@@ -553,7 +559,7 @@ int IRtcEngineExBridge::muteLocalVideoStream(bool mute) {
 // 57. enableLocalVideo
 // =============================================================================
 
-int IRtcEngineExBridge::enableLocalVideo(bool enabled) {
+int RtcEngineExBridge::enableLocalVideo(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableLocalVideo(enabled);
 }
@@ -562,7 +568,7 @@ int IRtcEngineExBridge::enableLocalVideo(bool enabled) {
 // 58. muteAllRemoteVideoStreams
 // =============================================================================
 
-int IRtcEngineExBridge::muteAllRemoteVideoStreams(bool mute) {
+int RtcEngineExBridge::muteAllRemoteVideoStreams(bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteAllRemoteVideoStreams(mute);
 }
@@ -571,7 +577,7 @@ int IRtcEngineExBridge::muteAllRemoteVideoStreams(bool mute) {
 // 59. setRemoteDefaultVideoStreamType
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteDefaultVideoStreamType(int streamType) {
+int RtcEngineExBridge::setRemoteDefaultVideoStreamType(int streamType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteDefaultVideoStreamType(
         static_cast<agora::rtc::VIDEO_STREAM_TYPE>(streamType));
@@ -581,7 +587,7 @@ int IRtcEngineExBridge::setRemoteDefaultVideoStreamType(int streamType) {
 // 60. muteRemoteVideoStream
 // =============================================================================
 
-int IRtcEngineExBridge::muteRemoteVideoStream(agora::rtc::uid_t uid, bool mute) {
+int RtcEngineExBridge::muteRemoteVideoStream(agora::rtc::uid_t uid, bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteRemoteVideoStream(uid, mute);
 }
@@ -590,7 +596,7 @@ int IRtcEngineExBridge::muteRemoteVideoStream(agora::rtc::uid_t uid, bool mute) 
 // 61. setRemoteVideoStreamType
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteVideoStreamType(agora::rtc::uid_t uid, int streamType) {
+int RtcEngineExBridge::setRemoteVideoStreamType(agora::rtc::uid_t uid, int streamType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteVideoStreamType(
         uid, static_cast<agora::rtc::VIDEO_STREAM_TYPE>(streamType));
@@ -600,7 +606,7 @@ int IRtcEngineExBridge::setRemoteVideoStreamType(agora::rtc::uid_t uid, int stre
 // 62. setRemoteVideoSubscriptionOptions — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteVideoSubscriptionOptions(
+int RtcEngineExBridge::setRemoteVideoSubscriptionOptions(
     agora::rtc::uid_t uid, const agora::rtc::VideoSubscriptionOptions &options) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteVideoSubscriptionOptions(uid, options);
@@ -610,19 +616,19 @@ int IRtcEngineExBridge::setRemoteVideoSubscriptionOptions(
 // 63–66: Subscribe blocklist/allowlist — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::setSubscribeAudioBlocklist(int /*uidList*/, int /*uidNumber*/) {
+int RtcEngineExBridge::setSubscribeAudioBlocklist(int /*uidList*/, int /*uidNumber*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setSubscribeAudioAllowlist(int /*uidList*/, int /*uidNumber*/) {
+int RtcEngineExBridge::setSubscribeAudioAllowlist(int /*uidList*/, int /*uidNumber*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setSubscribeVideoBlocklist(int /*uidList*/, int /*uidNumber*/) {
+int RtcEngineExBridge::setSubscribeVideoBlocklist(int /*uidList*/, int /*uidNumber*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setSubscribeVideoAllowlist(int /*uidList*/, int /*uidNumber*/) {
+int RtcEngineExBridge::setSubscribeVideoAllowlist(int /*uidList*/, int /*uidNumber*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -630,7 +636,7 @@ int IRtcEngineExBridge::setSubscribeVideoAllowlist(int /*uidList*/, int /*uidNum
 // 67. enableAudioVolumeIndication
 // =============================================================================
 
-int IRtcEngineExBridge::enableAudioVolumeIndication(int interval, int smooth, bool reportVad) {
+int RtcEngineExBridge::enableAudioVolumeIndication(int interval, int smooth, bool reportVad) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableAudioVolumeIndication(interval, smooth, reportVad);
 }
@@ -639,19 +645,19 @@ int IRtcEngineExBridge::enableAudioVolumeIndication(int interval, int smooth, bo
 // 68–69. startAudioRecording — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startAudioRecording(const std::string &filePath, int quality) {
+int RtcEngineExBridge::startAudioRecording(const std::string &filePath, int quality) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startAudioRecording(
         filePath.c_str(), static_cast<agora::rtc::AUDIO_RECORDING_QUALITY_TYPE>(quality));
 }
 
-int IRtcEngineExBridge::startAudioRecording(const std::string &filePath, int sampleRate, int quality) {
+int RtcEngineExBridge::startAudioRecording(const std::string &filePath, int sampleRate, int quality) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startAudioRecording(
         filePath.c_str(), sampleRate, static_cast<agora::rtc::AUDIO_RECORDING_QUALITY_TYPE>(quality));
 }
 
-int IRtcEngineExBridge::startAudioRecording(const agora::rtc::AudioRecordingConfiguration &config) {
+int RtcEngineExBridge::startAudioRecording(const agora::rtc::AudioRecordingConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startAudioRecording(config);
 }
@@ -660,7 +666,7 @@ int IRtcEngineExBridge::startAudioRecording(const agora::rtc::AudioRecordingConf
 // 70. registerAudioEncodedFrameObserver — stub
 // =============================================================================
 
-int IRtcEngineExBridge::registerAudioEncodedFrameObserver(int /*config*/, int /*observer*/) {
+int RtcEngineExBridge::registerAudioEncodedFrameObserver(int /*config*/, int /*observer*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -668,7 +674,7 @@ int IRtcEngineExBridge::registerAudioEncodedFrameObserver(int /*config*/, int /*
 // 71. stopAudioRecording
 // =============================================================================
 
-int IRtcEngineExBridge::stopAudioRecording() {
+int RtcEngineExBridge::stopAudioRecording() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopAudioRecording();
 }
@@ -677,19 +683,19 @@ int IRtcEngineExBridge::stopAudioRecording() {
 // 72–75. Media player / recorder — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::createMediaPlayer() {
+int RtcEngineExBridge::createMediaPlayer() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::destroyMediaPlayer(int /*mediaPlayer*/) {
+int RtcEngineExBridge::destroyMediaPlayer(int /*mediaPlayer*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::createMediaRecorder(int /*info*/) {
+int RtcEngineExBridge::createMediaRecorder(int /*info*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::destroyMediaRecorder(int /*mediaRecorder*/) {
+int RtcEngineExBridge::destroyMediaRecorder(int /*mediaRecorder*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -697,12 +703,12 @@ int IRtcEngineExBridge::destroyMediaRecorder(int /*mediaRecorder*/) {
 // 76–77. startAudioMixing (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::startAudioMixing(const std::string &filePath, bool loopback, int cycle) {
+int RtcEngineExBridge::startAudioMixing(const std::string &filePath, bool loopback, int cycle) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startAudioMixing(filePath.c_str(), loopback, cycle);
 }
 
-int IRtcEngineExBridge::startAudioMixing(
+int RtcEngineExBridge::startAudioMixing(
     const std::string &filePath, bool loopback, int cycle, int startPos) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startAudioMixing(filePath.c_str(), loopback, cycle, startPos);
@@ -712,7 +718,7 @@ int IRtcEngineExBridge::startAudioMixing(
 // 78. stopAudioMixing
 // =============================================================================
 
-int IRtcEngineExBridge::stopAudioMixing() {
+int RtcEngineExBridge::stopAudioMixing() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopAudioMixing();
 }
@@ -721,7 +727,7 @@ int IRtcEngineExBridge::stopAudioMixing() {
 // 79. pauseAudioMixing
 // =============================================================================
 
-int IRtcEngineExBridge::pauseAudioMixing() {
+int RtcEngineExBridge::pauseAudioMixing() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->pauseAudioMixing();
 }
@@ -730,7 +736,7 @@ int IRtcEngineExBridge::pauseAudioMixing() {
 // 80. resumeAudioMixing
 // =============================================================================
 
-int IRtcEngineExBridge::resumeAudioMixing() {
+int RtcEngineExBridge::resumeAudioMixing() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->resumeAudioMixing();
 }
@@ -739,7 +745,7 @@ int IRtcEngineExBridge::resumeAudioMixing() {
 // 81. selectAudioTrack
 // =============================================================================
 
-int IRtcEngineExBridge::selectAudioTrack(int index) {
+int RtcEngineExBridge::selectAudioTrack(int index) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->selectAudioTrack(index);
 }
@@ -748,7 +754,7 @@ int IRtcEngineExBridge::selectAudioTrack(int index) {
 // 82. getAudioTrackCount
 // =============================================================================
 
-GetAudioTrackCountResult IRtcEngineExBridge::getAudioTrackCount() {
+GetAudioTrackCountResult RtcEngineExBridge::getAudioTrackCount() {
     GetAudioTrackCountResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -762,7 +768,7 @@ GetAudioTrackCountResult IRtcEngineExBridge::getAudioTrackCount() {
 // 83. adjustAudioMixingVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustAudioMixingVolume(int volume) {
+int RtcEngineExBridge::adjustAudioMixingVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustAudioMixingVolume(volume);
 }
@@ -771,7 +777,7 @@ int IRtcEngineExBridge::adjustAudioMixingVolume(int volume) {
 // 84. adjustAudioMixingPublishVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustAudioMixingPublishVolume(int volume) {
+int RtcEngineExBridge::adjustAudioMixingPublishVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustAudioMixingPublishVolume(volume);
 }
@@ -780,7 +786,7 @@ int IRtcEngineExBridge::adjustAudioMixingPublishVolume(int volume) {
 // 85. getAudioMixingPublishVolume
 // =============================================================================
 
-GetAudioMixingPublishVolumeResult IRtcEngineExBridge::getAudioMixingPublishVolume() {
+GetAudioMixingPublishVolumeResult RtcEngineExBridge::getAudioMixingPublishVolume() {
     GetAudioMixingPublishVolumeResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -794,7 +800,7 @@ GetAudioMixingPublishVolumeResult IRtcEngineExBridge::getAudioMixingPublishVolum
 // 86. adjustAudioMixingPlayoutVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustAudioMixingPlayoutVolume(int volume) {
+int RtcEngineExBridge::adjustAudioMixingPlayoutVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustAudioMixingPlayoutVolume(volume);
 }
@@ -803,7 +809,7 @@ int IRtcEngineExBridge::adjustAudioMixingPlayoutVolume(int volume) {
 // 87. getAudioMixingPlayoutVolume
 // =============================================================================
 
-GetAudioMixingPlayoutVolumeResult IRtcEngineExBridge::getAudioMixingPlayoutVolume() {
+GetAudioMixingPlayoutVolumeResult RtcEngineExBridge::getAudioMixingPlayoutVolume() {
     GetAudioMixingPlayoutVolumeResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -817,7 +823,7 @@ GetAudioMixingPlayoutVolumeResult IRtcEngineExBridge::getAudioMixingPlayoutVolum
 // 88. getAudioMixingDuration
 // =============================================================================
 
-GetAudioMixingDurationResult IRtcEngineExBridge::getAudioMixingDuration() {
+GetAudioMixingDurationResult RtcEngineExBridge::getAudioMixingDuration() {
     GetAudioMixingDurationResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -831,7 +837,7 @@ GetAudioMixingDurationResult IRtcEngineExBridge::getAudioMixingDuration() {
 // 89. getAudioMixingCurrentPosition
 // =============================================================================
 
-GetAudioMixingCurrentPositionResult IRtcEngineExBridge::getAudioMixingCurrentPosition() {
+GetAudioMixingCurrentPositionResult RtcEngineExBridge::getAudioMixingCurrentPosition() {
     GetAudioMixingCurrentPositionResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -845,7 +851,7 @@ GetAudioMixingCurrentPositionResult IRtcEngineExBridge::getAudioMixingCurrentPos
 // 90. setAudioMixingPosition
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioMixingPosition(int pos) {
+int RtcEngineExBridge::setAudioMixingPosition(int pos) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioMixingPosition(pos);
 }
@@ -854,7 +860,7 @@ int IRtcEngineExBridge::setAudioMixingPosition(int pos) {
 // 91. setAudioMixingDualMonoMode
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioMixingDualMonoMode(int mode) {
+int RtcEngineExBridge::setAudioMixingDualMonoMode(int mode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioMixingDualMonoMode(
         static_cast<agora::media::AUDIO_MIXING_DUAL_MONO_MODE>(mode));
@@ -864,7 +870,7 @@ int IRtcEngineExBridge::setAudioMixingDualMonoMode(int mode) {
 // 92. setAudioMixingPitch
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioMixingPitch(int pitch) {
+int RtcEngineExBridge::setAudioMixingPitch(int pitch) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioMixingPitch(pitch);
 }
@@ -873,7 +879,7 @@ int IRtcEngineExBridge::setAudioMixingPitch(int pitch) {
 // 93. setAudioMixingPlaybackSpeed
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioMixingPlaybackSpeed(int speed) {
+int RtcEngineExBridge::setAudioMixingPlaybackSpeed(int speed) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioMixingPlaybackSpeed(speed);
 }
@@ -882,7 +888,7 @@ int IRtcEngineExBridge::setAudioMixingPlaybackSpeed(int speed) {
 // 94. getEffectsVolume
 // =============================================================================
 
-GetEffectsVolumeResult IRtcEngineExBridge::getEffectsVolume() {
+GetEffectsVolumeResult RtcEngineExBridge::getEffectsVolume() {
     GetEffectsVolumeResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -898,7 +904,7 @@ GetEffectsVolumeResult IRtcEngineExBridge::getEffectsVolume() {
 // 95. setEffectsVolume
 // =============================================================================
 
-int IRtcEngineExBridge::setEffectsVolume(int volume) {
+int RtcEngineExBridge::setEffectsVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setEffectsVolume(volume);
 }
@@ -907,7 +913,7 @@ int IRtcEngineExBridge::setEffectsVolume(int volume) {
 // 96. preloadEffect
 // =============================================================================
 
-int IRtcEngineExBridge::preloadEffect(int soundId, const std::string &filePath, int startPos) {
+int RtcEngineExBridge::preloadEffect(int soundId, const std::string &filePath, int startPos) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->preloadEffect(soundId, filePath.c_str(), startPos);
 }
@@ -916,7 +922,7 @@ int IRtcEngineExBridge::preloadEffect(int soundId, const std::string &filePath, 
 // 97. playEffect
 // =============================================================================
 
-int IRtcEngineExBridge::playEffect(
+int RtcEngineExBridge::playEffect(
     int soundId, const std::string &filePath, int loopCount,
     double pitch, double pan, int gain, bool publish, int startPos) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -929,7 +935,7 @@ int IRtcEngineExBridge::playEffect(
 // 98. playAllEffects
 // =============================================================================
 
-int IRtcEngineExBridge::playAllEffects(
+int RtcEngineExBridge::playAllEffects(
     int loopCount, double pitch, double pan, int gain, bool publish) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->playAllEffects(loopCount, pitch, pan, gain, publish);
@@ -939,7 +945,7 @@ int IRtcEngineExBridge::playAllEffects(
 // 99. getVolumeOfEffect
 // =============================================================================
 
-GetVolumeOfEffectResult IRtcEngineExBridge::getVolumeOfEffect(int soundId) {
+GetVolumeOfEffectResult RtcEngineExBridge::getVolumeOfEffect(int soundId) {
     GetVolumeOfEffectResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -955,7 +961,7 @@ GetVolumeOfEffectResult IRtcEngineExBridge::getVolumeOfEffect(int soundId) {
 // 100. setVolumeOfEffect
 // =============================================================================
 
-int IRtcEngineExBridge::setVolumeOfEffect(int soundId, int volume) {
+int RtcEngineExBridge::setVolumeOfEffect(int soundId, int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVolumeOfEffect(soundId, volume);
 }
@@ -964,7 +970,7 @@ int IRtcEngineExBridge::setVolumeOfEffect(int soundId, int volume) {
 // 101. pauseEffect
 // =============================================================================
 
-int IRtcEngineExBridge::pauseEffect(int soundId) {
+int RtcEngineExBridge::pauseEffect(int soundId) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->pauseEffect(soundId);
 }
@@ -973,7 +979,7 @@ int IRtcEngineExBridge::pauseEffect(int soundId) {
 // 102. pauseAllEffects
 // =============================================================================
 
-int IRtcEngineExBridge::pauseAllEffects() {
+int RtcEngineExBridge::pauseAllEffects() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->pauseAllEffects();
 }
@@ -982,7 +988,7 @@ int IRtcEngineExBridge::pauseAllEffects() {
 // 103. resumeEffect
 // =============================================================================
 
-int IRtcEngineExBridge::resumeEffect(int soundId) {
+int RtcEngineExBridge::resumeEffect(int soundId) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->resumeEffect(soundId);
 }
@@ -991,7 +997,7 @@ int IRtcEngineExBridge::resumeEffect(int soundId) {
 // 104. resumeAllEffects
 // =============================================================================
 
-int IRtcEngineExBridge::resumeAllEffects() {
+int RtcEngineExBridge::resumeAllEffects() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->resumeAllEffects();
 }
@@ -1000,7 +1006,7 @@ int IRtcEngineExBridge::resumeAllEffects() {
 // 105. stopEffect
 // =============================================================================
 
-int IRtcEngineExBridge::stopEffect(int soundId) {
+int RtcEngineExBridge::stopEffect(int soundId) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopEffect(soundId);
 }
@@ -1009,7 +1015,7 @@ int IRtcEngineExBridge::stopEffect(int soundId) {
 // 106. stopAllEffects
 // =============================================================================
 
-int IRtcEngineExBridge::stopAllEffects() {
+int RtcEngineExBridge::stopAllEffects() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopAllEffects();
 }
@@ -1018,7 +1024,7 @@ int IRtcEngineExBridge::stopAllEffects() {
 // 107. unloadEffect
 // =============================================================================
 
-int IRtcEngineExBridge::unloadEffect(int soundId) {
+int RtcEngineExBridge::unloadEffect(int soundId) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->unloadEffect(soundId);
 }
@@ -1027,7 +1033,7 @@ int IRtcEngineExBridge::unloadEffect(int soundId) {
 // 108. unloadAllEffects
 // =============================================================================
 
-int IRtcEngineExBridge::unloadAllEffects() {
+int RtcEngineExBridge::unloadAllEffects() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->unloadAllEffects();
 }
@@ -1036,7 +1042,7 @@ int IRtcEngineExBridge::unloadAllEffects() {
 // 109. getEffectDuration
 // =============================================================================
 
-GetEffectDurationResult IRtcEngineExBridge::getEffectDuration(const std::string &filePath) {
+GetEffectDurationResult RtcEngineExBridge::getEffectDuration(const std::string &filePath) {
     GetEffectDurationResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -1050,7 +1056,7 @@ GetEffectDurationResult IRtcEngineExBridge::getEffectDuration(const std::string 
 // 110. setEffectPosition
 // =============================================================================
 
-int IRtcEngineExBridge::setEffectPosition(int soundId, int pos) {
+int RtcEngineExBridge::setEffectPosition(int soundId, int pos) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setEffectPosition(soundId, pos);
 }
@@ -1059,7 +1065,7 @@ int IRtcEngineExBridge::setEffectPosition(int soundId, int pos) {
 // 111. getEffectCurrentPosition
 // =============================================================================
 
-GetEffectCurrentPositionResult IRtcEngineExBridge::getEffectCurrentPosition(int soundId) {
+GetEffectCurrentPositionResult RtcEngineExBridge::getEffectCurrentPosition(int soundId) {
     GetEffectCurrentPositionResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -1073,7 +1079,7 @@ GetEffectCurrentPositionResult IRtcEngineExBridge::getEffectCurrentPosition(int 
 // 112. enableSoundPositionIndication
 // =============================================================================
 
-int IRtcEngineExBridge::enableSoundPositionIndication(bool enabled) {
+int RtcEngineExBridge::enableSoundPositionIndication(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableSoundPositionIndication(enabled);
 }
@@ -1082,7 +1088,7 @@ int IRtcEngineExBridge::enableSoundPositionIndication(bool enabled) {
 // 113. setRemoteVoicePosition
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteVoicePosition(agora::rtc::uid_t uid, double pan, double gain) {
+int RtcEngineExBridge::setRemoteVoicePosition(agora::rtc::uid_t uid, double pan, double gain) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteVoicePosition(uid, pan, gain);
 }
@@ -1091,7 +1097,7 @@ int IRtcEngineExBridge::setRemoteVoicePosition(agora::rtc::uid_t uid, double pan
 // 114. enableSpatialAudio
 // =============================================================================
 
-int IRtcEngineExBridge::enableSpatialAudio(bool enabled) {
+int RtcEngineExBridge::enableSpatialAudio(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableSpatialAudio(enabled);
 }
@@ -1100,7 +1106,7 @@ int IRtcEngineExBridge::enableSpatialAudio(bool enabled) {
 // 115. setRemoteUserSpatialAudioParams — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteUserSpatialAudioParams(agora::rtc::uid_t /*uid*/) {
+int RtcEngineExBridge::setRemoteUserSpatialAudioParams(agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1108,7 +1114,7 @@ int IRtcEngineExBridge::setRemoteUserSpatialAudioParams(agora::rtc::uid_t /*uid*
 // 116. setVoiceBeautifierPreset
 // =============================================================================
 
-int IRtcEngineExBridge::setVoiceBeautifierPreset(int preset) {
+int RtcEngineExBridge::setVoiceBeautifierPreset(int preset) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVoiceBeautifierPreset(
         static_cast<agora::rtc::VOICE_BEAUTIFIER_PRESET>(preset));
@@ -1118,7 +1124,7 @@ int IRtcEngineExBridge::setVoiceBeautifierPreset(int preset) {
 // 117. setAudioEffectPreset
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioEffectPreset(int preset) {
+int RtcEngineExBridge::setAudioEffectPreset(int preset) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioEffectPreset(
         static_cast<agora::rtc::AUDIO_EFFECT_PRESET>(preset));
@@ -1128,7 +1134,7 @@ int IRtcEngineExBridge::setAudioEffectPreset(int preset) {
 // 118. setVoiceConversionPreset
 // =============================================================================
 
-int IRtcEngineExBridge::setVoiceConversionPreset(int preset) {
+int RtcEngineExBridge::setVoiceConversionPreset(int preset) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setVoiceConversionPreset(
         static_cast<agora::rtc::VOICE_CONVERSION_PRESET>(preset));
@@ -1138,7 +1144,7 @@ int IRtcEngineExBridge::setVoiceConversionPreset(int preset) {
 // 119. setAudioEffectParameters
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioEffectParameters(int preset, int param1, int param2) {
+int RtcEngineExBridge::setAudioEffectParameters(int preset, int param1, int param2) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAudioEffectParameters(
         static_cast<agora::rtc::AUDIO_EFFECT_PRESET>(preset), param1, param2);
@@ -1148,7 +1154,7 @@ int IRtcEngineExBridge::setAudioEffectParameters(int preset, int param1, int par
 // 120. setLocalVoicePitch
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalVoicePitch(double pitch) {
+int RtcEngineExBridge::setLocalVoicePitch(double pitch) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalVoicePitch(pitch);
 }
@@ -1157,7 +1163,7 @@ int IRtcEngineExBridge::setLocalVoicePitch(double pitch) {
 // 121. setLocalVoiceFormant
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalVoiceFormant(double formantRatio) {
+int RtcEngineExBridge::setLocalVoiceFormant(double formantRatio) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalVoiceFormant(formantRatio);
 }
@@ -1166,7 +1172,7 @@ int IRtcEngineExBridge::setLocalVoiceFormant(double formantRatio) {
 // 122. setLocalVoiceEqualization
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalVoiceEqualization(int bandFrequency, int bandGain) {
+int RtcEngineExBridge::setLocalVoiceEqualization(int bandFrequency, int bandGain) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalVoiceEqualization(
         static_cast<agora::rtc::AUDIO_EQUALIZATION_BAND_FREQUENCY>(bandFrequency), bandGain);
@@ -1176,7 +1182,7 @@ int IRtcEngineExBridge::setLocalVoiceEqualization(int bandFrequency, int bandGai
 // 123. setLocalVoiceReverb
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalVoiceReverb(int reverbKey, int value) {
+int RtcEngineExBridge::setLocalVoiceReverb(int reverbKey, int value) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalVoiceReverb(
         static_cast<agora::rtc::AUDIO_REVERB_TYPE>(reverbKey), value);
@@ -1186,7 +1192,7 @@ int IRtcEngineExBridge::setLocalVoiceReverb(int reverbKey, int value) {
 // 124. setHeadphoneEQPreset
 // =============================================================================
 
-int IRtcEngineExBridge::setHeadphoneEQPreset(int preset) {
+int RtcEngineExBridge::setHeadphoneEQPreset(int preset) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setHeadphoneEQPreset(
         static_cast<agora::rtc::HEADPHONE_EQUALIZER_PRESET>(preset));
@@ -1196,7 +1202,7 @@ int IRtcEngineExBridge::setHeadphoneEQPreset(int preset) {
 // 125. setHeadphoneEQParameters
 // =============================================================================
 
-int IRtcEngineExBridge::setHeadphoneEQParameters(int lowGain, int highGain) {
+int RtcEngineExBridge::setHeadphoneEQParameters(int lowGain, int highGain) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setHeadphoneEQParameters(lowGain, highGain);
 }
@@ -1205,7 +1211,7 @@ int IRtcEngineExBridge::setHeadphoneEQParameters(int lowGain, int highGain) {
 // 126. enableVoiceAITuner
 // =============================================================================
 
-int IRtcEngineExBridge::enableVoiceAITuner(bool enabled, int type) {
+int RtcEngineExBridge::enableVoiceAITuner(bool enabled, int type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableVoiceAITuner(
         enabled, static_cast<agora::rtc::VOICE_AI_TUNER_TYPE>(type));
@@ -1215,7 +1221,7 @@ int IRtcEngineExBridge::enableVoiceAITuner(bool enabled, int type) {
 // 127. setLogFile
 // =============================================================================
 
-int IRtcEngineExBridge::setLogFile(const std::string &filePath) {
+int RtcEngineExBridge::setLogFile(const std::string &filePath) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLogFile(filePath.c_str());
 }
@@ -1224,7 +1230,7 @@ int IRtcEngineExBridge::setLogFile(const std::string &filePath) {
 // 128. setLogFilter
 // =============================================================================
 
-int IRtcEngineExBridge::setLogFilter(unsigned int filter) {
+int RtcEngineExBridge::setLogFilter(unsigned int filter) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLogFilter(filter);
 }
@@ -1233,7 +1239,7 @@ int IRtcEngineExBridge::setLogFilter(unsigned int filter) {
 // 129. setLogLevel
 // =============================================================================
 
-int IRtcEngineExBridge::setLogLevel(int level) {
+int RtcEngineExBridge::setLogLevel(int level) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLogLevel(static_cast<agora::commons::LOG_LEVEL>(level));
 }
@@ -1242,7 +1248,7 @@ int IRtcEngineExBridge::setLogLevel(int level) {
 // 130. setLogFileSize
 // =============================================================================
 
-int IRtcEngineExBridge::setLogFileSize(unsigned int fileSizeInKBytes) {
+int RtcEngineExBridge::setLogFileSize(unsigned int fileSizeInKBytes) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLogFileSize(fileSizeInKBytes);
 }
@@ -1251,7 +1257,7 @@ int IRtcEngineExBridge::setLogFileSize(unsigned int fileSizeInKBytes) {
 // 131. uploadLogFile — stub
 // =============================================================================
 
-int IRtcEngineExBridge::uploadLogFile() {
+int RtcEngineExBridge::uploadLogFile() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1259,7 +1265,7 @@ int IRtcEngineExBridge::uploadLogFile() {
 // 132. writeLog — stub (varargs)
 // =============================================================================
 
-int IRtcEngineExBridge::writeLog(int /*level*/, const std::string & /*message*/) {
+int RtcEngineExBridge::writeLog(int /*level*/, const std::string & /*message*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1267,7 +1273,7 @@ int IRtcEngineExBridge::writeLog(int /*level*/, const std::string & /*message*/)
 // 133. setLocalRenderMode (2 params) — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalRenderMode(int renderMode, int mirrorMode) {
+int RtcEngineExBridge::setLocalRenderMode(int renderMode, int mirrorMode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalRenderMode(
         static_cast<agora::media::base::RENDER_MODE_TYPE>(renderMode),
@@ -1278,7 +1284,7 @@ int IRtcEngineExBridge::setLocalRenderMode(int renderMode, int mirrorMode) {
 // 134. setLocalRenderTargetFps
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalRenderTargetFps(int sourceType, int targetFps) {
+int RtcEngineExBridge::setLocalRenderTargetFps(int sourceType, int targetFps) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalRenderTargetFps(
         static_cast<agora::rtc::VIDEO_SOURCE_TYPE>(sourceType), targetFps);
@@ -1288,7 +1294,7 @@ int IRtcEngineExBridge::setLocalRenderTargetFps(int sourceType, int targetFps) {
 // 135. setRemoteRenderTargetFps
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteRenderTargetFps(int targetFps) {
+int RtcEngineExBridge::setRemoteRenderTargetFps(int targetFps) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteRenderTargetFps(targetFps);
 }
@@ -1297,7 +1303,7 @@ int IRtcEngineExBridge::setRemoteRenderTargetFps(int targetFps) {
 // 136. setLocalRenderMode (deprecated, 1 param)
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalRenderMode(int renderMode) {
+int RtcEngineExBridge::setLocalRenderMode(int renderMode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalRenderMode(
         static_cast<agora::media::base::RENDER_MODE_TYPE>(renderMode));
@@ -1307,7 +1313,7 @@ int IRtcEngineExBridge::setLocalRenderMode(int renderMode) {
 // 137. setLocalVideoMirrorMode
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalVideoMirrorMode(int mirrorMode) {
+int RtcEngineExBridge::setLocalVideoMirrorMode(int mirrorMode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setLocalVideoMirrorMode(
         static_cast<agora::rtc::VIDEO_MIRROR_MODE_TYPE>(mirrorMode));
@@ -1317,12 +1323,12 @@ int IRtcEngineExBridge::setLocalVideoMirrorMode(int mirrorMode) {
 // 138. enableDualStreamMode (deprecated, 1 param)
 // =============================================================================
 
-int IRtcEngineExBridge::enableDualStreamMode(bool enabled) {
+int RtcEngineExBridge::enableDualStreamMode(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableDualStreamMode(enabled);
 }
 
-int IRtcEngineExBridge::enableDualStreamMode(
+int RtcEngineExBridge::enableDualStreamMode(
     bool enabled, const agora::rtc::SimulcastStreamConfig &streamConfig) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableDualStreamMode(enabled, streamConfig);
@@ -1332,7 +1338,7 @@ int IRtcEngineExBridge::enableDualStreamMode(
 // 139. setDualStreamMode
 // =============================================================================
 
-int IRtcEngineExBridge::setDualStreamMode(int mode) {
+int RtcEngineExBridge::setDualStreamMode(int mode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setDualStreamMode(
         static_cast<agora::rtc::SIMULCAST_STREAM_MODE>(mode));
@@ -1342,7 +1348,7 @@ int IRtcEngineExBridge::setDualStreamMode(int mode) {
 // 140. setSimulcastConfig — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setSimulcastConfig() {
+int RtcEngineExBridge::setSimulcastConfig() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1350,7 +1356,7 @@ int IRtcEngineExBridge::setSimulcastConfig() {
 // 141. setDualStreamModeEx (with config) — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setDualStreamMode(int mode, const agora::rtc::SimulcastStreamConfig &streamConfig) {
+int RtcEngineExBridge::setDualStreamMode(int mode, const agora::rtc::SimulcastStreamConfig &streamConfig) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setDualStreamMode(
         static_cast<agora::rtc::SIMULCAST_STREAM_MODE>(mode), streamConfig);
@@ -1360,7 +1366,7 @@ int IRtcEngineExBridge::setDualStreamMode(int mode, const agora::rtc::SimulcastS
 // 142. enableCustomAudioLocalPlayback — stub
 // =============================================================================
 
-int IRtcEngineExBridge::enableCustomAudioLocalPlayback() {
+int RtcEngineExBridge::enableCustomAudioLocalPlayback() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1368,7 +1374,7 @@ int IRtcEngineExBridge::enableCustomAudioLocalPlayback() {
 // 143. setMixedAudioFrameParameters
 // =============================================================================
 
-int IRtcEngineExBridge::setMixedAudioFrameParameters(
+int RtcEngineExBridge::setMixedAudioFrameParameters(
     int sampleRate, int channel, int samplesPerCall) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setMixedAudioFrameParameters(sampleRate, channel, samplesPerCall);
@@ -1378,13 +1384,13 @@ int IRtcEngineExBridge::setMixedAudioFrameParameters(
 // 144. setPlaybackAudioFrameBeforeMixingParameters
 // =============================================================================
 
-int IRtcEngineExBridge::setPlaybackAudioFrameBeforeMixingParameters(
+int RtcEngineExBridge::setPlaybackAudioFrameBeforeMixingParameters(
     int sampleRate, int channel) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setPlaybackAudioFrameBeforeMixingParameters(sampleRate, channel);
 }
 
-int IRtcEngineExBridge::setPlaybackAudioFrameBeforeMixingParameters(
+int RtcEngineExBridge::setPlaybackAudioFrameBeforeMixingParameters(
     int sampleRate, int channel, int samplesPerCall) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setPlaybackAudioFrameBeforeMixingParameters(sampleRate, channel, samplesPerCall);
@@ -1394,7 +1400,7 @@ int IRtcEngineExBridge::setPlaybackAudioFrameBeforeMixingParameters(
 // 145. enableAudioSpectrumMonitor
 // =============================================================================
 
-int IRtcEngineExBridge::enableAudioSpectrumMonitor(int intervalInMS) {
+int RtcEngineExBridge::enableAudioSpectrumMonitor(int intervalInMS) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableAudioSpectrumMonitor(intervalInMS);
 }
@@ -1403,7 +1409,7 @@ int IRtcEngineExBridge::enableAudioSpectrumMonitor(int intervalInMS) {
 // 146. disableAudioSpectrumMonitor
 // =============================================================================
 
-int IRtcEngineExBridge::disableAudioSpectrumMonitor() {
+int RtcEngineExBridge::disableAudioSpectrumMonitor() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->disableAudioSpectrumMonitor();
 }
@@ -1412,7 +1418,7 @@ int IRtcEngineExBridge::disableAudioSpectrumMonitor() {
 // 147. registerAudioSpectrumObserver — stub
 // =============================================================================
 
-int IRtcEngineExBridge::registerAudioSpectrumObserver() {
+int RtcEngineExBridge::registerAudioSpectrumObserver() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1420,7 +1426,7 @@ int IRtcEngineExBridge::registerAudioSpectrumObserver() {
 // 148. unregisterAudioSpectrumObserver — stub
 // =============================================================================
 
-int IRtcEngineExBridge::unregisterAudioSpectrumObserver() {
+int RtcEngineExBridge::unregisterAudioSpectrumObserver() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1428,7 +1434,7 @@ int IRtcEngineExBridge::unregisterAudioSpectrumObserver() {
 // 149. adjustRecordingSignalVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustRecordingSignalVolume(int volume) {
+int RtcEngineExBridge::adjustRecordingSignalVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustRecordingSignalVolume(volume);
 }
@@ -1437,7 +1443,7 @@ int IRtcEngineExBridge::adjustRecordingSignalVolume(int volume) {
 // 150. muteRecordingSignal
 // =============================================================================
 
-int IRtcEngineExBridge::muteRecordingSignal(bool mute) {
+int RtcEngineExBridge::muteRecordingSignal(bool mute) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->muteRecordingSignal(mute);
 }
@@ -1446,7 +1452,7 @@ int IRtcEngineExBridge::muteRecordingSignal(bool mute) {
 // 151. adjustPlaybackSignalVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustPlaybackSignalVolume(int volume) {
+int RtcEngineExBridge::adjustPlaybackSignalVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustPlaybackSignalVolume(volume);
 }
@@ -1455,7 +1461,7 @@ int IRtcEngineExBridge::adjustPlaybackSignalVolume(int volume) {
 // 152. adjustUserPlaybackSignalVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustUserPlaybackSignalVolume(agora::rtc::uid_t uid, int volume) {
+int RtcEngineExBridge::adjustUserPlaybackSignalVolume(agora::rtc::uid_t uid, int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustUserPlaybackSignalVolume(uid, volume);
 }
@@ -1464,7 +1470,7 @@ int IRtcEngineExBridge::adjustUserPlaybackSignalVolume(agora::rtc::uid_t uid, in
 // 153. setRemoteSubscribeFallbackOption
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteSubscribeFallbackOption(int option) {
+int RtcEngineExBridge::setRemoteSubscribeFallbackOption(int option) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteSubscribeFallbackOption(
         static_cast<agora::rtc::STREAM_FALLBACK_OPTIONS>(option));
@@ -1474,7 +1480,7 @@ int IRtcEngineExBridge::setRemoteSubscribeFallbackOption(int option) {
 // 154. setHighPriorityUserList — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setHighPriorityUserList() {
+int RtcEngineExBridge::setHighPriorityUserList() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1482,14 +1488,14 @@ int IRtcEngineExBridge::setHighPriorityUserList() {
 // 155–157. Extension — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::enableExtension(
+int RtcEngineExBridge::enableExtension(
     const std::string &provider, const std::string &extension,
     const agora::rtc::ExtensionInfo &extensionInfo, bool enable) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableExtension(provider.c_str(), extension.c_str(), extensionInfo, enable);
 }
 
-int IRtcEngineExBridge::enableExtension(
+int RtcEngineExBridge::enableExtension(
     const std::string &provider, const std::string &extension,
     bool enable, int type) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -1498,7 +1504,7 @@ int IRtcEngineExBridge::enableExtension(
         static_cast<agora::media::MEDIA_SOURCE_TYPE>(type));
 }
 
-int IRtcEngineExBridge::setExtensionProperty(
+int RtcEngineExBridge::setExtensionProperty(
     const std::string &provider, const std::string &extension,
     const std::string &key, const std::string &value) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -1506,7 +1512,7 @@ int IRtcEngineExBridge::setExtensionProperty(
         provider.c_str(), extension.c_str(), key.c_str(), value.c_str());
 }
 
-int IRtcEngineExBridge::getExtensionProperty(
+int RtcEngineExBridge::getExtensionProperty(
     const std::string & /*provider*/, const std::string & /*extension*/,
     const std::string & /*key*/) {
     return -agora::ERR_NOT_SUPPORTED;
@@ -1516,7 +1522,7 @@ int IRtcEngineExBridge::getExtensionProperty(
 // 158. enableLoopbackRecording
 // =============================================================================
 
-int IRtcEngineExBridge::enableLoopbackRecording(bool enabled) {
+int RtcEngineExBridge::enableLoopbackRecording(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableLoopbackRecording(enabled);
 }
@@ -1525,7 +1531,7 @@ int IRtcEngineExBridge::enableLoopbackRecording(bool enabled) {
 // 159. adjustLoopbackSignalVolume
 // =============================================================================
 
-int IRtcEngineExBridge::adjustLoopbackSignalVolume(int volume) {
+int RtcEngineExBridge::adjustLoopbackSignalVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustLoopbackSignalVolume(volume);
 }
@@ -1534,7 +1540,7 @@ int IRtcEngineExBridge::adjustLoopbackSignalVolume(int volume) {
 // 160. getLoopbackRecordingVolume
 // =============================================================================
 
-GetLoopbackRecordingVolumeResult IRtcEngineExBridge::getLoopbackRecordingVolume() {
+GetLoopbackRecordingVolumeResult RtcEngineExBridge::getLoopbackRecordingVolume() {
     GetLoopbackRecordingVolumeResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -1548,7 +1554,7 @@ GetLoopbackRecordingVolumeResult IRtcEngineExBridge::getLoopbackRecordingVolume(
 // 161. enableInEarMonitoring
 // =============================================================================
 
-int IRtcEngineExBridge::enableInEarMonitoring(bool enabled, int includeAudioFilters) {
+int RtcEngineExBridge::enableInEarMonitoring(bool enabled, int includeAudioFilters) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableInEarMonitoring(enabled, includeAudioFilters);
 }
@@ -1557,7 +1563,7 @@ int IRtcEngineExBridge::enableInEarMonitoring(bool enabled, int includeAudioFilt
 // 162. setInEarMonitoringVolume
 // =============================================================================
 
-int IRtcEngineExBridge::setInEarMonitoringVolume(int volume) {
+int RtcEngineExBridge::setInEarMonitoringVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setInEarMonitoringVolume(volume);
 }
@@ -1566,7 +1572,7 @@ int IRtcEngineExBridge::setInEarMonitoringVolume(int volume) {
 // 163. loadExtensionProvider — stub
 // =============================================================================
 
-int IRtcEngineExBridge::loadExtensionProvider(const std::string &path) {
+int RtcEngineExBridge::loadExtensionProvider(const std::string &path) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
 #if defined(_WIN32) || defined(__linux__) || defined(__ANDROID__)
     return _engine->loadExtensionProvider(path.c_str());
@@ -1580,7 +1586,7 @@ int IRtcEngineExBridge::loadExtensionProvider(const std::string &path) {
 // 164. setExtensionProviderProperty — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setExtensionProviderProperty(
+int RtcEngineExBridge::setExtensionProviderProperty(
     const std::string &provider, const std::string &key,
     const std::string &value) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -1591,7 +1597,7 @@ int IRtcEngineExBridge::setExtensionProviderProperty(
 // 165. registerExtension — stub
 // =============================================================================
 
-int IRtcEngineExBridge::registerExtension(
+int RtcEngineExBridge::registerExtension(
     const std::string &provider, const std::string &extension) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->registerExtension(provider.c_str(), extension.c_str());
@@ -1602,109 +1608,109 @@ int IRtcEngineExBridge::registerExtension(
 // 167–189. Camera — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::setCameraCapturerConfiguration() {
+int RtcEngineExBridge::setCameraCapturerConfiguration() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::createCustomVideoTrack() {
+int RtcEngineExBridge::createCustomVideoTrack() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::createCustomEncodedVideoTrack() {
+int RtcEngineExBridge::createCustomEncodedVideoTrack() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::destroyCustomVideoTrack() {
+int RtcEngineExBridge::destroyCustomVideoTrack() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::destroyCustomEncodedVideoTrack() {
+int RtcEngineExBridge::destroyCustomEncodedVideoTrack() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::switchCamera() {
+int RtcEngineExBridge::switchCamera() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-bool IRtcEngineExBridge::isCameraZoomSupported() {
+bool RtcEngineExBridge::isCameraZoomSupported() {
     return false;
 }
 
-bool IRtcEngineExBridge::isCameraFaceDetectSupported() {
+bool RtcEngineExBridge::isCameraFaceDetectSupported() {
     return false;
 }
 
-bool IRtcEngineExBridge::isCameraTorchSupported() {
+bool RtcEngineExBridge::isCameraTorchSupported() {
     return false;
 }
 
-bool IRtcEngineExBridge::isCameraFocusSupported() {
+bool RtcEngineExBridge::isCameraFocusSupported() {
     return false;
 }
 
-bool IRtcEngineExBridge::isCameraAutoFocusFaceModeSupported() {
+bool RtcEngineExBridge::isCameraAutoFocusFaceModeSupported() {
     return false;
 }
 
-int IRtcEngineExBridge::setCameraZoomFactor(float /*factor*/) {
+int RtcEngineExBridge::setCameraZoomFactor(float /*factor*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::enableFaceDetection(bool /*enabled*/) {
+int RtcEngineExBridge::enableFaceDetection(bool /*enabled*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-GetCameraMaxZoomFactorResult IRtcEngineExBridge::getCameraMaxZoomFactor() {
+GetCameraMaxZoomFactorResult RtcEngineExBridge::getCameraMaxZoomFactor() {
     GetCameraMaxZoomFactorResult result{};
     result.errorCode = -agora::ERR_NOT_SUPPORTED;
     return result;
 }
 
-int IRtcEngineExBridge::setCameraFocusPositionInPreview(float /*positionX*/, float /*positionY*/) {
+int RtcEngineExBridge::setCameraFocusPositionInPreview(float /*positionX*/, float /*positionY*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setCameraTorchOn(bool /*isOn*/) {
+int RtcEngineExBridge::setCameraTorchOn(bool /*isOn*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setCameraAutoFocusFaceModeEnabled(bool /*enabled*/) {
+int RtcEngineExBridge::setCameraAutoFocusFaceModeEnabled(bool /*enabled*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-bool IRtcEngineExBridge::isCameraExposurePositionSupported() {
+bool RtcEngineExBridge::isCameraExposurePositionSupported() {
     return false;
 }
 
-int IRtcEngineExBridge::setCameraExposurePosition(float /*positionXinView*/, float /*positionYinView*/) {
+int RtcEngineExBridge::setCameraExposurePosition(float /*positionXinView*/, float /*positionYinView*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-bool IRtcEngineExBridge::isCameraExposureSupported() {
+bool RtcEngineExBridge::isCameraExposureSupported() {
     return false;
 }
 
-int IRtcEngineExBridge::setCameraExposureFactor(float /*factor*/) {
+int RtcEngineExBridge::setCameraExposureFactor(float /*factor*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-bool IRtcEngineExBridge::isCameraAutoExposureFaceModeSupported() {
+bool RtcEngineExBridge::isCameraAutoExposureFaceModeSupported() {
     return false;
 }
 
-int IRtcEngineExBridge::setCameraAutoExposureFaceModeEnabled(bool /*enabled*/) {
+int RtcEngineExBridge::setCameraAutoExposureFaceModeEnabled(bool /*enabled*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setCameraStabilizationMode(int /*mode*/) {
+int RtcEngineExBridge::setCameraStabilizationMode(int /*mode*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-bool IRtcEngineExBridge::isCameraCenterStageSupported() {
+bool RtcEngineExBridge::isCameraCenterStageSupported() {
     return false;
 }
 
-int IRtcEngineExBridge::enableCameraCenterStage(bool /*enabled*/) {
+int RtcEngineExBridge::enableCameraCenterStage(bool /*enabled*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1712,7 +1718,7 @@ int IRtcEngineExBridge::enableCameraCenterStage(bool /*enabled*/) {
 // 190. setDefaultAudioRouteToSpeakerphone
 // =============================================================================
 
-int IRtcEngineExBridge::setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker) {
+int RtcEngineExBridge::setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
     return _engine->setDefaultAudioRouteToSpeakerphone(defaultToSpeaker);
@@ -1726,7 +1732,7 @@ int IRtcEngineExBridge::setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker
 // 191. setEnableSpeakerphone
 // =============================================================================
 
-int IRtcEngineExBridge::setEnableSpeakerphone(bool speakerOn) {
+int RtcEngineExBridge::setEnableSpeakerphone(bool speakerOn) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
     return _engine->setEnableSpeakerphone(speakerOn);
@@ -1740,7 +1746,7 @@ int IRtcEngineExBridge::setEnableSpeakerphone(bool speakerOn) {
 // 192. isSpeakerphoneEnabled
 // =============================================================================
 
-bool IRtcEngineExBridge::isSpeakerphoneEnabled() {
+bool RtcEngineExBridge::isSpeakerphoneEnabled() {
     if (_engine == nullptr) { return false; }
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
     return _engine->isSpeakerphoneEnabled();
@@ -1753,7 +1759,7 @@ bool IRtcEngineExBridge::isSpeakerphoneEnabled() {
 // 193. setRouteInCommunicationMode
 // =============================================================================
 
-int IRtcEngineExBridge::setRouteInCommunicationMode(int route) {
+int RtcEngineExBridge::setRouteInCommunicationMode(int route) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
     return _engine->setRouteInCommunicationMode(route);
@@ -1767,7 +1773,7 @@ int IRtcEngineExBridge::setRouteInCommunicationMode(int route) {
 // 194. getScreenCaptureSources — stub
 // =============================================================================
 
-int IRtcEngineExBridge::getScreenCaptureSources() {
+int RtcEngineExBridge::getScreenCaptureSources() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1775,7 +1781,7 @@ int IRtcEngineExBridge::getScreenCaptureSources() {
 // 195. setAudioSessionOperationRestriction — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setAudioSessionOperationRestriction(int /*restriction*/) {
+int RtcEngineExBridge::setAudioSessionOperationRestriction(int /*restriction*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1783,7 +1789,7 @@ int IRtcEngineExBridge::setAudioSessionOperationRestriction(int /*restriction*/)
 // 196. getAudioDeviceInfo — stub
 // =============================================================================
 
-int IRtcEngineExBridge::getAudioDeviceInfo() {
+int RtcEngineExBridge::getAudioDeviceInfo() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1791,7 +1797,7 @@ int IRtcEngineExBridge::getAudioDeviceInfo() {
 // 197. setScreenCaptureContentHint
 // =============================================================================
 
-int IRtcEngineExBridge::setScreenCaptureContentHint(int contentHint) {
+int RtcEngineExBridge::setScreenCaptureContentHint(int contentHint) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setScreenCaptureContentHint(
         static_cast<agora::rtc::VIDEO_CONTENT_HINT>(contentHint));
@@ -1801,7 +1807,7 @@ int IRtcEngineExBridge::setScreenCaptureContentHint(int contentHint) {
 // 198. updateScreenCaptureRegion — stub
 // =============================================================================
 
-int IRtcEngineExBridge::updateScreenCaptureRegion() {
+int RtcEngineExBridge::updateScreenCaptureRegion() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1809,7 +1815,7 @@ int IRtcEngineExBridge::updateScreenCaptureRegion() {
 // 199. updateScreenCaptureParameters — stub
 // =============================================================================
 
-int IRtcEngineExBridge::updateScreenCaptureParameters() {
+int RtcEngineExBridge::updateScreenCaptureParameters() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1817,15 +1823,15 @@ int IRtcEngineExBridge::updateScreenCaptureParameters() {
 // 200–202. Screen capture — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startScreenCapture() {
+int RtcEngineExBridge::startScreenCapture() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::updateScreenCapture() {
+int RtcEngineExBridge::updateScreenCapture() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::queryScreenCaptureCapability() {
+int RtcEngineExBridge::queryScreenCaptureCapability() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1833,7 +1839,7 @@ int IRtcEngineExBridge::queryScreenCaptureCapability() {
 // 203. queryCameraFocalLengthCapability — stub
 // =============================================================================
 
-int IRtcEngineExBridge::queryCameraFocalLengthCapability() {
+int RtcEngineExBridge::queryCameraFocalLengthCapability() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1841,7 +1847,7 @@ int IRtcEngineExBridge::queryCameraFocalLengthCapability() {
 // 204. setExternalMediaProjection — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setExternalMediaProjection() {
+int RtcEngineExBridge::setExternalMediaProjection() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1849,7 +1855,7 @@ int IRtcEngineExBridge::setExternalMediaProjection() {
 // 205. setScreenCaptureScenario
 // =============================================================================
 
-int IRtcEngineExBridge::setScreenCaptureScenario(int screenScenario) {
+int RtcEngineExBridge::setScreenCaptureScenario(int screenScenario) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setScreenCaptureScenario(
         static_cast<agora::rtc::SCREEN_SCENARIO_TYPE>(screenScenario));
@@ -1859,7 +1865,7 @@ int IRtcEngineExBridge::setScreenCaptureScenario(int screenScenario) {
 // 206. stopScreenCapture
 // =============================================================================
 
-int IRtcEngineExBridge::stopScreenCapture() {
+int RtcEngineExBridge::stopScreenCapture() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->stopScreenCapture();
 }
@@ -1868,7 +1874,7 @@ int IRtcEngineExBridge::stopScreenCapture() {
 // 207. getCallId — stub (out param)
 // =============================================================================
 
-int IRtcEngineExBridge::getCallId() {
+int RtcEngineExBridge::getCallId() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1876,7 +1882,7 @@ int IRtcEngineExBridge::getCallId() {
 // 208. rate
 // =============================================================================
 
-int IRtcEngineExBridge::rate(
+int RtcEngineExBridge::rate(
     const std::string &callId, int rating, const std::string &description) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->rate(callId.c_str(), rating, description.c_str());
@@ -1886,7 +1892,7 @@ int IRtcEngineExBridge::rate(
 // 209. complain
 // =============================================================================
 
-int IRtcEngineExBridge::complain(const std::string &callId, const std::string &description) {
+int RtcEngineExBridge::complain(const std::string &callId, const std::string &description) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->complain(callId.c_str(), description.c_str());
 }
@@ -1895,31 +1901,31 @@ int IRtcEngineExBridge::complain(const std::string &callId, const std::string &d
 // 210–216. RTMP streaming / transcoder — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startRtmpStreamWithoutTranscoding(const std::string & /*url*/) {
+int RtcEngineExBridge::startRtmpStreamWithoutTranscoding(const std::string & /*url*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::startRtmpStreamWithTranscoding(const std::string & /*url*/) {
+int RtcEngineExBridge::startRtmpStreamWithTranscoding(const std::string & /*url*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::updateRtmpTranscoding() {
+int RtcEngineExBridge::updateRtmpTranscoding() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::startLocalVideoTranscoder() {
+int RtcEngineExBridge::startLocalVideoTranscoder() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::updateLocalTranscoderConfiguration() {
+int RtcEngineExBridge::updateLocalTranscoderConfiguration() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopRtmpStream(const std::string & /*url*/) {
+int RtcEngineExBridge::stopRtmpStream(const std::string & /*url*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopLocalVideoTranscoder() {
+int RtcEngineExBridge::stopLocalVideoTranscoder() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1927,15 +1933,15 @@ int IRtcEngineExBridge::stopLocalVideoTranscoder() {
 // 217–219. Local audio mixer — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startLocalAudioMixer() {
+int RtcEngineExBridge::startLocalAudioMixer() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::updateLocalAudioMixerConfiguration() {
+int RtcEngineExBridge::updateLocalAudioMixerConfiguration() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopLocalAudioMixer() {
+int RtcEngineExBridge::stopLocalAudioMixer() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1943,27 +1949,27 @@ int IRtcEngineExBridge::stopLocalAudioMixer() {
 // 220–224. Camera/screen capture source type — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startCameraCapture(int /*sourceType*/) {
+int RtcEngineExBridge::startCameraCapture(int /*sourceType*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopCameraCapture(int /*sourceType*/) {
+int RtcEngineExBridge::stopCameraCapture(int /*sourceType*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setCameraDeviceOrientation(int /*type*/, int /*orientation*/) {
+int RtcEngineExBridge::setCameraDeviceOrientation(int /*type*/, int /*orientation*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setScreenCaptureOrientation(int /*type*/, int /*orientation*/) {
+int RtcEngineExBridge::setScreenCaptureOrientation(int /*type*/, int /*orientation*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::startScreenCapture(int /*sourceType*/) {
+int RtcEngineExBridge::startScreenCapture(int /*sourceType*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopScreenCapture(int /*sourceType*/) {
+int RtcEngineExBridge::stopScreenCapture(int /*sourceType*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1971,7 +1977,7 @@ int IRtcEngineExBridge::stopScreenCapture(int /*sourceType*/) {
 // 225. getConnectionState
 // =============================================================================
 
-int IRtcEngineExBridge::getConnectionState() {
+int RtcEngineExBridge::getConnectionState() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return static_cast<int>(_engine->getConnectionState());
 }
@@ -1980,11 +1986,11 @@ int IRtcEngineExBridge::getConnectionState() {
 // 226–227. registerEventHandler / unregisterEventHandler — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::registerEventHandler() {
+int RtcEngineExBridge::registerEventHandler() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::unregisterEventHandler() {
+int RtcEngineExBridge::unregisterEventHandler() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -1992,7 +1998,7 @@ int IRtcEngineExBridge::unregisterEventHandler() {
 // 228. setRemoteUserPriority
 // =============================================================================
 
-int IRtcEngineExBridge::setRemoteUserPriority(agora::rtc::uid_t uid, int userPriority) {
+int RtcEngineExBridge::setRemoteUserPriority(agora::rtc::uid_t uid, int userPriority) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setRemoteUserPriority(
         uid, static_cast<agora::rtc::PRIORITY_TYPE>(userPriority));
@@ -2002,7 +2008,7 @@ int IRtcEngineExBridge::setRemoteUserPriority(agora::rtc::uid_t uid, int userPri
 // 229. registerPacketObserver — stub
 // =============================================================================
 
-int IRtcEngineExBridge::registerPacketObserver() {
+int RtcEngineExBridge::registerPacketObserver() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2010,7 +2016,7 @@ int IRtcEngineExBridge::registerPacketObserver() {
 // 230. enableEncryption
 // =============================================================================
 
-int IRtcEngineExBridge::enableEncryption(bool enabled, const agora::rtc::EncryptionConfig &config) {
+int RtcEngineExBridge::enableEncryption(bool enabled, const agora::rtc::EncryptionConfig &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableEncryption(enabled, config);
 }
@@ -2019,7 +2025,7 @@ int IRtcEngineExBridge::enableEncryption(bool enabled, const agora::rtc::Encrypt
 // 231. createDataStream (bool) — stub (out param)
 // =============================================================================
 
-int IRtcEngineExBridge::createDataStream(bool /*reliable*/, bool /*ordered*/) {
+int RtcEngineExBridge::createDataStream(bool /*reliable*/, bool /*ordered*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2027,7 +2033,7 @@ int IRtcEngineExBridge::createDataStream(bool /*reliable*/, bool /*ordered*/) {
 // 232. createDataStreamWithConfig — stub (out param)
 // =============================================================================
 
-int IRtcEngineExBridge::createDataStream(const agora::rtc::DataStreamConfig &config) {
+int RtcEngineExBridge::createDataStream(const agora::rtc::DataStreamConfig &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     int streamId = 0;
     return _engine->createDataStream(&streamId, config);
@@ -2037,7 +2043,7 @@ int IRtcEngineExBridge::createDataStream(const agora::rtc::DataStreamConfig &con
 // 233. sendStreamMessage
 // =============================================================================
 
-int IRtcEngineExBridge::sendStreamMessage(int streamId, const std::string &data) {
+int RtcEngineExBridge::sendStreamMessage(int streamId, const std::string &data) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->sendStreamMessage(streamId, data.c_str(), data.length());
 }
@@ -2046,7 +2052,7 @@ int IRtcEngineExBridge::sendStreamMessage(int streamId, const std::string &data)
 // 234. sendRdtMessage — stub
 // =============================================================================
 
-int IRtcEngineExBridge::sendRdtMessage(agora::rtc::uid_t /*uid*/) {
+int RtcEngineExBridge::sendRdtMessage(agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2054,7 +2060,7 @@ int IRtcEngineExBridge::sendRdtMessage(agora::rtc::uid_t /*uid*/) {
 // 235. sendMediaControlMessage — stub
 // =============================================================================
 
-int IRtcEngineExBridge::sendMediaControlMessage(agora::rtc::uid_t /*uid*/) {
+int RtcEngineExBridge::sendMediaControlMessage(agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2062,19 +2068,19 @@ int IRtcEngineExBridge::sendMediaControlMessage(agora::rtc::uid_t /*uid*/) {
 // 236–239. Watermark — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::addVideoWatermark() {
+int RtcEngineExBridge::addVideoWatermark() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::addVideoWatermarkByUrl(const std::string & /*watermarkUrl*/) {
+int RtcEngineExBridge::addVideoWatermarkByUrl(const std::string & /*watermarkUrl*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::removeVideoWatermark(const std::string & /*id*/) {
+int RtcEngineExBridge::removeVideoWatermark(const std::string & /*id*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::clearVideoWatermarks() {
+int RtcEngineExBridge::clearVideoWatermarks() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2082,12 +2088,12 @@ int IRtcEngineExBridge::clearVideoWatermarks() {
 // 240–241. pauseAudio / resumeAudio (deprecated)
 // =============================================================================
 
-int IRtcEngineExBridge::pauseAudio() {
+int RtcEngineExBridge::pauseAudio() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->pauseAudio();
 }
 
-int IRtcEngineExBridge::resumeAudio() {
+int RtcEngineExBridge::resumeAudio() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->resumeAudio();
 }
@@ -2096,7 +2102,7 @@ int IRtcEngineExBridge::resumeAudio() {
 // 242. enableWebSdkInteroperability
 // =============================================================================
 
-int IRtcEngineExBridge::enableWebSdkInteroperability(bool enabled) {
+int RtcEngineExBridge::enableWebSdkInteroperability(bool enabled) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableWebSdkInteroperability(enabled);
 }
@@ -2105,7 +2111,7 @@ int IRtcEngineExBridge::enableWebSdkInteroperability(bool enabled) {
 // 243. sendCustomReportMessage
 // =============================================================================
 
-int IRtcEngineExBridge::sendCustomReportMessage(
+int RtcEngineExBridge::sendCustomReportMessage(
     const std::string &id, const std::string &category,
     const std::string &event, const std::string &label, int value) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -2117,11 +2123,11 @@ int IRtcEngineExBridge::sendCustomReportMessage(
 // 244–245. Media metadata observer — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::registerMediaMetadataObserver() {
+int RtcEngineExBridge::registerMediaMetadataObserver() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::unregisterMediaMetadataObserver() {
+int RtcEngineExBridge::unregisterMediaMetadataObserver() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2129,12 +2135,12 @@ int IRtcEngineExBridge::unregisterMediaMetadataObserver() {
 // 246–247. Audio frame dump — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startAudioFrameDump(
+int RtcEngineExBridge::startAudioFrameDump(
     const std::string & /*channelId*/, agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopAudioFrameDump(
+int RtcEngineExBridge::stopAudioFrameDump(
     const std::string & /*channelId*/, agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
@@ -2143,7 +2149,7 @@ int IRtcEngineExBridge::stopAudioFrameDump(
 // 248. setAINSMode
 // =============================================================================
 
-int IRtcEngineExBridge::setAINSMode(bool enabled, int mode) {
+int RtcEngineExBridge::setAINSMode(bool enabled, int mode) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAINSMode(enabled, static_cast<agora::rtc::AUDIO_AINS_MODE>(mode));
 }
@@ -2152,7 +2158,7 @@ int IRtcEngineExBridge::setAINSMode(bool enabled, int mode) {
 // 249. registerLocalUserAccount
 // =============================================================================
 
-int IRtcEngineExBridge::registerLocalUserAccount(const std::string &userAccount) {
+int RtcEngineExBridge::registerLocalUserAccount(const std::string &userAccount) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->registerLocalUserAccount(_appId.c_str(), userAccount.c_str());
 }
@@ -2161,7 +2167,7 @@ int IRtcEngineExBridge::registerLocalUserAccount(const std::string &userAccount)
 // 250–251. joinChannelWithUserAccount (2 overloads)
 // =============================================================================
 
-int IRtcEngineExBridge::joinChannelWithUserAccount(
+int RtcEngineExBridge::joinChannelWithUserAccount(
     const std::string &token, const std::string &channelId,
     const std::string &userAccount) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -2169,7 +2175,7 @@ int IRtcEngineExBridge::joinChannelWithUserAccount(
         nullableCString(token), channelId.c_str(), userAccount.c_str());
 }
 
-int IRtcEngineExBridge::joinChannelWithUserAccount(
+int RtcEngineExBridge::joinChannelWithUserAccount(
     const std::string &token, const std::string &channelId,
     const std::string &userAccount, const agora::rtc::ChannelMediaOptions &options) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -2181,11 +2187,11 @@ int IRtcEngineExBridge::joinChannelWithUserAccount(
 // 252–253. getUserInfo — stubs (out param)
 // =============================================================================
 
-int IRtcEngineExBridge::getUserInfoByUserAccount(const std::string & /*userAccount*/) {
+int RtcEngineExBridge::getUserInfoByUserAccount(const std::string & /*userAccount*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::getUserInfoByUid(agora::rtc::uid_t /*uid*/) {
+int RtcEngineExBridge::getUserInfoByUid(agora::rtc::uid_t /*uid*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2193,19 +2199,19 @@ int IRtcEngineExBridge::getUserInfoByUid(agora::rtc::uid_t /*uid*/) {
 // 254–257. Channel media relay — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startOrUpdateChannelMediaRelay() {
+int RtcEngineExBridge::startOrUpdateChannelMediaRelay() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopChannelMediaRelay() {
+int RtcEngineExBridge::stopChannelMediaRelay() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::pauseAllChannelMediaRelay() {
+int RtcEngineExBridge::pauseAllChannelMediaRelay() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::resumeAllChannelMediaRelay() {
+int RtcEngineExBridge::resumeAllChannelMediaRelay() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2213,19 +2219,19 @@ int IRtcEngineExBridge::resumeAllChannelMediaRelay() {
 // 258–261. Direct CDN streaming — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::setDirectCdnStreamingAudioConfiguration(int /*profile*/) {
+int RtcEngineExBridge::setDirectCdnStreamingAudioConfiguration(int /*profile*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::setDirectCdnStreamingVideoConfiguration() {
+int RtcEngineExBridge::setDirectCdnStreamingVideoConfiguration() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopDirectCdnStreaming() {
+int RtcEngineExBridge::stopDirectCdnStreaming() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::updateDirectCdnStreamingMediaOptions() {
+int RtcEngineExBridge::updateDirectCdnStreamingMediaOptions() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2233,16 +2239,16 @@ int IRtcEngineExBridge::updateDirectCdnStreamingMediaOptions() {
 // 262–264. Rhythm player — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::startRhythmPlayer(
+int RtcEngineExBridge::startRhythmPlayer(
     const std::string & /*sound1*/, const std::string & /*sound2*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::stopRhythmPlayer() {
+int RtcEngineExBridge::stopRhythmPlayer() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::configRhythmPlayer() {
+int RtcEngineExBridge::configRhythmPlayer() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2250,12 +2256,12 @@ int IRtcEngineExBridge::configRhythmPlayer() {
 // 265–266. takeSnapshot
 // =============================================================================
 
-int IRtcEngineExBridge::takeSnapshot(agora::rtc::uid_t uid, const std::string &filePath) {
+int RtcEngineExBridge::takeSnapshot(agora::rtc::uid_t uid, const std::string &filePath) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->takeSnapshot(uid, filePath.c_str());
 }
 
-int IRtcEngineExBridge::takeSnapshot(agora::rtc::uid_t uid, const agora::media::SnapshotConfig &config) {
+int RtcEngineExBridge::takeSnapshot(agora::rtc::uid_t uid, const agora::media::SnapshotConfig &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->takeSnapshot(uid, config);
 }
@@ -2264,7 +2270,7 @@ int IRtcEngineExBridge::takeSnapshot(agora::rtc::uid_t uid, const agora::media::
 // 267. enableContentInspect — stub
 // =============================================================================
 
-int IRtcEngineExBridge::enableContentInspect(bool /*enabled*/) {
+int RtcEngineExBridge::enableContentInspect(bool /*enabled*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2272,11 +2278,11 @@ int IRtcEngineExBridge::enableContentInspect(bool /*enabled*/) {
 // 268–269. Custom audio volume — stubs
 // =============================================================================
 
-int IRtcEngineExBridge::adjustCustomAudioPublishVolume() {
+int RtcEngineExBridge::adjustCustomAudioPublishVolume() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-int IRtcEngineExBridge::adjustCustomAudioPlayoutVolume() {
+int RtcEngineExBridge::adjustCustomAudioPlayoutVolume() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2284,7 +2290,7 @@ int IRtcEngineExBridge::adjustCustomAudioPlayoutVolume() {
 // 270. setCloudProxy
 // =============================================================================
 
-int IRtcEngineExBridge::setCloudProxy(int proxyType) {
+int RtcEngineExBridge::setCloudProxy(int proxyType) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setCloudProxy(static_cast<agora::rtc::CLOUD_PROXY_TYPE>(proxyType));
 }
@@ -2293,7 +2299,7 @@ int IRtcEngineExBridge::setCloudProxy(int proxyType) {
 // 271. setLocalAccessPoint — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setLocalAccessPoint() {
+int RtcEngineExBridge::setLocalAccessPoint() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2301,7 +2307,7 @@ int IRtcEngineExBridge::setLocalAccessPoint() {
 // 272. setAdvancedAudioOptions — stub
 // =============================================================================
 
-int IRtcEngineExBridge::setAdvancedAudioOptions() {
+int RtcEngineExBridge::setAdvancedAudioOptions() {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2309,7 +2315,7 @@ int IRtcEngineExBridge::setAdvancedAudioOptions() {
 // 273. setAVSyncSource
 // =============================================================================
 
-int IRtcEngineExBridge::setAVSyncSource(
+int RtcEngineExBridge::setAVSyncSource(
     const std::string &channelId, agora::rtc::uid_t uid) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setAVSyncSource(channelId.c_str(), uid);
@@ -2319,7 +2325,7 @@ int IRtcEngineExBridge::setAVSyncSource(
 // 274. enableVideoImageSource — stub
 // =============================================================================
 
-int IRtcEngineExBridge::enableVideoImageSource(bool /*enable*/) {
+int RtcEngineExBridge::enableVideoImageSource(bool /*enable*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }
 
@@ -2327,7 +2333,7 @@ int IRtcEngineExBridge::enableVideoImageSource(bool /*enable*/) {
 // 275. getCurrentMonotonicTimeInMs
 // =============================================================================
 
-int64_t IRtcEngineExBridge::getCurrentMonotonicTimeInMs() {
+int64_t RtcEngineExBridge::getCurrentMonotonicTimeInMs() {
     if (_engine == nullptr) { return -1; }
     return _engine->getCurrentMonotonicTimeInMs();
 }
@@ -2336,7 +2342,7 @@ int64_t IRtcEngineExBridge::getCurrentMonotonicTimeInMs() {
 // 276. getNetworkType
 // =============================================================================
 
-GetNetworkTypeResult IRtcEngineExBridge::getNetworkType() {
+GetNetworkTypeResult RtcEngineExBridge::getNetworkType() {
     GetNetworkTypeResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
@@ -2350,7 +2356,7 @@ GetNetworkTypeResult IRtcEngineExBridge::getNetworkType() {
 // 277. setParameters
 // =============================================================================
 
-int IRtcEngineExBridge::setParameters(const std::string &parameters) {
+int RtcEngineExBridge::setParameters(const std::string &parameters) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setParameters(parameters.c_str());
 }
@@ -2359,7 +2365,7 @@ int IRtcEngineExBridge::setParameters(const std::string &parameters) {
 // 278. startMediaRenderingTracing
 // =============================================================================
 
-int IRtcEngineExBridge::startMediaRenderingTracing() {
+int RtcEngineExBridge::startMediaRenderingTracing() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startMediaRenderingTracing();
 }
@@ -2368,7 +2374,7 @@ int IRtcEngineExBridge::startMediaRenderingTracing() {
 // 279. enableInstantMediaRendering
 // =============================================================================
 
-int IRtcEngineExBridge::enableInstantMediaRendering() {
+int RtcEngineExBridge::enableInstantMediaRendering() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableInstantMediaRendering();
 }
@@ -2377,7 +2383,7 @@ int IRtcEngineExBridge::enableInstantMediaRendering() {
 // 280. getNtpWallTimeInMs
 // =============================================================================
 
-uint64_t IRtcEngineExBridge::getNtpWallTimeInMs() {
+uint64_t RtcEngineExBridge::getNtpWallTimeInMs() {
     if (_engine == nullptr) { return 0; }
     return _engine->getNtpWallTimeInMs();
 }
@@ -2386,7 +2392,7 @@ uint64_t IRtcEngineExBridge::getNtpWallTimeInMs() {
 // 281. isFeatureAvailableOnDevice — stub
 // =============================================================================
 
-bool IRtcEngineExBridge::isFeatureAvailableOnDevice(int /*type*/) {
+bool RtcEngineExBridge::isFeatureAvailableOnDevice(int /*type*/) {
     return false;
 }
 
@@ -2394,7 +2400,7 @@ bool IRtcEngineExBridge::isFeatureAvailableOnDevice(int /*type*/) {
 // 282. sendAudioMetadata
 // =============================================================================
 
-int IRtcEngineExBridge::sendAudioMetadata(const std::string &metadata) {
+int RtcEngineExBridge::sendAudioMetadata(const std::string &metadata) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->sendAudioMetadata(metadata.c_str(), metadata.length());
 }
@@ -2403,6 +2409,6 @@ int IRtcEngineExBridge::sendAudioMetadata(const std::string &metadata) {
 // 283. queryHDRCapability — stub
 // =============================================================================
 
-int IRtcEngineExBridge::queryHDRCapability(int /*videoModule*/) {
+int RtcEngineExBridge::queryHDRCapability(int /*videoModule*/) {
     return -agora::ERR_NOT_SUPPORTED;
 }

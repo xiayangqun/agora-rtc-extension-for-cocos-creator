@@ -9,12 +9,12 @@
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
-#include "agora/IRtcEngineExBridge.h"
+#include "agora/RtcEngineExBridge.h"
 %}
 
 %{
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
-#include "agora/IRtcEngineExBridge.h"
+#include "agora/RtcEngineExBridge.h"
 %}
 
 // Result struct typemaps — extracted to agora_rtc_engine_typemap_out.i
@@ -22,17 +22,17 @@
 
 // se::Object is passed only during manual initialization callback wiring.
 // Keep it out of the SWIG surface for this auto-binding experiment.
-%ignore IRtcEngineExBridge::initialize;
+%ignore RtcEngineExBridge::initialize;
 
 // SWIG's Cocos dispatcher only gates overloads by argc, and Cocos primitive
 // converters are permissive (for example number -> string). Keep same-argc
 // overloads out of the auto binding until they get manual dispatch or renamed
 // JS entry points.
-%ignore IRtcEngineExBridge::enableExtension;
-%ignore IRtcEngineExBridge::joinChannel;
-%ignore IRtcEngineExBridge::takeSnapshot;
+%ignore RtcEngineExBridge::enableExtension;
+%ignore RtcEngineExBridge::joinChannel;
+%ignore RtcEngineExBridge::takeSnapshot;
 
 // JS → C++ typemaps for Agora struct parameters
 %include "agora_rtc_engine_typemap_in.i"
 
-%include "agora/IRtcEngineExBridge.h"
+%include "agora/RtcEngineExBridge.h"

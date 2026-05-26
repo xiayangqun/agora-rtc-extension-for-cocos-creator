@@ -5,8 +5,8 @@
 > **Purpose**: Documents all functions in `assets/agora-rtc/interface/` that are **not** a straightforward 1:1 translation from the C++ Bridge layer to TypeScript.
 > **Audience**: AI agents and developers reading the interface code — this file explains the C++ Bridge semantics behind each special TS signature.
 > **Reference Files**:
-> - **Bridge C++ Header**: `native/agora/IRtcEngineExBridge.h`
-> - **Bridge C++ Impl**: `native/agora/IRtcEngineExBridge.cpp`
+> - **Bridge C++ Header**: `native/agora/RtcEngineExBridge.h`
+> - **Bridge C++ Impl**: `native/agora/RtcEngineExBridge.cpp`
 > - **TS Interface**: `assets/agora-rtc/interface/IRtcEngine.ts`, `IRtcEngineEx.ts`
 > - **C++ SDK Headers**: `mac/include/rtc/IAgoraRtcEngine.h`, `IAgoraRtcEngineEx.h`
 
@@ -83,9 +83,9 @@ TS:   registerObserver(observer: IObserver): Promise<number>;
 
 ---
 
-#### Current Bridge Overloads (`IRtcEngineExBridge.h`, 18 methods)
+#### Current Bridge Overloads (`RtcEngineExBridge.h`, 18 methods)
 
-This is the source-of-truth overload list for the current C++ Bridge header. Keep this table in sync with `native/agora/IRtcEngineExBridge.h` whenever Bridge signatures change.
+This is the source-of-truth overload list for the current C++ Bridge header. Keep this table in sync with `native/agora/RtcEngineExBridge.h` whenever Bridge signatures change.
 
 | # | Method | Bridge overload signatures | Notes |
 |---|--------|----------------------------|-------|

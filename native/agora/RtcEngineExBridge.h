@@ -8,7 +8,7 @@
 namespace se {
 class Object;
 }
-class IRtcEngineEventHandlerBridge;
+class RtcEngineEventHandlerExBridge;
 
 // =============================================================================
 // Simplified structs (replacing Agora SDK types)
@@ -106,13 +106,13 @@ struct GetFaceShapeAreaOptionsResult {
 };
 
 // =============================================================================
-// IRtcEngineExBridge
+// RtcEngineExBridge
 // =============================================================================
 
-class IRtcEngineExBridge {
+class RtcEngineExBridge {
 public:
-    IRtcEngineExBridge();
-    ~IRtcEngineExBridge();
+    RtcEngineExBridge();
+    ~RtcEngineExBridge();
 
     // -------------------------------------------------------------------------
     // 0. release (SDK: static void release in IRtcEngine, first method)
@@ -1232,6 +1232,6 @@ public:
 
 private:
     agora::rtc::IRtcEngine *_engine{nullptr};
-    std::shared_ptr<IRtcEngineEventHandlerBridge> _eventHandler;
+    std::shared_ptr<RtcEngineEventHandlerExBridge> _eventHandler;
     std::string _appId;
 };

@@ -84,7 +84,7 @@ export abstract class IRtcEngineEventHandler {
 
     onAudioMixingFinished(): void {}
 
-    onAudioEffectFinished(soundId: number): void {}
+    onAudioEffectFinished(soundId?: number): void {}
 
     onVideoDeviceStateChanged(
         deviceId: string,

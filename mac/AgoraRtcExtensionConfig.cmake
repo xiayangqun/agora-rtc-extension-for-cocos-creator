@@ -19,8 +19,9 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 endif()
 
 add_library(AgoraRtcExtension STATIC
-    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AgoraRtcEngineBridge.cpp
-    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AgoraRtcEventHandlerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineExBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineEventHandlerExBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcNativeValueToSe.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_manual.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/register.cpp
 )
@@ -40,6 +41,7 @@ endif()
 
 target_include_directories(AgoraRtcExtension PUBLIC
     ${AGORA_RTC_EXTENSION_ROOT}/mac/include/rtc
+    ${AGORA_RTC_EXTENSION_ROOT}/mac/libs/aosl.xcframework/macos-arm64_x86_64/aosl.framework/Headers
     ${AGORA_RTC_EXTENSION_ROOT}/native
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual

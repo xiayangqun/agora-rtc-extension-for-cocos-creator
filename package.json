@@ -14,6 +14,7 @@
         "test:predownload": "node scripts/test-predownload-utils.js",
         "native:genbindings": "node scripts/genbindings.js",
         "genbindings:sevalue": "node scripts/generate-sevalue-to-native.js",
+        "genbindings:native-tosevalue": "node scripts/generate-native-tosevalue.js",
         "test:native-bindings": "node scripts/test-native-binding-utils.js",
         "lint": "eslint src --ext .ts",
         "lint:fix": "eslint src --ext .ts --fix",

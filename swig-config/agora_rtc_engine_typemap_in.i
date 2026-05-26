@@ -1,4 +1,4 @@
-// JS → C++ typemap(in) for Agora SDK structs passed to IRtcEngineExBridge.
+// JS → C++ typemap(in) for Agora SDK structs passed to RtcEngineExBridge.
 //
 // For each type:
 //   %ignore  → prevents JSB class wrapper, constructor, property accessors

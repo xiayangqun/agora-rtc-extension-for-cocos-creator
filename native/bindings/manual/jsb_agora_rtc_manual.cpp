@@ -1,6 +1,6 @@
 #include "jsb_agora_rtc_manual.h"
 
-#include "agora/IRtcEngineExBridge.h"
+#include "agora/RtcEngineExBridge.h"
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
 #include "bindings/manual/jsb_global.h"
 #include "bindings/jswrapper/SeApi.h"
@@ -44,19 +44,19 @@ bool getIntProperty(se::Object *object, const char *name, int *out) {
     return true;
 }
 
-IRtcEngineExBridge *getNativeBridge(se::State &s) {
-    return static_cast<IRtcEngineExBridge *>(s.nativeThisObject());
+RtcEngineExBridge *getNativeBridge(se::State &s) {
+    return static_cast<RtcEngineExBridge *>(s.nativeThisObject());
 }
 
 static bool js_agora_RtcEngineNative_constructor(se::State &s) {
-    auto *bridge = new IRtcEngineExBridge();
+    auto *bridge = new RtcEngineExBridge();
     s.thisObject()->setPrivateData(bridge);
     return true;
 }
 SE_BIND_CTOR(js_agora_RtcEngineNative_constructor, __jsb_AgoraRtcEngineNative_class, js_agora_RtcEngineNative_finalize)
 
 static bool js_agora_RtcEngineNative_finalize(se::State &s) {
-    auto *bridge = static_cast<IRtcEngineExBridge *>(s.nativeThisObject());
+    auto *bridge = static_cast<RtcEngineExBridge *>(s.nativeThisObject());
     delete bridge;
     return true;
 }
