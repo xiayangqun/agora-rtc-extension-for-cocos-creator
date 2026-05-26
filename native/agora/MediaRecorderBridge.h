@@ -18,6 +18,7 @@ public:
     agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder() const;
     void invalidate();
 
+    //todo jsb manual
     int setMediaRecorderObserver(se::Object *observer);
     int startRecording(const agora::media::MediaRecorderConfiguration &config);
     int stopRecording();

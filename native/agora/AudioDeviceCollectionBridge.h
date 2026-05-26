@@ -35,9 +35,11 @@ public:
 
     int getCount();
     int setDevice(const std::string &deviceId);
-    //todo jsbing
+    //todo jsb manual 合并getDevice，getDeviceEx 到一个jsb 函数中
     GetAudioDeviceInfoResult getDevice(int index);
     GetAudioDeviceInfoExResult getDeviceEx(int index);
+
+    //todo jsb manual getDefaultDevice，getDefaultDeviceEx 到一个jsb 函数中
     GetAudioDeviceInfoResult getDefaultDevice();
     GetAudioDeviceInfoExResult getDefaultDeviceEx();
     int setApplicationVolume(int volume);

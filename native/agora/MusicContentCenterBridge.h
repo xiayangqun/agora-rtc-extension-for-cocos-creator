@@ -39,9 +39,12 @@ public:
     int initialize(const agora::rtc::MusicContentCenterConfiguration &configuration);
     int renewToken(const std::string &token);
     void release();
+    //todo jsb manual
     int registerEventHandler(se::Object *eventHandler);
     int unregisterEventHandler();
+    //todo jsb manual
     std::shared_ptr<MusicPlayerBridge> createMusicPlayer();
+    //todo jsb manual
     int destroyMusicPlayer(std::shared_ptr<MusicPlayerBridge> musicPlayer);
     std::shared_ptr<MusicPlayerBridge> *getMusicPlayer(int playerId) const;
     MCCRequestResult getMusicCharts();

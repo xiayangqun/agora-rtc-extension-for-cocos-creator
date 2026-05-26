@@ -10,7 +10,16 @@
 namespace se {
 class Object;
 }
+class AudioDeviceManagerBridge;
+class H265TranscoderBridge;
+class LocalSpatialAudioEngineBridge;
 class MediaPlayerBridge;
+class MediaPlayerCacheManagerBridge;
+class MediaRecorderBridge;
+class MusicContentCenterBridge;
+class ScreenCaptureSourceListBridge;
+class VideoDeviceManagerBridge;
+class VideoEffectObjectBridge;
 class RtcEngineEventHandlerExBridge;
 
 struct AgoraRtcNativeContext {
@@ -81,7 +90,21 @@ public:
     RtcEngineExBridge();
     ~RtcEngineExBridge();
     void release(bool sync);
-    int initialize(const AgoraRtcNativeContext &context, se::Object *eventHandler);
+    //todo jsb manual
+    int initialize(const RtcEngineContext &context, se::Object *eventHandler);
+
+    //todo jsb manual
+    std::shared_ptr<AudioDeviceManagerBridge> getAudioDeviceManager();
+    //todo jsb manual
+    std::shared_ptr<VideoDeviceManagerBridge> getVideoDeviceManager();
+    //todo jsb manual
+    std::shared_ptr<MusicContentCenterBridge> getMusicContentCenter();
+    //todo jsb manual
+    std::shared_ptr<MediaPlayerCacheManagerBridge> getMediaPlayerCacheManager();
+    //todo jsb manual
+    std::shared_ptr<LocalSpatialAudioEngineBridge> getLocalSpatialAudioEngine();
+    //todo jsb manual
+    std::shared_ptr<H265TranscoderBridge> getH265Transcoder();
 
     //not support
     // int queryInterface(int iid);
@@ -126,12 +149,11 @@ public:
                                                           agora::media::MEDIA_SOURCE_TYPE type);
     int setFilterEffectOptions(bool enabled, const agora::rtc::FilterEffectOptions &options,
                                agora::media::MEDIA_SOURCE_TYPE type);
-
-    //todo for human
-    int createVideoEffectObject(const std::string &bundlePath, agora::media::MEDIA_SOURCE_TYPE type);
-
-    //todo for human
-    int destroyVideoEffectObject(se::Object *videoEffectObject);
+    //todo jsb manual
+    std::shared_ptr<VideoEffectObjectBridge> createVideoEffectObject(const std::string &bundlePath,
+                                                                     agora::media::MEDIA_SOURCE_TYPE type);
+    //todo jsb manual
+    int destroyVideoEffectObject(std::shared_ptr<VideoEffectObjectBridge> videoEffectObject);
     int setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options,
                                   agora::media::MEDIA_SOURCE_TYPE type);
     int setVideoDenoiserOptions(bool enabled, const agora::rtc::VideoDenoiserOptions &options,
@@ -171,20 +193,18 @@ public:
                             agora::rtc::AUDIO_RECORDING_QUALITY_TYPE quality);
     int startAudioRecording(const agora::rtc::AudioRecordingConfiguration &config);
 
-    //todo for human
-    int registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
-                                          agora::rtc::IAudioEncodedFrameObserver *observer);
+    //not support
+    // int registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
+    //                                       agora::rtc::IAudioEncodedFrameObserver *observer);
     int stopAudioRecording();
-
+    //todo jsb manual
     std::shared_ptr<MediaPlayerBridge> createMediaPlayer();
-
+    //todo jsb manual
     int destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer);
-
-    //todo for human
-    int createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
-
-    //todo for human
-    int destroyMediaRecorder(agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder);
+    //todo jsb manual
+    std::shared_ptr<MediaRecorderBridge> createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
+    //todo jsb manual
+    int destroyMediaRecorder(std::shared_ptr<MediaRecorderBridge> mediaRecorder);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle, int startPos);
     int stopAudioMixing();
@@ -272,9 +292,9 @@ public:
     int enableAudioSpectrumMonitor(int intervalInMS);
     int disableAudioSpectrumMonitor();
 
-    //todo for human
-    int registerAudioSpectrumObserver();
-    int unregisterAudioSpectrumObserver();
+    //not support
+    // int registerAudioSpectrumObserver();
+    // int unregisterAudioSpectrumObserver();
     int adjustRecordingSignalVolume(int volume);
     int muteRecordingSignal(bool mute);
     int adjustPlaybackSignalVolume(int volume);
@@ -302,18 +322,11 @@ public:
     int enableExtension(const std::string &provider, const std::string &extension, bool enable,
                         agora::media::MEDIA_SOURCE_TYPE type);
     int setCameraCapturerConfiguration(const agora::rtc::CameraCapturerConfiguration &config);
-
-    //todo for human
-    int createCustomVideoTrack();
-
-    //todo for human
-    int createCustomEncodedVideoTrack();
-
-    //todo for human
-    int destroyCustomVideoTrack();
-
-    //todo for human
-    int destroyCustomEncodedVideoTrack();
+    //not support
+    // int createCustomVideoTrack();
+    // int createCustomEncodedVideoTrack();
+    // int destroyCustomVideoTrack();
+    // int destroyCustomEncodedVideoTrack();
     int switchCamera();
     bool isCameraZoomSupported();
     bool isCameraFaceDetectSupported();
@@ -339,9 +352,10 @@ public:
     int setRouteInCommunicationMode(int route);
     bool isCameraCenterStageSupported();
     int enableCameraCenterStage(bool enabled);
-
-    //todo for human
-    int getScreenCaptureSources();
+    //todo jsb manual
+    std::shared_ptr<ScreenCaptureSourceListBridge> getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
+                                                                           const agora::rtc::SIZE &iconSize,
+                                                                           bool includeScreen);
     int setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction);
     int startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
                                       const agora::rtc::ScreenCaptureParameters &captureParams);
@@ -414,9 +428,9 @@ public:
     int sendCustomReportMessage(const std::string &id, const std::string &category, const std::string &event,
                                 const std::string &label, int value);
 
-    //todo for human
-    int registerMediaMetadataObserver();
-    int unregisterMediaMetadataObserver();
+    //not support
+    // int registerMediaMetadataObserver();
+    // int unregisterMediaMetadataObserver();
 
     int startAudioFrameDump(const std::string &channelId, agora::rtc::uid_t uid);
     int stopAudioFrameDump(const std::string &channelId, agora::rtc::uid_t uid);
@@ -569,9 +583,19 @@ public:
 
 private:
     void releaseMediaPlayers();
+    void releaseMediaRecorders();
+    void releaseVideoEffects();
 
     agora::rtc::IRtcEngineEx *_engine{nullptr};
     std::shared_ptr<RtcEngineEventHandlerExBridge> _eventHandler;
     std::vector<std::shared_ptr<MediaPlayerBridge>> _mediaPlayers;
-    std::string _appId;
+    std::vector<std::shared_ptr<MediaRecorderBridge>> _mediaRecorders;
+    std::vector<std::shared_ptr<VideoEffectObjectBridge>> _videoEffects;
+    std::shared_ptr<ScreenCaptureSourceListBridge> _screenCaptureSources;
+    std::shared_ptr<AudioDeviceManagerBridge> _audioDeviceManager;
+    std::shared_ptr<VideoDeviceManagerBridge> _videoDeviceManager;
+    std::shared_ptr<MusicContentCenterBridge> _musicContentCenter;
+    std::shared_ptr<MediaPlayerCacheManagerBridge> _mediaPlayerCacheManager;
+    std::shared_ptr<LocalSpatialAudioEngineBridge> _localSpatialAudioEngine;
+    std::shared_ptr<H265TranscoderBridge> _h265Transcoder;
 };

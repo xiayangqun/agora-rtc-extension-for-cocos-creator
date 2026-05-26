@@ -1,7 +1,16 @@
 #include "agora/RtcEngineExBridge.h"
 
 #include "agora/RtcEngineEventHandlerExBridge.h"
+#include "agora/AudioDeviceManagerBridge.h"
+#include "agora/H265TranscoderBridge.h"
+#include "agora/LocalSpatialAudioEngineBridge.h"
 #include "agora/MediaPlayerBridge.h"
+#include "agora/MediaPlayerCacheManagerBridge.h"
+#include "agora/MediaRecorderBridge.h"
+#include "agora/MusicContentCenterBridge.h"
+#include "agora/ScreenCaptureSourceListBridge.h"
+#include "agora/VideoDeviceManagerBridge.h"
+#include "agora/VideoEffectObjectBridge.h"
 
 #include "IAgoraMediaPlayer.h"
 #include "IAgoraMediaRecorder.h"
@@ -28,12 +37,41 @@ void RtcEngineExBridge::release(bool sync) {
         _eventHandler->invalidateCallbacks();
     }
     releaseMediaPlayers();
+    releaseMediaRecorders();
+    releaseVideoEffects();
+    if (_screenCaptureSources) {
+        _screenCaptureSources->invalidate();
+        _screenCaptureSources.reset();
+    }
+    if (_audioDeviceManager) {
+        _audioDeviceManager->invalidate();
+        _audioDeviceManager.reset();
+    }
+    if (_videoDeviceManager) {
+        _videoDeviceManager->invalidate();
+        _videoDeviceManager.reset();
+    }
+    if (_musicContentCenter) {
+        _musicContentCenter->invalidate();
+        _musicContentCenter.reset();
+    }
+    if (_mediaPlayerCacheManager) {
+        _mediaPlayerCacheManager->invalidate();
+        _mediaPlayerCacheManager.reset();
+    }
+    if (_localSpatialAudioEngine) {
+        _localSpatialAudioEngine->invalidate();
+        _localSpatialAudioEngine.reset();
+    }
+    if (_h265Transcoder) {
+        _h265Transcoder->invalidate();
+        _h265Transcoder.reset();
+    }
     if (_engine != nullptr) {
         agora::rtc::IRtcEngine::release(nullptr);
         _engine = nullptr;
     }
     _eventHandler.reset();
-    _appId.clear();
 }
 
 void RtcEngineExBridge::releaseMediaPlayers() {
@@ -49,24 +87,105 @@ void RtcEngineExBridge::releaseMediaPlayers() {
     _mediaPlayers.clear();
 }
 
-int RtcEngineExBridge::initialize(const AgoraRtcNativeContext &context, se::Object *eventHandler) {
-    release(true);
+void RtcEngineExBridge::releaseMediaRecorders() {
+    if (_engine != nullptr) {
+        for (auto &bridge : _mediaRecorders) {
+            if (bridge && bridge->hasMediaRecorder()) { _engine->destroyMediaRecorder(bridge->mediaRecorder()); }
+            if (bridge) { bridge->invalidate(); }
+        }
+    }
+    _mediaRecorders.clear();
+}
 
+void RtcEngineExBridge::releaseVideoEffects() {
+    if (_engine != nullptr) {
+        for (auto &bridge : _videoEffects) {
+            if (bridge && bridge->hasVideoEffectObject()) {
+                _engine->destroyVideoEffectObject(bridge->videoEffectObject());
+            }
+            if (bridge) { bridge->invalidate(); }
+        }
+    }
+    _videoEffects.clear();
+}
+
+int RtcEngineExBridge::initialize(const RtcEngineContext &context, se::Object *eventHandler) {
+    release(true);
     _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngine());
     if (_engine == nullptr) { return -1; }
-
     _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
-    _appId = context.appId;
-
     agora::rtc::RtcEngineContext rtcContext;
-    rtcContext.eventHandler = _eventHandler.get();
-    rtcContext.appId = _appId.c_str();
-    rtcContext.context = nullptr;
-    rtcContext.channelProfile = static_cast<agora::CHANNEL_PROFILE_TYPE>(context.channelProfile);
-    rtcContext.audioScenario = static_cast<agora::rtc::AUDIO_SCENARIO_TYPE>(context.audioScenario);
-    rtcContext.areaCode = context.areaCode;
+    context.eventHandler = _eventHandler.get();
+    return _engine->initialize(context);
+}
 
-    return _engine->initialize(rtcContext);
+std::shared_ptr<AudioDeviceManagerBridge> RtcEngineExBridge::getAudioDeviceManager() {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_audioDeviceManager || !_audioDeviceManager->hasAudioDeviceManager()) {
+        agora::rtc::IAudioDeviceManager *rawPtr = nullptr;
+        _engine->queryInterface(agora::rtc::AGORA_IID_AUDIO_DEVICE_MANAGER, reinterpret_cast<void **>(&rawPtr));
+        if (!rawPtr) { return nullptr; }
+        _audioDeviceManager =
+            std::make_shared<AudioDeviceManagerBridge>(agora::agora_refptr<agora::rtc::IAudioDeviceManager>(rawPtr));
+    }
+    return _audioDeviceManager;
+}
+
+std::shared_ptr<VideoDeviceManagerBridge> RtcEngineExBridge::getVideoDeviceManager() {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_videoDeviceManager || !_videoDeviceManager->hasVideoDeviceManager()) {
+        agora::rtc::IVideoDeviceManager *rawPtr = nullptr;
+        _engine->queryInterface(agora::rtc::AGORA_IID_VIDEO_DEVICE_MANAGER, reinterpret_cast<void **>(&rawPtr));
+        if (!rawPtr) { return nullptr; }
+        _videoDeviceManager =
+            std::make_shared<VideoDeviceManagerBridge>(agora::agora_refptr<agora::rtc::IVideoDeviceManager>(rawPtr));
+    }
+    return _videoDeviceManager;
+}
+
+std::shared_ptr<MusicContentCenterBridge> RtcEngineExBridge::getMusicContentCenter() {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_musicContentCenter || !_musicContentCenter->hasMusicContentCenter()) {
+        agora::rtc::IMusicContentCenter *rawPtr = nullptr;
+        _engine->queryInterface(agora::rtc::AGORA_IID_MUSIC_CONTENT_CENTER, reinterpret_cast<void **>(&rawPtr));
+        if (!rawPtr) { return nullptr; }
+        _musicContentCenter =
+            std::make_shared<MusicContentCenterBridge>(agora::agora_refptr<agora::rtc::IMusicContentCenter>(rawPtr));
+    }
+    return _musicContentCenter;
+}
+
+std::shared_ptr<MediaPlayerCacheManagerBridge> RtcEngineExBridge::getMediaPlayerCacheManager() {
+    if (!_mediaPlayerCacheManager || !_mediaPlayerCacheManager->hasCacheManager()) {
+        auto *cacheManager = ::getMediaPlayerCacheManager();
+        if (!cacheManager) { return nullptr; }
+        _mediaPlayerCacheManager = std::make_shared<MediaPlayerCacheManagerBridge>(cacheManager);
+    }
+    return _mediaPlayerCacheManager;
+}
+
+std::shared_ptr<LocalSpatialAudioEngineBridge> RtcEngineExBridge::getLocalSpatialAudioEngine() {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_localSpatialAudioEngine || !_localSpatialAudioEngine->hasSpatialAudioEngine()) {
+        agora::rtc::ILocalSpatialAudioEngine *rawPtr = nullptr;
+        _engine->queryInterface(agora::rtc::AGORA_IID_LOCAL_SPATIAL_AUDIO, reinterpret_cast<void **>(&rawPtr));
+        if (!rawPtr) { return nullptr; }
+        _localSpatialAudioEngine = std::make_shared<LocalSpatialAudioEngineBridge>(
+            agora::agora_refptr<agora::rtc::ILocalSpatialAudioEngine>(rawPtr));
+    }
+    return _localSpatialAudioEngine;
+}
+
+std::shared_ptr<H265TranscoderBridge> RtcEngineExBridge::getH265Transcoder() {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_h265Transcoder || !_h265Transcoder->hasH265Transcoder()) {
+        agora::rtc::IH265Transcoder *rawPtr = nullptr;
+        _engine->queryInterface(agora::rtc::AGORA_IID_H265_TRANSCODER, reinterpret_cast<void **>(&rawPtr));
+        if (!rawPtr) { return nullptr; }
+        _h265Transcoder =
+            std::make_shared<H265TranscoderBridge>(agora::agora_refptr<agora::rtc::IH265Transcoder>(rawPtr));
+    }
+    return _h265Transcoder;
 }
 
 GetVersionResult RtcEngineExBridge::getVersion() {
@@ -277,14 +396,26 @@ int RtcEngineExBridge::setFilterEffectOptions(bool enabled, const agora::rtc::Fi
     return _engine->setFilterEffectOptions(enabled, options, type);
 }
 
-int RtcEngineExBridge::createVideoEffectObject(const std::string &bundlePath, agora::media::MEDIA_SOURCE_TYPE type) {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+std::shared_ptr<VideoEffectObjectBridge> RtcEngineExBridge::createVideoEffectObject(
+    const std::string &bundlePath, agora::media::MEDIA_SOURCE_TYPE type) {
+    if (_engine == nullptr) { return nullptr; }
+    auto effect = _engine->createVideoEffectObject(bundlePath.c_str(), type);
+    if (!effect) { return nullptr; }
+    auto bridge = std::make_shared<VideoEffectObjectBridge>(effect);
+    _videoEffects.push_back(bridge);
+    return bridge;
 }
 
-int RtcEngineExBridge::destroyVideoEffectObject(se::Object *videoEffectObject) {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+int RtcEngineExBridge::destroyVideoEffectObject(std::shared_ptr<VideoEffectObjectBridge> videoEffectObject) {
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    if (!videoEffectObject) { return -agora::ERR_INVALID_ARGUMENT; }
+    int ret = _engine->destroyVideoEffectObject(videoEffectObject->videoEffectObject());
+    if (ret == 0) {
+        videoEffectObject->invalidate();
+        auto it = std::find(_videoEffects.begin(), _videoEffects.end(), videoEffectObject);
+        if (it != _videoEffects.end()) { _videoEffects.erase(it); }
+    }
+    return ret;
 }
 
 int RtcEngineExBridge::setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options,
@@ -461,11 +592,11 @@ int RtcEngineExBridge::startAudioRecording(const agora::rtc::AudioRecordingConfi
     return _engine->startAudioRecording(config);
 }
 
-int RtcEngineExBridge::registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
-                                                         agora::rtc::IAudioEncodedFrameObserver *observer) {
-    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->registerAudioEncodedFrameObserver(config, observer);
-}
+// int RtcEngineExBridge::registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
+//                                                          agora::rtc::IAudioEncodedFrameObserver *observer) {
+//     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+//     return _engine->registerAudioEncodedFrameObserver(config, observer);
+// }
 
 int RtcEngineExBridge::stopAudioRecording() {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
@@ -486,10 +617,9 @@ int RtcEngineExBridge::destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> med
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     if (mediaPlayer == nullptr) { return -agora::ERR_INVALID_ARGUMENT; }
 
-    auto iter = std::find_if(_mediaPlayers.begin(), _mediaPlayers.end(),
-                             [&mediaPlayer](const std::shared_ptr<MediaPlayerBridge> &item) {
-                                 return item == mediaPlayer;
-                             });
+    auto iter =
+        std::find_if(_mediaPlayers.begin(), _mediaPlayers.end(),
+                     [&mediaPlayer](const std::shared_ptr<MediaPlayerBridge> &item) { return item == mediaPlayer; });
     if (iter == _mediaPlayers.end() || !(*iter)->hasMediaPlayer()) { return -agora::ERR_INVALID_ARGUMENT; }
 
     int result = _engine->destroyMediaPlayer((*iter)->mediaPlayer());
@@ -500,14 +630,26 @@ int RtcEngineExBridge::destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> med
     return result;
 }
 
-int RtcEngineExBridge::createMediaRecorder(const agora::rtc::RecorderStreamInfo &info) {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+std::shared_ptr<MediaRecorderBridge> RtcEngineExBridge::createMediaRecorder(
+    const agora::rtc::RecorderStreamInfo &info) {
+    if (_engine == nullptr) { return nullptr; }
+    auto recorder = _engine->createMediaRecorder(info);
+    if (!recorder) { return nullptr; }
+    auto bridge = std::make_shared<MediaRecorderBridge>(recorder);
+    _mediaRecorders.push_back(bridge);
+    return bridge;
 }
 
-int RtcEngineExBridge::destroyMediaRecorder(agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder) {
+int RtcEngineExBridge::destroyMediaRecorder(std::shared_ptr<MediaRecorderBridge> mediaRecorder) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->destroyMediaRecorder(mediaRecorder);
+    if (!mediaRecorder) { return -agora::ERR_INVALID_ARGUMENT; }
+    int ret = _engine->destroyMediaRecorder(mediaRecorder->mediaRecorder());
+    if (ret == 0) {
+        mediaRecorder->invalidate();
+        auto it = std::find(_mediaRecorders.begin(), _mediaRecorders.end(), mediaRecorder);
+        if (it != _mediaRecorders.end()) { _mediaRecorders.erase(it); }
+    }
+    return ret;
 }
 
 int RtcEngineExBridge::startAudioMixing(const std::string &filePath, bool loopback, int cycle) {
@@ -1188,9 +1330,14 @@ int RtcEngineExBridge::enableCameraCenterStage(bool enabled) {
     return _engine->enableCameraCenterStage(enabled);
 }
 
-int RtcEngineExBridge::getScreenCaptureSources() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+std::shared_ptr<ScreenCaptureSourceListBridge> RtcEngineExBridge::getScreenCaptureSources(
+    const agora::rtc::SIZE &thumbSize, const agora::rtc::SIZE &iconSize, bool includeScreen) {
+    if (_engine == nullptr) { return nullptr; }
+    if (!_screenCaptureSources) { _screenCaptureSources = std::make_shared<ScreenCaptureSourceListBridge>(); }
+    auto *list = _engine->getScreenCaptureSources(thumbSize, iconSize, includeScreen);
+    if (!list) { return nullptr; }
+    _screenCaptureSources->setList(list);
+    return _screenCaptureSources;
 }
 
 int RtcEngineExBridge::setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction) {

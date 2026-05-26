@@ -36,6 +36,7 @@ public:
     //                           const agora::rtc::EncodedVideoFrameInfo &videoEncodedFrameInfo,
     //                           unsigned int videoTrackId = 0);
 
+    //todo jsb ignore 2个
     int addVideoFrameRenderer(agora::media::IVideoFrameObserver *renderer);
     int removeVideoFrameRenderer(agora::media::IVideoFrameObserver *renderer);
 

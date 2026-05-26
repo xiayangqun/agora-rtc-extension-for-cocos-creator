@@ -223,5 +223,3 @@ int AudioDeviceManagerBridge::followSystemLoopbackDevice(bool enable) {
     if (!_audioDeviceManager) { return -agora::ERR_INVALID_ARGUMENT; }
     return _audioDeviceManager->followSystemLoopbackDevice(enable);
 }
-
-void AudioDeviceManagerBridge::__release() {}
