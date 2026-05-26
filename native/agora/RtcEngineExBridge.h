@@ -2,14 +2,15 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "IAgoraRtcEngine.h"
 #include "IAgoraRtcEngineEx.h"
-#include <vector>
 
 namespace se {
 class Object;
 }
+class MediaPlayerBridge;
 class RtcEngineEventHandlerExBridge;
 
 struct AgoraRtcNativeContext {
@@ -175,11 +176,9 @@ public:
                                           agora::rtc::IAudioEncodedFrameObserver *observer);
     int stopAudioRecording();
 
-    //todo for human
-    int createMediaPlayer();
+    std::shared_ptr<MediaPlayerBridge> createMediaPlayer();
 
-    //todo for human
-    int destroyMediaPlayer(agora::agora_refptr<agora::rtc::IMediaPlayer> mediaPlayer);
+    int destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer);
 
     //todo for human
     int createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
@@ -438,8 +437,8 @@ public:
     int setDirectCdnStreamingAudioConfiguration(agora::rtc::AUDIO_PROFILE_TYPE profile);
     int setDirectCdnStreamingVideoConfiguration(const agora::rtc::VideoEncoderConfiguration &config);
 
-    //todo for human
-    int startDirectCdnStreaming();
+    int startDirectCdnStreaming(const std::string &publishUrl,
+                                const agora::rtc::DirectCdnStreamingMediaOptions &options);
     int stopDirectCdnStreaming();
     int updateDirectCdnStreamingMediaOptions(const agora::rtc::DirectCdnStreamingMediaOptions &options);
     int startRhythmPlayer(const std::string &sound1, const std::string &sound2,
@@ -569,7 +568,10 @@ public:
                      int loopCount, double pitch, double pan, int gain, bool publish, int startPos);
 
 private:
+    void releaseMediaPlayers();
+
     agora::rtc::IRtcEngineEx *_engine{nullptr};
     std::shared_ptr<RtcEngineEventHandlerExBridge> _eventHandler;
+    std::vector<std::shared_ptr<MediaPlayerBridge>> _mediaPlayers;
     std::string _appId;
 };

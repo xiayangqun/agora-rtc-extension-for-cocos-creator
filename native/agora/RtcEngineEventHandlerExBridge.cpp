@@ -4,90 +4,10 @@
 #include <vector>
 
 #include "application/ApplicationManager.h"
-#include "agora/RtcNativeValueToSe.h"
 #include "base/Scheduler.h"
-#include "bindings/jswrapper/SeApi.h"
-
-
-namespace {
-
-void pushArg(se::ValueArray &args, const se::Value &value) { args.push_back(value); }
-
-template<typename T>
-void pushArg(se::ValueArray &args, const T &value) {
-    se::Value converted;
-    if (!nativevalue_to_se(value, converted, nullptr)) {
-        converted.setNull();
-    }
-    args.push_back(converted);
-}
-
-bool isScriptEngineValid() {
-    auto *scriptEngine = se::ScriptEngine::getInstance();
-    return scriptEngine != nullptr && scriptEngine->isValid();
-}
-
-void callHandler(
-    const std::shared_ptr<RtcEngineEventHandlerExBridge> &owner,
-    const char *method,
-    const se::ValueArray &args) {
-    // release() can happen before a performFunctionInCocosThread lambda runs.
-    // The lambda keeps owner alive, so this gate prevents stale TS callbacks.
-    if (owner == nullptr || !owner->canDispatchCallbacks()) {
-        return;
-    }
-
-    se::Object *handler = owner->eventHandler();
-    if (handler == nullptr) {
-        return;
-    }
-
-    se::Value callback;
-    if (!handler->getProperty(method, &callback) || !callback.isObject() || !callback.toObject()->isFunction()) {
-        return;
-    }
-
-    auto *scriptEngine = se::ScriptEngine::getInstance();
-    if (scriptEngine == nullptr || !scriptEngine->isValid() || !owner->canDispatchCallbacks()) {
-        return;
-    }
-
-    scriptEngine->clearException();
-    callback.toObject()->call(args, handler);
-}
-
-} // namespace
 
 RtcEngineEventHandlerExBridge::RtcEngineEventHandlerExBridge(se::Object *eventHandler)
-    : _eventHandler(eventHandler) {
-    if (_eventHandler != nullptr) {
-        _eventHandler->incRef();
-        _eventHandler->root();
-    }
-}
-
-RtcEngineEventHandlerExBridge::~RtcEngineEventHandlerExBridge() {
-    if (_eventHandler != nullptr) {
-        _eventHandler->unroot();
-        _eventHandler->decRef();
-        _eventHandler = nullptr;
-    }
-}
-
-void RtcEngineEventHandlerExBridge::invalidateCallbacks() {
-    // Agora callbacks already queued onto the Cocos thread can outlive engine
-    // release because they capture shared_ptr<this>. Flip this gate first so
-    // release wins: old queued tasks may still execute, but they cannot call TS.
-    _callbacksEnabled.store(false, std::memory_order_release);
-}
-
-bool RtcEngineEventHandlerExBridge::canDispatchCallbacks() const {
-    return _callbacksEnabled.load(std::memory_order_acquire);
-}
-
-se::Object *RtcEngineEventHandlerExBridge::eventHandler() const {
-    return _eventHandler;
-}
+    : ObserverBridgeBase(eventHandler) {}
 
 const char* RtcEngineEventHandlerExBridge::eventHandlerType() const { return "event_handler_ex"; }
 
@@ -2260,5 +2180,38 @@ void RtcEngineEventHandlerExBridge::onRenewTokenResult(const RtcConnection& conn
             pushArg(args, tokenCopy);
             pushArg(args, codeCopy);
             callHandler(self, "onRenewTokenResult", args);
+        });
+}
+
+void RtcEngineEventHandlerExBridge::onDirectCdnStreamingStateChanged(
+    DIRECT_CDN_STREAMING_STATE state,
+    DIRECT_CDN_STREAMING_REASON reason,
+    const char *message) {
+    auto stateCopy = state;
+    auto reasonCopy = reason;
+    std::string messageCopy(message != nullptr ? message : "");
+    auto self = shared_from_this();
+    CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
+        [self, stateCopy, reasonCopy, messageCopy]() {
+            if (!isScriptEngineValid()) { return; }
+            se::AutoHandleScope handleScope;
+            se::ValueArray args;
+            pushArg(args, stateCopy);
+            pushArg(args, reasonCopy);
+            pushArg(args, messageCopy);
+            callHandler(self, "onDirectCdnStreamingStateChanged", args);
+        });
+}
+
+void RtcEngineEventHandlerExBridge::onDirectCdnStreamingStats(const DirectCdnStreamingStats &stats) {
+    auto statsCopy = stats;
+    auto self = shared_from_this();
+    CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
+        [self, statsCopy]() {
+            if (!isScriptEngineValid()) { return; }
+            se::AutoHandleScope handleScope;
+            se::ValueArray args;
+            pushArg(args, statsCopy);
+            callHandler(self, "onDirectCdnStreamingStats", args);
         });
 }

@@ -9,11 +9,13 @@
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
+#include "agora/RtcMediaPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
 %}
 
 %{
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
+#include "agora/RtcMediaPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
 %}
 
@@ -34,5 +36,14 @@
 
 // JS → C++ typemaps for Agora struct parameters
 %include "agora_rtc_engine_typemap_in.i"
+
+// Media player instances are created by RtcEngineExBridge and returned to JS.
+// Do not expose the native constructor or internal SDK ref helpers.
+%rename(MediaPlayerNative) RtcMediaPlayerBridge;
+%ignore RtcMediaPlayerBridge::RtcMediaPlayerBridge;
+%ignore RtcMediaPlayerBridge::hasMediaPlayer;
+%ignore RtcMediaPlayerBridge::mediaPlayer;
+%ignore RtcMediaPlayerBridge::invalidate;
+%include "agora/RtcMediaPlayerBridge.h"
 
 %include "agora/RtcEngineExBridge.h"

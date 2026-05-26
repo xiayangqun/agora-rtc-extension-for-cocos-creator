@@ -19,9 +19,26 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
 endif()
 
 add_library(AgoraRtcExtension STATIC
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/ObserverBridgeBase.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineExBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineEventHandlerExBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerSourceObserverBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcNativeValueToSe.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AudioDeviceManagerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/VideoDeviceManagerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/VideoDeviceCollectionBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AudioDeviceCollectionBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/H265TranscoderBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/H265TranscoderObserverBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/LocalSpatialAudioEngineBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaEngineBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerCacheManagerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaRecorderBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaRecorderObserverBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicContentCenterBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicContentCenterEventHandlerBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicPlayerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_manual.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/register.cpp
 )

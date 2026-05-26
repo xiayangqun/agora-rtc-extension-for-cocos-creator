@@ -1,9 +1,12 @@
 #include "agora/RtcEngineExBridge.h"
 
 #include "agora/RtcEngineEventHandlerExBridge.h"
+#include "agora/MediaPlayerBridge.h"
 
 #include "IAgoraMediaPlayer.h"
 #include "IAgoraMediaRecorder.h"
+
+#include <algorithm>
 
 namespace {
 const char *nullableCString(const std::string &value) {
@@ -24,12 +27,26 @@ void RtcEngineExBridge::release(bool sync) {
         // but they must not call back into TS once the engine has been released.
         _eventHandler->invalidateCallbacks();
     }
+    releaseMediaPlayers();
     if (_engine != nullptr) {
         agora::rtc::IRtcEngine::release(nullptr);
         _engine = nullptr;
     }
     _eventHandler.reset();
     _appId.clear();
+}
+
+void RtcEngineExBridge::releaseMediaPlayers() {
+    // Media player bridge objects may still be referenced by TS after engine release.
+    // Clear their SDK refs first so stale TS objects cannot operate on released SDK state.
+    for (const auto &mediaPlayerBridge : _mediaPlayers) {
+        if (mediaPlayerBridge == nullptr) { continue; }
+        if (_engine != nullptr && mediaPlayerBridge->hasMediaPlayer()) {
+            _engine->destroyMediaPlayer(mediaPlayerBridge->mediaPlayer());
+        }
+        mediaPlayerBridge->invalidate();
+    }
+    _mediaPlayers.clear();
 }
 
 int RtcEngineExBridge::initialize(const AgoraRtcNativeContext &context, se::Object *eventHandler) {
@@ -455,14 +472,32 @@ int RtcEngineExBridge::stopAudioRecording() {
     return _engine->stopAudioRecording();
 }
 
-int RtcEngineExBridge::createMediaPlayer() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+std::shared_ptr<MediaPlayerBridge> RtcEngineExBridge::createMediaPlayer() {
+    if (_engine == nullptr) { return nullptr; }
+    auto mediaPlayer = _engine->createMediaPlayer();
+    if (!mediaPlayer) { return nullptr; }
+
+    auto bridge = std::make_shared<MediaPlayerBridge>(mediaPlayer);
+    _mediaPlayers.push_back(bridge);
+    return bridge;
 }
 
-int RtcEngineExBridge::destroyMediaPlayer(agora::agora_refptr<agora::rtc::IMediaPlayer> mediaPlayer) {
+int RtcEngineExBridge::destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->destroyMediaPlayer(mediaPlayer);
+    if (mediaPlayer == nullptr) { return -agora::ERR_INVALID_ARGUMENT; }
+
+    auto iter = std::find_if(_mediaPlayers.begin(), _mediaPlayers.end(),
+                             [&mediaPlayer](const std::shared_ptr<MediaPlayerBridge> &item) {
+                                 return item == mediaPlayer;
+                             });
+    if (iter == _mediaPlayers.end() || !(*iter)->hasMediaPlayer()) { return -agora::ERR_INVALID_ARGUMENT; }
+
+    int result = _engine->destroyMediaPlayer((*iter)->mediaPlayer());
+    if (result == 0) {
+        (*iter)->invalidate();
+        _mediaPlayers.erase(iter);
+    }
+    return result;
 }
 
 int RtcEngineExBridge::createMediaRecorder(const agora::rtc::RecorderStreamInfo &info) {
@@ -1233,9 +1268,17 @@ QueryCameraFocalLengthCapabilityResult RtcEngineExBridge::queryCameraFocalLength
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
         return result;
     }
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
     result.errorCode = _engine->queryCameraFocalLengthCapability(focalLengthInfos, size);
     result.size = size;
-    result.focalLengthInfos.assign(focalLengthInfos, focalLengthInfos + size);
+    if (focalLengthInfos != nullptr && size > 0) {
+        result.focalLengthInfos.assign(focalLengthInfos, focalLengthInfos + size);
+    }
+#else
+    (void)focalLengthInfos;
+    result.errorCode = -agora::ERR_NOT_SUPPORTED;
+    result.size = 0;
+#endif
     return result;
 }
 
@@ -1552,9 +1595,11 @@ int RtcEngineExBridge::setDirectCdnStreamingVideoConfiguration(const agora::rtc:
     return _engine->setDirectCdnStreamingVideoConfiguration(config);
 }
 
-int RtcEngineExBridge::startDirectCdnStreaming() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
+int RtcEngineExBridge::startDirectCdnStreaming(const std::string &publishUrl,
+                                               const agora::rtc::DirectCdnStreamingMediaOptions &options) {
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    if (_eventHandler == nullptr) { return -agora::ERR_INVALID_ARGUMENT; }
+    return _engine->startDirectCdnStreaming(_eventHandler.get(), publishUrl.c_str(), options);
 }
 
 int RtcEngineExBridge::stopDirectCdnStreaming() {

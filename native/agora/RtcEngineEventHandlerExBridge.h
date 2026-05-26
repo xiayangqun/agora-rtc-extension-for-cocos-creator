@@ -1,9 +1,7 @@
 #pragma once
 
-#include <atomic>
-#include <memory>
-
 #include "IAgoraRtcEngineEx.h"
+#include "agora/ObserverBridgeBase.h"
 
 namespace se {
 class Object;
@@ -15,15 +13,11 @@ using agora::VideoLayout;
 using namespace agora::rtc;
 
 class RtcEngineEventHandlerExBridge
-    : public IRtcEngineEventHandlerEx,
-      public std::enable_shared_from_this<RtcEngineEventHandlerExBridge> {
+    : public ObserverBridgeBase,
+      public IRtcEngineEventHandlerEx,
+      public IDirectCdnStreamingEventHandler {
 public:
     explicit RtcEngineEventHandlerExBridge(se::Object *eventHandler);
-    ~RtcEngineEventHandlerExBridge() override;
-
-    void invalidateCallbacks();
-    bool canDispatchCallbacks() const;
-    se::Object *eventHandler() const;
 
     // IRtcEngineEventHandler callbacks. These non-connection overloads are intentionally
     // kept as no-ops; TS dispatch only happens from the IRtcEngineEventHandlerEx overloads.
@@ -186,9 +180,9 @@ public:
     void onMultipathStats(const RtcConnection& connection, const MultipathStats& stats) override;
     void onRenewTokenResult(const RtcConnection& connection, const char* token, RENEW_TOKEN_ERROR_CODE code) override;
 
-private:
-    se::Object *_eventHandler{nullptr};
-    // Queued Cocos-thread callbacks capture shared_ptr<this>; release() must still
-    // be able to stop those old tasks from calling the TS event handler.
-    std::atomic_bool _callbacksEnabled{true};
+    // IDirectCdnStreamingEventHandler callbacks.
+    void onDirectCdnStreamingStateChanged(DIRECT_CDN_STREAMING_STATE state,
+                                          DIRECT_CDN_STREAMING_REASON reason,
+                                          const char *message) override;
+    void onDirectCdnStreamingStats(const DirectCdnStreamingStats &stats) override;
 };

@@ -1,7 +1,9 @@
 #include "jsb_agora_rtc_manual.h"
 
+#include "agora/MediaPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
+#include "bindings/manual/jsb_classtype.h"
 #include "bindings/manual/jsb_global.h"
 #include "bindings/jswrapper/SeApi.h"
 
@@ -9,9 +11,12 @@
 
 namespace {
 se::Class *__jsb_AgoraRtcEngineNative_class = nullptr;
+se::Class *__jsb_AgoraMediaPlayerNative_class = nullptr;
 
 static bool js_agora_RtcEngineNative_finalize(se::State &s);
+static bool js_agora_MediaPlayerNative_finalize(se::State &s);
 SE_DECLARE_FINALIZE_FUNC(js_agora_RtcEngineNative_finalize)
+SE_DECLARE_FINALIZE_FUNC(js_agora_MediaPlayerNative_finalize)
 
 se::Object *getOrCreateNamespace(se::Object *global, const char *name) {
     se::Value nsVal;
@@ -46,6 +51,10 @@ bool getIntProperty(se::Object *object, const char *name, int *out) {
 
 RtcEngineExBridge *getNativeBridge(se::State &s) {
     return static_cast<RtcEngineExBridge *>(s.nativeThisObject());
+}
+
+MediaPlayerBridge *getNativeMediaPlayer(se::State &s) {
+    return static_cast<MediaPlayerBridge *>(s.nativeThisObject());
 }
 
 static bool js_agora_RtcEngineNative_constructor(se::State &s) {
@@ -141,6 +150,57 @@ static bool js_agora_RtcEngineNative_release(se::State &s) {
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_release)
+
+static bool js_agora_RtcEngineNative_createMediaPlayer(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) {
+        s.rval().setNull();
+        return true;
+    }
+
+    auto mediaPlayer = bridge->createMediaPlayer();
+    if (mediaPlayer == nullptr) {
+        s.rval().setNull();
+        return true;
+    }
+
+    nativevalue_to_se(mediaPlayer, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_createMediaPlayer)
+
+static bool js_agora_RtcEngineNative_destroyMediaPlayer(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) {
+        s.rval().setInt32(-7);
+        return true;
+    }
+    if (args.empty()) {
+        s.rval().setInt32(-2);
+        return true;
+    }
+    std::shared_ptr<MediaPlayerBridge> mediaPlayer;
+    if (!sevalue_to_native(args[0], &mediaPlayer, s.thisObject())) {
+        s.rval().setInt32(-2);
+        return true;
+    }
+    s.rval().setInt32(bridge->destroyMediaPlayer(mediaPlayer));
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_destroyMediaPlayer)
+
+static bool js_agora_MediaPlayerNative_getId(se::State &s) {
+    auto *mediaPlayer = getNativeMediaPlayer(s);
+    s.rval().setInt32(mediaPlayer != nullptr ? mediaPlayer->getId() : -2);
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaPlayerNative_getId)
+
+static bool js_agora_MediaPlayerNative_finalize(se::State &s) {
+    return true;
+}
+SE_BIND_FINALIZE_FUNC(js_agora_MediaPlayerNative_finalize)
 
 // ===== Channel management ================================================
 
@@ -459,6 +519,17 @@ bool register_agora_rtc_manual(se::Object *global) {
     auto *agora = getOrCreateNamespace(global, "agora");
     auto *native = getOrCreateNamespace(agora, "native");
 
+    auto *mediaPlayerCls = se::Class::create(
+        "MediaPlayerNative",
+        native,
+        nullptr,
+        nullptr);
+    mediaPlayerCls->defineFunction("getId", _SE(js_agora_MediaPlayerNative_getId));
+    mediaPlayerCls->defineFinalizeFunction(_SE(js_agora_MediaPlayerNative_finalize));
+    mediaPlayerCls->install();
+    JSBClassType::registerClass<MediaPlayerBridge>(mediaPlayerCls);
+    __jsb_AgoraMediaPlayerNative_class = mediaPlayerCls;
+
     auto *cls = se::Class::create(
         "RtcEngineNative",
         native,
@@ -468,6 +539,8 @@ bool register_agora_rtc_manual(se::Object *global) {
     cls->defineFunction("initialize", _SE(js_agora_RtcEngineNative_initialize));
     cls->defineFunction("joinChannel", _SE(js_agora_RtcEngineNative_joinChannel));
     cls->defineFunction("release", _SE(js_agora_RtcEngineNative_release));
+    cls->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineNative_createMediaPlayer));
+    cls->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineNative_destroyMediaPlayer));
     // Channel management
     cls->defineFunction("leaveChannel", _SE(js_agora_RtcEngineNative_leaveChannel));
     cls->defineFunction("renewToken", _SE(js_agora_RtcEngineNative_renewToken));

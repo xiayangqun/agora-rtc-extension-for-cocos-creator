@@ -14,12 +14,15 @@ bool nativevalue_to_se(bool from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(float from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(double from, se::Value &to, se::Object *ctx);
 
-template<typename T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
+template <typename T, typename std::enable_if<std::is_enum<T>::value, int>::type = 0>
 bool nativevalue_to_se(T from, se::Value &to, se::Object *ctx) {
-    return nativevalue_to_se(static_cast<int32_t>(from), to, ctx);
+    (void)ctx;
+    to.setInt32(static_cast<int32_t>(from));
+    return true;
 }
 
-template<typename T, typename std::enable_if<std::is_integral<T>::value && !std::is_same<T, bool>::value, int>::type = 0>
+template <typename T,
+          typename std::enable_if<std::is_integral<T>::value && !std::is_same<T, bool>::value, int>::type = 0>
 bool nativevalue_to_se(T from, se::Value &to, se::Object *ctx) {
     (void)ctx;
     if constexpr (std::is_unsigned<T>::value || sizeof(T) > sizeof(int32_t)) {
@@ -35,15 +38,16 @@ bool nativevalue_to_se(const agora::rtc::RtcStats &from, se::Value &to, se::Obje
 bool nativevalue_to_se(const agora::rtc::AudioVolumeInfo &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::LocalAudioStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::VideoDimensions &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::RemoteVideoStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::ClientRoleOptions &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::VideoRenderingTracingInfo &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::MultipathStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::DirectCdnStreamingStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object *ctx);
 
-template<typename T>
-bool nativevalue_to_se(const std::vector<T> &from, se::Value &to, se::Object *ctx) {
+template <typename T> bool nativevalue_to_se(const std::vector<T> &from, se::Value &to, se::Object *ctx) {
     se::HandleObject array(se::Object::createArrayObject(from.size()));
     bool ok = true;
     for (size_t i = 0; i < from.size(); ++i) {
