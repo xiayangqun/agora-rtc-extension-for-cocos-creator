@@ -4,15 +4,13 @@
 #include <string>
 
 #include "IAgoraRtcEngine.h"
+#include "IAgoraRtcEngineEx.h"
+#include <vector>
 
 namespace se {
 class Object;
 }
 class RtcEngineEventHandlerExBridge;
-
-// =============================================================================
-// Simplified structs (replacing Agora SDK types)
-// =============================================================================
 
 struct AgoraRtcNativeContext {
     std::string appId;
@@ -21,849 +19,301 @@ struct AgoraRtcNativeContext {
     unsigned int areaCode{agora::rtc::AREA_CODE_GLOB};
 };
 
-// =============================================================================
-// Result structs for Pattern A / B (out-param methods)
-// =============================================================================
-
 struct GetVersionResult {
     int errorCode;
     int build;
 };
 
-struct GetEffectsVolumeResult {
-    int errorCode;
-    int volume;
-};
-
 struct QueryCodecCapabilityResult {
     int errorCode;
-    int size;
-};
-
-struct GetAudioMixingDurationResult {
-    int errorCode;
-    int duration;
-};
-
-struct GetAudioMixingCurrentPositionResult {
-    int errorCode;
-    int position;
-};
-
-struct GetAudioMixingPublishVolumeResult {
-    int errorCode;
-    int volume;
-};
-
-struct GetAudioMixingPlayoutVolumeResult {
-    int errorCode;
-    int volume;
-};
-
-struct GetAudioTrackCountResult {
-    int errorCode;
-    int count;
-};
-
-struct GetVolumeOfEffectResult {
-    int errorCode;
-    int volume;
-};
-
-struct GetEffectDurationResult {
-    int errorCode;
-    int duration;
-};
-
-struct GetEffectCurrentPositionResult {
-    int errorCode;
-    int position;
-};
-
-struct GetCameraMaxZoomFactorResult {
-    int errorCode;
-    float factor;
-};
-
-struct GetLoopbackRecordingVolumeResult {
-    int errorCode;
-    int volume;
-};
-
-struct GetNetworkTypeResult {
-    int errorCode;
-    int type;
+    std::vector<agora::rtc::CodecCapInfo> codecInfo;
 };
 
 struct GetFaceShapeBeautyOptionsResult {
     int errorCode;
-    int options;
+    agora::rtc::FaceShapeBeautyOptions options;
 };
 
 struct GetFaceShapeAreaOptionsResult {
     int errorCode;
-    int options;
+    agora::rtc::FaceShapeAreaOptions options;
 };
 
-// =============================================================================
-// RtcEngineExBridge
-// =============================================================================
+struct GetExtensionPropertyResult {
+    int errorCode;
+    std::string value;
+};
+
+struct GetAudioDeviceInfoResult {
+    int errorCode;
+    agora::rtc::DeviceInfo deviceInfo;
+};
+
+struct GetCallIdResult {
+    int errorCode;
+    std::string callId;
+};
+
+struct GetUserInfoResult {
+    int errorCode;
+    agora::rtc::UserInfo userInfo;
+};
+
+struct QueryCameraFocalLengthCapabilityResult {
+    int errorCode;
+    int size;
+    std::vector<agora::rtc::FocalLengthInfo> focalLengthInfos;
+};
+
+struct QueryHDRCapabilityResult {
+    int errorCode;
+    agora::rtc::HDR_CAPABILITY capability;
+};
+
+struct CreateDataStreamResult {
+    int errorCode;
+    int streamId;
+};
 
 class RtcEngineExBridge {
 public:
     RtcEngineExBridge();
     ~RtcEngineExBridge();
-
-    // -------------------------------------------------------------------------
-    // 0. release (SDK: static void release in IRtcEngine, first method)
-    // -------------------------------------------------------------------------
     void release(bool sync);
-
-    // -------------------------------------------------------------------------
-    // 1. initialize
-    // -------------------------------------------------------------------------
     int initialize(const AgoraRtcNativeContext &context, se::Object *eventHandler);
 
-    // -------------------------------------------------------------------------
-    // 2. queryInterface — stub (not supported)
-    // -------------------------------------------------------------------------
-    int queryInterface(int iid);
-
-    // -------------------------------------------------------------------------
-    // 3. getVersion
-    // -------------------------------------------------------------------------
+    //not support
+    // int queryInterface(int iid);
     GetVersionResult getVersion();
-
-    // -------------------------------------------------------------------------
-    // 4. getErrorDescription
-    // -------------------------------------------------------------------------
     const char *getErrorDescription(int code);
-
-    // -------------------------------------------------------------------------
-    // 5. queryCodecCapability
-    // -------------------------------------------------------------------------
-    QueryCodecCapabilityResult queryCodecCapability();
-
-    // -------------------------------------------------------------------------
-    // 6. queryDeviceScore
-    // -------------------------------------------------------------------------
+    QueryCodecCapabilityResult queryCodecCapability(int &size);
     int queryDeviceScore();
-
-    // -------------------------------------------------------------------------
-    // 7. preloadChannel
-    // -------------------------------------------------------------------------
     int preloadChannel(const std::string &token, const std::string &channelId, agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 8. preloadChannelWithUserAccount
-    // -------------------------------------------------------------------------
-    int preloadChannelWithUserAccount(const std::string &token, const std::string &channelId, const std::string &userAccount);
-
-    // -------------------------------------------------------------------------
-    // 9. updatePreloadChannelToken
-    // -------------------------------------------------------------------------
+    int preloadChannelWithUserAccount(const std::string &token, const std::string &channelId,
+                                      const std::string &userAccount);
     int updatePreloadChannelToken(const std::string &token);
-
-    // -------------------------------------------------------------------------
-    // 10–11. joinChannel (2 overloads)
-    // -------------------------------------------------------------------------
-    int joinChannel(
-        const std::string &token,
-        const std::string &channelId,
-        const std::string &info,
-        agora::rtc::uid_t uid);
-    int joinChannel(
-        const std::string &token,
-        const std::string &channelId,
-        agora::rtc::uid_t uid,
-        const agora::rtc::ChannelMediaOptions &options);
-
-    // -------------------------------------------------------------------------
-    // 12. updateChannelMediaOptions
-    // -------------------------------------------------------------------------
+    int joinChannel(const std::string &token, const std::string &channelId, const std::string &info,
+                    agora::rtc::uid_t uid);
+    int joinChannel(const std::string &token, const std::string &channelId, agora::rtc::uid_t uid,
+                    const agora::rtc::ChannelMediaOptions &options);
     int updateChannelMediaOptions(const agora::rtc::ChannelMediaOptions &options);
-
-    // -------------------------------------------------------------------------
-    // 13. leaveChannel
-    // -------------------------------------------------------------------------
     int leaveChannel();
-
-    // -------------------------------------------------------------------------
-    // 14. leaveChannel (with LeaveChannelOptions)
-    // -------------------------------------------------------------------------
     int leaveChannel(const agora::rtc::LeaveChannelOptions &options);
-
-    // -------------------------------------------------------------------------
-    // 15. renewToken
-    // -------------------------------------------------------------------------
     int renewToken(const std::string &token);
-
-    // -------------------------------------------------------------------------
-    // 16. setChannelProfile
-    // -------------------------------------------------------------------------
-    int setChannelProfile(int profile);
-
-    // -------------------------------------------------------------------------
-    // 17–18. setClientRole (2 overloads)
-    // -------------------------------------------------------------------------
-    int setClientRole(int role);
-    int setClientRole(int role, int audienceLatencyLevel);
-
-    // -------------------------------------------------------------------------
-    // 19. startEchoTest — stub
-    // -------------------------------------------------------------------------
+    int setChannelProfile(agora::CHANNEL_PROFILE_TYPE profile);
+    int setClientRole(agora::rtc::CLIENT_ROLE_TYPE role);
+    int setClientRole(agora::rtc::CLIENT_ROLE_TYPE role, const agora::rtc::ClientRoleOptions &options);
     int startEchoTest(const agora::rtc::EchoTestConfiguration &config);
-
-    // -------------------------------------------------------------------------
-    // 20. stopEchoTest
-    // -------------------------------------------------------------------------
     int stopEchoTest();
-
-    // -------------------------------------------------------------------------
-    // 21. enableMultiCamera — stub
-    // -------------------------------------------------------------------------
     int enableMultiCamera(bool enabled, const agora::rtc::CameraCapturerConfiguration &config);
-
-    // -------------------------------------------------------------------------
-    // 22. enableVideo
-    // -------------------------------------------------------------------------
     int enableVideo();
-
-    // -------------------------------------------------------------------------
-    // 23. disableVideo
-    // -------------------------------------------------------------------------
     int disableVideo();
-
-    // -------------------------------------------------------------------------
-    // 24–25. startPreview (2 overloads)
-    // -------------------------------------------------------------------------
     int startPreview();
-    int startPreview(int sourceType);
-
-    // -------------------------------------------------------------------------
-    // 26–27. stopPreview (2 overloads)
-    // -------------------------------------------------------------------------
+    int startPreview(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
     int stopPreview();
-    int stopPreview(int sourceType);
-
-    // -------------------------------------------------------------------------
-    // 28. startLastmileProbeTest — stub
-    // -------------------------------------------------------------------------
+    int stopPreview(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
     int startLastmileProbeTest(const agora::rtc::LastmileProbeConfig &config);
-
-    // -------------------------------------------------------------------------
-    // 29. stopLastmileProbeTest
-    // -------------------------------------------------------------------------
     int stopLastmileProbeTest();
-
-    // -------------------------------------------------------------------------
-    // 30. setVideoEncoderConfiguration — stub
-    // -------------------------------------------------------------------------
     int setVideoEncoderConfiguration(const agora::rtc::VideoEncoderConfiguration &config);
-
-    // -------------------------------------------------------------------------
-    // 31–42: Beauty / filter / video effect — stubs
-    // -------------------------------------------------------------------------
-    int setBeautyEffectOptions(bool enabled, const agora::rtc::BeautyOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    int setFaceShapeBeautyOptions(bool enabled, const agora::rtc::FaceShapeBeautyOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
+    int setBeautyEffectOptions(bool enabled, const agora::rtc::BeautyOptions &options,
+                               agora::media::MEDIA_SOURCE_TYPE type);
+    int setFaceShapeBeautyOptions(bool enabled, const agora::rtc::FaceShapeBeautyOptions &options,
+                                  agora::media::MEDIA_SOURCE_TYPE type);
     int setFaceShapeAreaOptions(const agora::rtc::FaceShapeAreaOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    GetFaceShapeBeautyOptionsResult getFaceShapeBeautyOptions(int type);
-    GetFaceShapeAreaOptionsResult getFaceShapeAreaOptions(int shapeArea, int type);
-    int setFilterEffectOptions(bool enabled, const agora::rtc::FilterEffectOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    int createVideoEffectObject(const std::string &bundlePath, int type);
-    int destroyVideoEffectObject(int videoEffectObject);
-    int setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    int setVideoDenoiserOptions(bool enabled, const agora::rtc::VideoDenoiserOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    int setColorEnhanceOptions(bool enabled, const agora::rtc::ColorEnhanceOptions &options, agora::media::MEDIA_SOURCE_TYPE type);
-    int enableVirtualBackground(bool enabled, const agora::rtc::VirtualBackgroundSource &backgroundSource, const agora::rtc::SegmentationProperty &segproperty, agora::media::MEDIA_SOURCE_TYPE type);
+    GetFaceShapeBeautyOptionsResult getFaceShapeBeautyOptions(agora::media::MEDIA_SOURCE_TYPE type);
+    GetFaceShapeAreaOptionsResult getFaceShapeAreaOptions(agora::rtc::FaceShapeAreaOptions::FACE_SHAPE_AREA shapeArea,
+                                                          agora::media::MEDIA_SOURCE_TYPE type);
+    int setFilterEffectOptions(bool enabled, const agora::rtc::FilterEffectOptions &options,
+                               agora::media::MEDIA_SOURCE_TYPE type);
 
-    // -------------------------------------------------------------------------
-    // 43. setupRemoteVideo — stub
-    // -------------------------------------------------------------------------
+    //todo for human
+    int createVideoEffectObject(const std::string &bundlePath, agora::media::MEDIA_SOURCE_TYPE type);
+
+    //todo for human
+    int destroyVideoEffectObject(se::Object *videoEffectObject);
+    int setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options,
+                                  agora::media::MEDIA_SOURCE_TYPE type);
+    int setVideoDenoiserOptions(bool enabled, const agora::rtc::VideoDenoiserOptions &options,
+                                agora::media::MEDIA_SOURCE_TYPE type);
+    int setColorEnhanceOptions(bool enabled, const agora::rtc::ColorEnhanceOptions &options,
+                               agora::media::MEDIA_SOURCE_TYPE type);
+    int enableVirtualBackground(bool enabled, const agora::rtc::VirtualBackgroundSource &backgroundSource,
+                                const agora::rtc::SegmentationProperty &segproperty,
+                                agora::media::MEDIA_SOURCE_TYPE type);
     int setupRemoteVideo(const agora::rtc::VideoCanvas &canvas);
-
-    // -------------------------------------------------------------------------
-    // 44. setupLocalVideo — stub
-    // -------------------------------------------------------------------------
     int setupLocalVideo(const agora::rtc::VideoCanvas &canvas);
-
-    // -------------------------------------------------------------------------
-    // 45. setVideoScenario
-    // -------------------------------------------------------------------------
-    int setVideoScenario(int scenarioType);
-
-    // -------------------------------------------------------------------------
-    // 46. setVideoQoEPreference
-    // -------------------------------------------------------------------------
-    int setVideoQoEPreference(int qoePreference);
-
-    // -------------------------------------------------------------------------
-    // 47. enableAudio
-    // -------------------------------------------------------------------------
+    int setVideoScenario(agora::rtc::VIDEO_APPLICATION_SCENARIO_TYPE scenarioType);
+    int setVideoQoEPreference(agora::rtc::VIDEO_QOE_PREFERENCE_TYPE qoePreference);
     int enableAudio();
-
-    // -------------------------------------------------------------------------
-    // 48. disableAudio
-    // -------------------------------------------------------------------------
     int disableAudio();
-
-    // -------------------------------------------------------------------------
-    // 49. setAudioProfile (deprecated, 2 params)
-    // -------------------------------------------------------------------------
-    int setAudioProfile(int profile, int scenario);
-
-    // -------------------------------------------------------------------------
-    // 50. setAudioProfile (1 param)
-    // -------------------------------------------------------------------------
-    int setAudioProfile(int profile);
-
-    // -------------------------------------------------------------------------
-    // 51. setAudioScenario
-    // -------------------------------------------------------------------------
-    int setAudioScenario(int scenario);
-
-    // -------------------------------------------------------------------------
-    // 52. enableLocalAudio
-    // -------------------------------------------------------------------------
+    int setAudioProfile(agora::rtc::AUDIO_PROFILE_TYPE profile, agora::rtc::AUDIO_SCENARIO_TYPE scenario);
+    int setAudioProfile(agora::rtc::AUDIO_PROFILE_TYPE profile);
+    int setAudioScenario(agora::rtc::AUDIO_SCENARIO_TYPE scenario);
     int enableLocalAudio(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 53. muteLocalAudioStream
-    // -------------------------------------------------------------------------
     int muteLocalAudioStream(bool mute);
-
-    // -------------------------------------------------------------------------
-    // 54. muteAllRemoteAudioStreams
-    // -------------------------------------------------------------------------
     int muteAllRemoteAudioStreams(bool mute);
-
-    // -------------------------------------------------------------------------
-    // 55. muteRemoteAudioStream
-    // -------------------------------------------------------------------------
     int muteRemoteAudioStream(agora::rtc::uid_t uid, bool mute);
-
-    // -------------------------------------------------------------------------
-    // 56. muteLocalVideoStream
-    // -------------------------------------------------------------------------
     int muteLocalVideoStream(bool mute);
-
-    // -------------------------------------------------------------------------
-    // 57. enableLocalVideo
-    // -------------------------------------------------------------------------
     int enableLocalVideo(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 58. muteAllRemoteVideoStreams
-    // -------------------------------------------------------------------------
     int muteAllRemoteVideoStreams(bool mute);
-
-    // -------------------------------------------------------------------------
-    // 59. setRemoteDefaultVideoStreamType
-    // -------------------------------------------------------------------------
-    int setRemoteDefaultVideoStreamType(int streamType);
-
-    // -------------------------------------------------------------------------
-    // 60. muteRemoteVideoStream
-    // -------------------------------------------------------------------------
+    int setRemoteDefaultVideoStreamType(agora::rtc::VIDEO_STREAM_TYPE streamType);
     int muteRemoteVideoStream(agora::rtc::uid_t uid, bool mute);
-
-    // -------------------------------------------------------------------------
-    // 61. setRemoteVideoStreamType
-    // -------------------------------------------------------------------------
-    int setRemoteVideoStreamType(agora::rtc::uid_t uid, int streamType);
-
-    // -------------------------------------------------------------------------
-    // 62. setRemoteVideoSubscriptionOptions — stub
-    // -------------------------------------------------------------------------
+    int setRemoteVideoStreamType(agora::rtc::uid_t uid, agora::rtc::VIDEO_STREAM_TYPE streamType);
     int setRemoteVideoSubscriptionOptions(agora::rtc::uid_t uid, const agora::rtc::VideoSubscriptionOptions &options);
-
-    // -------------------------------------------------------------------------
-    // 63–66: Subscribe blocklist/allowlist — stubs
-    // -------------------------------------------------------------------------
-    int setSubscribeAudioBlocklist(int uidList, int uidNumber);
-    int setSubscribeAudioAllowlist(int uidList, int uidNumber);
-    int setSubscribeVideoBlocklist(int uidList, int uidNumber);
-    int setSubscribeVideoAllowlist(int uidList, int uidNumber);
-
-    // -------------------------------------------------------------------------
-    // 67. enableAudioVolumeIndication
-    // -------------------------------------------------------------------------
+    int setSubscribeAudioBlocklist(const std::vector<agora::rtc::uid_t> &uidList);
+    int setSubscribeAudioAllowlist(const std::vector<agora::rtc::uid_t> &uidList);
+    int setSubscribeVideoBlocklist(const std::vector<agora::rtc::uid_t> &uidList);
+    int setSubscribeVideoAllowlist(const std::vector<agora::rtc::uid_t> &uidList);
     int enableAudioVolumeIndication(int interval, int smooth, bool reportVad);
-
-    // -------------------------------------------------------------------------
-    // 68–70. startAudioRecording — stubs
-    // -------------------------------------------------------------------------
-    int startAudioRecording(const std::string &filePath, int quality);
-    int startAudioRecording(const std::string &filePath, int sampleRate, int quality);
+    int startAudioRecording(const std::string &filePath, agora::rtc::AUDIO_RECORDING_QUALITY_TYPE quality);
+    int startAudioRecording(const std::string &filePath, int sampleRate,
+                            agora::rtc::AUDIO_RECORDING_QUALITY_TYPE quality);
     int startAudioRecording(const agora::rtc::AudioRecordingConfiguration &config);
 
-    // -------------------------------------------------------------------------
-    // 71. registerAudioEncodedFrameObserver — stub
-    // -------------------------------------------------------------------------
-    int registerAudioEncodedFrameObserver(int config, int observer);
-
-    // -------------------------------------------------------------------------
-    // 72. stopAudioRecording
-    // -------------------------------------------------------------------------
+    //todo for human
+    int registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
+                                          agora::rtc::IAudioEncodedFrameObserver *observer);
     int stopAudioRecording();
 
-    // -------------------------------------------------------------------------
-    // 73. createMediaPlayer — stub
-    // -------------------------------------------------------------------------
+    //todo for human
     int createMediaPlayer();
 
-    // -------------------------------------------------------------------------
-    // 74. destroyMediaPlayer — stub
-    // -------------------------------------------------------------------------
-    int destroyMediaPlayer(int mediaPlayer);
+    //todo for human
+    int destroyMediaPlayer(agora::agora_refptr<agora::rtc::IMediaPlayer> mediaPlayer);
 
-    // -------------------------------------------------------------------------
-    // 75. createMediaRecorder — stub
-    // -------------------------------------------------------------------------
-    int createMediaRecorder(int info);
+    //todo for human
+    int createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
 
-    // -------------------------------------------------------------------------
-    // 76. destroyMediaRecorder — stub
-    // -------------------------------------------------------------------------
-    int destroyMediaRecorder(int mediaRecorder);
-
-    // -------------------------------------------------------------------------
-    // 77–78. startAudioMixing (2 overloads)
-    // -------------------------------------------------------------------------
+    //todo for human
+    int destroyMediaRecorder(agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle, int startPos);
-
-    // -------------------------------------------------------------------------
-    // 79. stopAudioMixing
-    // -------------------------------------------------------------------------
     int stopAudioMixing();
-
-    // -------------------------------------------------------------------------
-    // 80. pauseAudioMixing
-    // -------------------------------------------------------------------------
     int pauseAudioMixing();
-
-    // -------------------------------------------------------------------------
-    // 81. resumeAudioMixing
-    // -------------------------------------------------------------------------
     int resumeAudioMixing();
-
-    // -------------------------------------------------------------------------
-    // 82. selectAudioTrack
-    // -------------------------------------------------------------------------
     int selectAudioTrack(int index);
-
-    // -------------------------------------------------------------------------
-    // 83. getAudioTrackCount
-    // -------------------------------------------------------------------------
-    GetAudioTrackCountResult getAudioTrackCount();
-
-    // -------------------------------------------------------------------------
-    // 84. adjustAudioMixingVolume
-    // -------------------------------------------------------------------------
+    int getAudioTrackCount();
     int adjustAudioMixingVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 85. adjustAudioMixingPublishVolume
-    // -------------------------------------------------------------------------
     int adjustAudioMixingPublishVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 86. getAudioMixingPublishVolume
-    // -------------------------------------------------------------------------
-    GetAudioMixingPublishVolumeResult getAudioMixingPublishVolume();
-
-    // -------------------------------------------------------------------------
-    // 87. adjustAudioMixingPlayoutVolume
-    // -------------------------------------------------------------------------
+    int getAudioMixingPublishVolume();
     int adjustAudioMixingPlayoutVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 88. getAudioMixingPlayoutVolume
-    // -------------------------------------------------------------------------
-    GetAudioMixingPlayoutVolumeResult getAudioMixingPlayoutVolume();
-
-    // -------------------------------------------------------------------------
-    // 89. getAudioMixingDuration
-    // -------------------------------------------------------------------------
-    GetAudioMixingDurationResult getAudioMixingDuration();
-
-    // -------------------------------------------------------------------------
-    // 90. getAudioMixingCurrentPosition
-    // -------------------------------------------------------------------------
-    GetAudioMixingCurrentPositionResult getAudioMixingCurrentPosition();
-
-    // -------------------------------------------------------------------------
-    // 91. setAudioMixingPosition
-    // -------------------------------------------------------------------------
+    int getAudioMixingPlayoutVolume();
+    int getAudioMixingDuration();
+    int getAudioMixingCurrentPosition();
     int setAudioMixingPosition(int pos);
-
-    // -------------------------------------------------------------------------
-    // 92. setAudioMixingDualMonoMode
-    // -------------------------------------------------------------------------
-    int setAudioMixingDualMonoMode(int mode);
-
-    // -------------------------------------------------------------------------
-    // 93. setAudioMixingPitch
-    // -------------------------------------------------------------------------
+    int setAudioMixingDualMonoMode(agora::media::AUDIO_MIXING_DUAL_MONO_MODE mode);
     int setAudioMixingPitch(int pitch);
-
-    // -------------------------------------------------------------------------
-    // 94. setAudioMixingPlaybackSpeed
-    // -------------------------------------------------------------------------
     int setAudioMixingPlaybackSpeed(int speed);
-
-    // -------------------------------------------------------------------------
-    // 95. getEffectsVolume
-    // -------------------------------------------------------------------------
-    GetEffectsVolumeResult getEffectsVolume();
-
-    // -------------------------------------------------------------------------
-    // 96. setEffectsVolume
-    // -------------------------------------------------------------------------
+    int getEffectsVolume();
     int setEffectsVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 97. preloadEffect
-    // -------------------------------------------------------------------------
     int preloadEffect(int soundId, const std::string &filePath, int startPos);
-
-    // -------------------------------------------------------------------------
-    // 98. playEffect
-    // -------------------------------------------------------------------------
-    int playEffect(int soundId, const std::string &filePath, int loopCount, double pitch, double pan, int gain, bool publish, int startPos);
-
-    // -------------------------------------------------------------------------
-    // 99. playAllEffects
-    // -------------------------------------------------------------------------
+    int playEffect(int soundId, const std::string &filePath, int loopCount, double pitch, double pan, int gain,
+                   bool publish, int startPos);
     int playAllEffects(int loopCount, double pitch, double pan, int gain, bool publish);
-
-    // -------------------------------------------------------------------------
-    // 100. getVolumeOfEffect
-    // -------------------------------------------------------------------------
-    GetVolumeOfEffectResult getVolumeOfEffect(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 101. setVolumeOfEffect
-    // -------------------------------------------------------------------------
+    int getVolumeOfEffect(int soundId);
     int setVolumeOfEffect(int soundId, int volume);
-
-    // -------------------------------------------------------------------------
-    // 102. pauseEffect
-    // -------------------------------------------------------------------------
     int pauseEffect(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 103. pauseAllEffects
-    // -------------------------------------------------------------------------
     int pauseAllEffects();
-
-    // -------------------------------------------------------------------------
-    // 104. resumeEffect
-    // -------------------------------------------------------------------------
     int resumeEffect(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 105. resumeAllEffects
-    // -------------------------------------------------------------------------
     int resumeAllEffects();
-
-    // -------------------------------------------------------------------------
-    // 106. stopEffect
-    // -------------------------------------------------------------------------
     int stopEffect(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 107. stopAllEffects
-    // -------------------------------------------------------------------------
     int stopAllEffects();
-
-    // -------------------------------------------------------------------------
-    // 108. unloadEffect
-    // -------------------------------------------------------------------------
     int unloadEffect(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 109. unloadAllEffects
-    // -------------------------------------------------------------------------
     int unloadAllEffects();
-
-    // -------------------------------------------------------------------------
-    // 110. getEffectDuration
-    // -------------------------------------------------------------------------
-    GetEffectDurationResult getEffectDuration(const std::string &filePath);
-
-    // -------------------------------------------------------------------------
-    // 111. setEffectPosition
-    // -------------------------------------------------------------------------
+    int getEffectDuration(const std::string &filePath);
     int setEffectPosition(int soundId, int pos);
-
-    // -------------------------------------------------------------------------
-    // 112. getEffectCurrentPosition
-    // -------------------------------------------------------------------------
-    GetEffectCurrentPositionResult getEffectCurrentPosition(int soundId);
-
-    // -------------------------------------------------------------------------
-    // 113. enableSoundPositionIndication
-    // -------------------------------------------------------------------------
+    int getEffectCurrentPosition(int soundId);
     int enableSoundPositionIndication(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 114. setRemoteVoicePosition
-    // -------------------------------------------------------------------------
     int setRemoteVoicePosition(agora::rtc::uid_t uid, double pan, double gain);
-
-    // -------------------------------------------------------------------------
-    // 115. enableSpatialAudio
-    // -------------------------------------------------------------------------
     int enableSpatialAudio(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 116. setRemoteUserSpatialAudioParams — stub
-    // -------------------------------------------------------------------------
-    int setRemoteUserSpatialAudioParams(agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 117. setVoiceBeautifierPreset
-    // -------------------------------------------------------------------------
-    int setVoiceBeautifierPreset(int preset);
-
-    // -------------------------------------------------------------------------
-    // 118. setAudioEffectPreset
-    // -------------------------------------------------------------------------
-    int setAudioEffectPreset(int preset);
-
-    // -------------------------------------------------------------------------
-    // 119. setVoiceConversionPreset
-    // -------------------------------------------------------------------------
-    int setVoiceConversionPreset(int preset);
-
-    // -------------------------------------------------------------------------
-    // 120. setAudioEffectParameters
-    // -------------------------------------------------------------------------
-    int setAudioEffectParameters(int preset, int param1, int param2);
-
-    // -------------------------------------------------------------------------
-    // 121. setLocalVoicePitch
-    // -------------------------------------------------------------------------
+    int setRemoteUserSpatialAudioParams(agora::rtc::uid_t uid, const agora::SpatialAudioParams &params);
+    int setVoiceBeautifierPreset(agora::rtc::VOICE_BEAUTIFIER_PRESET preset);
+    int setAudioEffectPreset(agora::rtc::AUDIO_EFFECT_PRESET preset);
+    int setVoiceConversionPreset(agora::rtc::VOICE_CONVERSION_PRESET preset);
+    int setAudioEffectParameters(agora::rtc::AUDIO_EFFECT_PRESET preset, int param1, int param2);
+    int setVoiceBeautifierParameters(agora::rtc::VOICE_BEAUTIFIER_PRESET preset, int param1, int param2);
+    int setVoiceConversionParameters(agora::rtc::VOICE_CONVERSION_PRESET preset, int param1, int param2);
     int setLocalVoicePitch(double pitch);
-
-    // -------------------------------------------------------------------------
-    // 122. setLocalVoiceFormant
-    // -------------------------------------------------------------------------
     int setLocalVoiceFormant(double formantRatio);
-
-    // -------------------------------------------------------------------------
-    // 123. setLocalVoiceEqualization
-    // -------------------------------------------------------------------------
-    int setLocalVoiceEqualization(int bandFrequency, int bandGain);
-
-    // -------------------------------------------------------------------------
-    // 124. setLocalVoiceReverb
-    // -------------------------------------------------------------------------
-    int setLocalVoiceReverb(int reverbKey, int value);
-
-    // -------------------------------------------------------------------------
-    // 125. setHeadphoneEQPreset
-    // -------------------------------------------------------------------------
-    int setHeadphoneEQPreset(int preset);
-
-    // -------------------------------------------------------------------------
-    // 126. setHeadphoneEQParameters
-    // -------------------------------------------------------------------------
+    int setLocalVoiceEqualization(agora::rtc::AUDIO_EQUALIZATION_BAND_FREQUENCY bandFrequency, int bandGain);
+    int setLocalVoiceReverb(agora::rtc::AUDIO_REVERB_TYPE reverbKey, int value);
+    int setHeadphoneEQPreset(agora::rtc::HEADPHONE_EQUALIZER_PRESET preset);
     int setHeadphoneEQParameters(int lowGain, int highGain);
-
-    // -------------------------------------------------------------------------
-    // 127. enableVoiceAITuner
-    // -------------------------------------------------------------------------
-    int enableVoiceAITuner(bool enabled, int type);
-
-    // -------------------------------------------------------------------------
-    // 128. setLogFile
-    // -------------------------------------------------------------------------
+    int enableVoiceAITuner(bool enabled, agora::rtc::VOICE_AI_TUNER_TYPE type);
     int setLogFile(const std::string &filePath);
-
-    // -------------------------------------------------------------------------
-    // 129. setLogFilter
-    // -------------------------------------------------------------------------
     int setLogFilter(unsigned int filter);
-
-    // -------------------------------------------------------------------------
-    // 130. setLogLevel
-    // -------------------------------------------------------------------------
-    int setLogLevel(int level);
-
-    // -------------------------------------------------------------------------
-    // 131. setLogFileSize
-    // -------------------------------------------------------------------------
+    int setLogLevel(agora::commons::LOG_LEVEL level);
     int setLogFileSize(unsigned int fileSizeInKBytes);
-
-    // -------------------------------------------------------------------------
-    // 132. uploadLogFile — stub
-    // -------------------------------------------------------------------------
-    int uploadLogFile();
-
-    // -------------------------------------------------------------------------
-    // 133. writeLog — stub (varargs)
-    // -------------------------------------------------------------------------
-    int writeLog(int level, const std::string &message);
-
-    // -------------------------------------------------------------------------
-    // 134. setLocalRenderMode (2 params) — stub
-    // -------------------------------------------------------------------------
-    int setLocalRenderMode(int renderMode, int mirrorMode);
-
-    // -------------------------------------------------------------------------
-    // 135. setLocalRenderTargetFps
-    // -------------------------------------------------------------------------
-    int setLocalRenderTargetFps(int sourceType, int targetFps);
-
-    // -------------------------------------------------------------------------
-    // 136. setRemoteRenderTargetFps
-    // -------------------------------------------------------------------------
+    int uploadLogFile(const std::string &requestId, const std::string &filePath);
+    int writeLog(agora::commons::LOG_LEVEL level, const std::string &fmt);
+    int setLocalRenderMode(agora::media::base::RENDER_MODE_TYPE renderMode,
+                           agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode);
+    int setRemoteRenderMode(agora::rtc::uid_t uid, agora::media::base::RENDER_MODE_TYPE renderMode,
+                            agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode);
+    int setLocalRenderTargetFps(agora::rtc::VIDEO_SOURCE_TYPE sourceType, int targetFps);
     int setRemoteRenderTargetFps(int targetFps);
-
-    // -------------------------------------------------------------------------
-    // 137. setLocalRenderMode (deprecated, 1 param)
-    // -------------------------------------------------------------------------
-    int setLocalRenderMode(int renderMode);
-
-    // -------------------------------------------------------------------------
-    // 138. setLocalVideoMirrorMode
-    // -------------------------------------------------------------------------
-    int setLocalVideoMirrorMode(int mirrorMode);
-
-    // -------------------------------------------------------------------------
-    // 139–140. enableDualStreamMode (deprecated)
-    // -------------------------------------------------------------------------
+    int setLocalRenderMode(agora::media::base::RENDER_MODE_TYPE renderMode);
+    int setLocalVideoMirrorMode(agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode);
     int enableDualStreamMode(bool enabled);
     int enableDualStreamMode(bool enabled, const agora::rtc::SimulcastStreamConfig &streamConfig);
-
-    // -------------------------------------------------------------------------
-    // 141. setDualStreamMode
-    // -------------------------------------------------------------------------
-    int setDualStreamMode(int mode);
-
-    // -------------------------------------------------------------------------
-    // 142. setSimulcastConfig — stub
-    // -------------------------------------------------------------------------
-    int setSimulcastConfig();
-
-    // -------------------------------------------------------------------------
-    // 143. setDualStreamMode (with config) — stub
-    // -------------------------------------------------------------------------
-    int setDualStreamMode(int mode, const agora::rtc::SimulcastStreamConfig &streamConfig);
-
-    // -------------------------------------------------------------------------
-    // 144. enableCustomAudioLocalPlayback — stub
-    // -------------------------------------------------------------------------
-    int enableCustomAudioLocalPlayback();
-
-    // -------------------------------------------------------------------------
-    // 145–147. Audio frame parameters — stubs
-    // -------------------------------------------------------------------------
+    int setDualStreamMode(agora::rtc::SIMULCAST_STREAM_MODE mode);
+    int setSimulcastConfig(const agora::rtc::SimulcastConfig &config);
+    int setDualStreamMode(agora::rtc::SIMULCAST_STREAM_MODE mode,
+                          const agora::rtc::SimulcastStreamConfig &streamConfig);
+    int enableCustomAudioLocalPlayback(agora::rtc::track_id_t trackId, bool enabled);
+    int setRecordingAudioFrameParameters(int sampleRate, int channel, agora::rtc::RAW_AUDIO_FRAME_OP_MODE_TYPE mode,
+                                         int samplesPerCall);
+    int setPlaybackAudioFrameParameters(int sampleRate, int channel, agora::rtc::RAW_AUDIO_FRAME_OP_MODE_TYPE mode,
+                                        int samplesPerCall);
     int setMixedAudioFrameParameters(int sampleRate, int channel, int samplesPerCall);
+    int setEarMonitoringAudioFrameParameters(int sampleRate, int channel, agora::rtc::RAW_AUDIO_FRAME_OP_MODE_TYPE mode,
+                                             int samplesPerCall);
     int setPlaybackAudioFrameBeforeMixingParameters(int sampleRate, int channel);
     int setPlaybackAudioFrameBeforeMixingParameters(int sampleRate, int channel, int samplesPerCall);
-
-    // -------------------------------------------------------------------------
-    // 148. enableAudioSpectrumMonitor
-    // -------------------------------------------------------------------------
     int enableAudioSpectrumMonitor(int intervalInMS);
-
-    // -------------------------------------------------------------------------
-    // 149. disableAudioSpectrumMonitor
-    // -------------------------------------------------------------------------
     int disableAudioSpectrumMonitor();
 
-    // -------------------------------------------------------------------------
-    // 150. registerAudioSpectrumObserver — stub
-    // -------------------------------------------------------------------------
+    //todo for human
     int registerAudioSpectrumObserver();
-
-    // -------------------------------------------------------------------------
-    // 151. unregisterAudioSpectrumObserver — stub
-    // -------------------------------------------------------------------------
     int unregisterAudioSpectrumObserver();
-
-    // -------------------------------------------------------------------------
-    // 152. adjustRecordingSignalVolume
-    // -------------------------------------------------------------------------
     int adjustRecordingSignalVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 153. muteRecordingSignal
-    // -------------------------------------------------------------------------
     int muteRecordingSignal(bool mute);
-
-    // -------------------------------------------------------------------------
-    // 154. adjustPlaybackSignalVolume
-    // -------------------------------------------------------------------------
     int adjustPlaybackSignalVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 155. adjustUserPlaybackSignalVolume
-    // -------------------------------------------------------------------------
     int adjustUserPlaybackSignalVolume(agora::rtc::uid_t uid, int volume);
-
-    // -------------------------------------------------------------------------
-    // 156. setRemoteSubscribeFallbackOption
-    // -------------------------------------------------------------------------
-    int setRemoteSubscribeFallbackOption(int option);
-
-    // -------------------------------------------------------------------------
-    // 157. setHighPriorityUserList — stub
-    // -------------------------------------------------------------------------
-    int setHighPriorityUserList();
-
-    // -------------------------------------------------------------------------
-    // 158–160. Extension — stubs
-    // -------------------------------------------------------------------------
-    int enableExtension(const std::string &provider, const std::string &extension, const agora::rtc::ExtensionInfo &extensionInfo, bool enable);
-    int enableExtension(const std::string &provider, const std::string &extension, bool enable, int type);
-    int setExtensionProperty(const std::string &provider, const std::string &extension, const std::string &key, const std::string &value);
-    int getExtensionProperty(const std::string &provider, const std::string &extension, const std::string &key);
-
-    // -------------------------------------------------------------------------
-    // 161. enableLoopbackRecording
-    // -------------------------------------------------------------------------
+    int setRemoteSubscribeFallbackOption(agora::rtc::STREAM_FALLBACK_OPTIONS option);
+    int setHighPriorityUserList(const std::vector<agora::rtc::uid_t> &uidList,
+                                agora::rtc::STREAM_FALLBACK_OPTIONS option);
+    int enableExtension(const std::string &provider, const std::string &extension,
+                        const agora::rtc::ExtensionInfo &extensionInfo, bool enable);
+    int setExtensionProperty(const std::string &provider, const std::string &extension,
+                             const agora::rtc::ExtensionInfo &extensionInfo, const std::string &key,
+                             const std::string &value);
+    GetExtensionPropertyResult getExtensionProperty(const std::string &provider, const std::string &extension,
+                                                    const agora::rtc::ExtensionInfo &extensionInfo,
+                                                    const std::string &key);
     int enableLoopbackRecording(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 162. adjustLoopbackSignalVolume
-    // -------------------------------------------------------------------------
     int adjustLoopbackSignalVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 163. getLoopbackRecordingVolume
-    // -------------------------------------------------------------------------
-    GetLoopbackRecordingVolumeResult getLoopbackRecordingVolume();
-
-    // -------------------------------------------------------------------------
-    // 164. enableInEarMonitoring
-    // -------------------------------------------------------------------------
+    int getLoopbackRecordingVolume();
     int enableInEarMonitoring(bool enabled, int includeAudioFilters);
-
-    // -------------------------------------------------------------------------
-    // 165. setInEarMonitoringVolume
-    // -------------------------------------------------------------------------
     int setInEarMonitoringVolume(int volume);
-
-    // -------------------------------------------------------------------------
-    // 166–168. Extension provider — stubs
-    // -------------------------------------------------------------------------
-    int loadExtensionProvider(const std::string &path);
+    int loadExtensionProvider(const std::string &path, bool unload_after_use = false);
     int setExtensionProviderProperty(const std::string &provider, const std::string &key, const std::string &value);
-    int registerExtension(const std::string &provider, const std::string &extension);
+    int registerExtension(const std::string &provider, const std::string &extension,
+                          agora::media::MEDIA_SOURCE_TYPE type = agora::media::UNKNOWN_MEDIA_SOURCE);
+    int enableExtension(const std::string &provider, const std::string &extension, bool enable,
+                        agora::media::MEDIA_SOURCE_TYPE type);
+    int setCameraCapturerConfiguration(const agora::rtc::CameraCapturerConfiguration &config);
 
-
-    // -------------------------------------------------------------------------
-    // 170–244. Camera — stubs
-    // -------------------------------------------------------------------------
-    int setCameraCapturerConfiguration();
+    //todo for human
     int createCustomVideoTrack();
+
+    //todo for human
     int createCustomEncodedVideoTrack();
+
+    //todo for human
     int destroyCustomVideoTrack();
+
+    //todo for human
     int destroyCustomEncodedVideoTrack();
     int switchCamera();
     bool isCameraZoomSupported();
@@ -873,7 +323,7 @@ public:
     bool isCameraAutoFocusFaceModeSupported();
     int setCameraZoomFactor(float factor);
     int enableFaceDetection(bool enabled);
-    GetCameraMaxZoomFactorResult getCameraMaxZoomFactor();
+    float getCameraMaxZoomFactor();
     int setCameraFocusPositionInPreview(float positionX, float positionY);
     int setCameraTorchOn(bool isOn);
     int setCameraAutoFocusFaceModeEnabled(bool enabled);
@@ -883,355 +333,243 @@ public:
     int setCameraExposureFactor(float factor);
     bool isCameraAutoExposureFaceModeSupported();
     int setCameraAutoExposureFaceModeEnabled(bool enabled);
-    int setCameraStabilizationMode(int mode);
+    int setCameraStabilizationMode(agora::rtc::CAMERA_STABILIZATION_MODE mode);
+    int setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker);
+    int setEnableSpeakerphone(bool speakerOn);
+    bool isSpeakerphoneEnabled();
+    int setRouteInCommunicationMode(int route);
     bool isCameraCenterStageSupported();
     int enableCameraCenterStage(bool enabled);
 
-    // -------------------------------------------------------------------------
-    // 245. setDefaultAudioRouteToSpeakerphone
-    // -------------------------------------------------------------------------
-    int setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker);
-
-    // -------------------------------------------------------------------------
-    // 246. setEnableSpeakerphone
-    // -------------------------------------------------------------------------
-    int setEnableSpeakerphone(bool speakerOn);
-
-    // -------------------------------------------------------------------------
-    // 247. isSpeakerphoneEnabled
-    // -------------------------------------------------------------------------
-    bool isSpeakerphoneEnabled();
-
-    // -------------------------------------------------------------------------
-    // 248. setRouteInCommunicationMode
-    // -------------------------------------------------------------------------
-    int setRouteInCommunicationMode(int route);
-
-    // -------------------------------------------------------------------------
-    // 249. getScreenCaptureSources — stub
-    // -------------------------------------------------------------------------
+    //todo for human
     int getScreenCaptureSources();
+    int setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction);
+    int startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
+                                      const agora::rtc::ScreenCaptureParameters &captureParams);
+    int startScreenCaptureByScreenRect(const agora::rtc::Rectangle &screenRect, const agora::rtc::Rectangle &regionRect,
+                                       const agora::rtc::ScreenCaptureParameters &captureParams);
 
-    // -------------------------------------------------------------------------
-    // 250. setAudioSessionOperationRestriction — stub
-    // -------------------------------------------------------------------------
-    int setAudioSessionOperationRestriction(int restriction);
-
-    // -------------------------------------------------------------------------
-    // 251. getAudioDeviceInfo — stub
-    // -------------------------------------------------------------------------
-    int getAudioDeviceInfo();
-
-    // -------------------------------------------------------------------------
-    // 252. setScreenCaptureContentHint
-    // -------------------------------------------------------------------------
-    int setScreenCaptureContentHint(int contentHint);
-
-    // -------------------------------------------------------------------------
-    // 253. updateScreenCaptureRegion — stub
-    // -------------------------------------------------------------------------
-    int updateScreenCaptureRegion();
-
-    // -------------------------------------------------------------------------
-    // 254. updateScreenCaptureParameters — stub
-    // -------------------------------------------------------------------------
-    int updateScreenCaptureParameters();
-
-    // -------------------------------------------------------------------------
-    // 255–258. Screen capture — stubs
-    // -------------------------------------------------------------------------
-    int startScreenCapture();
-    int updateScreenCapture();
+    GetAudioDeviceInfoResult getAudioDeviceInfo();
+    int startScreenCaptureByWindowId(int64_t windowId, const agora::rtc::Rectangle &regionRect,
+                                     const agora::rtc::ScreenCaptureParameters &captureParams);
+    int setScreenCaptureContentHint(agora::rtc::VIDEO_CONTENT_HINT contentHint);
+    int updateScreenCaptureRegion(const agora::rtc::Rectangle &regionRect);
+    int updateScreenCaptureParameters(const agora::rtc::ScreenCaptureParameters &captureParams);
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    int startScreenCapture(const agora::rtc::ScreenCaptureParameters2 &captureParams);
+    int updateScreenCapture(const agora::rtc::ScreenCaptureParameters2 &captureParams);
+#endif
     int queryScreenCaptureCapability();
 
-    // -------------------------------------------------------------------------
-    // 259. queryCameraFocalLengthCapability — stub
-    // -------------------------------------------------------------------------
-    int queryCameraFocalLengthCapability();
-
-    // -------------------------------------------------------------------------
-    // 260. setExternalMediaProjection — stub
-    // -------------------------------------------------------------------------
-    int setExternalMediaProjection();
-
-    // -------------------------------------------------------------------------
-    // 261. setScreenCaptureScenario
-    // -------------------------------------------------------------------------
-    int setScreenCaptureScenario(int screenScenario);
-
-    // -------------------------------------------------------------------------
-    // 262. stopScreenCapture
-    // -------------------------------------------------------------------------
+    QueryCameraFocalLengthCapabilityResult queryCameraFocalLengthCapability(
+        agora::rtc::FocalLengthInfo *focalLengthInfos, int &size);
+    int setExternalMediaProjection(void *mediaProjection);
+    int setScreenCaptureScenario(agora::rtc::SCREEN_SCENARIO_TYPE screenScenario);
     int stopScreenCapture();
 
-    // -------------------------------------------------------------------------
-    // 263. getCallId — stub (out param)
-    // -------------------------------------------------------------------------
-    int getCallId();
-
-    // -------------------------------------------------------------------------
-    // 264. rate
-    // -------------------------------------------------------------------------
+    GetCallIdResult getCallId();
     int rate(const std::string &callId, int rating, const std::string &description);
-
-    // -------------------------------------------------------------------------
-    // 265. complain
-    // -------------------------------------------------------------------------
     int complain(const std::string &callId, const std::string &description);
-
-    // -------------------------------------------------------------------------
-    // 266–274. RTMP streaming / transcoder — stubs
-    // -------------------------------------------------------------------------
     int startRtmpStreamWithoutTranscoding(const std::string &url);
-    int startRtmpStreamWithTranscoding(const std::string &url);
-    int updateRtmpTranscoding();
-    int startLocalVideoTranscoder();
-    int updateLocalTranscoderConfiguration();
+    int startRtmpStreamWithTranscoding(const std::string &url, const agora::rtc::LiveTranscoding &transcoding);
+    int updateRtmpTranscoding(const agora::rtc::LiveTranscoding &transcoding);
+    int startLocalVideoTranscoder(const agora::rtc::LocalTranscoderConfiguration &config);
+    int updateLocalTranscoderConfiguration(const agora::rtc::LocalTranscoderConfiguration &config);
     int stopRtmpStream(const std::string &url);
     int stopLocalVideoTranscoder();
-
-    // -------------------------------------------------------------------------
-    // 275–277. Local audio mixer — stubs
-    // -------------------------------------------------------------------------
-    int startLocalAudioMixer();
-    int updateLocalAudioMixerConfiguration();
+    int startLocalAudioMixer(const agora::rtc::LocalAudioMixerConfiguration &config);
+    int updateLocalAudioMixerConfiguration(const agora::rtc::LocalAudioMixerConfiguration &config);
     int stopLocalAudioMixer();
-
-    // -------------------------------------------------------------------------
-    // 278–282. Camera/screen capture source type — stubs
-    // -------------------------------------------------------------------------
-    int startCameraCapture(int sourceType);
-    int stopCameraCapture(int sourceType);
-    int setCameraDeviceOrientation(int type, int orientation);
-    int setScreenCaptureOrientation(int type, int orientation);
-    int startScreenCapture(int sourceType);
-
-    // -------------------------------------------------------------------------
-    // 283. stopScreenCapture (by sourceType) — stub
-    // -------------------------------------------------------------------------
-    int stopScreenCapture(int sourceType);
-
-    // -------------------------------------------------------------------------
-    // 284. getConnectionState
-    // -------------------------------------------------------------------------
+    int startCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
+    int stopCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
+    int setCameraDeviceOrientation(agora::rtc::VIDEO_SOURCE_TYPE type, agora::rtc::VIDEO_ORIENTATION orientation);
+    int setScreenCaptureOrientation(agora::rtc::VIDEO_SOURCE_TYPE type, agora::rtc::VIDEO_ORIENTATION orientation);
+    int startScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
+    int stopScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
     int getConnectionState();
 
-    // -------------------------------------------------------------------------
-    // 285–286. registerEventHandler / unregisterEventHandler — stubs
-    // -------------------------------------------------------------------------
-    int registerEventHandler();
-    int unregisterEventHandler();
+    //not suport
+    // int registerEventHandler();
 
-    // -------------------------------------------------------------------------
-    // 287. setRemoteUserPriority
-    // -------------------------------------------------------------------------
-    int setRemoteUserPriority(agora::rtc::uid_t uid, int userPriority);
+    //not suport
+    // int unregisterEventHandler();
+    int setRemoteUserPriority(agora::rtc::uid_t uid, agora::rtc::PRIORITY_TYPE userPriority);
 
-    // -------------------------------------------------------------------------
-    // 288. registerPacketObserver — stub
-    // -------------------------------------------------------------------------
-    int registerPacketObserver();
-
-    // -------------------------------------------------------------------------
-    // 289. enableEncryption
-    // -------------------------------------------------------------------------
+    //not suport
+    // int registerPacketObserver();
     int enableEncryption(bool enabled, const agora::rtc::EncryptionConfig &config);
 
-    // -------------------------------------------------------------------------
-    // 290. createDataStream (bool) — stub (out param)
-    // -------------------------------------------------------------------------
-    int createDataStream(bool reliable, bool ordered);
-
-    // -------------------------------------------------------------------------
-    // 291. createDataStream (config) — stub (out param)
-    // -------------------------------------------------------------------------
-    int createDataStream(const agora::rtc::DataStreamConfig &config);
-
-    // -------------------------------------------------------------------------
-    // 292. sendStreamMessage
-    // -------------------------------------------------------------------------
+    CreateDataStreamResult createDataStream(bool reliable, bool ordered);
+    CreateDataStreamResult createDataStream(const agora::rtc::DataStreamConfig &config);
     int sendStreamMessage(int streamId, const std::string &data);
-
-    // -------------------------------------------------------------------------
-    // 293. sendRdtMessage — stub
-    // -------------------------------------------------------------------------
-    int sendRdtMessage(agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 294. sendMediaControlMessage — stub
-    // -------------------------------------------------------------------------
-    int sendMediaControlMessage(agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 295–297. addVideoWatermark — stubs
-    // -------------------------------------------------------------------------
-    int addVideoWatermark();
-    int addVideoWatermarkByUrl(const std::string &watermarkUrl);
+    int sendRdtMessage(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data);
+    int sendMediaControlMessage(agora::rtc::uid_t uid, const std::string &data);
+    int addVideoWatermark(const agora::rtc::RtcImage &watermark);
+    int addVideoWatermark(const std::string &watermarkUrl, const agora::rtc::WatermarkOptions &options);
+    int addVideoWatermark(const agora::rtc::WatermarkConfig &configs);
     int removeVideoWatermark(const std::string &id);
     int clearVideoWatermarks();
-
-    // -------------------------------------------------------------------------
-    // 298–299. pauseAudio / resumeAudio (deprecated)
-    // -------------------------------------------------------------------------
     int pauseAudio();
     int resumeAudio();
-
-    // -------------------------------------------------------------------------
-    // 300. enableWebSdkInteroperability
-    // -------------------------------------------------------------------------
     int enableWebSdkInteroperability(bool enabled);
+    int sendCustomReportMessage(const std::string &id, const std::string &category, const std::string &event,
+                                const std::string &label, int value);
 
-    // -------------------------------------------------------------------------
-    // 301. sendCustomReportMessage
-    // -------------------------------------------------------------------------
-    int sendCustomReportMessage(const std::string &id, const std::string &category, const std::string &event, const std::string &label, int value);
-
-    // -------------------------------------------------------------------------
-    // 302–303. Media metadata observer — stubs
-    // -------------------------------------------------------------------------
+    //todo for human
     int registerMediaMetadataObserver();
     int unregisterMediaMetadataObserver();
 
-    // -------------------------------------------------------------------------
-    // 304–305. Audio frame dump — stubs
-    // -------------------------------------------------------------------------
     int startAudioFrameDump(const std::string &channelId, agora::rtc::uid_t uid);
     int stopAudioFrameDump(const std::string &channelId, agora::rtc::uid_t uid);
+    int setAINSMode(bool enabled, agora::rtc::AUDIO_AINS_MODE mode);
+    int registerLocalUserAccount(const std::string &appId, const std::string &userAccount);
+    int joinChannelWithUserAccount(const std::string &token, const std::string &channelId,
+                                   const std::string &userAccount);
+    int joinChannelWithUserAccount(const std::string &token, const std::string &channelId,
+                                   const std::string &userAccount, const agora::rtc::ChannelMediaOptions &options);
 
-    // -------------------------------------------------------------------------
-    // 306. setAINSMode
-    // -------------------------------------------------------------------------
-    int setAINSMode(bool enabled, int mode);
+    GetUserInfoResult getUserInfoByUserAccount(const std::string &userAccount);
 
-    // -------------------------------------------------------------------------
-    // 307. registerLocalUserAccount
-    // -------------------------------------------------------------------------
-    int registerLocalUserAccount(const std::string &userAccount);
-
-    // -------------------------------------------------------------------------
-    // 308–309. joinChannelWithUserAccount (2 overloads)
-    // -------------------------------------------------------------------------
-    int joinChannelWithUserAccount(const std::string &token, const std::string &channelId, const std::string &userAccount);
-    int joinChannelWithUserAccount(const std::string &token, const std::string &channelId, const std::string &userAccount, const agora::rtc::ChannelMediaOptions &options);
-
-    // -------------------------------------------------------------------------
-    // 310–311. getUserInfo — stubs (out param)
-    // -------------------------------------------------------------------------
-    int getUserInfoByUserAccount(const std::string &userAccount);
-    int getUserInfoByUid(agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 312–315. Channel media relay — stubs
-    // -------------------------------------------------------------------------
-    int startOrUpdateChannelMediaRelay();
+    GetUserInfoResult getUserInfoByUid(agora::rtc::uid_t uid);
+    int startOrUpdateChannelMediaRelay(const agora::rtc::ChannelMediaRelayConfiguration &configuration);
     int stopChannelMediaRelay();
     int pauseAllChannelMediaRelay();
     int resumeAllChannelMediaRelay();
+    int setDirectCdnStreamingAudioConfiguration(agora::rtc::AUDIO_PROFILE_TYPE profile);
+    int setDirectCdnStreamingVideoConfiguration(const agora::rtc::VideoEncoderConfiguration &config);
 
-    // -------------------------------------------------------------------------
-    // 316–319. Direct CDN streaming — stubs
-    // -------------------------------------------------------------------------
-    int setDirectCdnStreamingAudioConfiguration(int profile);
-    int setDirectCdnStreamingVideoConfiguration();
+    //todo for human
+    int startDirectCdnStreaming();
     int stopDirectCdnStreaming();
-    int updateDirectCdnStreamingMediaOptions();
-
-    // -------------------------------------------------------------------------
-    // 320–322. Rhythm player — stubs
-    // -------------------------------------------------------------------------
-    int startRhythmPlayer(const std::string &sound1, const std::string &sound2);
+    int updateDirectCdnStreamingMediaOptions(const agora::rtc::DirectCdnStreamingMediaOptions &options);
+    int startRhythmPlayer(const std::string &sound1, const std::string &sound2,
+                          const agora::rtc::AgoraRhythmPlayerConfig &config);
     int stopRhythmPlayer();
-    int configRhythmPlayer();
-
-    // -------------------------------------------------------------------------
-    // 323–324. takeSnapshot
-    // -------------------------------------------------------------------------
+    int configRhythmPlayer(const agora::rtc::AgoraRhythmPlayerConfig &config);
     int takeSnapshot(agora::rtc::uid_t uid, const std::string &filePath);
     int takeSnapshot(agora::rtc::uid_t uid, const agora::media::SnapshotConfig &config);
-
-    // -------------------------------------------------------------------------
-    // 325. enableContentInspect — stub
-    // -------------------------------------------------------------------------
-    int enableContentInspect(bool enabled);
-
-    // -------------------------------------------------------------------------
-    // 326–327. Custom audio volume — stubs
-    // -------------------------------------------------------------------------
-    int adjustCustomAudioPublishVolume();
-    int adjustCustomAudioPlayoutVolume();
-
-    // -------------------------------------------------------------------------
-    // 328. setCloudProxy
-    // -------------------------------------------------------------------------
-    int setCloudProxy(int proxyType);
-
-    // -------------------------------------------------------------------------
-    // 329. setLocalAccessPoint — stub
-    // -------------------------------------------------------------------------
-    int setLocalAccessPoint();
-
-    // -------------------------------------------------------------------------
-    // 330. setAdvancedAudioOptions — stub
-    // -------------------------------------------------------------------------
-    int setAdvancedAudioOptions();
-
-    // -------------------------------------------------------------------------
-    // 331. setAVSyncSource
-    // -------------------------------------------------------------------------
+    int enableContentInspect(bool enabled, const agora::media::ContentInspectConfig &config);
+    int adjustCustomAudioPublishVolume(agora::rtc::track_id_t trackId, int volume);
+    int adjustCustomAudioPlayoutVolume(agora::rtc::track_id_t trackId, int volume);
+    int setCloudProxy(agora::rtc::CLOUD_PROXY_TYPE proxyType);
+    int setLocalAccessPoint(const agora::rtc::LocalAccessPointConfiguration &config);
+    int setAdvancedAudioOptions(agora::rtc::AdvancedAudioOptions &options, int sourceType);
     int setAVSyncSource(const std::string &channelId, agora::rtc::uid_t uid);
-
-    // -------------------------------------------------------------------------
-    // 332. enableVideoImageSource — stub
-    // -------------------------------------------------------------------------
-    int enableVideoImageSource(bool enable);
-
-    // -------------------------------------------------------------------------
-    // 333. getCurrentMonotonicTimeInMs
-    // -------------------------------------------------------------------------
+    int enableVideoImageSource(bool enable, const agora::rtc::ImageTrackOptions &options);
     int64_t getCurrentMonotonicTimeInMs();
-
-    // -------------------------------------------------------------------------
-    // 334. getNetworkType
-    // -------------------------------------------------------------------------
-    GetNetworkTypeResult getNetworkType();
-
-    // -------------------------------------------------------------------------
-    // 335. setParameters
-    // -------------------------------------------------------------------------
+    int getNetworkType();
     int setParameters(const std::string &parameters);
-
-    // -------------------------------------------------------------------------
-    // 336. startMediaRenderingTracing
-    // -------------------------------------------------------------------------
     int startMediaRenderingTracing();
-
-    // -------------------------------------------------------------------------
-    // 337. enableInstantMediaRendering
-    // -------------------------------------------------------------------------
     int enableInstantMediaRendering();
-
-    // -------------------------------------------------------------------------
-    // 338. getNtpWallTimeInMs
-    // -------------------------------------------------------------------------
     uint64_t getNtpWallTimeInMs();
-
-    // -------------------------------------------------------------------------
-    // 339. isFeatureAvailableOnDevice — stub
-    // -------------------------------------------------------------------------
-    bool isFeatureAvailableOnDevice(int type);
-
-    // -------------------------------------------------------------------------
-    // 340. sendAudioMetadata
-    // -------------------------------------------------------------------------
+    bool isFeatureAvailableOnDevice(agora::rtc::FeatureType type);
     int sendAudioMetadata(const std::string &metadata);
+    QueryHDRCapabilityResult queryHDRCapability(agora::rtc::VIDEO_MODULE_TYPE videoModule);
+    int joinChannelEx(const std::string &token, const agora::rtc::RtcConnection &connection,
+                      const agora::rtc::ChannelMediaOptions &options);
+    int leaveChannelEx(const agora::rtc::RtcConnection &connection);
+    int leaveChannelEx(const agora::rtc::RtcConnection &connection, const agora::rtc::LeaveChannelOptions &options);
+    int leaveChannelWithUserAccountEx(const std::string &channelId, const std::string &userAccount);
+    int leaveChannelWithUserAccountEx(const std::string &channelId, const std::string &userAccount,
+                                      const agora::rtc::LeaveChannelOptions &options);
+    int updateChannelMediaOptionsEx(const agora::rtc::ChannelMediaOptions &options,
+                                    const agora::rtc::RtcConnection &connection);
+    int setVideoEncoderConfigurationEx(const agora::rtc::VideoEncoderConfiguration &config,
+                                       const agora::rtc::RtcConnection &connection);
+    int setupRemoteVideoEx(const agora::rtc::VideoCanvas &canvas, const agora::rtc::RtcConnection &connection);
+    int muteRemoteAudioStreamEx(agora::rtc::uid_t uid, bool mute, const agora::rtc::RtcConnection &connection);
+    int muteRemoteVideoStreamEx(agora::rtc::uid_t uid, bool mute, const agora::rtc::RtcConnection &connection);
+    int setRemoteVideoStreamTypeEx(agora::rtc::uid_t uid, agora::rtc::VIDEO_STREAM_TYPE streamType,
+                                   const agora::rtc::RtcConnection &connection);
+    int muteLocalAudioStreamEx(bool mute, const agora::rtc::RtcConnection &connection);
+    int muteLocalVideoStreamEx(bool mute, const agora::rtc::RtcConnection &connection);
+    int muteAllRemoteAudioStreamsEx(bool mute, const agora::rtc::RtcConnection &connection);
+    int muteAllRemoteVideoStreamsEx(bool mute, const agora::rtc::RtcConnection &connection);
+    int setSubscribeAudioBlocklistEx(const std::vector<agora::rtc::uid_t> &uidList,
+                                     const agora::rtc::RtcConnection &connection);
+    int setSubscribeAudioAllowlistEx(const std::vector<agora::rtc::uid_t> &uidList,
+                                     const agora::rtc::RtcConnection &connection);
+    int setSubscribeVideoBlocklistEx(const std::vector<agora::rtc::uid_t> &uidList,
+                                     const agora::rtc::RtcConnection &connection);
+    int setSubscribeVideoAllowlistEx(const std::vector<agora::rtc::uid_t> &uidList,
+                                     const agora::rtc::RtcConnection &connection);
+    int setRemoteVideoSubscriptionOptionsEx(agora::rtc::uid_t uid, const agora::rtc::VideoSubscriptionOptions &options,
+                                            const agora::rtc::RtcConnection &connection);
+    int setRemoteVoicePositionEx(agora::rtc::uid_t uid, double pan, double gain,
+                                 const agora::rtc::RtcConnection &connection);
+    int setRemoteUserSpatialAudioParamsEx(agora::rtc::uid_t uid, const agora::SpatialAudioParams &params,
+                                          const agora::rtc::RtcConnection &connection);
+    int setRemoteRenderModeEx(agora::rtc::uid_t uid, agora::media::base::RENDER_MODE_TYPE renderMode,
+                              agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode,
+                              const agora::rtc::RtcConnection &connection);
+    int enableLoopbackRecordingEx(const agora::rtc::RtcConnection &connection, bool enabled);
+    int adjustRecordingSignalVolumeEx(int volume, const agora::rtc::RtcConnection &connection);
+    int muteRecordingSignalEx(bool mute, const agora::rtc::RtcConnection &connection);
+    int adjustUserPlaybackSignalVolumeEx(agora::rtc::uid_t uid, int volume,
+                                         const agora::rtc::RtcConnection &connection);
+    int getConnectionStateEx(const agora::rtc::RtcConnection &connection);
+    int enableEncryptionEx(const agora::rtc::RtcConnection &connection, bool enabled,
+                           const agora::rtc::EncryptionConfig &config);
+    CreateDataStreamResult createDataStreamEx(bool reliable, bool ordered, const agora::rtc::RtcConnection &connection);
+    CreateDataStreamResult createDataStreamEx(const agora::rtc::DataStreamConfig &config,
+                                              const agora::rtc::RtcConnection &connection);
+    int sendStreamMessageEx(int streamId, const std::string &data, const agora::rtc::RtcConnection &connection);
+    int sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data,
+                         const agora::rtc::RtcConnection &connection);
+    int sendMediaControlMessageEx(agora::rtc::uid_t uid, const std::string &data,
+                                  const agora::rtc::RtcConnection &connection);
+    int addVideoWatermarkEx(const std::string &watermarkUrl, const agora::rtc::WatermarkOptions &options,
+                            const agora::rtc::RtcConnection &connection);
+    int addVideoWatermarkEx(const agora::rtc::WatermarkConfig &config, const agora::rtc::RtcConnection &connection);
+    int removeVideoWatermarkEx(const std::string &id, const agora::rtc::RtcConnection &connection);
+    int clearVideoWatermarkEx(const agora::rtc::RtcConnection &connection);
+    int sendCustomReportMessageEx(const std::string &id, const std::string &category, const std::string &event,
+                                  const std::string &label, int value, const agora::rtc::RtcConnection &connection);
+    int enableAudioVolumeIndicationEx(int interval, int smooth, bool reportVad,
+                                      const agora::rtc::RtcConnection &connection);
+    int startRtmpStreamWithoutTranscodingEx(const std::string &url, const agora::rtc::RtcConnection &connection);
+    int startRtmpStreamWithTranscodingEx(const std::string &url, const agora::rtc::LiveTranscoding &transcoding,
+                                         const agora::rtc::RtcConnection &connection);
+    int updateRtmpTranscodingEx(const agora::rtc::LiveTranscoding &transcoding,
+                                const agora::rtc::RtcConnection &connection);
+    int stopRtmpStreamEx(const std::string &url, const agora::rtc::RtcConnection &connection);
+    int startOrUpdateChannelMediaRelayEx(const agora::rtc::ChannelMediaRelayConfiguration &configuration,
+                                         const agora::rtc::RtcConnection &connection);
+    int stopChannelMediaRelayEx(const agora::rtc::RtcConnection &connection);
+    int pauseAllChannelMediaRelayEx(const agora::rtc::RtcConnection &connection);
+    int resumeAllChannelMediaRelayEx(const agora::rtc::RtcConnection &connection);
 
-    // -------------------------------------------------------------------------
-    // 341. queryHDRCapability — stub
-    // -------------------------------------------------------------------------
-    int queryHDRCapability(int videoModule);
+    GetUserInfoResult getUserInfoByUserAccountEx(const std::string &userAccount,
+                                                 const agora::rtc::RtcConnection &connection);
+
+    GetUserInfoResult getUserInfoByUidEx(agora::rtc::uid_t uid, const agora::rtc::RtcConnection &connection);
+    int enableDualStreamModeEx(bool enabled, const agora::rtc::SimulcastStreamConfig &streamConfig,
+                               const agora::rtc::RtcConnection &connection);
+    int setDualStreamModeEx(agora::rtc::SIMULCAST_STREAM_MODE mode,
+                            const agora::rtc::SimulcastStreamConfig &streamConfig,
+                            const agora::rtc::RtcConnection &connection);
+    int setSimulcastConfigEx(const agora::rtc::SimulcastConfig &simulcastConfig,
+                             const agora::rtc::RtcConnection &connection);
+    int setHighPriorityUserListEx(const std::vector<agora::rtc::uid_t> &uidList,
+                                  agora::rtc::STREAM_FALLBACK_OPTIONS option,
+                                  const agora::rtc::RtcConnection &connection);
+    int takeSnapshotEx(const agora::rtc::RtcConnection &connection, agora::rtc::uid_t uid, const std::string &filePath);
+    int takeSnapshotEx(const agora::rtc::RtcConnection &connection, agora::rtc::uid_t uid,
+                       const agora::media::SnapshotConfig &config);
+    int enableContentInspectEx(bool enabled, const agora::media::ContentInspectConfig &config,
+                               const agora::rtc::RtcConnection &connection);
+    int startMediaRenderingTracingEx(const agora::rtc::RtcConnection &connection);
+    int setParametersEx(const agora::rtc::RtcConnection &connection, const std::string &parameters);
+
+    GetCallIdResult getCallIdEx(const agora::rtc::RtcConnection &connection);
+    int sendAudioMetadataEx(const agora::rtc::RtcConnection &connection, const std::string &metadata);
+    int preloadEffectEx(const agora::rtc::RtcConnection &connection, int soundId, const std::string &filePath,
+                        int startPos);
+    int playEffectEx(const agora::rtc::RtcConnection &connection, int soundId, const std::string &filePath,
+                     int loopCount, double pitch, double pan, int gain, bool publish, int startPos);
 
 private:
-    agora::rtc::IRtcEngine *_engine{nullptr};
+    agora::rtc::IRtcEngineEx *_engine{nullptr};
     std::shared_ptr<RtcEngineEventHandlerExBridge> _eventHandler;
     std::string _appId;
 };
