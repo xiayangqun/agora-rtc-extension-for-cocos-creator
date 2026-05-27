@@ -3,6 +3,7 @@
 #include "IAgoraMediaEngine.h"
 #include <string>
 
+//todo jsb ignore class
 class MediaEngineBridge {
 public:
     explicit MediaEngineBridge(agora::media::IMediaEngine *mediaEngine);

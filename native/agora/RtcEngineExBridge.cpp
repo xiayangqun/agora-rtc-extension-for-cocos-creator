@@ -198,7 +198,7 @@ GetVersionResult RtcEngineExBridge::getVersion() {
     return result;
 }
 
-const char *RtcEngineExBridge::getErrorDescription(int code) {
+std::string RtcEngineExBridge::getErrorDescription(int code) {
     if (_engine == nullptr) { return ""; }
     return _engine->getErrorDescription(code);
 }
@@ -1175,6 +1175,29 @@ int RtcEngineExBridge::enableExtension(const std::string &provider, const std::s
     return _engine->enableExtension(provider.c_str(), extension.c_str(), enable, type);
 }
 
+int RtcEngineExBridge::setExtensionProperty(const std::string &provider, const std::string &extension,
+                                            const std::string &key, const std::string &value,
+                                            agora::media::MEDIA_SOURCE_TYPE type) {
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return _engine->setExtensionProperty(provider.c_str(), extension.c_str(), key.c_str(), value.c_str(), type);
+}
+
+GetExtensionPropertyResult RtcEngineExBridge::getExtensionProperty(const std::string &provider,
+                                                                   const std::string &extension,
+                                                                   const std::string &key,
+                                                                   agora::media::MEDIA_SOURCE_TYPE type) {
+    GetExtensionPropertyResult result{};
+    if (_engine == nullptr) {
+        result.errorCode = -agora::ERR_NOT_INITIALIZED;
+        return result;
+    }
+    char value[4096] = {};
+    result.errorCode = _engine->getExtensionProperty(provider.c_str(), extension.c_str(), key.c_str(),
+                                                     value, sizeof(value), type);
+    result.value = value;
+    return result;
+}
+
 int RtcEngineExBridge::setCameraCapturerConfiguration(const agora::rtc::CameraCapturerConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setCameraCapturerConfiguration(config);
@@ -1388,8 +1411,7 @@ QueryCameraFocalLengthCapabilityResult RtcEngineExBridge::queryCameraFocalLength
     result.focalLengthInfos.resize(static_cast<size_t>(size));
     auto *focalLengthInfos = result.focalLengthInfos.empty() ? nullptr : result.focalLengthInfos.data();
     result.errorCode = _engine->queryCameraFocalLengthCapability(focalLengthInfos, size);
-    if (result.errorCode == 0 && size >= 0 &&
-        static_cast<size_t>(size) < result.focalLengthInfos.size()) {
+    if (result.errorCode == 0 && size >= 0 && static_cast<size_t>(size) < result.focalLengthInfos.size()) {
         // Shrink result.focalLengthInfos to size, so the structure contains no redundant invalid data.
         result.focalLengthInfos.resize(static_cast<size_t>(size));
     }
@@ -2037,8 +2059,7 @@ int RtcEngineExBridge::sendStreamMessageEx(int streamId, const void *data, size_
 }
 
 int RtcEngineExBridge::sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const void *data,
-                                        size_t length,
-                                        const agora::rtc::RtcConnection &connection) {
+                                        size_t length, const agora::rtc::RtcConnection &connection) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->sendRdtMessageEx(uid, type, static_cast<const char *>(data), length, connection);
 }

@@ -754,7 +754,7 @@ export class AgoraRTCClientProxy {
     }
 
     private async _publishVideoTrack(track: ILocalVideoTrack): Promise<void> {
-        const publishedVideoTracks = this._client.localTracks.filter((localTrack) =>
+        const publishedVideoTracks = this._client.localTracks.filter((localTrack): localTrack is ILocalVideoTrack =>
             this._isLocalVideoTrack(localTrack),
         );
         if (publishedVideoTracks.some((localTrack) => this._isSameTrack(localTrack, track))) {

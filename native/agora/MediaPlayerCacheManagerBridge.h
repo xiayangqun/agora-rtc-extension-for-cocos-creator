@@ -13,8 +13,13 @@ public:
     explicit MediaPlayerCacheManagerBridge(agora::rtc::IMediaPlayerCacheManager *cacheManager);
     ~MediaPlayerCacheManagerBridge();
 
+    //todo jsb ignore
     bool hasCacheManager() const;
+
+    //todo jsb ignore
     agora::rtc::IMediaPlayerCacheManager *cacheManager() const;
+
+    //todo jsb ignore
     void invalidate();
 
     int removeAllCaches();

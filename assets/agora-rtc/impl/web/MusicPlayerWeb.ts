@@ -2,7 +2,7 @@ import { IMusicPlayer } from "../../interface/IMusicPlayer";
 import { IMediaPlayerSourceObserver } from "../../interface/IMediaPlayerSourceObserver";
 import { ERROR_CODE_TYPE } from "../../types/AgoraBase";
 import { MEDIA_PLAYER_STATE, MediaSource, PlayerStreamInfo } from "../../types/AgoraMediaPlayerTypes";
-import { RENDER_MODE_TYPE, AUDIO_DUAL_MONO_MODE } from "../../types/AgoraMediaBase";
+import { AUDIO_DUAL_MONO_MODE } from "../../types/AgoraMediaBase";
 import { SpatialAudioParams } from "../../types/AgoraBase";
 import { MusicPlayMode } from "../../types/AgoraMusicContentCenter";
 
@@ -152,26 +152,6 @@ export class MusicPlayerWeb implements IMusicPlayer {
     async getPublishSignalVolume(): Promise<{ volume: number; errorCode: number }> {
         console.warn("getPublishSignalVolume not support in web");
         return { volume: -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED, errorCode: -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED };
-    }
-
-    async setView(view: any): Promise<number> {
-        console.warn("setView not support in web");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    async setRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number> {
-        console.warn("setRenderMode not support in web");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    async unregisterAudioFrameObserver(): Promise<number> {
-        console.warn("unregisterAudioFrameObserver not support in web");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    async unregisterMediaPlayerAudioSpectrumObserver(): Promise<number> {
-        console.warn("unregisterMediaPlayerAudioSpectrumObserver not support in web");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
     async setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): Promise<number> {

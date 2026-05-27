@@ -13,7 +13,10 @@ class VideoDeviceCollectionBridge {
 public:
     VideoDeviceCollectionBridge(agora::rtc::IVideoDeviceCollection *collection);
     ~VideoDeviceCollectionBridge();
+
+    //todo jsb ignore
     void invalidate();
+
     int getCount();
     int setDevice(const std::string &deviceId);
     GetVideoDeviceInfoResult getDevice(int index);

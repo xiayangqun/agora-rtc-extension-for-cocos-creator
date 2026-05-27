@@ -7,7 +7,6 @@ import {
     SenderOptions,
 } from "../../types/AgoraBase";
 import { AudioFrame, EXTERNAL_VIDEO_SOURCE_TYPE, ExternalVideoFrame } from "../../types/AgoraMediaBase";
-import { IVideoFrameObserver } from "../../interface/IVideoFrameObserver";
 import { IFaceInfoObserver } from "../../interface/IFaceInfoObserver";
 
 const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
@@ -18,7 +17,7 @@ export class MediaEngineWeb implements IMediaEngine {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async registerVideoFrameObserver(observer: IVideoFrameObserver): Promise<number> {
+    async registerVideoFrameObserver(observer: unknown): Promise<number> {
         console.warn("registerVideoFrameObserver not support in web");
         return -ERR_NOT_SUPPORTED;
     }

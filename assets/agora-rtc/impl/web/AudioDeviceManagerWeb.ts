@@ -33,19 +33,14 @@ export class AudioDeviceManagerWeb implements IAudioDeviceManager {
         return { deviceId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
-    async getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
-        console.warn("getPlaybackDeviceInfo not support in web");
-        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
-    }
-
-    async getPlaybackDeviceInfoType(): Promise<{
+    async getPlaybackDeviceInfo(): Promise<{
         deviceId: string;
         deviceName: string;
-        deviceTypeName: string;
+        deviceTypeName?: string;
         errorCode: number;
     }> {
-        console.warn("getPlaybackDeviceInfoType not support in web");
-        return { deviceId: "", deviceName: "", deviceTypeName: "", errorCode: -ERR_NOT_SUPPORTED };
+        console.warn("getPlaybackDeviceInfo not support in web");
+        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async setPlaybackDeviceVolume(volume: number): Promise<number> {
@@ -68,19 +63,14 @@ export class AudioDeviceManagerWeb implements IAudioDeviceManager {
         return { deviceId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
-    async getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }> {
-        console.warn("getRecordingDeviceInfo not support in web");
-        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
-    }
-
-    async getRecordingDeviceInfoType(): Promise<{
+    async getRecordingDeviceInfo(): Promise<{
         deviceId: string;
         deviceName: string;
-        deviceTypeName: string;
+        deviceTypeName?: string;
         errorCode: number;
     }> {
-        console.warn("getRecordingDeviceInfoType not support in web");
-        return { deviceId: "", deviceName: "", deviceTypeName: "", errorCode: -ERR_NOT_SUPPORTED };
+        console.warn("getRecordingDeviceInfo not support in web");
+        return { deviceId: "", deviceName: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async setRecordingDeviceVolume(volume: number): Promise<number> {

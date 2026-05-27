@@ -32,8 +32,8 @@ export class MediaPlayerCacheManagerWeb implements IMediaPlayerCacheManager {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getCacheDir(path: string, length: number): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
+    async getCacheDir(): Promise<{ path: string; errorCode: number }> {
+        return { path: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
     async getMaxCacheFileCount(): Promise<number> {

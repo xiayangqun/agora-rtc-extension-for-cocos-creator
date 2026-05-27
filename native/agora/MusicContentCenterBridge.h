@@ -32,10 +32,14 @@ public:
     explicit MusicContentCenterBridge(agora::rtc::IMusicContentCenter *musicContentCenter);
     ~MusicContentCenterBridge();
 
+    //todo jsb ignore
     bool hasMusicContentCenter() const;
-    agora::rtc::IMusicContentCenter *musicContentCenter() const;
-    void invalidate();
 
+    //todo jsb ignore
+    agora::rtc::IMusicContentCenter *musicContentCenter() const;
+
+    //todo jsb ignore
+    void invalidate();
     int initialize(const agora::rtc::MusicContentCenterConfiguration &configuration);
     int renewToken(const std::string &token);
     //todo jsb manual

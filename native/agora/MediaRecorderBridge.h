@@ -14,8 +14,13 @@ public:
     explicit MediaRecorderBridge(agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder);
     ~MediaRecorderBridge();
 
+    //todo jsb ignore
     bool hasMediaRecorder() const;
+
+    //todo jsb ignore
     agora::agora_refptr<agora::rtc::IMediaRecorder> mediaRecorder() const;
+
+    //todo jsb ignore
     void invalidate();
 
     //todo jsb manual

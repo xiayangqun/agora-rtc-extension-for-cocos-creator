@@ -20,8 +20,13 @@ public:
     explicit VideoDeviceManagerBridge(agora::rtc::IVideoDeviceManager *videoDeviceManager);
     ~VideoDeviceManagerBridge();
 
+    //todo jsb ignore
     bool hasVideoDeviceManager() const;
+
+    //todo jsb ignore
     agora::rtc::IVideoDeviceManager *videoDeviceManager() const;
+
+    //todo jsb ignore
     void invalidate();
 
     std::shared_ptr<VideoDeviceCollectionBridge> enumerateVideoDevices();

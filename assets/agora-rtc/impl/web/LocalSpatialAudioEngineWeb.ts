@@ -8,10 +8,6 @@ const ERR_NOT_SUPPORTED = ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
 export class LocalSpatialAudioEngineWeb implements ILocalSpatialAudioEngine {
     async dispose(): Promise<void> {}
 
-    async initialize(): Promise<number> {
-        return -ERR_NOT_SUPPORTED;
-    }
-
     async updateRemotePosition(uid: number, posInfo: RemoteVoicePositionInfo): Promise<number> {
         return -ERR_NOT_SUPPORTED;
     }
@@ -91,7 +87,7 @@ export class LocalSpatialAudioEngineWeb implements ILocalSpatialAudioEngine {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async setZones(zones: SpatialAudioZone[], zoneCount: number): Promise<number> {
+    async setZones(zones: SpatialAudioZone[]): Promise<number> {
         return -ERR_NOT_SUPPORTED;
     }
 

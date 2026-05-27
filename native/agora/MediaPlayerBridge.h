@@ -55,8 +55,14 @@ public:
     ~MediaPlayerBridge();
 
     int getId() const;
+
+    //todo jsb ignore
     bool hasMediaPlayer() const;
+
+    //todo jsb ignore
     agora::agora_refptr<agora::rtc::IMediaPlayer> mediaPlayer() const;
+
+    //todo jsb ignore
     virtual void invalidate();
 
     int open(const std::string &url, int64_t startPos);
@@ -88,7 +94,10 @@ public:
     GetPlayoutVolumeResult getPlayoutVolume();
     int adjustPublishSignalVolume(int volume);
     GetPublishSignalVolumeResult getPublishSignalVolume();
+
+    //todo jsb manual
     int registerPlayerSourceObserver(se::Object *observer);
+    //todo jsb manual
     int unregisterPlayerSourceObserver();
     //not support
     // int registerAudioFrameObserver(agora::media::IAudioPcmFrameSink *observer);
@@ -107,8 +116,8 @@ public:
     // int unregisterMediaPlayerAudioSpectrumObserver(agora::media::IAudioSpectrumObserver *observer);
 
     int setAudioDualMonoMode(agora::media::base::AUDIO_DUAL_MONO_MODE mode);
-    const char *getPlayerSdkVersion();
-    const char *getPlaySrc();
+    std::string getPlayerSdkVersion();
+    std::string getPlaySrc();
     int openWithAgoraCDNSrc(const std::string &src, int64_t startPos);
     int getAgoraCDNLineCount();
     int switchAgoraCDNLineByIndex(int index);

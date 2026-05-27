@@ -452,7 +452,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return Native2Web.ERROR_CODE_TYPE(code);
     }
 
-    async queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[]; size: number }> {
+    async queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }> {
         try {
             const webCodecs = await AgoraRTC.getSupportedCodec();
             const codecInfo: CodecCapInfo[] = webCodecs.video.map((video) => {
@@ -465,14 +465,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
                     },
                 };
             });
-            return { errorCode: ERR_OK, codecInfo, size: codecInfo.length };
+            return { errorCode: ERR_OK, codecInfo };
         } catch (e: any) {
             console.error("queryCodecCapability failed:", e.toString ? e.toString() : "");
             if (isAgoraRTCError(e)) {
                 const err = e as IAgoraRTCError;
-                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), codecInfo: [], size: 0 };
+                return { errorCode: -Web2Native.AgoraRTCErrorCode(err.code), codecInfo: [] };
             } else {
-                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, codecInfo: [], size: 0 };
+                return { errorCode: -ERROR_CODE_TYPE.ERR_FAILED, codecInfo: [] };
             }
         }
     }
@@ -1063,7 +1063,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): Promise<number> {
+    async setSubscribeAudioBlocklist(uidList: number[]): Promise<number> {
         try {
             return await this.__setSubscribeAudioBlocklist(this.mainClientProxy, uidList);
         } catch (e) {
@@ -1076,7 +1076,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): Promise<number> {
+    async setSubscribeAudioAllowlist(uidList: number[]): Promise<number> {
         try {
             return await this.__setSubscribeAudioAllowlist(this.mainClientProxy, uidList);
         } catch (e) {
@@ -1089,7 +1089,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): Promise<number> {
+    async setSubscribeVideoBlocklist(uidList: number[]): Promise<number> {
         try {
             return await this.__setSubscribeVideoBlocklist(this.mainClientProxy, uidList);
         } catch (e) {
@@ -1102,7 +1102,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): Promise<number> {
+    async setSubscribeVideoAllowlist(uidList: number[]): Promise<number> {
         try {
             return await this.__setSubscribeVideoAllowlist(this.mainClientProxy, uidList);
         } catch (e) {
@@ -1759,20 +1759,17 @@ export class RtcEngineWeb implements IRtcEngineEx {
         extension: string,
         extensionInfo: ExtensionInfo,
         key: string,
-        buf_len: number,
     ): Promise<{ errorCode: number; value: string }>;
     async getExtensionProperty(
         provider: string,
         extension: string,
         key: string,
-        buf_len: number,
         type: MEDIA_SOURCE_TYPE,
     ): Promise<{ errorCode: number; value: number }>;
     async getExtensionProperty(
         provider: unknown,
         extension: unknown,
         key: unknown,
-        buf_len: unknown,
         type: unknown,
     ): Promise<{ errorCode: number; value: string } | { errorCode: number; value: number }> {
         console.warn("getExtensionProperty not support in web");
@@ -2113,9 +2110,9 @@ export class RtcEngineWeb implements IRtcEngineEx {
 
     async queryCameraFocalLengthCapability(
         size: number,
-    ): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[]; size: number }> {
+    ): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[] }> {
         console.warn("queryCameraFocalLengthCapability not support in web");
-        return { errorCode: -ERR_NOT_SUPPORTED, focalLengthInfos: [], size: 0 };
+        return { errorCode: -ERR_NOT_SUPPORTED, focalLengthInfos: [] };
     }
 
     async setExternalMediaProjection(mediaProjection: unknown): Promise<number> {
@@ -2444,7 +2441,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return await proxy?.createDataStream(reliable, ordered);
     }
 
-    async sendStreamMessage(streamId: number, data: ArrayBuffer, length: number): Promise<number> {
+    async sendStreamMessage(streamId: number, data: ArrayBuffer): Promise<number> {
         try {
             return await this.__sendStreamMessage(this.mainClientProxy, streamId, data);
         } catch (e) {
@@ -2463,12 +2460,12 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return ERR_OK;
     }
 
-    async sendRdtMessage(uid: number, type: RdtStreamType, data: string, length: number): Promise<number> {
+    async sendRdtMessage(uid: number, type: RdtStreamType, data: ArrayBuffer): Promise<number> {
         console.warn("sendRdtMessage not support in web");
         return -ERR_NOT_SUPPORTED;
     }
 
-    async sendMediaControlMessage(uid: number, data: string, length: number): Promise<number> {
+    async sendMediaControlMessage(uid: number, data: ArrayBuffer): Promise<number> {
         console.warn("sendMediaControlMessage not support in web");
         return -ERR_NOT_SUPPORTED;
     }
@@ -2800,7 +2797,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return (navigator as any).connection?.effectiveType ? 3 : -1;
     }
 
-    async setParameters(parameters: object): Promise<number> {
+    async setParameters(parameters: string): Promise<number> {
         console.warn("setParameters not support in web");
         return -ERR_NOT_SUPPORTED;
     }
@@ -2824,7 +2821,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return true;
     }
 
-    async sendAudioMetadata(metadata: Uint8Array, length: number): Promise<number> {
+    async sendAudioMetadata(metadata: ArrayBuffer): Promise<number> {
         console.warn("sendAudioMetadata not support in web");
         return -ERR_NOT_SUPPORTED;
     }
@@ -3087,11 +3084,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
-    async setSubscribeAudioBlocklistEx(
-        uidList: number[],
-        uidNumber: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async setSubscribeAudioBlocklistEx(uidList: number[], connection: RtcConnection): Promise<number> {
         try {
             const key = connectionKey(connection);
             const proxy = this.subClientProxies.get(key);
@@ -3104,11 +3097,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
-    async setSubscribeAudioAllowlistEx(
-        uidList: number[],
-        uidNumber: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async setSubscribeAudioAllowlistEx(uidList: number[], connection: RtcConnection): Promise<number> {
         try {
             const key = connectionKey(connection);
             const proxy = this.subClientProxies.get(key);
@@ -3121,11 +3110,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
-    async setSubscribeVideoBlocklistEx(
-        uidList: number[],
-        uidNumber: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async setSubscribeVideoBlocklistEx(uidList: number[], connection: RtcConnection): Promise<number> {
         try {
             const key = connectionKey(connection);
             const proxy = this.subClientProxies.get(key);
@@ -3138,11 +3123,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
-    async setSubscribeVideoAllowlistEx(
-        uidList: number[],
-        uidNumber: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async setSubscribeVideoAllowlistEx(uidList: number[], connection: RtcConnection): Promise<number> {
         try {
             const key = connectionKey(connection);
             const proxy = this.subClientProxies.get(key);
@@ -3287,12 +3268,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         }
     }
 
-    async sendStreamMessageEx(
-        streamId: number,
-        data: ArrayBuffer,
-        length: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async sendStreamMessageEx(streamId: number, data: ArrayBuffer, connection: RtcConnection): Promise<number> {
         try {
             const key = connectionKey(connection);
             const proxy = this.subClientProxies.get(key);
@@ -3308,20 +3284,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
     async sendRdtMessageEx(
         uid: number,
         type: RdtStreamType,
-        data: string,
-        length: number,
+        data: ArrayBuffer,
         connection: RtcConnection,
     ): Promise<number> {
         console.warn("sendRdtMessageEx not support in web");
         return -ERR_NOT_SUPPORTED;
     }
 
-    async sendMediaControlMessageEx(
-        uid: number,
-        data: string,
-        length: number,
-        connection: RtcConnection,
-    ): Promise<number> {
+    async sendMediaControlMessageEx(uid: number, data: ArrayBuffer, connection: RtcConnection): Promise<number> {
         console.warn("sendMediaControlMessageEx not support in web");
         return -ERR_NOT_SUPPORTED;
     }
@@ -3554,7 +3524,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         return { callId: "", errorCode: -ERR_NOT_SUPPORTED };
     }
 
-    async sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): Promise<number> {
+    async sendAudioMetadataEx(connection: RtcConnection, metadata: ArrayBuffer): Promise<number> {
         console.warn("sendAudioMetadataEx not support in web");
         return -ERR_NOT_SUPPORTED;
     }

@@ -62,10 +62,8 @@ export class MusicContentCenterWeb implements IMusicContentCenter {
         return -ERR_NOT_SUPPORTED;
     }
 
-    async getCaches(
-        cacheInfoSize: number,
-    ): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[]; cacheInfoSize: number }> {
-        return { errorCode: -ERR_NOT_SUPPORTED, cacheInfo: [], cacheInfoSize: 0 };
+    async getCaches(cacheInfoSize: number): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[] }> {
+        return { errorCode: -ERR_NOT_SUPPORTED, cacheInfo: [] };
     }
 
     async isPreloaded(songCode: number): Promise<number> {

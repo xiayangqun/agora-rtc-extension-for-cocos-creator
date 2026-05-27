@@ -113,7 +113,7 @@ public:
     //not support
     // int queryInterface(int iid);
     GetVersionResult getVersion();
-    const char *getErrorDescription(int code);
+    std::string getErrorDescription(int code);
     QueryCodecCapabilityResult queryCodecCapability(int &size);
     int queryDeviceScore();
     int preloadChannel(const std::string &token, const std::string &channelId, agora::rtc::uid_t uid);
@@ -325,6 +325,11 @@ public:
                           agora::media::MEDIA_SOURCE_TYPE type = agora::media::UNKNOWN_MEDIA_SOURCE);
     int enableExtension(const std::string &provider, const std::string &extension, bool enable,
                         agora::media::MEDIA_SOURCE_TYPE type);
+    int setExtensionProperty(const std::string &provider, const std::string &extension, const std::string &key,
+                             const std::string &value, agora::media::MEDIA_SOURCE_TYPE type);
+    GetExtensionPropertyResult getExtensionProperty(const std::string &provider, const std::string &extension,
+                                                    const std::string &key, agora::media::MEDIA_SOURCE_TYPE type);
+
     int setCameraCapturerConfiguration(const agora::rtc::CameraCapturerConfiguration &config);
     //not support
     // int createCustomVideoTrack();

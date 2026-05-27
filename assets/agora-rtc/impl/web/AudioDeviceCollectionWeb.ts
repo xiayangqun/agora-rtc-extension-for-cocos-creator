@@ -12,21 +12,9 @@ export class AudioDeviceCollectionWeb implements IAudioDeviceCollection {
         return this.devices.length;
     }
 
-    async getDevice(index: number): Promise<{ deviceName: string; deviceId: string; errorCode: number }> {
-        if (index < 0 || index >= this.devices.length) {
-            return { deviceName: "", deviceId: "", errorCode: -ERROR_CODE_TYPE.ERR_INVALID_ARGUMENT };
-        }
-        const device = this.devices[index];
-        return {
-            deviceName: device.label,
-            deviceId: device.deviceId,
-            errorCode: ERROR_CODE_TYPE.ERR_OK,
-        };
-    }
-
     async getDeviceType(
         index: number,
-    ): Promise<{ deviceName: string; deviceTypeName: string; deviceId: string; errorCode: number }> {
+    ): Promise<{ deviceName: string; deviceTypeName?: string; deviceId: string; errorCode: number }> {
         if (index < 0 || index >= this.devices.length) {
             return {
                 deviceName: "",
@@ -44,19 +32,14 @@ export class AudioDeviceCollectionWeb implements IAudioDeviceCollection {
         };
     }
 
-    async setDevice(): Promise<number> {
+    async setDevice(deviceId: string): Promise<number> {
         console.warn("setDevice not support in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    async getDefaultDevice(): Promise<{ deviceName: string; deviceId: string; errorCode: number }> {
-        console.warn("getDefaultDevice not support in web");
-        return { deviceName: "", deviceId: "", errorCode: -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED };
-    }
-
     async getDefaultDeviceType(): Promise<{
         deviceName: string;
-        deviceTypeName: string;
+        deviceTypeName?: string;
         deviceId: string;
         errorCode: number;
     }> {
@@ -64,7 +47,7 @@ export class AudioDeviceCollectionWeb implements IAudioDeviceCollection {
         return { deviceName: "", deviceTypeName: "", deviceId: "", errorCode: -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED };
     }
 
-    async setApplicationVolume(): Promise<number> {
+    async setApplicationVolume(volume: number): Promise<number> {
         console.warn("setApplicationVolume not support in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
@@ -74,7 +57,7 @@ export class AudioDeviceCollectionWeb implements IAudioDeviceCollection {
         return { volume: 0, errorCode: -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED };
     }
 
-    async setApplicationMute(): Promise<number> {
+    async setApplicationMute(mute: boolean): Promise<number> {
         console.warn("setApplicationMute not support in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }

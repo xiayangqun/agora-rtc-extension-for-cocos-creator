@@ -9,9 +9,11 @@ class MusicPlayerBridge : public MediaPlayerBridge {
 public:
     explicit MusicPlayerBridge(agora::agora_refptr<agora::rtc::IMusicPlayer> musicPlayer);
 
+    //todo jsb ignore
     agora::agora_refptr<agora::rtc::IMusicPlayer> musicPlayer() const;
-
+    //todo jsb ignore
     void invalidate() override;
+
     int openWithSongCode(int64_t songCode, int64_t startPos = 0);
     int setPlayMode(agora::rtc::MusicPlayMode mode);
 

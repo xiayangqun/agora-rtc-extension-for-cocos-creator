@@ -75,6 +75,7 @@ public:
 
     bool hasAudioDeviceManager() const;
     agora::agora_refptr<agora::rtc::IAudioDeviceManager> audioDeviceManager() const;
+    //todo jsb ignore
     void invalidate();
     //todo jsb manual
     std::shared_ptr<AudioDeviceCollectionBridge> enumeratePlaybackDevices();
@@ -82,16 +83,20 @@ public:
     std::shared_ptr<AudioDeviceCollectionBridge> enumerateRecordingDevices();
     int setPlaybackDevice(const std::string &deviceId);
     GetPlaybackDeviceResult getPlaybackDevice();
-    //todo jsb manual 合并以下2个函数
+
+    //todo jsb manual 合并以下2个函数到一个jsb key
     GetPlaybackDeviceInfoResult getPlaybackDeviceInfo();
     GetPlaybackDeviceInfoExResult getPlaybackDeviceInfoEx();
+
     int setPlaybackDeviceVolume(int volume);
     GetPlaybackDeviceVolumeResult getPlaybackDeviceVolume();
     int setRecordingDevice(const std::string &deviceId);
     GetRecordingDeviceResult getRecordingDevice();
-    //todo jsb manual 合并以下2个函数
+
+    //todo jsb manual 合并以下2个函数到一个jsb key
     GetRecordingDeviceInfoResult getRecordingDeviceInfo();
     GetRecordingDeviceInfoExResult getRecordingDeviceInfoEx();
+
     int setRecordingDeviceVolume(int volume);
     GetRecordingDeviceVolumeResult getRecordingDeviceVolume();
     int setLoopbackDevice(const std::string &deviceId);

@@ -32,6 +32,7 @@ public:
     AudioDeviceCollectionBridge(agora::rtc::IAudioDeviceCollection *collection);
     ~AudioDeviceCollectionBridge();
 
+    //todo jsb ignore
     void invalidate();
 
     int getCount();
@@ -43,6 +44,7 @@ public:
     //todo jsb manual getDefaultDevice，getDefaultDeviceEx 到一个jsb 函数中
     GetAudioCollectionDeviceInfoResult getDefaultDevice();
     GetAudioCollectionDeviceInfoExResult getDefaultDeviceEx();
+
     int setApplicationVolume(int volume);
     GetAudioDeviceVolumeResult getApplicationVolume();
     int setApplicationMute(bool mute);

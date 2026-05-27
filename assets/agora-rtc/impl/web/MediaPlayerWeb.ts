@@ -615,24 +615,6 @@ export class MediaPlayerWeb implements IMediaPlayer {
         return { volume: this._publishSignalVolume, errorCode: ERROR_CODE_TYPE.ERR_OK };
     }
 
-    async setView(view: any): Promise<number> {
-        console.warn("setView not supported in web, use HTMLVideoElement directly");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    async setRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number> {
-        console.warn("setRenderMode not supported in web");
-        return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
-    }
-
-    async unregisterAudioFrameObserver(): Promise<number> {
-        return ERROR_CODE_TYPE.ERR_OK;
-    }
-
-    async unregisterMediaPlayerAudioSpectrumObserver(): Promise<number> {
-        return ERROR_CODE_TYPE.ERR_OK;
-    }
-
     async setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): Promise<number> {
         console.warn("setAudioDualMonoMode not supported in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;

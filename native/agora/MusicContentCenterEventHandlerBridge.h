@@ -50,20 +50,20 @@ struct MusicCollectionData {
     std::vector<MusicData> musics;
 };
 
-class MusicContentCenterEventHandlerBridge
-    : public ObserverBridgeBase,
-      public agora::rtc::IMusicContentCenterEventHandler {
+//todo jsb ignore class
+class MusicContentCenterEventHandlerBridge : public ObserverBridgeBase,
+                                             public agora::rtc::IMusicContentCenterEventHandler {
 public:
     explicit MusicContentCenterEventHandlerBridge(se::Object *eventHandler);
 
-    void onMusicChartsResult(const char* requestId, agora::agora_refptr<agora::rtc::MusicChartCollection> result,
+    void onMusicChartsResult(const char *requestId, agora::agora_refptr<agora::rtc::MusicChartCollection> result,
                              agora::rtc::MusicContentCenterStateReason reason) override;
-    void onMusicCollectionResult(const char* requestId, agora::agora_refptr<agora::rtc::MusicCollection> result,
+    void onMusicCollectionResult(const char *requestId, agora::agora_refptr<agora::rtc::MusicCollection> result,
                                  agora::rtc::MusicContentCenterStateReason reason) override;
-    void onLyricResult(const char* requestId, int64_t songCode, const char* lyricUrl,
+    void onLyricResult(const char *requestId, int64_t songCode, const char *lyricUrl,
                        agora::rtc::MusicContentCenterStateReason reason) override;
-    void onSongSimpleInfoResult(const char* requestId, int64_t songCode, const char* simpleInfo,
+    void onSongSimpleInfoResult(const char *requestId, int64_t songCode, const char *simpleInfo,
                                 agora::rtc::MusicContentCenterStateReason reason) override;
-    void onPreLoadEvent(const char* requestId, int64_t songCode, int percent, const char* lyricUrl,
+    void onPreLoadEvent(const char *requestId, int64_t songCode, int percent, const char *lyricUrl,
                         agora::rtc::PreloadState state, agora::rtc::MusicContentCenterStateReason reason) override;
 };

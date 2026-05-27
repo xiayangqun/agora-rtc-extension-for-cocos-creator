@@ -227,12 +227,12 @@ int MediaPlayerBridge::setAudioDualMonoMode(agora::media::base::AUDIO_DUAL_MONO_
     return _mediaPlayer->setAudioDualMonoMode(mode);
 }
 
-const char *MediaPlayerBridge::getPlayerSdkVersion() {
+std::string MediaPlayerBridge::getPlayerSdkVersion() {
     if (!_mediaPlayer) { return ""; }
     return _mediaPlayer->getPlayerSdkVersion();
 }
 
-const char *MediaPlayerBridge::getPlaySrc() {
+std::string MediaPlayerBridge::getPlaySrc() {
     if (!_mediaPlayer) { return ""; }
     return _mediaPlayer->getPlaySrc();
 }
