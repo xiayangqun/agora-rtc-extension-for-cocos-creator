@@ -12,7 +12,7 @@ using agora::LICENSE_ERROR_TYPE;
 using agora::VideoLayout;
 using namespace agora::rtc;
 
-//todo jsb ignore class
+//jsb ignore class
 class RtcEngineEventHandlerExBridge : public ObserverBridgeBase,
                                       public IRtcEngineEventHandlerEx,
                                       public IDirectCdnStreamingEventHandler {

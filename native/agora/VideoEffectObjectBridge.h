@@ -8,13 +8,13 @@ public:
     explicit VideoEffectObjectBridge(agora::agora_refptr<agora::rtc::IVideoEffectObject> videoEffectObject);
     ~VideoEffectObjectBridge();
 
-    //todo jsb ignore
+    //jsb ignore
     bool hasVideoEffectObject() const;
 
-    //todo jsb ignore
+    //jsb ignore
     agora::agora_refptr<agora::rtc::IVideoEffectObject> videoEffectObject() const;
 
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
 
     int addOrUpdateVideoEffect(uint32_t nodeId, const std::string &templateName);

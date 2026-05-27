@@ -7,7 +7,7 @@ namespace se {
 class Object;
 }
 
-//todo jsb ignore class
+//jsb ignore class
 class MediaPlayerSourceObserverBridge : public ObserverBridgeBase, public agora::rtc::IMediaPlayerSourceObserver {
 public:
     explicit MediaPlayerSourceObserverBridge(se::Object *eventHandler);

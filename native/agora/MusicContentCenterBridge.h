@@ -32,22 +32,22 @@ public:
     explicit MusicContentCenterBridge(agora::rtc::IMusicContentCenter *musicContentCenter);
     ~MusicContentCenterBridge();
 
-    //todo jsb ignore
+    //jsb ignore
     bool hasMusicContentCenter() const;
 
-    //todo jsb ignore
+    //jsb ignore
     agora::rtc::IMusicContentCenter *musicContentCenter() const;
 
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
     int initialize(const agora::rtc::MusicContentCenterConfiguration &configuration);
     int renewToken(const std::string &token);
-    //todo jsb manual
+    //jsb manual
     int registerEventHandler(se::Object *eventHandler);
     int unregisterEventHandler();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<MusicPlayerBridge> createMusicPlayer();
-    //todo jsb manual
+    //jsb manual
     int destroyMusicPlayer(std::shared_ptr<MusicPlayerBridge> musicPlayer);
     std::shared_ptr<MusicPlayerBridge> *getMusicPlayer(int playerId) const;
     MCCRequestResult getMusicCharts();

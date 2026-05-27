@@ -94,20 +94,20 @@ public:
     RtcEngineExBridge();
     ~RtcEngineExBridge();
     void release(bool sync);
-    //todo jsb manual
+    //jsb manual
     int initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler);
 
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<AudioDeviceManagerBridge> getAudioDeviceManager();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<VideoDeviceManagerBridge> getVideoDeviceManager();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<MusicContentCenterBridge> getMusicContentCenter();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<MediaPlayerCacheManagerBridge> getMediaPlayerCacheManager();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<LocalSpatialAudioEngineBridge> getLocalSpatialAudioEngine();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<H265TranscoderBridge> getH265Transcoder();
 
     //not support
@@ -153,10 +153,10 @@ public:
                                                           agora::media::MEDIA_SOURCE_TYPE type);
     int setFilterEffectOptions(bool enabled, const agora::rtc::FilterEffectOptions &options,
                                agora::media::MEDIA_SOURCE_TYPE type);
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<VideoEffectObjectBridge> createVideoEffectObject(const std::string &bundlePath,
                                                                      agora::media::MEDIA_SOURCE_TYPE type);
-    //todo jsb manual
+    //jsb manual
     int destroyVideoEffectObject(std::shared_ptr<VideoEffectObjectBridge> videoEffectObject);
     int setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options,
                                   agora::media::MEDIA_SOURCE_TYPE type);
@@ -201,13 +201,13 @@ public:
     // int registerAudioEncodedFrameObserver(const agora::rtc::AudioEncodedFrameObserverConfig &config,
     //                                       agora::rtc::IAudioEncodedFrameObserver *observer);
     int stopAudioRecording();
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<MediaPlayerBridge> createMediaPlayer();
-    //todo jsb manual
+    //jsb manual
     int destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer);
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<MediaRecorderBridge> createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
-    //todo jsb manual
+    //jsb manual
     int destroyMediaRecorder(std::shared_ptr<MediaRecorderBridge> mediaRecorder);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle, int startPos);
@@ -361,7 +361,7 @@ public:
     int setRouteInCommunicationMode(int route);
     bool isCameraCenterStageSupported();
     int enableCameraCenterStage(bool enabled);
-    //todo jsb manual
+    //jsb manual
     std::shared_ptr<ScreenCaptureSourceListBridge> getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
                                                                            const agora::rtc::SIZE &iconSize,
                                                                            bool includeScreen);

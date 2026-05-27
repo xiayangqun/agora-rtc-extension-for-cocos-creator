@@ -56,13 +56,13 @@ public:
 
     int getId() const;
 
-    //todo jsb ignore
+    //jsb ignore
     bool hasMediaPlayer() const;
 
-    //todo jsb ignore
+    //jsb ignore
     agora::agora_refptr<agora::rtc::IMediaPlayer> mediaPlayer() const;
 
-    //todo jsb ignore
+    //jsb ignore
     virtual void invalidate();
 
     int open(const std::string &url, int64_t startPos);
@@ -95,9 +95,9 @@ public:
     int adjustPublishSignalVolume(int volume);
     GetPublishSignalVolumeResult getPublishSignalVolume();
 
-    //todo jsb manual
+    //jsb manual
     int registerPlayerSourceObserver(se::Object *observer);
-    //todo jsb manual
+    //jsb manual
     int unregisterPlayerSourceObserver();
     //not support
     // int registerAudioFrameObserver(agora::media::IAudioPcmFrameSink *observer);

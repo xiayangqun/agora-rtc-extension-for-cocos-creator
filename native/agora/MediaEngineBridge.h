@@ -3,7 +3,7 @@
 #include "IAgoraMediaEngine.h"
 #include <string>
 
-//todo jsb ignore class
+//jsb ignore class
 class MediaEngineBridge {
 public:
     explicit MediaEngineBridge(agora::media::IMediaEngine *mediaEngine);
@@ -38,7 +38,7 @@ public:
     //                           const agora::rtc::EncodedVideoFrameInfo &videoEncodedFrameInfo,
     //                           unsigned int videoTrackId = 0);
 
-    //todo jsb ignore 2个
+    //jsb ignore 2个
     int addVideoFrameRenderer(agora::media::IVideoFrameObserver *renderer);
     int removeVideoFrameRenderer(agora::media::IVideoFrameObserver *renderer);
 

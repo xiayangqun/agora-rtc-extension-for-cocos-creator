@@ -14,7 +14,7 @@ public:
     VideoDeviceCollectionBridge(agora::rtc::IVideoDeviceCollection *collection);
     ~VideoDeviceCollectionBridge();
 
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
 
     int getCount();

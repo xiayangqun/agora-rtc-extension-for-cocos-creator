@@ -17,16 +17,16 @@ public:
 
     bool hasH265Transcoder() const;
     agora::agora_refptr<agora::rtc::IH265Transcoder> h265Transcoder() const;
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
 
     int enableTranscode(const std::string &token, const std::string &channel, agora::rtc::uid_t uid);
     int queryChannel(const std::string &token, const std::string &channel, agora::rtc::uid_t uid);
     int triggerTranscode(const std::string &token, const std::string &channel, agora::rtc::uid_t uid);
 
-    //todo jsb manual
+    //jsb manual
     int registerTranscoderObserver(se::Object *observer);
-    //todo jsb manual
+    //jsb manual
     int unregisterTranscoderObserver();
 
 private:

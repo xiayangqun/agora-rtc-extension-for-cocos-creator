@@ -21,8 +21,6 @@ export * from "./interface/IMusicPlayer";
 export * from "./interface/IVideoDeviceCollection";
 export * from "./interface/IVideoDeviceManager";
 export * from "./interface/IVideoEffectObject";
-export * from "./interface/IVideoFrameMetaInfo";
-export * from "./interface/IVideoFrameObserver";
 
 export * from "./types/AgoraBase";
 export * from "./types/AgoraH265Transcoder";

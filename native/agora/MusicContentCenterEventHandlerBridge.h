@@ -50,7 +50,7 @@ struct MusicCollectionData {
     std::vector<MusicData> musics;
 };
 
-//todo jsb ignore class
+//jsb ignore class
 class MusicContentCenterEventHandlerBridge : public ObserverBridgeBase,
                                              public agora::rtc::IMusicContentCenterEventHandler {
 public:

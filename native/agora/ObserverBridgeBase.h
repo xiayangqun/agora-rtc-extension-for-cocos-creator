@@ -7,7 +7,7 @@
 #include "agora/RtcNativeValueToSe.h"
 #include "bindings/jswrapper/SeApi.h"
 
-//todo jsb ignore class
+//jsb ignore class
 class ObserverBridgeBase : public std::enable_shared_from_this<ObserverBridgeBase> {
 public:
     explicit ObserverBridgeBase(se::Object *eventHandler);

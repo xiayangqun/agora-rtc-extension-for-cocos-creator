@@ -1,7 +1,19 @@
 #include "jsb_agora_rtc_manual.h"
 
+#include "agora/AudioDeviceCollectionBridge.h"
+#include "agora/AudioDeviceManagerBridge.h"
+#include "agora/H265TranscoderBridge.h"
+#include "agora/LocalSpatialAudioEngineBridge.h"
 #include "agora/MediaPlayerBridge.h"
+#include "agora/MediaPlayerCacheManagerBridge.h"
+#include "agora/MediaRecorderBridge.h"
+#include "agora/MusicContentCenterBridge.h"
+#include "agora/MusicPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
+#include "agora/ScreenCaptureSourceListBridge.h"
+#include "agora/VideoDeviceCollectionBridge.h"
+#include "agora/VideoDeviceManagerBridge.h"
+#include "agora/VideoEffectObjectBridge.h"
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
 #include "bindings/manual/jsb_classtype.h"
 #include "bindings/manual/jsb_global.h"
@@ -12,6 +24,18 @@
 namespace {
 se::Class *__jsb_AgoraRtcEngineNative_class = nullptr;
 se::Class *__jsb_AgoraMediaPlayerNative_class = nullptr;
+se::Class *__jsb_AgoraAudioDeviceManagerNative_class = nullptr;
+se::Class *__jsb_AgoraAudioDeviceCollectionNative_class = nullptr;
+se::Class *__jsb_AgoraVideoDeviceManagerNative_class = nullptr;
+se::Class *__jsb_AgoraVideoDeviceCollectionNative_class = nullptr;
+se::Class *__jsb_AgoraMusicContentCenterNative_class = nullptr;
+se::Class *__jsb_AgoraMusicPlayerNative_class = nullptr;
+se::Class *__jsb_AgoraMediaRecorderNative_class = nullptr;
+se::Class *__jsb_AgoraH265TranscoderNative_class = nullptr;
+se::Class *__jsb_AgoraScreenCaptureSourceListNative_class = nullptr;
+se::Class *__jsb_AgoraVideoEffectObjectNative_class = nullptr;
+se::Class *__jsb_AgoraLocalSpatialAudioEngineNative_class = nullptr;
+se::Class *__jsb_AgoraMediaPlayerCacheManagerNative_class = nullptr;
 
 static bool js_agora_RtcEngineNative_finalize(se::State &s);
 static bool js_agora_MediaPlayerNative_finalize(se::State &s);
@@ -509,6 +533,432 @@ SE_BIND_FUNC(js_agora_RtcEngineNative_getVersion)
 
 DEF_SIMPLE_VOID_METHOD(queryDeviceScore)
 
+// ===== Bridge object getters ==============================================
+
+static bool js_agora_RtcEngineNative_getAudioDeviceManager(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setNull(); return true; }
+    auto mgr = bridge->getAudioDeviceManager();
+    if (mgr == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(mgr, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getAudioDeviceManager)
+
+static bool js_agora_RtcEngineNative_getVideoDeviceManager(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setNull(); return true; }
+    auto mgr = bridge->getVideoDeviceManager();
+    if (mgr == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(mgr, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getVideoDeviceManager)
+
+static bool js_agora_RtcEngineNative_getMusicContentCenter(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setNull(); return true; }
+    auto mcc = bridge->getMusicContentCenter();
+    if (mcc == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(mcc, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getMusicContentCenter)
+
+static bool js_agora_RtcEngineNative_getMediaPlayerCacheManager(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setNull(); return true; }
+    auto mgr = bridge->getMediaPlayerCacheManager();
+    if (mgr == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(mgr, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getMediaPlayerCacheManager)
+
+static bool js_agora_RtcEngineNative_getLocalSpatialAudioEngine(se::State &s) {
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setNull(); return true; }
+    auto engine = bridge->getLocalSpatialAudioEngine();
+    if (engine == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(engine, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getLocalSpatialAudioEngine)
+
+// ===== Video effect object ================================================
+
+static bool js_agora_RtcEngineNative_createVideoEffectObject(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 2) { s.rval().setNull(); return true; }
+    std::string bundlePath = args[0].toString();
+    int type = args[1].toInt32();
+    auto obj = bridge->createVideoEffectObject(bundlePath, static_cast<agora::media::MEDIA_SOURCE_TYPE>(type));
+    if (obj == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(obj, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_createVideoEffectObject)
+
+static bool js_agora_RtcEngineNative_destroyVideoEffectObject(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    std::shared_ptr<VideoEffectObjectBridge> obj;
+    if (!sevalue_to_native(args[0], &obj, s.thisObject())) { s.rval().setInt32(-2); return true; }
+    s.rval().setInt32(bridge->destroyVideoEffectObject(obj));
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_destroyVideoEffectObject)
+
+// ===== Media recorder =====================================================
+
+static bool js_agora_RtcEngineNative_createMediaRecorder(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.empty()) { s.rval().setNull(); return true; }
+    agora::rtc::RecorderStreamInfo info;
+    if (!sevalue_to_native(args[0], &info, s.thisObject())) { s.rval().setNull(); return true; }
+    auto recorder = bridge->createMediaRecorder(info);
+    if (recorder == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(recorder, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_createMediaRecorder)
+
+static bool js_agora_RtcEngineNative_destroyMediaRecorder(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    std::shared_ptr<MediaRecorderBridge> recorder;
+    if (!sevalue_to_native(args[0], &recorder, s.thisObject())) { s.rval().setInt32(-2); return true; }
+    s.rval().setInt32(bridge->destroyMediaRecorder(recorder));
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_destroyMediaRecorder)
+
+// ===== Same-argc overloads ================================================
+
+static bool js_agora_RtcEngineNative_addVideoWatermark(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.empty()) { s.rval().setInt32(-7); return true; }
+    // Try WatermarkConfig first (object with more fields), then RtcImage
+    agora::rtc::WatermarkConfig configs;
+    if (sevalue_to_native(args[0], &configs, s.thisObject())) {
+        s.rval().setInt32(bridge->addVideoWatermark(configs));
+        return true;
+    }
+    agora::rtc::RtcImage watermark;
+    if (sevalue_to_native(args[0], &watermark, s.thisObject())) {
+        s.rval().setInt32(bridge->addVideoWatermark(watermark));
+        return true;
+    }
+    SE_REPORT_ERROR("addVideoWatermark: invalid argument");
+    return false;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_addVideoWatermark)
+
+static bool js_agora_RtcEngineNative_enableExtension(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 4) { s.rval().setInt32(-7); return true; }
+    std::string provider = args[0].toString();
+    std::string extension = args[1].toString();
+    // Determine overload by 3rd arg type
+    if (args[2].isObject()) {
+        agora::rtc::ExtensionInfo extensionInfo;
+        if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
+        bool enable = args[3].toBoolean();
+        s.rval().setInt32(bridge->enableExtension(provider.c_str(), extension.c_str(), extensionInfo, enable));
+    } else {
+        bool enable = args[2].toBoolean();
+        int type = args[3].toInt32();
+        s.rval().setInt32(bridge->enableExtension(provider.c_str(), extension.c_str(), enable, static_cast<agora::media::MEDIA_SOURCE_TYPE>(type)));
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_enableExtension)
+
+static bool js_agora_RtcEngineNative_getExtensionProperty(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 4) { s.rval().setInt32(-7); return true; }
+    std::string provider = args[0].toString();
+    std::string extension = args[1].toString();
+    if (args[2].isObject()) {
+        agora::rtc::ExtensionInfo extensionInfo;
+        if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
+        std::string key = args[3].toString();
+        auto result = bridge->getExtensionProperty(provider.c_str(), extension.c_str(), extensionInfo, key);
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    } else {
+        std::string key = args[2].toString();
+        int type = args[3].toInt32();
+        auto result = bridge->getExtensionProperty(provider.c_str(), extension.c_str(), key, static_cast<agora::media::MEDIA_SOURCE_TYPE>(type));
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getExtensionProperty)
+
+static bool js_agora_RtcEngineNative_setExtensionProperty(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 5) { s.rval().setInt32(-7); return true; }
+    std::string provider = args[0].toString();
+    std::string extension = args[1].toString();
+    if (args[2].isObject()) {
+        agora::rtc::ExtensionInfo extensionInfo;
+        if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
+        std::string key = args[3].toString();
+        std::string value = args[4].toString();
+        s.rval().setInt32(bridge->setExtensionProperty(provider.c_str(), extension.c_str(), extensionInfo, key, value));
+    } else {
+        std::string key = args[2].toString();
+        std::string value = args[3].toString();
+        int type = args[4].toInt32();
+        s.rval().setInt32(bridge->setExtensionProperty(provider.c_str(), extension.c_str(), key, value, static_cast<agora::media::MEDIA_SOURCE_TYPE>(type)));
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_setExtensionProperty)
+
+static bool js_agora_RtcEngineNative_takeSnapshot(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 2) { s.rval().setInt32(-7); return true; }
+    auto uid = static_cast<agora::rtc::uid_t>(args[0].toInt32());
+    if (args[1].isString()) {
+        std::string filePath = args[1].toString();
+        s.rval().setInt32(bridge->takeSnapshot(uid, filePath));
+    } else {
+        agora::media::SnapshotConfig config;
+        if (!sevalue_to_native(args[1], &config, s.thisObject())) { s.rval().setInt32(-2); return true; }
+        s.rval().setInt32(bridge->takeSnapshot(uid, config));
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_takeSnapshot)
+
+static bool js_agora_RtcEngineNative_takeSnapshotEx(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.size() < 3) { s.rval().setInt32(-7); return true; }
+    agora::rtc::RtcConnection connection;
+    if (!sevalue_to_native(args[0], &connection, s.thisObject())) { s.rval().setInt32(-2); return true; }
+    auto uid = static_cast<agora::rtc::uid_t>(args[1].toInt32());
+    if (args[2].isString()) {
+        std::string filePath = args[2].toString();
+        s.rval().setInt32(bridge->takeSnapshotEx(connection, uid, filePath));
+    } else {
+        agora::media::SnapshotConfig config;
+        if (!sevalue_to_native(args[2], &config, s.thisObject())) { s.rval().setInt32(-2); return true; }
+        s.rval().setInt32(bridge->takeSnapshotEx(connection, uid, config));
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_takeSnapshotEx)
+
+// ===== MediaPlayerBridge manual bindings ==================================
+
+static bool js_agora_MediaPlayerNative_registerPlayerSourceObserver(se::State &s) {
+    const auto &args = s.args();
+    auto *player = getNativeMediaPlayer(s);
+    if (player == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    se::Object *observer = args[0].toObject();
+    s.rval().setInt32(player->registerPlayerSourceObserver(observer));
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaPlayerNative_registerPlayerSourceObserver)
+
+static bool js_agora_MediaPlayerNative_setPlayerOption(se::State &s) {
+    const auto &args = s.args();
+    auto *player = getNativeMediaPlayer(s);
+    if (player == nullptr || args.size() < 2) { s.rval().setInt32(-2); return true; }
+    std::string key = args[0].toString();
+    if (args[1].isString()) {
+        std::string value = args[1].toString();
+        s.rval().setInt32(player->setPlayerOption(key, value));
+    } else {
+        int value = args[1].toInt32();
+        s.rval().setInt32(player->setPlayerOption(key, value));
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaPlayerNative_setPlayerOption)
+
+// ===== MusicContentCenterBridge manual bindings ===========================
+
+static bool js_agora_MusicContentCenterNative_renewToken(se::State &s) {
+    const auto &args = s.args();
+    auto *mcc = static_cast<MusicContentCenterBridge *>(s.nativeThisObject());
+    if (mcc == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    std::string token = args[0].toString();
+    s.rval().setInt32(mcc->renewToken(token));
+    return true;
+}
+SE_BIND_FUNC(js_agora_MusicContentCenterNative_renewToken)
+
+static bool js_agora_MusicContentCenterNative_unregisterEventHandler(se::State &s) {
+    auto *mcc = static_cast<MusicContentCenterBridge *>(s.nativeThisObject());
+    s.rval().setInt32(mcc ? mcc->unregisterEventHandler() : -2);
+    return true;
+}
+SE_BIND_FUNC(js_agora_MusicContentCenterNative_unregisterEventHandler)
+
+static bool js_agora_MusicContentCenterNative_createMusicPlayer(se::State &s) {
+    auto *mcc = static_cast<MusicContentCenterBridge *>(s.nativeThisObject());
+    if (mcc == nullptr) { s.rval().setNull(); return true; }
+    auto player = mcc->createMusicPlayer();
+    if (player == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(player, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_MusicContentCenterNative_createMusicPlayer)
+
+// ===== H265TranscoderBridge manual bindings ===============================
+
+static bool js_agora_H265TranscoderNative_registerTranscoderObserver(se::State &s) {
+    const auto &args = s.args();
+    auto *transcoder = static_cast<H265TranscoderBridge *>(s.nativeThisObject());
+    if (transcoder == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    se::Object *observer = args[0].toObject();
+    s.rval().setInt32(transcoder->registerTranscoderObserver(observer));
+    return true;
+}
+SE_BIND_FUNC(js_agora_H265TranscoderNative_registerTranscoderObserver)
+
+// ===== MediaRecorderBridge manual bindings ================================
+
+static bool js_agora_MediaRecorderNative_setMediaRecorderObserver(se::State &s) {
+    const auto &args = s.args();
+    auto *recorder = static_cast<MediaRecorderBridge *>(s.nativeThisObject());
+    if (recorder == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    se::Object *observer = args[0].toObject();
+    s.rval().setInt32(recorder->setMediaRecorderObserver(observer));
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaRecorderNative_setMediaRecorderObserver)
+
+// ===== AudioDeviceCollectionBridge merged bindings ========================
+
+static bool js_agora_AudioDeviceCollectionNative_getDevice(se::State &s) {
+    const auto &args = s.args();
+    auto *collection = static_cast<AudioDeviceCollectionBridge *>(s.nativeThisObject());
+    if (collection == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    int index = args[0].toInt32();
+    if (args.size() > 1 && args[1].toBoolean()) {
+        auto result = collection->getDeviceEx(index);
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    } else {
+        auto result = collection->getDevice(index);
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceCollectionNative_getDevice)
+
+static bool js_agora_AudioDeviceCollectionNative_getDefaultDevice(se::State &s) {
+    const auto &args = s.args();
+    auto *collection = static_cast<AudioDeviceCollectionBridge *>(s.nativeThisObject());
+    if (collection == nullptr) { s.rval().setInt32(-2); return true; }
+    if (!args.empty() && args[0].toBoolean()) {
+        auto result = collection->getDefaultDeviceEx();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    } else {
+        auto result = collection->getDefaultDevice();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceCollectionNative_getDefaultDevice)
+
+// ===== AudioDeviceManagerBridge manual bindings ===========================
+
+static bool js_agora_AudioDeviceManagerNative_enumeratePlaybackDevices(se::State &s) {
+    auto *mgr = static_cast<AudioDeviceManagerBridge *>(s.nativeThisObject());
+    if (mgr == nullptr) { s.rval().setNull(); return true; }
+    auto collection = mgr->enumeratePlaybackDevices();
+    if (collection == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(collection, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceManagerNative_enumeratePlaybackDevices)
+
+static bool js_agora_AudioDeviceManagerNative_enumerateRecordingDevices(se::State &s) {
+    auto *mgr = static_cast<AudioDeviceManagerBridge *>(s.nativeThisObject());
+    if (mgr == nullptr) { s.rval().setNull(); return true; }
+    auto collection = mgr->enumerateRecordingDevices();
+    if (collection == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(collection, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceManagerNative_enumerateRecordingDevices)
+
+static bool js_agora_AudioDeviceManagerNative_getPlaybackDevice(se::State &s) {
+    const auto &args = s.args();
+    auto *mgr = static_cast<AudioDeviceManagerBridge *>(s.nativeThisObject());
+    if (mgr == nullptr) { s.rval().setInt32(-2); return true; }
+    if (!args.empty() && args[0].toBoolean()) {
+        auto result = mgr->getPlaybackDeviceInfoEx();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    } else {
+        auto result = mgr->getPlaybackDevice();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceManagerNative_getPlaybackDevice)
+
+static bool js_agora_AudioDeviceManagerNative_getRecordingDevice(se::State &s) {
+    const auto &args = s.args();
+    auto *mgr = static_cast<AudioDeviceManagerBridge *>(s.nativeThisObject());
+    if (mgr == nullptr) { s.rval().setInt32(-2); return true; }
+    if (!args.empty() && args[0].toBoolean()) {
+        auto result = mgr->getRecordingDeviceInfoEx();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    } else {
+        auto result = mgr->getRecordingDevice();
+        nativevalue_to_se(result, s.rval(), s.thisObject());
+    }
+    return true;
+}
+SE_BIND_FUNC(js_agora_AudioDeviceManagerNative_getRecordingDevice)
+
+// ===== ScreenCaptureSourceListBridge manual binding =======================
+
+static bool js_agora_ScreenCaptureSourceListNative_getSourceInfo(se::State &s) {
+    const auto &args = s.args();
+    auto *list = static_cast<ScreenCaptureSourceListBridge *>(s.nativeThisObject());
+    if (list == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    unsigned int index = static_cast<unsigned int>(args[0].toInt32());
+    auto info = list->getSourceInfo(index);
+    nativevalue_to_se(info, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_ScreenCaptureSourceListNative_getSourceInfo)
+
+// ===== getScreenCaptureSources ===========================================
+
+static bool js_agora_RtcEngineNative_getScreenCaptureSources(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr || args.empty()) { s.rval().setNull(); return true; }
+    agora::rtc::SIZE thumbSize;
+    if (!sevalue_to_native(args[0], &thumbSize, s.thisObject())) { s.rval().setNull(); return true; }
+    agora::rtc::SIZE iconSize;
+    if (args.size() > 1 && args[1].isObject()) {
+        sevalue_to_native(args[1], &iconSize, s.thisObject());
+    }
+    bool includeScreen = args.size() > 2 && args[2].toBoolean();
+    auto list = bridge->getScreenCaptureSources(thumbSize, iconSize, includeScreen);
+    if (list == nullptr) { s.rval().setNull(); return true; }
+    nativevalue_to_se(list, s.rval(), s.thisObject());
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_getScreenCaptureSources)
+
 // ===== Undefine macros ===================================================
 #undef DEF_SIMPLE_INT_METHOD
 #undef DEF_SIMPLE_BOOL_METHOD
@@ -596,9 +1046,35 @@ bool register_agora_rtc_manual(se::Object *global) {
     cls->defineFunction("getErrorDescription", _SE(js_agora_RtcEngineNative_getErrorDescription));
     cls->defineFunction("getVersion", _SE(js_agora_RtcEngineNative_getVersion));
     cls->defineFunction("queryDeviceScore", _SE(js_agora_RtcEngineNative_queryDeviceScore));
+    // Bridge object getters
+    cls->defineFunction("getAudioDeviceManager", _SE(js_agora_RtcEngineNative_getAudioDeviceManager));
+    cls->defineFunction("getVideoDeviceManager", _SE(js_agora_RtcEngineNative_getVideoDeviceManager));
+    cls->defineFunction("getMusicContentCenter", _SE(js_agora_RtcEngineNative_getMusicContentCenter));
+    cls->defineFunction("getMediaPlayerCacheManager", _SE(js_agora_RtcEngineNative_getMediaPlayerCacheManager));
+    cls->defineFunction("getLocalSpatialAudioEngine", _SE(js_agora_RtcEngineNative_getLocalSpatialAudioEngine));
+    // Video effect object
+    cls->defineFunction("createVideoEffectObject", _SE(js_agora_RtcEngineNative_createVideoEffectObject));
+    cls->defineFunction("destroyVideoEffectObject", _SE(js_agora_RtcEngineNative_destroyVideoEffectObject));
+    // Media recorder
+    cls->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineNative_createMediaRecorder));
+    cls->defineFunction("destroyMediaRecorder", _SE(js_agora_RtcEngineNative_destroyMediaRecorder));
+    // Same-argc overloads
+    cls->defineFunction("addVideoWatermark", _SE(js_agora_RtcEngineNative_addVideoWatermark));
+    cls->defineFunction("enableExtension", _SE(js_agora_RtcEngineNative_enableExtension));
+    cls->defineFunction("getExtensionProperty", _SE(js_agora_RtcEngineNative_getExtensionProperty));
+    cls->defineFunction("setExtensionProperty", _SE(js_agora_RtcEngineNative_setExtensionProperty));
+    cls->defineFunction("takeSnapshot", _SE(js_agora_RtcEngineNative_takeSnapshot));
+    cls->defineFunction("takeSnapshotEx", _SE(js_agora_RtcEngineNative_takeSnapshotEx));
+    cls->defineFunction("getScreenCaptureSources", _SE(js_agora_RtcEngineNative_getScreenCaptureSources));
     cls->defineFinalizeFunction(_SE(js_agora_RtcEngineNative_finalize));
     cls->install();
 
     __jsb_AgoraRtcEngineNative_class = cls;
+
+    // MediaPlayerNative additional bindings
+    mediaPlayerCls->defineFunction("registerPlayerSourceObserver", _SE(js_agora_MediaPlayerNative_registerPlayerSourceObserver));
+    mediaPlayerCls->defineFunction("setPlayerOption", _SE(js_agora_MediaPlayerNative_setPlayerOption));
+    mediaPlayerCls->install();
+
     return true;
 }

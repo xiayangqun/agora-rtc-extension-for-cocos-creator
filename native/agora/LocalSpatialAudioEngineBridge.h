@@ -13,7 +13,7 @@ public:
     bool hasSpatialAudioEngine() const;
     agora::agora_refptr<agora::rtc::ILocalSpatialAudioEngine> spatialAudioEngine() const;
 
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
 
     int updateRemotePosition(agora::rtc::uid_t uid, const agora::rtc::RemoteVoicePositionInfo &posInfo);

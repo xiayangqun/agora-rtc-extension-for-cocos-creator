@@ -7,7 +7,7 @@ namespace se {
 class Object;
 }
 
-//todo jsb ignore class
+//jsb ignore class
 class H265TranscoderObserverBridge : public ObserverBridgeBase, public agora::rtc::IH265TranscoderObserver {
 public:
     explicit H265TranscoderObserverBridge(se::Object *eventHandler);

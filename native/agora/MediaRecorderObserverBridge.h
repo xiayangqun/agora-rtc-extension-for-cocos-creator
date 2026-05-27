@@ -7,7 +7,7 @@ namespace se {
 class Object;
 }
 
-//todo jsb ignore class
+//jsb ignore class
 class MediaRecorderObserverBridge : public ObserverBridgeBase, public agora::media::IMediaRecorderObserver {
 public:
     explicit MediaRecorderObserverBridge(se::Object *eventHandler);

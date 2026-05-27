@@ -9,41 +9,211 @@
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
-#include "agora/RtcMediaPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
+#include "agora/AudioDeviceCollectionBridge.h"
+#include "agora/AudioDeviceManagerBridge.h"
+#include "agora/H265TranscoderBridge.h"
+#include "agora/LocalSpatialAudioEngineBridge.h"
+#include "agora/MediaPlayerBridge.h"
+#include "agora/MediaPlayerCacheManagerBridge.h"
+#include "agora/MediaRecorderBridge.h"
+#include "agora/MusicContentCenterBridge.h"
+#include "agora/MusicPlayerBridge.h"
+#include "agora/ScreenCaptureSourceListBridge.h"
+#include "agora/VideoDeviceCollectionBridge.h"
+#include "agora/VideoDeviceManagerBridge.h"
+#include "agora/VideoEffectObjectBridge.h"
 %}
 
 %{
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
-#include "agora/RtcMediaPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
+#include "agora/AudioDeviceCollectionBridge.h"
+#include "agora/AudioDeviceManagerBridge.h"
+#include "agora/H265TranscoderBridge.h"
+#include "agora/LocalSpatialAudioEngineBridge.h"
+#include "agora/MediaPlayerBridge.h"
+#include "agora/MediaPlayerCacheManagerBridge.h"
+#include "agora/MediaRecorderBridge.h"
+#include "agora/MusicContentCenterBridge.h"
+#include "agora/MusicPlayerBridge.h"
+#include "agora/ScreenCaptureSourceListBridge.h"
+#include "agora/VideoDeviceCollectionBridge.h"
+#include "agora/VideoDeviceManagerBridge.h"
+#include "agora/VideoEffectObjectBridge.h"
 %}
 
 // Result struct typemaps — extracted to agora_rtc_engine_typemap_out.i
 %include "agora_rtc_engine_typemap_out.i"
 
-// se::Object is passed only during manual initialization callback wiring.
-// Keep it out of the SWIG surface for this auto-binding experiment.
-%ignore RtcEngineExBridge::initialize;
+// ============================================================
+// Ignore classes (//todo jsb ignore class)
+// ============================================================
+%ignore RtcEngineEventHandlerExBridge;
+%ignore ObserverBridgeBase;
+%ignore MediaRecorderObserverBridge;
+%ignore MediaPlayerSourceObserverBridge;
+%ignore MusicContentCenterEventHandlerBridge;
+%ignore H265TranscoderObserverBridge;
+%ignore MediaEngineBridge;
 
-// SWIG's Cocos dispatcher only gates overloads by argc, and Cocos primitive
-// converters are permissive (for example number -> string). Keep same-argc
-// overloads out of the auto binding until they get manual dispatch or renamed
-// JS entry points.
+// ============================================================
+// Ignore functions (//todo jsb ignore) — internal lifecycle/raw pointer accessors
+// ============================================================
+
+// AudioDeviceCollectionBridge
+%ignore AudioDeviceCollectionBridge::invalidate;
+
+// AudioDeviceManagerBridge
+%ignore AudioDeviceManagerBridge::invalidate;
+
+// H265TranscoderBridge
+%ignore H265TranscoderBridge::h265Transcoder;
+
+// LocalSpatialAudioEngineBridge
+%ignore LocalSpatialAudioEngineBridge::invalidate;
+
+// MediaEngineBridge
+%ignore MediaEngineBridge::addVideoFrameRenderer;
+
+// MediaPlayerBridge
+%ignore MediaPlayerBridge::hasMediaPlayer;
+%ignore MediaPlayerBridge::mediaPlayer;
+%ignore MediaPlayerBridge::invalidate;
+
+// MediaPlayerCacheManagerBridge
+%ignore MediaPlayerCacheManagerBridge::hasCacheManager;
+%ignore MediaPlayerCacheManagerBridge::cacheManager;
+%ignore MediaPlayerCacheManagerBridge::invalidate;
+
+// MediaRecorderBridge
+%ignore MediaRecorderBridge::hasMediaRecorder;
+%ignore MediaRecorderBridge::mediaRecorder;
+%ignore MediaRecorderBridge::invalidate;
+
+// MusicContentCenterBridge
+%ignore MusicContentCenterBridge::hasMusicContentCenter;
+%ignore MusicContentCenterBridge::musicContentCenter;
+%ignore MusicContentCenterBridge::invalidate;
+
+// MusicPlayerBridge
+%ignore MusicPlayerBridge::musicPlayer;
+
+// ScreenCaptureSourceListBridge (3 internal functions)
+%ignore ScreenCaptureSourceListBridge::hasList;
+%ignore ScreenCaptureSourceListBridge::setList;
+%ignore ScreenCaptureSourceListBridge::invalidate;
+
+// VideoDeviceCollectionBridge
+%ignore VideoDeviceCollectionBridge::invalidate;
+
+// VideoDeviceManagerBridge
+%ignore VideoDeviceManagerBridge::hasVideoDeviceManager;
+%ignore VideoDeviceManagerBridge::videoDeviceManager;
+%ignore VideoDeviceManagerBridge::invalidate;
+
+// VideoEffectObjectBridge
+%ignore VideoEffectObjectBridge::hasVideoEffectObject;
+%ignore VideoEffectObjectBridge::videoEffectObject;
+%ignore VideoEffectObjectBridge::invalidate;
+
+// ============================================================
+// Ignore manual-binding functions (//todo jsb manual) — hand-written in jsb_agora_rtc_manual.cpp
+// ============================================================
+
+// RtcEngineExBridge — manual bindings
+%ignore RtcEngineExBridge::release;
+%ignore RtcEngineExBridge::initialize;
+%ignore RtcEngineExBridge::getAudioDeviceManager;
+%ignore RtcEngineExBridge::getVideoDeviceManager;
+%ignore RtcEngineExBridge::getMusicContentCenter;
+%ignore RtcEngineExBridge::getMediaPlayerCacheManager;
+%ignore RtcEngineExBridge::getLocalSpatialAudioEngine;
+%ignore RtcEngineExBridge::createVideoEffectObject;
+%ignore RtcEngineExBridge::destroyVideoEffectObject;
+%ignore RtcEngineExBridge::createMediaPlayer;
+%ignore RtcEngineExBridge::destroyMediaPlayer;
+%ignore RtcEngineExBridge::createMediaRecorder;
+%ignore RtcEngineExBridge::destroyMediaRecorder;
+%ignore RtcEngineExBridge::getScreenCaptureSources;
+
+// MediaPlayerBridge — manual bindings
+%ignore MediaPlayerBridge::registerPlayerSourceObserver;
+
+// H265TranscoderBridge — manual bindings
+%ignore H265TranscoderBridge::registerTranscoderObserver;
+
+// MediaRecorderBridge — manual bindings
+%ignore MediaRecorderBridge::setMediaRecorderObserver;
+
+// MusicContentCenterBridge — manual bindings
+%ignore MusicContentCenterBridge::renewToken;
+%ignore MusicContentCenterBridge::unregisterEventHandler;
+%ignore MusicContentCenterBridge::createMusicPlayer;
+
+// AudioDeviceCollectionBridge — manual bindings (merged overloads)
+%ignore AudioDeviceCollectionBridge::getDevice;
+%ignore AudioDeviceCollectionBridge::getDeviceEx;
+%ignore AudioDeviceCollectionBridge::getDefaultDevice;
+%ignore AudioDeviceCollectionBridge::getDefaultDeviceEx;
+
+// AudioDeviceManagerBridge — manual bindings
+%ignore AudioDeviceManagerBridge::enumeratePlaybackDevices;
+%ignore AudioDeviceManagerBridge::enumerateRecordingDevices;
+%ignore AudioDeviceManagerBridge::getPlaybackDevice;
+%ignore AudioDeviceManagerBridge::getPlaybackDeviceInfo;
+%ignore AudioDeviceManagerBridge::getPlaybackDeviceInfoEx;
+%ignore AudioDeviceManagerBridge::getRecordingDevice;
+%ignore AudioDeviceManagerBridge::getRecordingDeviceInfo;
+%ignore AudioDeviceManagerBridge::getRecordingDeviceInfoEx;
+
+// ScreenCaptureSourceListBridge — manual binding
+%ignore ScreenCaptureSourceListBridge::getSourceInfo;
+
+// ============================================================
+// Ignore same-argc overloaded functions (hand-written disambiguation)
+// ============================================================
+
+// MediaPlayerBridge::setPlayerOption — (string,int) vs (string,string)
+%ignore MediaPlayerBridge::setPlayerOption;
+
+// RtcEngineEventHandlerExBridge::onFirstLocalVideoFramePublished — already ignored via class ignore
+
+// RtcEngineExBridge::addVideoWatermark — (RtcImage) vs (WatermarkConfig)
+%ignore RtcEngineExBridge::addVideoWatermark;
+
+// RtcEngineExBridge::enableExtension — same-argc overload
 %ignore RtcEngineExBridge::enableExtension;
+
+// RtcEngineExBridge::getExtensionProperty — same-argc overload
+%ignore RtcEngineExBridge::getExtensionProperty;
+
+// RtcEngineExBridge::joinChannel — same-argc overload
 %ignore RtcEngineExBridge::joinChannel;
+
+// RtcEngineExBridge::setExtensionProperty — same-argc overload
+%ignore RtcEngineExBridge::setExtensionProperty;
+
+// RtcEngineExBridge::takeSnapshot — same-argc overload
 %ignore RtcEngineExBridge::takeSnapshot;
 
-// JS → C++ typemaps for Agora struct parameters
-%include "agora_rtc_engine_typemap_in.i"
+// RtcEngineExBridge::takeSnapshotEx — same-argc overload
+%ignore RtcEngineExBridge::takeSnapshotEx;
 
-// Media player instances are created by RtcEngineExBridge and returned to JS.
-// Do not expose the native constructor or internal SDK ref helpers.
-%rename(MediaPlayerNative) RtcMediaPlayerBridge;
-%ignore RtcMediaPlayerBridge::RtcMediaPlayerBridge;
-%ignore RtcMediaPlayerBridge::hasMediaPlayer;
-%ignore RtcMediaPlayerBridge::mediaPlayer;
-%ignore RtcMediaPlayerBridge::invalidate;
-%include "agora/RtcMediaPlayerBridge.h"
-
+// ============================================================
+// Include headers for SWIG auto-generation
+// ============================================================
 %include "agora/RtcEngineExBridge.h"
+%include "agora/AudioDeviceCollectionBridge.h"
+%include "agora/AudioDeviceManagerBridge.h"
+%include "agora/H265TranscoderBridge.h"
+%include "agora/LocalSpatialAudioEngineBridge.h"
+%include "agora/MediaPlayerBridge.h"
+%include "agora/MediaPlayerCacheManagerBridge.h"
+%include "agora/MediaRecorderBridge.h"
+%include "agora/MusicContentCenterBridge.h"
+%include "agora/MusicPlayerBridge.h"
+%include "agora/ScreenCaptureSourceListBridge.h"
+%include "agora/VideoDeviceCollectionBridge.h"
+%include "agora/VideoDeviceManagerBridge.h"
+%include "agora/VideoEffectObjectBridge.h"

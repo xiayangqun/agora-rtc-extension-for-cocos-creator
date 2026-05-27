@@ -7,18 +7,18 @@ public:
     ScreenCaptureSourceListBridge();
     ~ScreenCaptureSourceListBridge();
 
-    //todo jsb ignore
+    //jsb ignore
     bool hasList() const;
 
-    //todo jsb ignore
+    //jsb ignore
     void setList(agora::rtc::IScreenCaptureSourceList *list);
 
-    //todo jsb ignore
+    //jsb ignore
     void invalidate();
 
     unsigned int getCount();
 
-    //todo jsb manual
+    //jsb manual
     agora::rtc::ScreenCaptureSourceInfo getSourceInfo(unsigned int index);
 
 private:
