@@ -29,7 +29,7 @@ int AudioDeviceCollectionBridge::setDevice(const std::string &deviceId) {
     return _collection->setDevice(deviceIdBuf);
 }
 
-GetAudioDeviceInfoResult AudioDeviceCollectionBridge::getDevice(int index) {
+GetAudioCollectionDeviceInfoResult AudioDeviceCollectionBridge::getDevice(int index) {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
@@ -37,7 +37,7 @@ GetAudioDeviceInfoResult AudioDeviceCollectionBridge::getDevice(int index) {
     return {ret, std::string(deviceName), std::string(deviceId)};
 }
 
-GetAudioDeviceInfoExResult AudioDeviceCollectionBridge::getDeviceEx(int index) {
+GetAudioCollectionDeviceInfoExResult AudioDeviceCollectionBridge::getDeviceEx(int index) {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, "", "", ""}; }
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceTypeName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
@@ -46,7 +46,7 @@ GetAudioDeviceInfoExResult AudioDeviceCollectionBridge::getDeviceEx(int index) {
     return {ret, std::string(deviceName), std::string(deviceTypeName), std::string(deviceId)};
 }
 
-GetAudioDeviceInfoResult AudioDeviceCollectionBridge::getDefaultDevice() {
+GetAudioCollectionDeviceInfoResult AudioDeviceCollectionBridge::getDefaultDevice() {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
@@ -54,7 +54,7 @@ GetAudioDeviceInfoResult AudioDeviceCollectionBridge::getDefaultDevice() {
     return {ret, std::string(deviceName), std::string(deviceId)};
 }
 
-GetAudioDeviceInfoExResult AudioDeviceCollectionBridge::getDefaultDeviceEx() {
+GetAudioCollectionDeviceInfoExResult AudioDeviceCollectionBridge::getDefaultDeviceEx() {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, "", "", ""}; }
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceTypeName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
@@ -82,7 +82,7 @@ int AudioDeviceCollectionBridge::setApplicationMute(bool mute) {
 
 GetAudioDeviceMuteResult AudioDeviceCollectionBridge::isApplicationMute() {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, false}; }
-    bool muted = false;
-    int ret = _collection->isApplicationMute(muted);
-    return {ret, muted};
+    bool mute = false;
+    int ret = _collection->isApplicationMute(mute);
+    return {ret, mute};
 }

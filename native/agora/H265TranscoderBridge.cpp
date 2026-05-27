@@ -12,7 +12,7 @@ H265TranscoderBridge::~H265TranscoderBridge() {
 }
 
 bool H265TranscoderBridge::hasH265Transcoder() const {
-    return _h265Transcoder != nullptr;
+    return _h265Transcoder.get() != nullptr;
 }
 
 agora::agora_refptr<agora::rtc::IH265Transcoder> H265TranscoderBridge::h265Transcoder() const {

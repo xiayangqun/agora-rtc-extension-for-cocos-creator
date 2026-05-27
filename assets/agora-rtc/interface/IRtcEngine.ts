@@ -131,7 +131,7 @@ export interface IRtcEngine {
 
     getErrorDescription(code: number): Promise<string>;
 
-    queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[]; size: number }>;
+    queryCodecCapability(size: number): Promise<{ errorCode: number; codecInfo: CodecCapInfo[] }>;
 
     queryDeviceScore(): Promise<number>;
 
@@ -271,13 +271,13 @@ export interface IRtcEngine {
 
     setRemoteVideoSubscriptionOptions(uid: number, options: VideoSubscriptionOptions): Promise<number>;
 
-    setSubscribeAudioBlocklist(uidList: number[], uidNumber: number): Promise<number>;
+    setSubscribeAudioBlocklist(uidList: number[]): Promise<number>;
 
-    setSubscribeAudioAllowlist(uidList: number[], uidNumber: number): Promise<number>;
+    setSubscribeAudioAllowlist(uidList: number[]): Promise<number>;
 
-    setSubscribeVideoBlocklist(uidList: number[], uidNumber: number): Promise<number>;
+    setSubscribeVideoBlocklist(uidList: number[]): Promise<number>;
 
-    setSubscribeVideoAllowlist(uidList: number[], uidNumber: number): Promise<number>;
+    setSubscribeVideoAllowlist(uidList: number[]): Promise<number>;
 
     enableAudioVolumeIndication(interval: number, smooth: number, reportVad: boolean): Promise<number>;
 
@@ -513,7 +513,6 @@ export interface IRtcEngine {
         extension: string,
         extensionInfo: ExtensionInfo,
         key: string,
-        buf_len: number,
     ): Promise<{ errorCode: number; value: string }>;
 
     enableLoopbackRecording(enabled: boolean, deviceName: string): Promise<number>;
@@ -546,7 +545,6 @@ export interface IRtcEngine {
         provider: string,
         extension: string,
         key: string,
-        buf_len: number,
         type: MEDIA_SOURCE_TYPE,
     ): Promise<{ errorCode: number; value: number }>;
 
@@ -650,9 +648,7 @@ export interface IRtcEngine {
 
     queryScreenCaptureCapability(): Promise<number>;
 
-    queryCameraFocalLengthCapability(
-        size: number,
-    ): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[]; size: number }>;
+    queryCameraFocalLengthCapability(size: number): Promise<{ errorCode: number; focalLengthInfos: FocalLengthInfo[] }>;
 
     setExternalMediaProjection(mediaProjection: unknown): Promise<number>;
 
@@ -708,11 +704,11 @@ export interface IRtcEngine {
 
     createDataStream(config: DataStreamConfig): Promise<{ streamId: number; errorCode: number }>;
 
-    sendStreamMessage(streamId: number, data: ArrayBuffer, length: number): Promise<number>;
+    sendStreamMessage(streamId: number, data: ArrayBuffer): Promise<number>;
 
-    sendRdtMessage(uid: number, type: RdtStreamType, data: string, length: number): Promise<number>;
+    sendRdtMessage(uid: number, type: RdtStreamType, data: ArrayBuffer): Promise<number>;
 
-    sendMediaControlMessage(uid: number, data: string, length: number): Promise<number>;
+    sendMediaControlMessage(uid: number, data: ArrayBuffer): Promise<number>;
 
     addVideoWatermark(watermark: RtcImage): Promise<number>;
 
@@ -809,7 +805,7 @@ export interface IRtcEngine {
 
     getNetworkType(): Promise<number>;
 
-    setParameters(parameters: object): Promise<number>;
+    setParameters(parameters: string): Promise<number>;
 
     startMediaRenderingTracing(): Promise<number>;
 
@@ -819,7 +815,7 @@ export interface IRtcEngine {
 
     isFeatureAvailableOnDevice(type: FeatureType): Promise<boolean>;
 
-    sendAudioMetadata(metadata: Uint8Array, length: number): Promise<number>;
+    sendAudioMetadata(metadata: ArrayBuffer): Promise<number>;
 
     queryHDRCapability(videoModule: VIDEO_MODULE_TYPE): Promise<{ errorCode: number; capability: HDR_CAPABILITY }>;
 }

@@ -8,21 +8,6 @@ struct GetCacheDirResult {
     std::string path;
 };
 
-struct GetMaxCacheFileCountResult {
-    int errorCode;
-    int count;
-};
-
-struct GetMaxCacheFileSizeResult {
-    int errorCode;
-    int64_t cacheSize;
-};
-
-struct GetCacheFileCountResult {
-    int errorCode;
-    int count;
-};
-
 class MediaPlayerCacheManagerBridge {
 public:
     explicit MediaPlayerCacheManagerBridge(agora::rtc::IMediaPlayerCacheManager *cacheManager);
@@ -39,10 +24,10 @@ public:
     int setMaxCacheFileCount(int count);
     int setMaxCacheFileSize(int64_t cacheSize);
     int enableAutoRemoveCache(bool enable);
-    GetCacheDirResult getCacheDir(int length);
-    GetMaxCacheFileCountResult getMaxCacheFileCount();
-    GetMaxCacheFileSizeResult getMaxCacheFileSize();
-    GetCacheFileCountResult getCacheFileCount();
+    GetCacheDirResult getCacheDir();
+    int getMaxCacheFileCount();
+    int64_t getMaxCacheFileSize();
+    int getCacheFileCount();
 
 private:
     agora::rtc::IMediaPlayerCacheManager *_cacheManager{nullptr};

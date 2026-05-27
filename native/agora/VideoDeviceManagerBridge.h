@@ -17,11 +17,11 @@ struct VideoDeviceCapabilityResult {
 
 class VideoDeviceManagerBridge {
 public:
-    explicit VideoDeviceManagerBridge(agora::agora_refptr<agora::rtc::IVideoDeviceManager> videoDeviceManager);
+    explicit VideoDeviceManagerBridge(agora::rtc::IVideoDeviceManager *videoDeviceManager);
     ~VideoDeviceManagerBridge();
 
     bool hasVideoDeviceManager() const;
-    agora::agora_refptr<agora::rtc::IVideoDeviceManager> videoDeviceManager() const;
+    agora::rtc::IVideoDeviceManager *videoDeviceManager() const;
     void invalidate();
 
     std::shared_ptr<VideoDeviceCollectionBridge> enumerateVideoDevices();
@@ -31,9 +31,8 @@ public:
     VideoDeviceCapabilityResult getCapability(const std::string &deviceId, uint32_t deviceCapabilityNumber);
     int startDeviceTest(agora::view_t hwnd);
     int stopDeviceTest();
-    void release();
 
 private:
-    agora::agora_refptr<agora::rtc::IVideoDeviceManager> _videoDeviceManager;
+    agora::rtc::IVideoDeviceManager *_videoDeviceManager{nullptr};
     std::shared_ptr<VideoDeviceCollectionBridge> _videoDeviceCollection;
 };

@@ -2,8 +2,7 @@
 
 #include "AgoraBase.h"
 
-VideoDeviceManagerBridge::VideoDeviceManagerBridge(
-    agora::agora_refptr<agora::rtc::IVideoDeviceManager> videoDeviceManager)
+VideoDeviceManagerBridge::VideoDeviceManagerBridge(agora::rtc::IVideoDeviceManager *videoDeviceManager)
     : _videoDeviceManager(videoDeviceManager) {}
 
 VideoDeviceManagerBridge::~VideoDeviceManagerBridge() {
@@ -11,10 +10,10 @@ VideoDeviceManagerBridge::~VideoDeviceManagerBridge() {
 }
 
 bool VideoDeviceManagerBridge::hasVideoDeviceManager() const {
-    return _videoDeviceManager.get() != nullptr;
+    return _videoDeviceManager != nullptr;
 }
 
-agora::agora_refptr<agora::rtc::IVideoDeviceManager> VideoDeviceManagerBridge::videoDeviceManager() const {
+agora::rtc::IVideoDeviceManager *VideoDeviceManagerBridge::videoDeviceManager() const {
     return _videoDeviceManager;
 }
 
@@ -23,7 +22,7 @@ void VideoDeviceManagerBridge::invalidate() {
         _videoDeviceCollection->invalidate();
         _videoDeviceCollection.reset();
     }
-    if (_videoDeviceCollection) {
+    if (_videoDeviceManager) {
         _videoDeviceManager->release();
         _videoDeviceManager = nullptr;
     }

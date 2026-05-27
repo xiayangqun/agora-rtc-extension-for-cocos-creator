@@ -2,7 +2,7 @@
 
 #include "AgoraBase.h"
 
-MediaEngineBridge::MediaEngineBridge(agora::agora_refptr<agora::media::IMediaEngine> mediaEngine)
+MediaEngineBridge::MediaEngineBridge(agora::media::IMediaEngine *mediaEngine)
     : _mediaEngine(mediaEngine) {}
 
 MediaEngineBridge::~MediaEngineBridge() {
@@ -10,15 +10,15 @@ MediaEngineBridge::~MediaEngineBridge() {
 }
 
 bool MediaEngineBridge::hasMediaEngine() const {
-    return _mediaEngine.get() != nullptr;
+    return _mediaEngine != nullptr;
 }
 
-agora::agora_refptr<agora::media::IMediaEngine> MediaEngineBridge::mediaEngine() const {
+agora::media::IMediaEngine *MediaEngineBridge::mediaEngine() const {
     return _mediaEngine;
 }
 
 void MediaEngineBridge::invalidate() {
-    _mediaEngine = nullptr;
+    release();
 }
 
 // int MediaEngineBridge::registerAudioFrameObserver(agora::media::IAudioFrameObserver *observer) {
@@ -109,5 +109,6 @@ int MediaEngineBridge::removeVideoFrameRenderer(agora::media::IVideoFrameObserve
 }
 
 void MediaEngineBridge::release() {
-    _mediaEngine.reset();
+    if (_mediaEngine) { _mediaEngine->release(); }
+    _mediaEngine = nullptr;
 }

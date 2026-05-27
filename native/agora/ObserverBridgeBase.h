@@ -17,8 +17,8 @@ public:
     se::Object *eventHandler() const;
 
 protected:
-    void callHandler(const std::shared_ptr<ObserverBridgeBase> &owner,
-                     const char *method, const se::ValueArray &args);
+    static void callHandler(const std::shared_ptr<ObserverBridgeBase> &owner,
+                            const char *method, const se::ValueArray &args);
     static bool isScriptEngineValid();
 
     static void pushArg(se::ValueArray &args, const se::Value &value);

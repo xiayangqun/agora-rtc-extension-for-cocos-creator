@@ -12,7 +12,7 @@ public:
     agora::agora_refptr<agora::rtc::IMusicPlayer> musicPlayer() const;
 
     void invalidate() override;
-    int open(int64_t songCode, int64_t startPos = 0);
+    int openWithSongCode(int64_t songCode, int64_t startPos = 0);
     int setPlayMode(agora::rtc::MusicPlayMode mode);
 
 private:

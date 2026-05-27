@@ -14,7 +14,6 @@ public:
     unsigned int getCount();
     //todo jsb manual
     agora::rtc::ScreenCaptureSourceInfo getSourceInfo(unsigned int index);
-    void invalidate();
 
 private:
     agora::rtc::IScreenCaptureSourceList *_list{nullptr};

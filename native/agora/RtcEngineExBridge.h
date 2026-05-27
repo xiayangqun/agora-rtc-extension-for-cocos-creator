@@ -30,7 +30,7 @@ struct AgoraRtcNativeContext {
 };
 
 struct GetVersionResult {
-    int errorCode;
+    std::string version;
     int build;
 };
 
@@ -71,7 +71,6 @@ struct GetUserInfoResult {
 
 struct QueryCameraFocalLengthCapabilityResult {
     int errorCode;
-    int size;
     std::vector<agora::rtc::FocalLengthInfo> focalLengthInfos;
 };
 
@@ -85,13 +84,18 @@ struct CreateDataStreamResult {
     int streamId;
 };
 
+struct UploadLogFileResult {
+    int errorCode;
+    std::string requestId;
+};
+
 class RtcEngineExBridge {
 public:
     RtcEngineExBridge();
     ~RtcEngineExBridge();
     void release(bool sync);
     //todo jsb manual
-    int initialize(const RtcEngineContext &context, se::Object *eventHandler);
+    int initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler);
 
     //todo jsb manual
     std::shared_ptr<AudioDeviceManagerBridge> getAudioDeviceManager();
@@ -263,7 +267,7 @@ public:
     int setLogFilter(unsigned int filter);
     int setLogLevel(agora::commons::LOG_LEVEL level);
     int setLogFileSize(unsigned int fileSizeInKBytes);
-    int uploadLogFile(const std::string &requestId, const std::string &filePath);
+    UploadLogFileResult uploadLogFile();
     int writeLog(agora::commons::LOG_LEVEL level, const std::string &fmt);
     int setLocalRenderMode(agora::media::base::RENDER_MODE_TYPE renderMode,
                            agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode);
@@ -310,7 +314,7 @@ public:
     GetExtensionPropertyResult getExtensionProperty(const std::string &provider, const std::string &extension,
                                                     const agora::rtc::ExtensionInfo &extensionInfo,
                                                     const std::string &key);
-    int enableLoopbackRecording(bool enabled);
+    int enableLoopbackRecording(bool enabled, const std::string &deviceName);
     int adjustLoopbackSignalVolume(int volume);
     int getLoopbackRecordingVolume();
     int enableInEarMonitoring(bool enabled, int includeAudioFilters);
@@ -374,8 +378,7 @@ public:
 #endif
     int queryScreenCaptureCapability();
 
-    QueryCameraFocalLengthCapabilityResult queryCameraFocalLengthCapability(
-        agora::rtc::FocalLengthInfo *focalLengthInfos, int &size);
+    QueryCameraFocalLengthCapabilityResult queryCameraFocalLengthCapability(int &size);
     int setExternalMediaProjection(void *mediaProjection);
     int setScreenCaptureScenario(agora::rtc::SCREEN_SCENARIO_TYPE screenScenario);
     int stopScreenCapture();
@@ -393,11 +396,13 @@ public:
     int startLocalAudioMixer(const agora::rtc::LocalAudioMixerConfiguration &config);
     int updateLocalAudioMixerConfiguration(const agora::rtc::LocalAudioMixerConfiguration &config);
     int stopLocalAudioMixer();
-    int startCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
+    int startCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType,
+                           const agora::rtc::CameraCapturerConfiguration &config);
     int stopCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
     int setCameraDeviceOrientation(agora::rtc::VIDEO_SOURCE_TYPE type, agora::rtc::VIDEO_ORIENTATION orientation);
     int setScreenCaptureOrientation(agora::rtc::VIDEO_SOURCE_TYPE type, agora::rtc::VIDEO_ORIENTATION orientation);
-    int startScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
+    int startScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType,
+                           const agora::rtc::ScreenCaptureConfiguration &config);
     int stopScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType);
     int getConnectionState();
 
@@ -414,9 +419,9 @@ public:
 
     CreateDataStreamResult createDataStream(bool reliable, bool ordered);
     CreateDataStreamResult createDataStream(const agora::rtc::DataStreamConfig &config);
-    int sendStreamMessage(int streamId, const std::string &data);
-    int sendRdtMessage(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data);
-    int sendMediaControlMessage(agora::rtc::uid_t uid, const std::string &data);
+    int sendStreamMessage(int streamId, const void *data, size_t length);
+    int sendRdtMessage(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const void *data, size_t length);
+    int sendMediaControlMessage(agora::rtc::uid_t uid, const void *data, size_t length);
     int addVideoWatermark(const agora::rtc::RtcImage &watermark);
     int addVideoWatermark(const std::string &watermarkUrl, const agora::rtc::WatermarkOptions &options);
     int addVideoWatermark(const agora::rtc::WatermarkConfig &configs);
@@ -476,7 +481,7 @@ public:
     int enableInstantMediaRendering();
     uint64_t getNtpWallTimeInMs();
     bool isFeatureAvailableOnDevice(agora::rtc::FeatureType type);
-    int sendAudioMetadata(const std::string &metadata);
+    int sendAudioMetadata(const void *metadata, size_t length);
     QueryHDRCapabilityResult queryHDRCapability(agora::rtc::VIDEO_MODULE_TYPE videoModule);
     int joinChannelEx(const std::string &token, const agora::rtc::RtcConnection &connection,
                       const agora::rtc::ChannelMediaOptions &options);
@@ -515,7 +520,8 @@ public:
     int setRemoteRenderModeEx(agora::rtc::uid_t uid, agora::media::base::RENDER_MODE_TYPE renderMode,
                               agora::rtc::VIDEO_MIRROR_MODE_TYPE mirrorMode,
                               const agora::rtc::RtcConnection &connection);
-    int enableLoopbackRecordingEx(const agora::rtc::RtcConnection &connection, bool enabled);
+    int enableLoopbackRecordingEx(const agora::rtc::RtcConnection &connection, bool enabled,
+                                  const std::string &deviceName);
     int adjustRecordingSignalVolumeEx(int volume, const agora::rtc::RtcConnection &connection);
     int muteRecordingSignalEx(bool mute, const agora::rtc::RtcConnection &connection);
     int adjustUserPlaybackSignalVolumeEx(agora::rtc::uid_t uid, int volume,
@@ -526,10 +532,10 @@ public:
     CreateDataStreamResult createDataStreamEx(bool reliable, bool ordered, const agora::rtc::RtcConnection &connection);
     CreateDataStreamResult createDataStreamEx(const agora::rtc::DataStreamConfig &config,
                                               const agora::rtc::RtcConnection &connection);
-    int sendStreamMessageEx(int streamId, const std::string &data, const agora::rtc::RtcConnection &connection);
-    int sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data,
+    int sendStreamMessageEx(int streamId, const void *data, size_t length, const agora::rtc::RtcConnection &connection);
+    int sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const void *data, size_t length,
                          const agora::rtc::RtcConnection &connection);
-    int sendMediaControlMessageEx(agora::rtc::uid_t uid, const std::string &data,
+    int sendMediaControlMessageEx(agora::rtc::uid_t uid, const void *data, size_t length,
                                   const agora::rtc::RtcConnection &connection);
     int addVideoWatermarkEx(const std::string &watermarkUrl, const agora::rtc::WatermarkOptions &options,
                             const agora::rtc::RtcConnection &connection);
@@ -575,7 +581,7 @@ public:
     int setParametersEx(const agora::rtc::RtcConnection &connection, const std::string &parameters);
 
     GetCallIdResult getCallIdEx(const agora::rtc::RtcConnection &connection);
-    int sendAudioMetadataEx(const agora::rtc::RtcConnection &connection, const std::string &metadata);
+    int sendAudioMetadataEx(const agora::rtc::RtcConnection &connection, const void *metadata, size_t length);
     int preloadEffectEx(const agora::rtc::RtcConnection &connection, int soundId, const std::string &filePath,
                         int startPos);
     int playEffectEx(const agora::rtc::RtcConnection &connection, int soundId, const std::string &filePath,

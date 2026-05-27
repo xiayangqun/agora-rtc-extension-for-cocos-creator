@@ -109,14 +109,14 @@ void RtcEngineExBridge::releaseVideoEffects() {
     _videoEffects.clear();
 }
 
-int RtcEngineExBridge::initialize(const RtcEngineContext &context, se::Object *eventHandler) {
+int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler) {
     release(true);
     _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngine());
     if (_engine == nullptr) { return -1; }
     _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
-    agora::rtc::RtcEngineContext rtcContext;
-    context.eventHandler = _eventHandler.get();
-    return _engine->initialize(context);
+    agora::rtc::RtcEngineContext rtcContext = context;
+    rtcContext.eventHandler = _eventHandler.get();
+    return _engine->initialize(rtcContext);
 }
 
 std::shared_ptr<AudioDeviceManagerBridge> RtcEngineExBridge::getAudioDeviceManager() {
@@ -137,8 +137,7 @@ std::shared_ptr<VideoDeviceManagerBridge> RtcEngineExBridge::getVideoDeviceManag
         agora::rtc::IVideoDeviceManager *rawPtr = nullptr;
         _engine->queryInterface(agora::rtc::AGORA_IID_VIDEO_DEVICE_MANAGER, reinterpret_cast<void **>(&rawPtr));
         if (!rawPtr) { return nullptr; }
-        _videoDeviceManager =
-            std::make_shared<VideoDeviceManagerBridge>(agora::agora_refptr<agora::rtc::IVideoDeviceManager>(rawPtr));
+        _videoDeviceManager = std::make_shared<VideoDeviceManagerBridge>(rawPtr);
     }
     return _videoDeviceManager;
 }
@@ -149,8 +148,7 @@ std::shared_ptr<MusicContentCenterBridge> RtcEngineExBridge::getMusicContentCent
         agora::rtc::IMusicContentCenter *rawPtr = nullptr;
         _engine->queryInterface(agora::rtc::AGORA_IID_MUSIC_CONTENT_CENTER, reinterpret_cast<void **>(&rawPtr));
         if (!rawPtr) { return nullptr; }
-        _musicContentCenter =
-            std::make_shared<MusicContentCenterBridge>(agora::agora_refptr<agora::rtc::IMusicContentCenter>(rawPtr));
+        _musicContentCenter = std::make_shared<MusicContentCenterBridge>(rawPtr);
     }
     return _musicContentCenter;
 }
@@ -170,6 +168,9 @@ std::shared_ptr<LocalSpatialAudioEngineBridge> RtcEngineExBridge::getLocalSpatia
         agora::rtc::ILocalSpatialAudioEngine *rawPtr = nullptr;
         _engine->queryInterface(agora::rtc::AGORA_IID_LOCAL_SPATIAL_AUDIO, reinterpret_cast<void **>(&rawPtr));
         if (!rawPtr) { return nullptr; }
+        agora::rtc::LocalSpatialAudioConfig config{};
+        config.rtcEngine = _engine;
+        rawPtr->initialize(config);
         _localSpatialAudioEngine = std::make_shared<LocalSpatialAudioEngineBridge>(
             agora::agora_refptr<agora::rtc::ILocalSpatialAudioEngine>(rawPtr));
     }
@@ -190,13 +191,9 @@ std::shared_ptr<H265TranscoderBridge> RtcEngineExBridge::getH265Transcoder() {
 
 GetVersionResult RtcEngineExBridge::getVersion() {
     GetVersionResult result{};
-    if (_engine == nullptr) {
-        result.errorCode = -agora::ERR_NOT_INITIALIZED;
-        return result;
-    }
+    if (_engine == nullptr) { return result; }
     int build = 0;
-    _engine->getVersion(&build);
-    result.errorCode = 0;
+    result.version = _engine->getVersion(&build);
     result.build = build;
     return result;
 }
@@ -941,12 +938,11 @@ int RtcEngineExBridge::setLogFileSize(unsigned int fileSizeInKBytes) {
     return _engine->setLogFileSize(fileSizeInKBytes);
 }
 
-int RtcEngineExBridge::uploadLogFile(const std::string &requestId, const std::string &filePath) {
-    (void)requestId;
-    (void)filePath;
-    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+UploadLogFileResult RtcEngineExBridge::uploadLogFile() {
+    if (_engine == nullptr) { return {-agora::ERR_NOT_INITIALIZED, ""}; }
     agora::util::AString sdkRequestId;
-    return _engine->uploadLogFile(sdkRequestId);
+    int result = _engine->uploadLogFile(sdkRequestId);
+    return {result, sdkRequestId->c_str() != nullptr ? sdkRequestId->c_str() : ""};
 }
 
 int RtcEngineExBridge::writeLog(agora::commons::LOG_LEVEL level, const std::string &fmt) {
@@ -1063,16 +1059,6 @@ int RtcEngineExBridge::disableAudioSpectrumMonitor() {
     return _engine->disableAudioSpectrumMonitor();
 }
 
-int RtcEngineExBridge::registerAudioSpectrumObserver() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
-}
-
-int RtcEngineExBridge::unregisterAudioSpectrumObserver() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
-}
-
 int RtcEngineExBridge::adjustRecordingSignalVolume(int volume) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->adjustRecordingSignalVolume(volume);
@@ -1135,9 +1121,9 @@ GetExtensionPropertyResult RtcEngineExBridge::getExtensionProperty(const std::st
     return result;
 }
 
-int RtcEngineExBridge::enableLoopbackRecording(bool enabled) {
+int RtcEngineExBridge::enableLoopbackRecording(bool enabled, const std::string &deviceName) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->enableLoopbackRecording(enabled);
+    return _engine->enableLoopbackRecording(enabled, deviceName.empty() ? nullptr : deviceName.c_str());
 }
 
 int RtcEngineExBridge::adjustLoopbackSignalVolume(int volume) {
@@ -1192,26 +1178,6 @@ int RtcEngineExBridge::enableExtension(const std::string &provider, const std::s
 int RtcEngineExBridge::setCameraCapturerConfiguration(const agora::rtc::CameraCapturerConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setCameraCapturerConfiguration(config);
-}
-
-int RtcEngineExBridge::createCustomVideoTrack() {
-    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->createCustomVideoTrack();
-}
-
-int RtcEngineExBridge::createCustomEncodedVideoTrack() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
-}
-
-int RtcEngineExBridge::destroyCustomVideoTrack() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
-}
-
-int RtcEngineExBridge::destroyCustomEncodedVideoTrack() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
 }
 
 int RtcEngineExBridge::switchCamera() {
@@ -1408,23 +1374,28 @@ int RtcEngineExBridge::queryScreenCaptureCapability() {
 #endif
 }
 
-QueryCameraFocalLengthCapabilityResult RtcEngineExBridge::queryCameraFocalLengthCapability(
-    agora::rtc::FocalLengthInfo *focalLengthInfos, int &size) {
+QueryCameraFocalLengthCapabilityResult RtcEngineExBridge::queryCameraFocalLengthCapability(int &size) {
     QueryCameraFocalLengthCapabilityResult result{};
     if (_engine == nullptr) {
         result.errorCode = -agora::ERR_NOT_INITIALIZED;
         return result;
     }
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS)
+    if (size < 0) {
+        result.errorCode = -agora::ERR_INVALID_ARGUMENT;
+        return result;
+    }
+    result.focalLengthInfos.resize(static_cast<size_t>(size));
+    auto *focalLengthInfos = result.focalLengthInfos.empty() ? nullptr : result.focalLengthInfos.data();
     result.errorCode = _engine->queryCameraFocalLengthCapability(focalLengthInfos, size);
-    result.size = size;
-    if (focalLengthInfos != nullptr && size > 0) {
-        result.focalLengthInfos.assign(focalLengthInfos, focalLengthInfos + size);
+    if (result.errorCode == 0 && size >= 0 &&
+        static_cast<size_t>(size) < result.focalLengthInfos.size()) {
+        // Shrink result.focalLengthInfos to size, so the structure contains no redundant invalid data.
+        result.focalLengthInfos.resize(static_cast<size_t>(size));
     }
 #else
-    (void)focalLengthInfos;
+    (void)size;
     result.errorCode = -agora::ERR_NOT_SUPPORTED;
-    result.size = 0;
 #endif
     return result;
 }
@@ -1517,9 +1488,9 @@ int RtcEngineExBridge::stopLocalAudioMixer() {
     return _engine->stopLocalAudioMixer();
 }
 
-int RtcEngineExBridge::startCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
+int RtcEngineExBridge::startCameraCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType,
+                                          const agora::rtc::CameraCapturerConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    agora::rtc::CameraCapturerConfiguration config;
     return _engine->startCameraCapture(sourceType, config);
 }
 
@@ -1540,9 +1511,9 @@ int RtcEngineExBridge::setScreenCaptureOrientation(agora::rtc::VIDEO_SOURCE_TYPE
     return _engine->setScreenCaptureOrientation(type, orientation);
 }
 
-int RtcEngineExBridge::startScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
+int RtcEngineExBridge::startScreenCapture(agora::rtc::VIDEO_SOURCE_TYPE sourceType,
+                                          const agora::rtc::ScreenCaptureConfiguration &config) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    agora::rtc::ScreenCaptureConfiguration config;
     return _engine->startScreenCapture(sourceType, config);
 }
 
@@ -1586,19 +1557,20 @@ CreateDataStreamResult RtcEngineExBridge::createDataStream(const agora::rtc::Dat
     return result;
 }
 
-int RtcEngineExBridge::sendStreamMessage(int streamId, const std::string &data) {
+int RtcEngineExBridge::sendStreamMessage(int streamId, const void *data, size_t length) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendStreamMessage(streamId, data.c_str(), data.size());
+    return _engine->sendStreamMessage(streamId, static_cast<const char *>(data), length);
 }
 
-int RtcEngineExBridge::sendRdtMessage(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data) {
+int RtcEngineExBridge::sendRdtMessage(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const void *data,
+                                      size_t length) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendRdtMessage(uid, type, data.c_str(), data.size());
+    return _engine->sendRdtMessage(uid, type, static_cast<const char *>(data), length);
 }
 
-int RtcEngineExBridge::sendMediaControlMessage(agora::rtc::uid_t uid, const std::string &data) {
+int RtcEngineExBridge::sendMediaControlMessage(agora::rtc::uid_t uid, const void *data, size_t length) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendMediaControlMessage(uid, data.c_str(), data.size());
+    return _engine->sendMediaControlMessage(uid, static_cast<const char *>(data), length);
 }
 
 int RtcEngineExBridge::addVideoWatermark(const agora::rtc::RtcImage &watermark) {
@@ -1645,16 +1617,6 @@ int RtcEngineExBridge::sendCustomReportMessage(const std::string &id, const std:
                                                const std::string &event, const std::string &label, int value) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->sendCustomReportMessage(id.c_str(), category.c_str(), event.c_str(), label.c_str(), value);
-}
-
-int RtcEngineExBridge::registerMediaMetadataObserver() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
-}
-
-int RtcEngineExBridge::unregisterMediaMetadataObserver() {
-    (void)_engine;
-    return -agora::ERR_NOT_SUPPORTED;
 }
 
 int RtcEngineExBridge::startAudioFrameDump(const std::string &channelId, agora::rtc::uid_t uid) {
@@ -1860,9 +1822,9 @@ bool RtcEngineExBridge::isFeatureAvailableOnDevice(agora::rtc::FeatureType type)
     return _engine->isFeatureAvailableOnDevice(type);
 }
 
-int RtcEngineExBridge::sendAudioMetadata(const std::string &metadata) {
+int RtcEngineExBridge::sendAudioMetadata(const void *metadata, size_t length) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendAudioMetadata(metadata.c_str(), metadata.size());
+    return _engine->sendAudioMetadata(static_cast<const char *>(metadata), length);
 }
 
 QueryHDRCapabilityResult RtcEngineExBridge::queryHDRCapability(agora::rtc::VIDEO_MODULE_TYPE videoModule) {
@@ -2013,9 +1975,10 @@ int RtcEngineExBridge::setRemoteRenderModeEx(agora::rtc::uid_t uid, agora::media
     return _engine->setRemoteRenderModeEx(uid, renderMode, mirrorMode, connection);
 }
 
-int RtcEngineExBridge::enableLoopbackRecordingEx(const agora::rtc::RtcConnection &connection, bool enabled) {
+int RtcEngineExBridge::enableLoopbackRecordingEx(const agora::rtc::RtcConnection &connection, bool enabled,
+                                                 const std::string &deviceName) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->enableLoopbackRecordingEx(connection, enabled);
+    return _engine->enableLoopbackRecordingEx(connection, enabled, deviceName.empty() ? nullptr : deviceName.c_str());
 }
 
 int RtcEngineExBridge::adjustRecordingSignalVolumeEx(int volume, const agora::rtc::RtcConnection &connection) {
@@ -2067,22 +2030,23 @@ CreateDataStreamResult RtcEngineExBridge::createDataStreamEx(const agora::rtc::D
     return result;
 }
 
-int RtcEngineExBridge::sendStreamMessageEx(int streamId, const std::string &data,
+int RtcEngineExBridge::sendStreamMessageEx(int streamId, const void *data, size_t length,
                                            const agora::rtc::RtcConnection &connection) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendStreamMessageEx(streamId, data.c_str(), data.size(), connection);
+    return _engine->sendStreamMessageEx(streamId, static_cast<const char *>(data), length, connection);
 }
 
-int RtcEngineExBridge::sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const std::string &data,
+int RtcEngineExBridge::sendRdtMessageEx(agora::rtc::uid_t uid, agora::rtc::RdtStreamType type, const void *data,
+                                        size_t length,
                                         const agora::rtc::RtcConnection &connection) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendRdtMessageEx(uid, type, data.c_str(), data.size(), connection);
+    return _engine->sendRdtMessageEx(uid, type, static_cast<const char *>(data), length, connection);
 }
 
-int RtcEngineExBridge::sendMediaControlMessageEx(agora::rtc::uid_t uid, const std::string &data,
+int RtcEngineExBridge::sendMediaControlMessageEx(agora::rtc::uid_t uid, const void *data, size_t length,
                                                  const agora::rtc::RtcConnection &connection) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendMediaControlMessageEx(uid, data.c_str(), data.size(), connection);
+    return _engine->sendMediaControlMessageEx(uid, static_cast<const char *>(data), length, connection);
 }
 
 int RtcEngineExBridge::addVideoWatermarkEx(const std::string &watermarkUrl, const agora::rtc::WatermarkOptions &options,
@@ -2255,9 +2219,10 @@ GetCallIdResult RtcEngineExBridge::getCallIdEx(const agora::rtc::RtcConnection &
     return result;
 }
 
-int RtcEngineExBridge::sendAudioMetadataEx(const agora::rtc::RtcConnection &connection, const std::string &metadata) {
+int RtcEngineExBridge::sendAudioMetadataEx(const agora::rtc::RtcConnection &connection, const void *metadata,
+                                           size_t length) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->sendAudioMetadataEx(connection, metadata.c_str(), metadata.size());
+    return _engine->sendAudioMetadataEx(connection, static_cast<const char *>(metadata), length);
 }
 
 int RtcEngineExBridge::preloadEffectEx(const agora::rtc::RtcConnection &connection, int soundId,

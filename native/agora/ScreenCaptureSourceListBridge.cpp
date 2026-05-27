@@ -15,10 +15,6 @@ void ScreenCaptureSourceListBridge::setList(agora::rtc::IScreenCaptureSourceList
     _list = list;
 }
 
-void ScreenCaptureSourceListBridge::invalidate() {
-    _list = nullptr;
-}
-
 unsigned int ScreenCaptureSourceListBridge::getCount() {
     if (!_list) { return 0; }
     return _list->getCount();

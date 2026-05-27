@@ -12,7 +12,7 @@ MediaRecorderBridge::~MediaRecorderBridge() {
 }
 
 bool MediaRecorderBridge::hasMediaRecorder() const {
-    return _mediaRecorder != nullptr;
+    return _mediaRecorder.get() != nullptr;
 }
 
 agora::agora_refptr<agora::rtc::IMediaRecorder> MediaRecorderBridge::mediaRecorder() const {

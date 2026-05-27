@@ -7,8 +7,7 @@
 #include "AgoraBase.h"
 #include "bindings/jswrapper/SeApi.h"
 
-MusicContentCenterBridge::MusicContentCenterBridge(
-    agora::agora_refptr<agora::rtc::IMusicContentCenter> musicContentCenter)
+MusicContentCenterBridge::MusicContentCenterBridge(agora::rtc::IMusicContentCenter *musicContentCenter)
     : _musicContentCenter(musicContentCenter) {}
 
 MusicContentCenterBridge::~MusicContentCenterBridge() = default;
@@ -17,7 +16,7 @@ bool MusicContentCenterBridge::hasMusicContentCenter() const {
     return _musicContentCenter != nullptr;
 }
 
-agora::agora_refptr<agora::rtc::IMusicContentCenter> MusicContentCenterBridge::musicContentCenter() const {
+agora::rtc::IMusicContentCenter *MusicContentCenterBridge::musicContentCenter() const {
     return _musicContentCenter;
 }
 
@@ -29,12 +28,11 @@ void MusicContentCenterBridge::invalidate() {
     }
     for (auto &player : _musicPlayers) {
         if (player) {
-            if (_musicContentCenter) { _musicContentCenter->destroyMusicPlayer(musicPlayer->musicPlayer()); }
-            musicPlayer->invalidate();
+            if (_musicContentCenter) { _musicContentCenter->destroyMusicPlayer(player->musicPlayer()); }
+            player->invalidate();
         }
     }
     _musicPlayers.clear();
-    _musicContentCenter = nullptr;
 }
 
 int MusicContentCenterBridge::initialize(const agora::rtc::MusicContentCenterConfiguration &configuration) {
@@ -45,10 +43,6 @@ int MusicContentCenterBridge::initialize(const agora::rtc::MusicContentCenterCon
 int MusicContentCenterBridge::renewToken(const std::string &token) {
     if (!_musicContentCenter) { return -agora::ERR_INVALID_ARGUMENT; }
     return _musicContentCenter->renewToken(token.c_str());
-}
-
-void MusicContentCenterBridge::release() {
-    _musicContentCenter = nullptr;
 }
 
 int MusicContentCenterBridge::registerEventHandler(se::Object *eventHandler) {
@@ -131,7 +125,7 @@ int MusicContentCenterBridge::preload(int64_t songCode, const std::string &jsonO
     return _musicContentCenter->preload(songCode, jsonOption.c_str());
 }
 
-MCCRequestResult MusicContentCenterBridge::preloadWithRequestId(int64_t songCode) {
+MCCRequestResult MusicContentCenterBridge::preload(int64_t songCode) {
     if (!_musicContentCenter) { return {-agora::ERR_INVALID_ARGUMENT, ""}; }
     agora::util::AString requestId;
     int ret = _musicContentCenter->preload(requestId, songCode);

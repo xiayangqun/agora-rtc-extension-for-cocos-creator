@@ -4,8 +4,6 @@ import type { RtcConnection } from "../types/AgoraRtcEngineEx";
 export interface ILocalSpatialAudioEngine {
     dispose(): Promise<void>;
 
-    initialize(): Promise<number>;
-
     updateRemotePosition(uid: number, posInfo: RemoteVoicePositionInfo): Promise<number>;
 
     updateRemotePositionEx(uid: number, posInfo: RemoteVoicePositionInfo, connection: RtcConnection): Promise<number>;
@@ -49,7 +47,7 @@ export interface ILocalSpatialAudioEngine {
 
     setRemoteAudioAttenuation(uid: number, attenuation: number, forceSet: boolean): Promise<number>;
 
-    setZones(zones: SpatialAudioZone[], zoneCount: number): Promise<number>;
+    setZones(zones: SpatialAudioZone[]): Promise<number>;
 
     setPlayerAttenuation(playerId: number, attenuation: number, forceSet: boolean): Promise<number>;
 

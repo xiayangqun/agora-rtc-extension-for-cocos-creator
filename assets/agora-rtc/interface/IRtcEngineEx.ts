@@ -64,13 +64,13 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     muteAllRemoteVideoStreamsEx(mute: boolean, connection: RtcConnection): Promise<number>;
 
-    setSubscribeAudioBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
+    setSubscribeAudioBlocklistEx(uidList: number[], connection: RtcConnection): Promise<number>;
 
-    setSubscribeAudioAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
+    setSubscribeAudioAllowlistEx(uidList: number[], connection: RtcConnection): Promise<number>;
 
-    setSubscribeVideoBlocklistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
+    setSubscribeVideoBlocklistEx(uidList: number[], connection: RtcConnection): Promise<number>;
 
-    setSubscribeVideoAllowlistEx(uidList: number[], uidNumber: number, connection: RtcConnection): Promise<number>;
+    setSubscribeVideoAllowlistEx(uidList: number[], connection: RtcConnection): Promise<number>;
 
     setRemoteVideoSubscriptionOptionsEx(
         uid: number,
@@ -116,22 +116,11 @@ export interface IRtcEngineEx extends IRtcEngine {
         connection: RtcConnection,
     ): Promise<{ streamId: number; errorCode: number }>;
 
-    sendStreamMessageEx(
-        streamId: number,
-        data: ArrayBuffer,
-        length: number,
-        connection: RtcConnection,
-    ): Promise<number>;
+    sendStreamMessageEx(streamId: number, data: ArrayBuffer, connection: RtcConnection): Promise<number>;
 
-    sendRdtMessageEx(
-        uid: number,
-        type: RdtStreamType,
-        data: string,
-        length: number,
-        connection: RtcConnection,
-    ): Promise<number>;
+    sendRdtMessageEx(uid: number, type: RdtStreamType, data: ArrayBuffer, connection: RtcConnection): Promise<number>;
 
-    sendMediaControlMessageEx(uid: number, data: string, length: number, connection: RtcConnection): Promise<number>;
+    sendMediaControlMessageEx(uid: number, data: ArrayBuffer, connection: RtcConnection): Promise<number>;
 
     addVideoWatermarkEx(watermarkUrl: string, options: WatermarkOptions, connection: RtcConnection): Promise<number>;
 
@@ -220,7 +209,7 @@ export interface IRtcEngineEx extends IRtcEngine {
 
     getCallIdEx(connection: RtcConnection): Promise<{ callId: string; errorCode: number }>;
 
-    sendAudioMetadataEx(connection: RtcConnection, metadata: Uint8Array, length: number): Promise<number>;
+    sendAudioMetadataEx(connection: RtcConnection, metadata: ArrayBuffer): Promise<number>;
 
     preloadEffectEx(connection: RtcConnection, soundId: number, filePath: string, startPos: number): Promise<number>;
 

@@ -68,23 +68,23 @@ GetPlaybackDeviceResult AudioDeviceManagerBridge::getPlaybackDevice() {
 }
 
 //todo 和 getRecordingDeviceInfo 一样的处理
-GetPlaybackDeviceInfoResult AudioDeviceManagerBridge::getPlaybackDeviceInfo(const std::string &deviceId) {
-    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, ""}; }
-    char deviceIdBuf[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+GetPlaybackDeviceInfoResult AudioDeviceManagerBridge::getPlaybackDeviceInfo() {
+    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
+    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    snprintf(deviceIdBuf, sizeof(deviceIdBuf), "%s", deviceId.c_str());
-    int ret = _audioDeviceManager->getPlaybackDeviceInfo(deviceIdBuf, deviceName);
-    return {ret, std::string(deviceName)};
+    int ret = _audioDeviceManager->getPlaybackDevice(deviceId);
+    if (ret == 0) { ret = _audioDeviceManager->getPlaybackDeviceInfo(deviceId, deviceName); }
+    return {ret, std::string(deviceId), std::string(deviceName)};
 }
 
-GetPlaybackDeviceInfoExResult AudioDeviceManagerBridge::getPlaybackDeviceInfoEx(const std::string &deviceId) {
-    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
-    char deviceIdBuf[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+GetPlaybackDeviceInfoExResult AudioDeviceManagerBridge::getPlaybackDeviceInfoEx() {
+    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", "", ""}; }
+    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceTypeName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    snprintf(deviceIdBuf, sizeof(deviceIdBuf), "%s", deviceId.c_str());
-    int ret = _audioDeviceManager->getPlaybackDeviceInfo(deviceIdBuf, deviceName, deviceTypeName);
-    return {ret, std::string(deviceName), std::string(deviceTypeName)};
+    int ret = _audioDeviceManager->getPlaybackDevice(deviceId);
+    if (ret == 0) { ret = _audioDeviceManager->getPlaybackDeviceInfo(deviceId, deviceName, deviceTypeName); }
+    return {ret, std::string(deviceId), std::string(deviceName), std::string(deviceTypeName)};
 }
 
 int AudioDeviceManagerBridge::setPlaybackDeviceVolume(int volume) {
@@ -111,24 +111,23 @@ GetRecordingDeviceResult AudioDeviceManagerBridge::getRecordingDevice() {
     return {ret, std::string(deviceId)};
 }
 
-//todo jsbing里设置名字为getRecordingDeviceInfo，然后先尝试调用getRecordingDeviceInfoEx，再尝试调用 getRecordingDeviceInfo
-GetRecordingDeviceInfoResult AudioDeviceManagerBridge::getRecordingDeviceInfo(const std::string &deviceId) {
-    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, ""}; }
-    char deviceIdBuf[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+GetRecordingDeviceInfoResult AudioDeviceManagerBridge::getRecordingDeviceInfo() {
+    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
+    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    snprintf(deviceIdBuf, sizeof(deviceIdBuf), "%s", deviceId.c_str());
-    int ret = _audioDeviceManager->getRecordingDeviceInfo(deviceIdBuf, deviceName);
-    return {ret, std::string(deviceName)};
+    int ret = _audioDeviceManager->getRecordingDevice(deviceId);
+    if (ret == 0) { ret = _audioDeviceManager->getRecordingDeviceInfo(deviceId, deviceName); }
+    return {ret, std::string(deviceId), std::string(deviceName)};
 }
 
-GetRecordingDeviceInfoExResult AudioDeviceManagerBridge::getRecordingDeviceInfoEx(const std::string &deviceId) {
-    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
-    char deviceIdBuf[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+GetRecordingDeviceInfoExResult AudioDeviceManagerBridge::getRecordingDeviceInfoEx() {
+    if (!_audioDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, "", "", ""}; }
+    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
     char deviceTypeName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    snprintf(deviceIdBuf, sizeof(deviceIdBuf), "%s", deviceId.c_str());
-    int ret = _audioDeviceManager->getRecordingDeviceInfo(deviceIdBuf, deviceName, deviceTypeName);
-    return {ret, std::string(deviceName), std::string(deviceTypeName)};
+    int ret = _audioDeviceManager->getRecordingDevice(deviceId);
+    if (ret == 0) { ret = _audioDeviceManager->getRecordingDeviceInfo(deviceId, deviceName, deviceTypeName); }
+    return {ret, std::string(deviceId), std::string(deviceName), std::string(deviceTypeName)};
 }
 
 int AudioDeviceManagerBridge::setRecordingDeviceVolume(int volume) {

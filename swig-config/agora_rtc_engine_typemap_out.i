@@ -149,3 +149,390 @@
     obj->setProperty("options", se::Value($1.options));
     s.rval().setObject(obj);
 %}
+
+// ─── RtcEngineExBridge.h ────────────────────────────────────────────────────
+
+// --- GetExtensionPropertyResult ----------------------------------------
+%ignore GetExtensionPropertyResult;
+%typemap(out) GetExtensionPropertyResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("value", se::Value($1.value));
+    s.rval().setObject(obj);
+%}
+
+// --- GetAudioDeviceInfoResult (RtcEngineExBridge) ----------------------
+%ignore GetAudioDeviceInfoResult;
+%typemap(out) GetAudioDeviceInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceInfo", se::Value($1.deviceInfo));
+    s.rval().setObject(obj);
+%}
+
+// --- GetCallIdResult ---------------------------------------------------
+%ignore GetCallIdResult;
+%typemap(out) GetCallIdResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("callId", se::Value($1.callId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetUserInfoResult -------------------------------------------------
+%ignore GetUserInfoResult;
+%typemap(out) GetUserInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("userInfo", se::Value($1.userInfo));
+    s.rval().setObject(obj);
+%}
+
+// --- QueryCameraFocalLengthCapabilityResult ----------------------------
+%ignore QueryCameraFocalLengthCapabilityResult;
+%typemap(out) QueryCameraFocalLengthCapabilityResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("size", se::Value($1.size));
+    se::Value tmp;
+    ok &= nativevalue_to_se($1.focalLengthInfos, tmp, s.thisObject());
+    obj->setProperty("focalLengthInfos", tmp);
+    s.rval().setObject(obj);
+%}
+
+// --- QueryHDRCapabilityResult ------------------------------------------
+%ignore QueryHDRCapabilityResult;
+%typemap(out) QueryHDRCapabilityResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("capability", se::Value($1.capability));
+    s.rval().setObject(obj);
+%}
+
+// --- CreateDataStreamResult --------------------------------------------
+%ignore CreateDataStreamResult;
+%typemap(out) CreateDataStreamResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("streamId", se::Value($1.streamId));
+    s.rval().setObject(obj);
+%}
+
+// ─── AudioDeviceManagerBridge.h ──────────────────────────────────────────────
+
+// --- GetPlaybackDeviceResult -------------------------------------------
+%ignore GetPlaybackDeviceResult;
+%typemap(out) GetPlaybackDeviceResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlaybackDeviceInfoResult ---------------------------------------
+%ignore GetPlaybackDeviceInfoResult;
+%typemap(out) GetPlaybackDeviceInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlaybackDeviceInfoExResult -------------------------------------
+%ignore GetPlaybackDeviceInfoExResult;
+%typemap(out) GetPlaybackDeviceInfoExResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    obj->setProperty("deviceTypeName", se::Value($1.deviceTypeName));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlaybackDeviceVolumeResult -------------------------------------
+%ignore GetPlaybackDeviceVolumeResult;
+%typemap(out) GetPlaybackDeviceVolumeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("volume", se::Value($1.volume));
+    s.rval().setObject(obj);
+%}
+
+// --- GetRecordingDeviceResult ------------------------------------------
+%ignore GetRecordingDeviceResult;
+%typemap(out) GetRecordingDeviceResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetRecordingDeviceInfoResult --------------------------------------
+%ignore GetRecordingDeviceInfoResult;
+%typemap(out) GetRecordingDeviceInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    s.rval().setObject(obj);
+%}
+
+// --- GetRecordingDeviceInfoExResult ------------------------------------
+%ignore GetRecordingDeviceInfoExResult;
+%typemap(out) GetRecordingDeviceInfoExResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    obj->setProperty("deviceTypeName", se::Value($1.deviceTypeName));
+    s.rval().setObject(obj);
+%}
+
+// --- GetRecordingDeviceVolumeResult ------------------------------------
+%ignore GetRecordingDeviceVolumeResult;
+%typemap(out) GetRecordingDeviceVolumeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("volume", se::Value($1.volume));
+    s.rval().setObject(obj);
+%}
+
+// --- GetLoopbackDeviceResult -------------------------------------------
+%ignore GetLoopbackDeviceResult;
+%typemap(out) GetLoopbackDeviceResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlaybackDeviceMuteResult ---------------------------------------
+%ignore GetPlaybackDeviceMuteResult;
+%typemap(out) GetPlaybackDeviceMuteResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("muted", se::Value($1.muted));
+    s.rval().setObject(obj);
+%}
+
+// --- GetRecordingDeviceMuteResult --------------------------------------
+%ignore GetRecordingDeviceMuteResult;
+%typemap(out) GetRecordingDeviceMuteResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("muted", se::Value($1.muted));
+    s.rval().setObject(obj);
+%}
+
+// ─── AudioDeviceCollectionBridge.h ───────────────────────────────────────────
+
+// --- GetAudioDeviceInfoResult (AudioDeviceCollectionBridge) ------------
+%ignore GetAudioDeviceInfoResult;
+%typemap(out) GetAudioDeviceInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetAudioDeviceInfoExResult ----------------------------------------
+%ignore GetAudioDeviceInfoExResult;
+%typemap(out) GetAudioDeviceInfoExResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    obj->setProperty("deviceTypeName", se::Value($1.deviceTypeName));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- GetAudioDeviceVolumeResult ----------------------------------------
+%ignore GetAudioDeviceVolumeResult;
+%typemap(out) GetAudioDeviceVolumeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("volume", se::Value($1.volume));
+    s.rval().setObject(obj);
+%}
+
+// --- GetAudioDeviceMuteResult ------------------------------------------
+%ignore GetAudioDeviceMuteResult;
+%typemap(out) GetAudioDeviceMuteResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("muted", se::Value($1.muted));
+    s.rval().setObject(obj);
+%}
+
+// ─── MediaPlayerCacheManagerBridge.h ─────────────────────────────────────────
+
+// --- GetCacheDirResult -------------------------------------------------
+%ignore GetCacheDirResult;
+%typemap(out) GetCacheDirResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("path", se::Value($1.path));
+    s.rval().setObject(obj);
+%}
+
+// --- GetMaxCacheFileCountResult ----------------------------------------
+%ignore GetMaxCacheFileCountResult;
+%typemap(out) GetMaxCacheFileCountResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("count", se::Value($1.count));
+    s.rval().setObject(obj);
+%}
+
+// --- GetMaxCacheFileSizeResult -----------------------------------------
+%ignore GetMaxCacheFileSizeResult;
+%typemap(out) GetMaxCacheFileSizeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("cacheSize", se::Value($1.cacheSize));
+    s.rval().setObject(obj);
+%}
+
+// --- GetCacheFileCountResult -------------------------------------------
+%ignore GetCacheFileCountResult;
+%typemap(out) GetCacheFileCountResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("count", se::Value($1.count));
+    s.rval().setObject(obj);
+%}
+
+// ─── MediaPlayerBridge.h ─────────────────────────────────────────────────────
+
+// --- GetDurationResult -------------------------------------------------
+%ignore GetDurationResult;
+%typemap(out) GetDurationResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("duration", se::Value($1.duration));
+    s.rval().setObject(obj);
+%}
+
+// --- GetStreamCountResult ----------------------------------------------
+%ignore GetStreamCountResult;
+%typemap(out) GetStreamCountResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("count", se::Value($1.count));
+    s.rval().setObject(obj);
+%}
+
+// --- GetStreamInfoResult -----------------------------------------------
+%ignore GetStreamInfoResult;
+%typemap(out) GetStreamInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("info", se::Value($1.info));
+    s.rval().setObject(obj);
+%}
+
+// --- GetMuteResult -----------------------------------------------------
+%ignore GetMuteResult;
+%typemap(out) GetMuteResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("muted", se::Value($1.muted));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlayoutVolumeResult --------------------------------------------
+%ignore GetPlayoutVolumeResult;
+%typemap(out) GetPlayoutVolumeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("volume", se::Value($1.volume));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPublishSignalVolumeResult --------------------------------------
+%ignore GetPublishSignalVolumeResult;
+%typemap(out) GetPublishSignalVolumeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("volume", se::Value($1.volume));
+    s.rval().setObject(obj);
+%}
+
+// --- GetPlayPositionResult ---------------------------------------------
+%ignore GetPlayPositionResult;
+%typemap(out) GetPlayPositionResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("pos", se::Value($1.pos));
+    s.rval().setObject(obj);
+%}
+
+// --- GetAudioBufferDelayResult -----------------------------------------
+%ignore GetAudioBufferDelayResult;
+%typemap(out) GetAudioBufferDelayResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("delayMs", se::Value($1.delayMs));
+    s.rval().setObject(obj);
+%}
+
+// ─── MusicContentCenterBridge.h ──────────────────────────────────────────────
+
+// --- GetCachesResult ---------------------------------------------------
+%ignore GetCachesResult;
+%typemap(out) GetCachesResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    se::Value tmp;
+    nativevalue_to_se($1.caches, tmp, s.thisObject());
+    obj->setProperty("caches", tmp);
+    s.rval().setObject(obj);
+%}
+
+// --- GetInternalSongCodeResult -----------------------------------------
+%ignore GetInternalSongCodeResult;
+%typemap(out) GetInternalSongCodeResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("internalSongCode", se::Value($1.internalSongCode));
+    s.rval().setObject(obj);
+%}
+
+// --- MCCRequestResult --------------------------------------------------
+%ignore MCCRequestResult;
+%typemap(out) MCCRequestResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("requestId", se::Value($1.requestId));
+    s.rval().setObject(obj);
+%}
+
+// ─── VideoDeviceManagerBridge.h ──────────────────────────────────────────────
+
+// --- GetVideoDeviceResult ----------------------------------------------
+%ignore GetVideoDeviceResult;
+%typemap(out) GetVideoDeviceResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}
+
+// --- VideoDeviceCapabilityResult ---------------------------------------
+%ignore VideoDeviceCapabilityResult;
+%typemap(out) VideoDeviceCapabilityResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("capability", se::Value($1.capability));
+    s.rval().setObject(obj);
+%}
+
+// ─── VideoDeviceCollectionBridge.h ───────────────────────────────────────────
+
+// --- GetVideoDeviceInfoResult ------------------------------------------
+%ignore GetVideoDeviceInfoResult;
+%typemap(out) GetVideoDeviceInfoResult %{
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("deviceName", se::Value($1.deviceName));
+    obj->setProperty("deviceId", se::Value($1.deviceId));
+    s.rval().setObject(obj);
+%}

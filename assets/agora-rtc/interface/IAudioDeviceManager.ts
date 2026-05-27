@@ -10,12 +10,10 @@ export interface IAudioDeviceManager {
 
     getPlaybackDevice(): Promise<{ deviceId: string; errorCode: number }>;
 
-    getPlaybackDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }>;
-
-    getPlaybackDeviceInfoType(): Promise<{
+    getPlaybackDeviceInfo(): Promise<{
         deviceId: string;
         deviceName: string;
-        deviceTypeName: string;
+        deviceTypeName?: string;
         errorCode: number;
     }>;
 
@@ -27,12 +25,10 @@ export interface IAudioDeviceManager {
 
     getRecordingDevice(): Promise<{ deviceId: string; errorCode: number }>;
 
-    getRecordingDeviceInfo(): Promise<{ deviceId: string; deviceName: string; errorCode: number }>;
-
-    getRecordingDeviceInfoType(): Promise<{
+    getRecordingDeviceInfo(): Promise<{
         deviceId: string;
         deviceName: string;
-        deviceTypeName: string;
+        deviceTypeName?: string;
         errorCode: number;
     }>;
 

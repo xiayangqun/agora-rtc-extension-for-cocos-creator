@@ -38,9 +38,7 @@ export interface IMusicContentCenter {
 
     removeCache(songCode: number): Promise<number>;
 
-    getCaches(
-        cacheInfoSize: number,
-    ): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[]; cacheInfoSize: number }>;
+    getCaches(cacheInfoSize: number): Promise<{ errorCode: number; cacheInfo: MusicCacheInfo[] }>;
 
     isPreloaded(songCode: number): Promise<number>;
 

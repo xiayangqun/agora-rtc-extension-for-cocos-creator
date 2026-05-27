@@ -29,16 +29,15 @@ struct MCCRequestResult {
 
 class MusicContentCenterBridge {
 public:
-    explicit MusicContentCenterBridge(agora::agora_refptr<agora::rtc::IMusicContentCenter> musicContentCenter);
+    explicit MusicContentCenterBridge(agora::rtc::IMusicContentCenter *musicContentCenter);
     ~MusicContentCenterBridge();
 
     bool hasMusicContentCenter() const;
-    agora::agora_refptr<agora::rtc::IMusicContentCenter> musicContentCenter() const;
+    agora::rtc::IMusicContentCenter *musicContentCenter() const;
     void invalidate();
 
     int initialize(const agora::rtc::MusicContentCenterConfiguration &configuration);
     int renewToken(const std::string &token);
-    void release();
     //todo jsb manual
     int registerEventHandler(se::Object *eventHandler);
     int unregisterEventHandler();
@@ -53,7 +52,7 @@ public:
     MCCRequestResult searchMusic(const std::string &keyword, int32_t page, int32_t pageSize,
                                  const std::string &jsonOption = "");
     int preload(int64_t songCode, const std::string &jsonOption);
-    MCCRequestResult preloadWithRequestId(int64_t songCode);
+    MCCRequestResult preload(int64_t songCode);
     int removeCache(int64_t songCode);
     GetCachesResult getCaches(int cacheInfoSize);
     int isPreloaded(int64_t songCode);
@@ -62,7 +61,7 @@ public:
     GetInternalSongCodeResult getInternalSongCode(int64_t songCode, const std::string &jsonOption);
 
 private:
-    agora::agora_refptr<agora::rtc::IMusicContentCenter> _musicContentCenter;
+    agora::rtc::IMusicContentCenter *_musicContentCenter{nullptr};
     std::shared_ptr<MusicContentCenterEventHandlerBridge> _eventHandler;
     std::vector<std::shared_ptr<MusicPlayerBridge>> _musicPlayers;
 };

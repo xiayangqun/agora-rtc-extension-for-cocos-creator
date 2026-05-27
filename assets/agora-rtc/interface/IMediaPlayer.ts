@@ -64,14 +64,6 @@ export interface IMediaPlayer {
 
     getPublishSignalVolume(): Promise<{ volume: number; errorCode: number }>;
 
-    setView(view: any): Promise<number>;
-
-    setRenderMode(renderMode: RENDER_MODE_TYPE): Promise<number>;
-
-    unregisterAudioFrameObserver(): Promise<number>;
-
-    unregisterMediaPlayerAudioSpectrumObserver(): Promise<number>;
-
     setAudioDualMonoMode(mode: AUDIO_DUAL_MONO_MODE): Promise<number>;
 
     getPlayerSdkVersion(): Promise<string>;

@@ -5,12 +5,13 @@
 
 class MediaEngineBridge {
 public:
-    explicit MediaEngineBridge(agora::agora_refptr<agora::media::IMediaEngine> mediaEngine);
+    explicit MediaEngineBridge(agora::media::IMediaEngine *mediaEngine);
     ~MediaEngineBridge();
 
     bool hasMediaEngine() const;
-    agora::agora_refptr<agora::media::IMediaEngine> mediaEngine() const;
+    agora::media::IMediaEngine *mediaEngine() const;
     void invalidate();
+    void release();
 
     //not support
     // int registerAudioFrameObserver(agora::media::IAudioFrameObserver *observer);
@@ -41,5 +42,5 @@ public:
     int removeVideoFrameRenderer(agora::media::IVideoFrameObserver *renderer);
 
 private:
-    agora::agora_refptr<agora::media::IMediaEngine> _mediaEngine;
+    agora::media::IMediaEngine *_mediaEngine{nullptr};
 };

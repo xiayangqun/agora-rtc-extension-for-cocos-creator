@@ -19,7 +19,10 @@ agora::agora_refptr<agora::rtc::ILocalSpatialAudioEngine> LocalSpatialAudioEngin
 }
 
 void LocalSpatialAudioEngineBridge::invalidate() {
-    _spatialAudioEngine.reset();
+    if (_spatialAudioEngine) {
+        _spatialAudioEngine->release();
+        _spatialAudioEngine.reset();
+    }
 }
 
 //todo 这个函数需要在rtcEngine get里直接调用

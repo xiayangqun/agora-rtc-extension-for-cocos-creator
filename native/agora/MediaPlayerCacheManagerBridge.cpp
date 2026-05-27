@@ -56,28 +56,26 @@ int MediaPlayerCacheManagerBridge::enableAutoRemoveCache(bool enable) {
     return _cacheManager->enableAutoRemoveCache(enable);
 }
 
-GetCacheDirResult MediaPlayerCacheManagerBridge::getCacheDir(int length) {
+GetCacheDirResult MediaPlayerCacheManagerBridge::getCacheDir() {
     if (!_cacheManager) { return {-agora::ERR_INVALID_ARGUMENT, ""}; }
-    std::string path(static_cast<size_t>(length), '\0');
-    int ret = _cacheManager->getCacheDir(&path[0], length);
+    constexpr int kCacheDirBufferSize = 1024;
+    std::string path(static_cast<size_t>(kCacheDirBufferSize), '\0');
+    int ret = _cacheManager->getCacheDir(&path[0], kCacheDirBufferSize);
     if (ret == 0) { path.resize(path.find('\0')); }
     return {ret, path};
 }
 
-GetMaxCacheFileCountResult MediaPlayerCacheManagerBridge::getMaxCacheFileCount() {
-    if (!_cacheManager) { return {-agora::ERR_INVALID_ARGUMENT, 0}; }
-    int count = _cacheManager->getMaxCacheFileCount();
-    return {0, count};
+int MediaPlayerCacheManagerBridge::getMaxCacheFileCount() {
+    if (!_cacheManager) { return -agora::ERR_INVALID_ARGUMENT; }
+    return _cacheManager->getMaxCacheFileCount();
 }
 
-GetMaxCacheFileSizeResult MediaPlayerCacheManagerBridge::getMaxCacheFileSize() {
-    if (!_cacheManager) { return {-agora::ERR_INVALID_ARGUMENT, 0}; }
-    int64_t cacheSize = _cacheManager->getMaxCacheFileSize();
-    return {0, cacheSize};
+int64_t MediaPlayerCacheManagerBridge::getMaxCacheFileSize() {
+    if (!_cacheManager) { return -agora::ERR_INVALID_ARGUMENT; }
+    return _cacheManager->getMaxCacheFileSize();
 }
 
-GetCacheFileCountResult MediaPlayerCacheManagerBridge::getCacheFileCount() {
-    if (!_cacheManager) { return {-agora::ERR_INVALID_ARGUMENT, 0}; }
-    int count = _cacheManager->getCacheFileCount();
-    return {0, count};
+int MediaPlayerCacheManagerBridge::getCacheFileCount() {
+    if (!_cacheManager) { return -agora::ERR_INVALID_ARGUMENT; }
+    return _cacheManager->getCacheFileCount();
 }

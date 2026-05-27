@@ -1,8 +1,6 @@
 import { VIDEO_EFFECT_ACTION } from "../types/AgoraRtcEngine";
 
 export interface IVideoEffectObject {
-    getObjectId(): Promise<number>;
-
     addOrUpdateVideoEffect(nodeId: number, templateName: string): Promise<number>;
 
     removeVideoEffect(nodeId: number): Promise<number>;

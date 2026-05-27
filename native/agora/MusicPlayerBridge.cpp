@@ -14,7 +14,7 @@ void MusicPlayerBridge::invalidate() {
     if (_musicPlayer) { _musicPlayer.reset(); }
 }
 
-int MusicPlayerBridge::open(int64_t songCode, int64_t startPos) {
+int MusicPlayerBridge::openWithSongCode(int64_t songCode, int64_t startPos) {
     if (!_musicPlayer) { return -agora::ERR_INVALID_ARGUMENT; }
     return _musicPlayer->open(songCode, startPos);
 }

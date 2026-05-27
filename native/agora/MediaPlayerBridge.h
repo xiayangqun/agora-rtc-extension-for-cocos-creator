@@ -3,6 +3,10 @@
 #include "IAgoraMediaPlayer.h"
 #include <string>
 
+namespace se {
+class Object;
+}
+
 class MediaPlayerSourceObserverBridge;
 
 struct GetDurationResult {

@@ -13,7 +13,7 @@ export interface IMediaPlayerCacheManager {
 
     enableAutoRemoveCache(enable: boolean): Promise<number>;
 
-    getCacheDir(path: string, length: number): Promise<number>;
+    getCacheDir(): Promise<{ path: string; errorCode: number }>;
 
     getMaxCacheFileCount(): Promise<number>;
 

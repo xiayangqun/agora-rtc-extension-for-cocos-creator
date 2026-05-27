@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AgoraBase.h"
+#include "AgoraRefPtr.h"
 #include "IAudioDeviceManager.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include <memory>
@@ -12,11 +14,13 @@ struct GetPlaybackDeviceResult {
 
 struct GetPlaybackDeviceInfoResult {
     int errorCode;
+    std::string deviceId;
     std::string deviceName;
 };
 
 struct GetPlaybackDeviceInfoExResult {
     int errorCode;
+    std::string deviceId;
     std::string deviceName;
     std::string deviceTypeName;
 };
@@ -33,11 +37,13 @@ struct GetRecordingDeviceResult {
 
 struct GetRecordingDeviceInfoResult {
     int errorCode;
+    std::string deviceId;
     std::string deviceName;
 };
 
 struct GetRecordingDeviceInfoExResult {
     int errorCode;
+    std::string deviceId;
     std::string deviceName;
     std::string deviceTypeName;
 };
@@ -54,12 +60,12 @@ struct GetLoopbackDeviceResult {
 
 struct GetPlaybackDeviceMuteResult {
     int errorCode;
-    bool muted;
+    bool mute;
 };
 
 struct GetRecordingDeviceMuteResult {
     int errorCode;
-    bool muted;
+    bool mute;
 };
 
 class AudioDeviceManagerBridge {
@@ -77,15 +83,15 @@ public:
     int setPlaybackDevice(const std::string &deviceId);
     GetPlaybackDeviceResult getPlaybackDevice();
     //todo jsb manual 合并以下2个函数
-    GetPlaybackDeviceInfoResult getPlaybackDeviceInfo(const std::string &deviceId);
-    GetPlaybackDeviceInfoExResult getPlaybackDeviceInfoEx(const std::string &deviceId);
+    GetPlaybackDeviceInfoResult getPlaybackDeviceInfo();
+    GetPlaybackDeviceInfoExResult getPlaybackDeviceInfoEx();
     int setPlaybackDeviceVolume(int volume);
     GetPlaybackDeviceVolumeResult getPlaybackDeviceVolume();
     int setRecordingDevice(const std::string &deviceId);
     GetRecordingDeviceResult getRecordingDevice();
     //todo jsb manual 合并以下2个函数
-    GetRecordingDeviceInfoResult getRecordingDeviceInfo(const std::string &deviceId);
-    GetRecordingDeviceInfoExResult getRecordingDeviceInfoEx(const std::string &deviceId);
+    GetRecordingDeviceInfoResult getRecordingDeviceInfo();
+    GetRecordingDeviceInfoExResult getRecordingDeviceInfoEx();
     int setRecordingDeviceVolume(int volume);
     GetRecordingDeviceVolumeResult getRecordingDeviceVolume();
     int setLoopbackDevice(const std::string &deviceId);
