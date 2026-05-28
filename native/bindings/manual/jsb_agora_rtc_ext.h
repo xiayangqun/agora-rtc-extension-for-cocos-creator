@@ -53,6 +53,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::PathStats *to, se::Obj
 bool sevalue_to_native(const se::Value &from, agora::rtc::MultipathStats *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::RtcStats *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::ClientRoleOptions *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, agora::rtc::VideoFormat *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::VideoTrackInfo *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::AudioVolumeInfo *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::DeviceInfo *to, se::Object *ctx);
