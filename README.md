@@ -1,5 +1,7 @@
 # Agora RTC Extension for Cocos Creator
 
+[中文](README.zh-CN.md)
+
 A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www.agora.io/) for real-time communication. Build video calling, interactive live streaming, screen sharing, and media playback features into your Cocos Creator games and applications.
 
 ## Features
@@ -58,44 +60,32 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 The extension follows a layered architecture with clean separation between platform-agnostic interfaces and platform-specific implementations.
 
 ```mermaid
-block-beta
-  columns 2
+flowchart TB
+    ts["TypeScript Interface Layer\nIRtcEngine · IRtcEngineEx · IRtcEventHandler\nIMediaPlayer · IAudioDeviceManager · ..."]
 
-  block:ts:2
-    columns 2
-    tsTitle["TypeScript Interface Layer"]
-    tsDesc["IRtcEngine · IRtcEngineEx · IRtcEventHandler\nIMediaPlayer · IAudioDeviceManager · ..."]
-  end
+    subgraph layer2 [ ]
+        direction LR
+        jsb["JSB Bindings (Native C++)\nSWIG auto-gen + Manual"]
+        tw["TS Wrapper (Web SDK)\nagora-rtc-sdk-ng adapter"]
+    end
 
-  block:left
-    columns 1
-    jsbTitle["JSB Bindings (Native C++)"]
-    jsbDesc["SWIG auto-gen + Manual"]
-  end
+    subgraph layer3 [ ]
+        direction LR
+        native["Agora Native SDK\niOS / Android / macOS / Win"]
+        web["agora-rtc-sdk-ng\n(Web SDK)"]
+    end
 
-  block:right
-    columns 1
-    twTitle["TS Wrapper (Web SDK)"]
-    twDesc["agora-rtc-sdk-ng adapter"]
-  end
+    ts --> jsb & tw
+    jsb --> native
+    tw --> web
 
-  block:left2:1
-    native["Agora Native SDK\niOS / Android / macOS / Win"]
-  end
-
-  block:right2:1
-    web["agora-rtc-sdk-ng\n(Web SDK)"]
-  end
-
-  ts --> left & right
-  left --> left2
-  right --> right2
-
-  style ts fill:#4a90d9,color:#fff
-  style left fill:#67b168,color:#fff
-  style right fill:#67b168,color:#fff
-  style left2 fill:#e8a838,color:#fff
-  style right2 fill:#e8a838,color:#fff
+    style ts fill:#4a90d9,color:#fff
+    style jsb fill:#67b168,color:#fff
+    style tw fill:#67b168,color:#fff
+    style native fill:#e8a838,color:#fff
+    style web fill:#e8a838,color:#fff
+    style layer2 fill:none,stroke:none
+    style layer3 fill:none,stroke:none
 ```
 
 ### Layer Descriptions

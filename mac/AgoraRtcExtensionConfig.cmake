@@ -42,12 +42,13 @@ add_library(AgoraRtcExtension STATIC
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicContentCenterEventHandlerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicPlayerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_manual.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_ext.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/register.cpp
 )
 
-if(EXISTS ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto/jsb_agora_rtc_auto.cpp)
+if(EXISTS ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto/jsb_agora_rtc_engine_bridge_auto.cpp)
     target_sources(AgoraRtcExtension PRIVATE
-        ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto/jsb_agora_rtc_auto.cpp
+        ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto/jsb_agora_rtc_engine_bridge_auto.cpp
     )
 endif()
 
@@ -69,6 +70,7 @@ target_include_directories(AgoraRtcExtension PUBLIC
     ${COCOS_X_PATH}
     ${COCOS_X_PATH}/cocos
     ${COCOS_X_PATH}/cocos/bindings/jswrapper
+    ${COCOS_X_PATH}/cocos/renderer
 )
 
 target_compile_features(AgoraRtcExtension PUBLIC cxx_std_17)

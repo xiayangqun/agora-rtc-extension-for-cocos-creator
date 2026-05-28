@@ -103,12 +103,22 @@ static bool js_agora_RtcEngineNative_initialize(se::State &s) {
     }
 
     auto *contextObject = args[0].toObject();
-    AgoraRtcNativeContext context;
-    getStringProperty(contextObject, "appId", &context.appId);
-    getIntProperty(contextObject, "channelProfile", &context.channelProfile);
-    getIntProperty(contextObject, "audioScenario", &context.audioScenario);
+    agora::rtc::RtcEngineContext context;
+    std::string appId;
+    getStringProperty(contextObject, "appId", &appId);
+    context.appId = appId.c_str();
 
-    int areaCode = static_cast<int>(context.areaCode);
+    int channelProfile = 0;
+    if (getIntProperty(contextObject, "channelProfile", &channelProfile)) {
+        context.channelProfile = static_cast<agora::CHANNEL_PROFILE_TYPE>(channelProfile);
+    }
+
+    int audioScenario = 0;
+    if (getIntProperty(contextObject, "audioScenario", &audioScenario)) {
+        context.audioScenario = static_cast<agora::rtc::AUDIO_SCENARIO_TYPE>(audioScenario);
+    }
+
+    int areaCode = 0;
     if (getIntProperty(contextObject, "areaCode", &areaCode)) {
         context.areaCode = static_cast<unsigned int>(areaCode);
     }
@@ -264,7 +274,7 @@ static bool js_agora_RtcEngineNative_setChannelProfile(se::State &s) {
     const auto &args = s.args();
     auto *bridge = getNativeBridge(s);
     int profile = args.size() > 0 ? args[0].toInt32() : 0;
-    s.rval().setInt32(bridge ? bridge->setChannelProfile(profile) : -7);
+    s.rval().setInt32(bridge ? bridge->setChannelProfile(static_cast<agora::CHANNEL_PROFILE_TYPE>(profile)) : -7);
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_setChannelProfile)
@@ -275,15 +285,14 @@ static bool js_agora_RtcEngineNative_setClientRole(se::State &s) {
     if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
     int role = args.size() > 0 ? args[0].toInt32() : 0;
     if (args.size() > 1 && args[1].isObject()) {
-        auto *opts = args[1].toObject();
-        se::Value latencyVal;
-        int latency = 0;
-        if (opts->getProperty("audienceLatencyLevel", &latencyVal) && latencyVal.isNumber()) {
-            latency = latencyVal.toInt32();
+        agora::rtc::ClientRoleOptions options;
+        if (!sevalue_to_native(args[1], &options, s.thisObject())) {
+            s.rval().setInt32(-2);
+            return true;
         }
-        s.rval().setInt32(bridge->setClientRole(role, latency));
+        s.rval().setInt32(bridge->setClientRole(static_cast<agora::rtc::CLIENT_ROLE_TYPE>(role), options));
     } else {
-        s.rval().setInt32(bridge->setClientRole(role));
+        s.rval().setInt32(bridge->setClientRole(static_cast<agora::rtc::CLIENT_ROLE_TYPE>(role)));
     }
     return true;
 }
@@ -361,8 +370,15 @@ static bool js_agora_RtcEngineNative_setAudioProfile(se::State &s) {
     auto *bridge = getNativeBridge(s);
     if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
     int profile = args.size() > 0 ? args[0].toInt32() : 0;
-    int scenario = args.size() > 1 ? args[1].toInt32() : 0;
-    s.rval().setInt32(bridge->setAudioProfile(profile, scenario));
+    int scenario = args.size() > 1 ? args[1].toInt32() : -1;
+    if (scenario >= 0) {
+        s.rval().setInt32(bridge->setAudioProfile(
+            static_cast<agora::rtc::AUDIO_PROFILE_TYPE>(profile),
+            static_cast<agora::rtc::AUDIO_SCENARIO_TYPE>(scenario)));
+    } else {
+        s.rval().setInt32(bridge->setAudioProfile(
+            static_cast<agora::rtc::AUDIO_PROFILE_TYPE>(profile)));
+    }
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_setAudioProfile)
@@ -423,9 +439,10 @@ static bool js_agora_RtcEngineNative_playEffect(se::State &s) {
     int loopCount = args.size() > 2 ? args[2].toInt32() : 0;
     double pitch = args.size() > 3 ? args[3].toNumber() : 1.0;
     double pan = args.size() > 4 ? args[4].toNumber() : 0.0;
-    double gain = args.size() > 5 ? args[5].toNumber() : 100.0;
+    int gain = args.size() > 5 ? args[5].toInt32() : 100;
     bool publish = args.size() > 6 && args[6].toBoolean();
-    s.rval().setInt32(bridge->playEffect(soundId, filePath, loopCount, pitch, pan, gain, publish));
+    int startPos = args.size() > 7 ? args[7].toInt32() : 0;
+    s.rval().setInt32(bridge->playEffect(soundId, filePath, loopCount, pitch, pan, gain, publish, startPos));
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_playEffect)
@@ -447,7 +464,8 @@ static bool js_agora_RtcEngineNative_preloadEffect(se::State &s) {
     if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
     int soundId = args.size() > 0 ? args[0].toInt32() : 0;
     std::string filePath = args.size() > 1 ? args[1].toString() : "";
-    s.rval().setInt32(bridge->preloadEffect(soundId, filePath));
+    int startPos = args.size() > 2 ? args[2].toInt32() : 0;
+    s.rval().setInt32(bridge->preloadEffect(soundId, filePath, startPos));
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_preloadEffect)
@@ -463,7 +481,15 @@ static bool js_agora_RtcEngineNative_setLogFile(se::State &s) {
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_setLogFile)
 
-DEF_SIMPLE_INT_METHOD(setLogLevel)
+static bool js_agora_RtcEngineNative_setLogLevel(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
+    int level = args.size() > 0 ? args[0].toInt32() : 0;
+    s.rval().setInt32(bridge->setLogLevel(static_cast<agora::commons::LOG_LEVEL>(level)));
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_setLogLevel)
 
 static bool js_agora_RtcEngineNative_setLogFileSize(se::State &s) {
     const auto &args = s.args();
@@ -476,7 +502,15 @@ SE_BIND_FUNC(js_agora_RtcEngineNative_setLogFileSize)
 
 // ===== Network / proxy ===================================================
 
-DEF_SIMPLE_INT_METHOD(setCloudProxy)
+static bool js_agora_RtcEngineNative_setCloudProxy(se::State &s) {
+    const auto &args = s.args();
+    auto *bridge = getNativeBridge(s);
+    if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
+    int proxyType = args.size() > 0 ? args[0].toInt32() : 0;
+    s.rval().setInt32(bridge->setCloudProxy(static_cast<agora::rtc::CLOUD_PROXY_TYPE>(proxyType)));
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineNative_setCloudProxy)
 DEF_SIMPLE_VOID_METHOD(getConnectionState)
 
 // ===== Speaker ===========================================================
@@ -522,11 +556,11 @@ SE_BIND_FUNC(js_agora_RtcEngineNative_getErrorDescription)
 static bool js_agora_RtcEngineNative_getVersion(se::State &s) {
     auto *bridge = getNativeBridge(s);
     if (bridge == nullptr) { s.rval().setInt32(-7); return true; }
-    int build = 0;
-    bridge->getVersion(&build);
-    se::HandleObject result(se::Object::createPlainObject());
-    result->setProperty("build", se::Value(build));
-    s.rval().setObject(result);
+    auto result = bridge->getVersion();
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("version", se::Value(result.version));
+    obj->setProperty("build", se::Value(result.build));
+    s.rval().setObject(obj);
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineNative_getVersion)
@@ -970,7 +1004,7 @@ bool register_agora_rtc_manual(se::Object *global) {
     auto *native = getOrCreateNamespace(agora, "native");
 
     auto *mediaPlayerCls = se::Class::create(
-        "MediaPlayerNative",
+        "MediaPlayerBridge",
         native,
         nullptr,
         nullptr);
@@ -981,7 +1015,7 @@ bool register_agora_rtc_manual(se::Object *global) {
     __jsb_AgoraMediaPlayerNative_class = mediaPlayerCls;
 
     auto *cls = se::Class::create(
-        "RtcEngineNative",
+        "RtcEngineExBridge",
         native,
         nullptr,
         _SE(js_agora_RtcEngineNative_constructor));

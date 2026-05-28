@@ -25,12 +25,6 @@ void LocalSpatialAudioEngineBridge::invalidate() {
     }
 }
 
-//todo 这个函数需要在rtcEngine get里直接调用
-int LocalSpatialAudioEngineBridge::initialize(const agora::rtc::LocalSpatialAudioConfig &config) {
-    if (!_spatialAudioEngine) { return -agora::ERR_INVALID_ARGUMENT; }
-    return _spatialAudioEngine->initialize(config);
-}
-
 int LocalSpatialAudioEngineBridge::updateRemotePosition(agora::rtc::uid_t uid,
                                                         const agora::rtc::RemoteVoicePositionInfo &posInfo) {
     if (!_spatialAudioEngine) { return -agora::ERR_INVALID_ARGUMENT; }

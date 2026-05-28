@@ -1349,8 +1349,8 @@ int RtcEngineExBridge::startScreenCaptureByScreenRect(const agora::rtc::Rectangl
     return -agora::ERR_NOT_SUPPORTED;
 }
 
-GetAudioDeviceInfoResult RtcEngineExBridge::getAudioDeviceInfo() {
-    GetAudioDeviceInfoResult result{};
+GetAudioDeviceInfoWithDeviceInfoResult RtcEngineExBridge::getAudioDeviceInfo() {
+    GetAudioDeviceInfoWithDeviceInfoResult result{};
     result.errorCode = -agora::ERR_NOT_SUPPORTED;
     return result;
 }

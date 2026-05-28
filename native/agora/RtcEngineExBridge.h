@@ -54,7 +54,7 @@ struct GetExtensionPropertyResult {
     std::string value;
 };
 
-struct GetAudioDeviceInfoResult {
+struct GetAudioDeviceInfoWithDeviceInfoResult {
     int errorCode;
     agora::rtc::DeviceInfo deviceInfo;
 };
@@ -371,7 +371,7 @@ public:
     int startScreenCaptureByScreenRect(const agora::rtc::Rectangle &screenRect, const agora::rtc::Rectangle &regionRect,
                                        const agora::rtc::ScreenCaptureParameters &captureParams);
 
-    GetAudioDeviceInfoResult getAudioDeviceInfo();
+    GetAudioDeviceInfoWithDeviceInfoResult getAudioDeviceInfo();
     int startScreenCaptureByWindowId(int64_t windowId, const agora::rtc::Rectangle &regionRect,
                                      const agora::rtc::ScreenCaptureParameters &captureParams);
     int setScreenCaptureContentHint(agora::rtc::VIDEO_CONTENT_HINT contentHint);

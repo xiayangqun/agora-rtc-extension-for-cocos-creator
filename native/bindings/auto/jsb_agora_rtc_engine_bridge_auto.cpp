@@ -55,9 +55,6 @@
 #include "bindings/manual/jsb_global.h"
 
 
-#include <string>
-
-
 #include <stdint.h>		// Use the C99 official header
 
 
@@ -78,247 +75,6 @@
 #include "agora/VideoDeviceManagerBridge.h"
 #include "agora/VideoEffectObjectBridge.h"
 
-
-
-se::Class* __jsb_std_string_class = nullptr;
-se::Object* __jsb_std_string_proto = nullptr;
-SE_DECLARE_FINALIZE_FUNC(js_delete_std_string) 
-
-static bool js_new_std_string__SWIG_0(se::State& s) // NOLINT(readability-identifier-naming)
-{
-    const auto& args = s.args();
-    CC_UNUSED bool ok = true;
-    std::string *result;
-    result = (std::string *)new std::string();
-    
-    
-    auto *ptr = JSB_MAKE_PRIVATE_OBJECT_WITH_INSTANCE(result);
-    s.thisObject()->setPrivateObject(ptr);
-    return true;
-}
-
-
-static bool js_new_std_string__SWIG_1(se::State& s) // NOLINT(readability-identifier-naming)
-{
-    const auto& args = s.args();
-    CC_UNUSED bool ok = true;
-    char *arg1 = (char *) NULL ;
-    ccstd::string temp1 ;
-    std::string *result;
-    
-    ok &= sevalue_to_native(args[0], &temp1);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg1 = (char *) temp1.c_str(); 
-    result = (std::string *)new std::string((char const *)arg1);
-    
-    
-    auto *ptr = JSB_MAKE_PRIVATE_OBJECT_WITH_INSTANCE(result);
-    s.thisObject()->setPrivateObject(ptr);
-    return true;
-}
-
-
-static bool js_new_std_string(se::State& s) // NOLINT(readability-identifier-naming)
-{
-    size_t argc = s.args().size();
-    bool ret = false;
-    
-    if(argc == 0) {
-        ret = js_new_std_string__SWIG_0(s);
-        if (ret) {
-            return ret; 
-        } /* reset exception and return */
-    }
-    
-    if(argc == 1) {
-        ret = js_new_std_string__SWIG_1(s);
-        if (ret) {
-            return ret; 
-        } /* reset exception and return */
-    }
-    
-    SE_REPORT_ERROR("Illegal arguments for construction of string");
-    return false;
-}
-SE_BIND_CTOR(js_new_std_string, __jsb_std_string_class, js_delete_std_string)
-
-static bool js_std_string_size(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    unsigned int result;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    result = (unsigned int)((std::string const *)arg1)->size();
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_size) 
-
-static bool js_std_string_length(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    unsigned int result;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    result = (unsigned int)((std::string const *)arg1)->length();
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_length) 
-
-static bool js_std_string_empty(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    bool result;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    result = (bool)((std::string const *)arg1)->empty();
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject());
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_empty) 
-
-static bool js_std_string_c_str(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    char *result = 0 ;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    result = (char *)((std::string const *)arg1)->c_str();
-    
-    ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_c_str) 
-
-static bool js_std_string_data(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    char *result = 0 ;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    result = (char *)((std::string const *)arg1)->data();
-    
-    ok &= nativevalue_to_se(result, s.rval(), nullptr /*ctx*/);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_data) 
-
-static bool js_std_string_assign(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    std::string *arg1 = (std::string *) NULL ;
-    char *arg2 = (char *) NULL ;
-    ccstd::string temp2 ;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<std::string>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = (char *) temp2.c_str(); 
-    (arg1)->assign((char const *)arg2);
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_std_string_assign) 
-
-static bool js_delete_std_string(se::State& s)
-{
-    return true;
-}
-SE_BIND_FINALIZE_FUNC(js_delete_std_string) 
-
-bool js_register_std_string(se::Object* obj) {
-    auto* cls = se::Class::create("string", obj, nullptr, _SE(js_new_std_string)); 
-    
-    cls->defineStaticProperty("__isJSB", se::Value(true), se::PropertyAttribute::READ_ONLY | se::PropertyAttribute::DONT_ENUM | se::PropertyAttribute::DONT_DELETE);
-    
-    cls->defineFunction("size", _SE(js_std_string_size)); 
-    cls->defineFunction("length", _SE(js_std_string_length)); 
-    cls->defineFunction("empty", _SE(js_std_string_empty)); 
-    cls->defineFunction("c_str", _SE(js_std_string_c_str)); 
-    cls->defineFunction("data", _SE(js_std_string_data)); 
-    cls->defineFunction("assign", _SE(js_std_string_assign)); 
-    
-    
-    
-    
-    cls->defineFinalizeFunction(_SE(js_delete_std_string));
-    
-    
-    cls->install();
-    JSBClassType::registerClass<std::string>(cls);
-    
-    __jsb_std_string_proto = cls->getProto();
-    __jsb_std_string_class = cls;
-    se::ScriptEngine::getInstance()->clearException();
-    return true;
-}
 
 
 se::Class* __jsb_AgoraRtcNativeContext_class = nullptr;
@@ -13907,36 +13663,6 @@ static bool js_LocalSpatialAudioEngineBridge_setRemoteAudioAttenuation(se::State
 }
 SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setRemoteAudioAttenuation) 
 
-static bool js_LocalSpatialAudioEngineBridge_setZones(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
-    std::vector< agora::rtc::SpatialAudioZone > *arg2 = 0 ;
-    std::vector< agora::rtc::SpatialAudioZone > temp2 ;
-    int result;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<LocalSpatialAudioEngineBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = &temp2;
-    
-    result = (int)(arg1)->setZones((std::vector< agora::rtc::SpatialAudioZone > const &)*arg2);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setZones) 
-
 static bool js_LocalSpatialAudioEngineBridge_setPlayerAttenuation(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -14017,7 +13743,6 @@ bool js_register_LocalSpatialAudioEngineBridge(se::Object* obj) {
     cls->defineFunction("muteAllRemoteAudioStreams", _SE(js_LocalSpatialAudioEngineBridge_muteAllRemoteAudioStreams)); 
     cls->defineFunction("muteRemoteAudioStream", _SE(js_LocalSpatialAudioEngineBridge_muteRemoteAudioStream)); 
     cls->defineFunction("setRemoteAudioAttenuation", _SE(js_LocalSpatialAudioEngineBridge_setRemoteAudioAttenuation)); 
-    cls->defineFunction("setZones", _SE(js_LocalSpatialAudioEngineBridge_setZones)); 
     cls->defineFunction("setPlayerAttenuation", _SE(js_LocalSpatialAudioEngineBridge_setPlayerAttenuation)); 
     cls->defineFunction("clearRemotePositions", _SE(js_LocalSpatialAudioEngineBridge_clearRemotePositions)); 
     
@@ -14353,7 +14078,9 @@ static bool js_MediaPlayerBridge_getStreamInfo(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("info", se::Value((&result)->info));
+    se::Value infoVal;
+    nativevalue_to_se((&result)->info, infoVal, s.thisObject());
+    obj->setProperty("info", infoVal);
     s.rval().setObject(obj);
     
     
@@ -16881,7 +16608,9 @@ static bool js_VideoDeviceManagerBridge_getCapability(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("capability", se::Value((&result)->capability));
+    se::Value capabilityVal;
+    nativevalue_to_se((&result)->capability, capabilityVal, s.thisObject());
+    obj->setProperty("capability", capabilityVal);
     s.rval().setObject(obj);
     
     
@@ -17354,7 +17083,6 @@ bool register_all_agora_rtc_engine_bridge(se::Object* obj) {
     }
     se::Object* ns = nsVal.toObject();
     /* Register classes */
-    js_register_std_string(ns); 
     js_register_AgoraRtcNativeContext(ns); 
     js_register_UploadLogFileResult(ns); 
     js_register_RtcEngineExBridge(ns); 

@@ -19,7 +19,7 @@ const expectedAutoOverloads = {
   startAudioMixing: [3, 4],
   startAudioRecording: [1, 2, 3],
   startPreview: [0, 1],
-  startScreenCapture: [0, 1],
+  // startScreenCapture: [1, 2], // 1-param version is Android/iOS/OHOS only (#if guarded)
   stopPreview: [0, 1],
   stopScreenCapture: [0, 1],
 };
@@ -28,13 +28,13 @@ const intentionallyManual = ["enableExtension", "joinChannel", "takeSnapshot"];
 const failures = [];
 
 for (const [method, argCounts] of Object.entries(expectedAutoOverloads)) {
-  const dispatcherStart = source.indexOf(`static bool js_IRtcEngineExBridge_${method}(se::State& s)`);
+  const dispatcherStart = source.indexOf(`static bool js_RtcEngineExBridge_${method}(se::State& s)`);
   if (dispatcherStart === -1) {
     failures.push(`${method}: dispatcher not generated`);
     continue;
   }
 
-  const bindMarker = `SE_BIND_FUNC(js_IRtcEngineExBridge_${method})`;
+  const bindMarker = `SE_BIND_FUNC(js_RtcEngineExBridge_${method})`;
   const dispatcherEnd = source.indexOf(bindMarker, dispatcherStart);
   if (dispatcherEnd === -1) {
     failures.push(`${method}: bind marker not found`);
@@ -42,7 +42,7 @@ for (const [method, argCounts] of Object.entries(expectedAutoOverloads)) {
   }
 
   const dispatcher = source.slice(dispatcherStart, dispatcherEnd);
-  const overloadWrappers = source.match(new RegExp(`js_IRtcEngineExBridge_${method}__SWIG_\\d+`, "g")) || [];
+  const overloadWrappers = source.match(new RegExp(`js_RtcEngineExBridge_${method}__SWIG_\\d+`, "g")) || [];
   const distinctWrappers = [...new Set(overloadWrappers)];
   if (distinctWrappers.length !== argCounts.length) {
     failures.push(`${method}: expected ${argCounts.length} overload wrappers, found ${distinctWrappers.length}`);
@@ -56,10 +56,10 @@ for (const [method, argCounts] of Object.entries(expectedAutoOverloads)) {
 }
 
 for (const method of intentionallyManual) {
-  if (source.includes(`static bool js_IRtcEngineExBridge_${method}__SWIG_`)) {
+  if (source.includes(`static bool js_RtcEngineExBridge_${method}__SWIG_`)) {
     failures.push(`${method}: same-argc overload should not be auto-generated`);
   }
-  if (source.includes(`SE_BIND_FUNC(js_IRtcEngineExBridge_${method})`)) {
+  if (source.includes(`SE_BIND_FUNC(js_RtcEngineExBridge_${method})`)) {
     failures.push(`${method}: same-argc overload dispatcher should not be auto-generated`);
   }
 }

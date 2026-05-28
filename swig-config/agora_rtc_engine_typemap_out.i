@@ -10,7 +10,7 @@
 %ignore GetVersionResult;
 %typemap(out) GetVersionResult %{
     se::HandleObject obj(se::Object::createPlainObject());
-    obj->setProperty("errorCode", se::Value($1.errorCode));
+    obj->setProperty("version", se::Value($1.version));
     obj->setProperty("build", se::Value($1.build));
     s.rval().setObject(obj);
 %}
@@ -20,7 +20,7 @@
 %typemap(out) QueryCodecCapabilityResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("size", se::Value($1.size));
+    obj->setProperty("size", se::Value(static_cast<int>($1.codecInfo.size())));
     s.rval().setObject(obj);
 %}
 
@@ -137,7 +137,9 @@
 %typemap(out) GetFaceShapeBeautyOptionsResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("options", se::Value($1.options));
+    se::Value optionsVal;
+    nativevalue_to_se($1.options, optionsVal, s.thisObject());
+    obj->setProperty("options", optionsVal);
     s.rval().setObject(obj);
 %}
 
@@ -146,7 +148,9 @@
 %typemap(out) GetFaceShapeAreaOptionsResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("options", se::Value($1.options));
+    se::Value optionsVal;
+    nativevalue_to_se($1.options, optionsVal, s.thisObject());
+    obj->setProperty("options", optionsVal);
     s.rval().setObject(obj);
 %}
 
@@ -161,12 +165,14 @@
     s.rval().setObject(obj);
 %}
 
-// --- GetAudioDeviceInfoResult (RtcEngineExBridge) ----------------------
-%ignore GetAudioDeviceInfoResult;
-%typemap(out) GetAudioDeviceInfoResult %{
+// --- GetAudioDeviceInfoWithDeviceInfoResult (RtcEngineExBridge) ---------
+%ignore GetAudioDeviceInfoWithDeviceInfoResult;
+%typemap(out) GetAudioDeviceInfoWithDeviceInfoResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("deviceInfo", se::Value($1.deviceInfo));
+    se::Value deviceInfoVal;
+    nativevalue_to_se($1.deviceInfo, deviceInfoVal, s.thisObject());
+    obj->setProperty("deviceInfo", deviceInfoVal);
     s.rval().setObject(obj);
 %}
 
@@ -184,7 +190,9 @@
 %typemap(out) GetUserInfoResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("userInfo", se::Value($1.userInfo));
+    se::Value userInfoVal;
+    nativevalue_to_se($1.userInfo, userInfoVal, s.thisObject());
+    obj->setProperty("userInfo", userInfoVal);
     s.rval().setObject(obj);
 %}
 
@@ -193,7 +201,7 @@
 %typemap(out) QueryCameraFocalLengthCapabilityResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("size", se::Value($1.size));
+    obj->setProperty("size", se::Value(static_cast<int>($1.focalLengthInfos.size())));
     se::Value tmp;
     ok &= nativevalue_to_se($1.focalLengthInfos, tmp, s.thisObject());
     obj->setProperty("focalLengthInfos", tmp);
@@ -308,7 +316,7 @@
 %typemap(out) GetPlaybackDeviceMuteResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("muted", se::Value($1.muted));
+    obj->setProperty("mute", se::Value($1.mute));
     s.rval().setObject(obj);
 %}
 
@@ -317,7 +325,7 @@
 %typemap(out) GetRecordingDeviceMuteResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("muted", se::Value($1.muted));
+    obj->setProperty("mute", se::Value($1.mute));
     s.rval().setObject(obj);
 %}
 
@@ -358,7 +366,7 @@
 %typemap(out) GetAudioDeviceMuteResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("muted", se::Value($1.muted));
+    obj->setProperty("mute", se::Value($1.mute));
     s.rval().setObject(obj);
 %}
 
@@ -425,7 +433,9 @@
 %typemap(out) GetStreamInfoResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("info", se::Value($1.info));
+    se::Value infoVal;
+    nativevalue_to_se($1.info, infoVal, s.thisObject());
+    obj->setProperty("info", infoVal);
     s.rval().setObject(obj);
 %}
 
@@ -521,7 +531,9 @@
 %typemap(out) VideoDeviceCapabilityResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("capability", se::Value($1.capability));
+    se::Value capabilityVal;
+    nativevalue_to_se($1.capability, capabilityVal, s.thisObject());
+    obj->setProperty("capability", capabilityVal);
     s.rval().setObject(obj);
 %}
 

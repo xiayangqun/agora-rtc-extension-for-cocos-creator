@@ -28,13 +28,13 @@ const expected = {
 const failures = [];
 
 for (const [method, fields] of Object.entries(expected)) {
-  const start = source.indexOf(`static bool js_IRtcEngineExBridge_${method}(se::State& s)`);
+  const start = source.indexOf(`static bool js_RtcEngineExBridge_${method}(se::State& s)`);
   if (start === -1) {
     failures.push(`${method}: wrapper function not found`);
     continue;
   }
 
-  const end = source.indexOf(`SE_BIND_FUNC(js_IRtcEngineExBridge_${method})`, start);
+  const end = source.indexOf(`SE_BIND_FUNC(js_RtcEngineExBridge_${method})`, start);
   if (end === -1) {
     failures.push(`${method}: SE_BIND_FUNC marker not found`);
     continue;

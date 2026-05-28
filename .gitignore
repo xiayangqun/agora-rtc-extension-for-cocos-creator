@@ -15,6 +15,5 @@ agora-rtc-extension-for-cocos-creator.code-workspace
 agora_web_moudle
 *.meta
 .trae
-native/bindings/auto/jsb_agora_*_auto.*
 docs
 .understand-anything

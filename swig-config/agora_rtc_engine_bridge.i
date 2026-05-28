@@ -2,13 +2,14 @@
 
 #pragma SWIG nowarn=302,312,317,325,401,402,503
 
-%include <std_string.i>
 %include <stdint.i>
 
 %insert(header_file) %{
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
+#include "bindings/manual/jsb_agora_rtc_ext.h"
+#include "agora/RtcNativeValueToSe.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"
@@ -27,6 +28,7 @@
 
 %{
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
+#include "bindings/manual/jsb_agora_rtc_ext.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"
@@ -47,6 +49,23 @@
 %include "agora_rtc_engine_typemap_out.i"
 
 // ============================================================
+// Ignore constructors (bridge objects are created by the engine, not from JS)
+// ============================================================
+%ignore AudioDeviceCollectionBridge::AudioDeviceCollectionBridge;
+%ignore AudioDeviceManagerBridge::AudioDeviceManagerBridge;
+%ignore H265TranscoderBridge::H265TranscoderBridge;
+%ignore LocalSpatialAudioEngineBridge::LocalSpatialAudioEngineBridge;
+%ignore MediaPlayerBridge::MediaPlayerBridge;
+%ignore MediaPlayerCacheManagerBridge::MediaPlayerCacheManagerBridge;
+%ignore MediaRecorderBridge::MediaRecorderBridge;
+%ignore MusicContentCenterBridge::MusicContentCenterBridge;
+%ignore MusicPlayerBridge::MusicPlayerBridge;
+%ignore ScreenCaptureSourceListBridge::ScreenCaptureSourceListBridge;
+%ignore VideoDeviceCollectionBridge::VideoDeviceCollectionBridge;
+%ignore VideoDeviceManagerBridge::VideoDeviceManagerBridge;
+%ignore VideoEffectObjectBridge::VideoEffectObjectBridge;
+
+// ============================================================
 // Ignore classes (//todo jsb ignore class)
 // ============================================================
 %ignore RtcEngineEventHandlerExBridge;
@@ -65,13 +84,16 @@
 %ignore AudioDeviceCollectionBridge::invalidate;
 
 // AudioDeviceManagerBridge
+%ignore AudioDeviceManagerBridge::audioDeviceManager;
 %ignore AudioDeviceManagerBridge::invalidate;
 
 // H265TranscoderBridge
 %ignore H265TranscoderBridge::h265Transcoder;
 
 // LocalSpatialAudioEngineBridge
+%ignore LocalSpatialAudioEngineBridge::spatialAudioEngine;
 %ignore LocalSpatialAudioEngineBridge::invalidate;
+%ignore LocalSpatialAudioEngineBridge::setZones;
 
 // MediaEngineBridge
 %ignore MediaEngineBridge::addVideoFrameRenderer;
@@ -80,6 +102,7 @@
 %ignore MediaPlayerBridge::hasMediaPlayer;
 %ignore MediaPlayerBridge::mediaPlayer;
 %ignore MediaPlayerBridge::invalidate;
+%ignore MediaPlayerBridge::getState;
 
 // MediaPlayerCacheManagerBridge
 %ignore MediaPlayerCacheManagerBridge::hasCacheManager;

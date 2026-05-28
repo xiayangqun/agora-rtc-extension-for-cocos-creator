@@ -108,6 +108,94 @@ const SKIP_STRUCTS = new Set([
     "IsSwappableImpl",
     "IsSwappable",
     "hash<agora::Optional<T> >",
+
+    // ---- Nested types (inside other structs, not top-level) ----
+    "StreamLayerConfig",      // nested in SimulcastConfig
+    "Packet",                 // nested in IPacketObserver
+    "PeerDownlinkInfo",       // nested in DownlinkNetworkInfo
+    "Region",                 // nested in VideoCompositingLayout
+    "Metadata",               // nested in IMetadataObserver
+    "CollectionEvent",        // nested in ISyncClientObserver
+    "AudioFrame",             // nested in IAudioFrameObserver
+    "AudioParams",            // nested in IAudioFrameObserver
+    "ExtensionMetaInfo",      // nested in IExtensionVideoCodecProvider
+    "ExtensionVideoCodecInfo", // nested in IExtensionVideoCodecProvider
+
+    // ---- Types that don't exist in this SDK version ----
+    "ScreenVideoParameters",
+    "ScreenCaptureParameters2",
+    "ExtensionVersion",
+    "ExtensionInterfaceVersion",
+    "VideoEncoderSettings",
+    "VideoDecoderSettings",
+    "ImagePayloadData",
+    "InputSeiData",
+    "MusicCacheInfo",
+    "MvProperty",
+    "ClimaxSegment",
+    "Music",
+    "VideoCompositingLayout",
+    "MusicContentCenterConfiguration",
+    "DataChannelConfig",
+    "TConnectionInfo",
+    "RtcConnectionConfiguration",
+    "RtmpConnectionConfiguration",
+    "AudioEncoderConfiguration",
+    "AgoraRhythmPlayerConfig",
+    "AudioDeviceInfo",
+    "LoopbackRecordingOption",
+    "AudioSinkWants",
+    "LocalAudioTrackStats",
+    "RemoteAudioTrackStats",
+    "AudioEncFrameRecvParams",
+    "DataChannelInfo",
+    "UserDataChannelInfo",
+    "Capabilities",
+    "LocalVideoTrackStats",
+    "RemoteVideoTrackStats",
+    "ANAStats",
+    "AudioProcessingStats",
+    "LocalAudioDetailedStats",
+    "AudioVolumeInformation",
+    "TConnectSettings",
+    "RtmpStreamingAudioConfiguration",
+    "LocalSpatialAudioConfig",
+    "RtmpStreamingVideoConfiguration",
+    "RtmpConnectionInfo",
+    "RawPixelBuffer",
+    "PaddedRawPixelBuffer",
+    "TextureInfo",
+    "VideoFrameData",
+    "VideoFrameDataV2",
+    "AlphaChannel",
+    "MixerLayoutConfig",
+    "StreamLayerConfigInternal",
+    "SimulcastConfigInternal",
+    "SimulcastStreamProfile",
+    "SpatialAudioZone",
+    "ScreenCaptureConfiguration",
+    "CameraCapturerConfiguration",
+    "DirectCdnStreamingMediaOptions",
+    "ContentInspectConfig",
+    "AdvancedAudioOptions",
+    "ImageTrackOptions",
+    "MediaRecorderConfiguration",
+    "AudioSessionConfiguration",
+    "ChannelMediaOptions",
+    "ScreenCaptureSourceInfo",
+    "SimulcastConfig",
+    "AudioPcmFrame",
+    "AgoraRhythmPlayerConfig",
+    "MusicContentCenterConfiguration",
+    "CameraCapturerConfiguration",
+    "ScreenCaptureConfiguration",
+    "DirectCdnStreamingMediaOptions",
+    "ContentInspectConfig",
+    "AdvancedAudioOptions",
+    "ImageTrackOptions",
+    "MediaRecorderConfiguration",
+    "RemoteVoicePositionInfo",
+    "SpatialAudioZone",
 ]);
 
 const parser = new Parser();
@@ -170,15 +258,22 @@ function extractField(fieldDecl) {
     const identNode = findFieldIdentifier(fieldDecl);
     const typeNode = fieldDecl.childForFieldName("type");
     if (!identNode || !typeNode) return null;
+    // Skip fields with empty names (parsing errors)
+    if (!identNode.text || identNode.text.trim() === '') return null;
 
     const arrayNode = findDescendant(fieldDecl, "array_declarator");
     const pointerNode = findDescendant(fieldDecl, "pointer_declarator");
     const referenceNode = findDescendant(fieldDecl, "reference_declarator");
     const bitfieldNode = findDescendant(fieldDecl, "bitfield_clause");
 
+    const typeStr = extractTypeString(typeNode);
+    // Skip const pointer fields (can't assign to them from JS)
+    const hasConst = fieldDecl.text.includes("const ");
+    if (pointerNode && hasConst) return null;
+
     return {
         name: identNode.text,
-        type: extractTypeString(typeNode),
+        type: typeStr,
         arraySize: arrayNode ? extractArraySize(arrayNode) : "",
         isPointer: Boolean(pointerNode),
         isReference: Boolean(referenceNode),
@@ -500,8 +595,9 @@ function parseProtectedImpls(middleContent) {
 }
 
 function extractUserBlock(content) {
-    const startIdx = content.indexOf(USER_BLOCK_START);
-    const endIdx = content.indexOf(USER_BLOCK_END);
+    // Use lastIndexOf to skip occurrences inside comments
+    const startIdx = content.lastIndexOf(USER_BLOCK_START);
+    const endIdx = content.lastIndexOf(USER_BLOCK_END);
     if (startIdx === -1 || endIdx === -1) return "";
     const afterStartIdx = content.indexOf("\n", startIdx) + 1;
     if (afterStartIdx >= endIdx) return "";
@@ -648,6 +744,8 @@ function main() {
 
     const candidates = allStructs.filter((s) => {
         if (SKIP_STRUCTS.has(s.name)) return false;
+        // Skip template specializations (contain '<' in the name)
+        if (s.name.includes('<')) return false;
         if (s.fields.length === 0) return false;
         return s.namespace[0] === "agora" || s.namespace.length === 0;
     });

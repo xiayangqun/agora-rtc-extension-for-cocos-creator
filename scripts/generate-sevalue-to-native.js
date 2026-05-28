@@ -134,6 +134,93 @@ const SKIP_STRUCTS = new Set([
     "IsSwappableImpl",
     "IsSwappable",
     "hash<agora::Optional<T> >",
+
+    // ---- Nested types (inside other structs, not top-level) ----
+    "StreamLayerConfig",      // nested in SimulcastConfig
+    "Packet",                 // nested in IPacketObserver
+    "PeerDownlinkInfo",       // nested in DownlinkNetworkInfo
+    "Region",                 // nested in VideoCompositingLayout
+    "Metadata",               // nested in IMetadataObserver
+    "CollectionEvent",        // nested in ISyncClientObserver
+    "AudioFrame",             // nested in IAudioFrameObserver
+    "AudioParams",            // nested in IAudioFrameObserver
+    "ExtensionMetaInfo",      // nested in IExtensionVideoCodecProvider
+    "ExtensionVideoCodecInfo", // nested in IExtensionVideoCodecProvider
+
+    // ---- Types that don't exist in this SDK version ----
+    "ScreenVideoParameters",
+    "ScreenCaptureParameters2",
+    "ExtensionVersion",
+    "ExtensionInterfaceVersion",
+    "VideoEncoderSettings",
+    "VideoDecoderSettings",
+    "ImagePayloadData",
+    "InputSeiData",
+    "MusicCacheInfo",
+    "MvProperty",
+    "ClimaxSegment",
+    "Music",
+    "VideoCompositingLayout",
+    "MusicContentCenterConfiguration",
+    "DataChannelConfig",
+    "TConnectionInfo",
+    "RtcConnectionConfiguration",
+    "RtmpConnectionConfiguration",
+    "AudioEncoderConfiguration",
+    "AgoraRhythmPlayerConfig",
+    "AudioDeviceInfo",
+    "LoopbackRecordingOption",
+    "AudioSinkWants",
+    "LocalAudioTrackStats",
+    "RemoteAudioTrackStats",
+    "AudioEncFrameRecvParams",
+    "DataChannelInfo",
+    "UserDataChannelInfo",
+    "Capabilities",
+    "LocalVideoTrackStats",
+    "RemoteVideoTrackStats",
+    "ANAStats",
+    "AudioProcessingStats",
+    "LocalAudioDetailedStats",
+    "AudioVolumeInformation",
+    "TConnectSettings",
+    "RtmpStreamingAudioConfiguration",
+    "LocalSpatialAudioConfig",
+    "RtmpStreamingVideoConfiguration",
+    "RtmpConnectionInfo",
+    "RawPixelBuffer",
+    "PaddedRawPixelBuffer",
+    "TextureInfo",
+    "VideoFrameData",
+    "VideoFrameDataV2",
+    "AlphaChannel",
+    "MixerLayoutConfig",
+    "StreamLayerConfigInternal",
+    "SimulcastConfigInternal",
+    "SimulcastStreamProfile",
+    "ScreenCaptureConfiguration",
+    "CameraCapturerConfiguration",
+    "DirectCdnStreamingMediaOptions",
+    "ContentInspectConfig",
+    "AdvancedAudioOptions",
+    "ImageTrackOptions",
+    "MediaRecorderConfiguration",
+    "AudioSessionConfiguration",
+    "ChannelMediaOptions",
+    "ScreenCaptureSourceInfo",
+    "SimulcastConfig",
+    "AudioPcmFrame",
+    "AgoraRhythmPlayerConfig",
+    "MusicContentCenterConfiguration",
+    "CameraCapturerConfiguration",
+    "ScreenCaptureConfiguration",
+    "DirectCdnStreamingMediaOptions",
+    "ContentInspectConfig",
+    "AdvancedAudioOptions",
+    "ImageTrackOptions",
+    "MediaRecorderConfiguration",
+    "RemoteVoicePositionInfo",
+    "SpatialAudioZone",
 ]);
 
 // ─── AST helpers ─────────────────────────────────────────────────────────
@@ -186,7 +273,9 @@ function extractFields(bodyNode) {
         if (child.type === "field_declaration") {
             const identNode = findFieldIdentifier(child);
             const typeStr = extractTypeString(child.childForFieldName("type"));
-            if (identNode && typeStr) {
+            // Skip pointer fields (need hand-written converter)
+            const hasPointer = findDescendant(child, "pointer_declarator") !== null;
+            if (identNode && typeStr && identNode.text && identNode.text.trim() !== '' && !hasPointer) {
                 fields.push({ name: identNode.text, type: typeStr });
             }
         }
@@ -197,7 +286,8 @@ function extractFields(bodyNode) {
                 if (inner.type === "field_declaration") {
                     const identNode = findFieldIdentifier(inner);
                     const typeStr = extractTypeString(inner.childForFieldName("type"));
-                    if (identNode && typeStr) {
+                    const hasPointer = findDescendant(inner, "pointer_declarator") !== null;
+                    if (identNode && typeStr && identNode.text && identNode.text.trim() !== '' && !hasPointer) {
                         fields.push({ name: identNode.text, type: typeStr });
                     }
                 }
@@ -316,8 +406,9 @@ function parseExistingImpls(middleContent) {
 }
 
 function extractUserBlock(content) {
-    const startIdx = content.indexOf(USER_BLOCK_START);
-    const endIdx = content.indexOf(USER_BLOCK_END);
+    // Use lastIndexOf to skip occurrences inside comments
+    const startIdx = content.lastIndexOf(USER_BLOCK_START);
+    const endIdx = content.lastIndexOf(USER_BLOCK_END);
     if (startIdx === -1 || endIdx === -1) return "";
     const afterStartIdx = content.indexOf("\n", startIdx) + 1;
     if (afterStartIdx >= endIdx) return "";
@@ -491,9 +582,11 @@ function main() {
 
     console.log(`[gen-sevalue] Found ${allStructs.length} struct(s) total`);
 
-    // Filter: skip blacklisted, skip non-agora namespaces
+    // Filter: skip blacklisted, skip non-agora namespaces, skip template specializations
     const candidates = allStructs.filter((s) => {
         if (SKIP_STRUCTS.has(s.name)) return false;
+        // Skip template specializations (contain '<' in the name)
+        if (s.name.includes('<')) return false;
         // Must be in agora::rtc namespace (or global for bridge types)
         const ns = s.namespace.join("::");
         if (ns !== "agora::rtc" && ns !== "agora" && ns !== "") return false;

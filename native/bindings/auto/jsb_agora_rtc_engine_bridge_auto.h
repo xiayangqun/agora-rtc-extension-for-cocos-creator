@@ -34,6 +34,7 @@
 
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
+#include "bindings/manual/jsb_conversions.h"
 #include "bindings/manual/jsb_agora_rtc_ext.h"
 #include "agora/RtcNativeValueToSe.h"
 #include "agora/RtcEngineExBridge.h"
@@ -54,11 +55,6 @@
 
 
 bool register_all_agora_rtc_engine_bridge(se::Object* obj);
-
-
-JSB_REGISTER_OBJECT_TYPE(std::string);
-extern se::Object *__jsb_std_string_proto; // NOLINT
-extern se::Class * __jsb_std_string_class; // NOLINT
 
 
 JSB_REGISTER_OBJECT_TYPE(AgoraRtcNativeContext);

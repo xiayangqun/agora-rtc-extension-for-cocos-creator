@@ -1,5 +1,7 @@
 # Agora RTC Extension for Cocos Creator
 
+[English](README.md)
+
 一个将 [Agora RTC SDK](https://www.agora.io/) 集成到 Cocos Creator 的编辑器扩展。在你的 Cocos Creator 游戏和应用中构建视频通话、互动直播、屏幕共享和媒体播放等功能。
 
 ## 功能特性
@@ -58,44 +60,32 @@
 本扩展采用分层架构，平台无关接口与平台特定实现之间有清晰的分离。
 
 ```mermaid
-block-beta
-  columns 2
+flowchart TB
+    ts["TypeScript 接口层\nIRtcEngine · IRtcEngineEx · IRtcEngineEventHandler\nIMediaPlayer · IAudioDeviceManager · ..."]
 
-  block:ts:2
-    columns 2
-    tsTitle["TypeScript 接口层"]
-    tsDesc["IRtcEngine · IRtcEngineEx · IRtcEngineEventHandler\nIMediaPlayer · IAudioDeviceManager · ..."]
-  end
+    subgraph layer2 [ ]
+        direction LR
+        jsb["JSB 绑定 (原生 C++)\nSWIG 自动生成 + 手写 JSB"]
+        tw["TS Wrapper (Web SDK)\nagora-rtc-sdk-ng 适配层"]
+    end
 
-  block:left
-    columns 1
-    jsbTitle["JSB 绑定 (原生 C++)"]
-    jsbDesc["SWIG 自动生成 + 手写 JSB"]
-  end
+    subgraph layer3 [ ]
+        direction LR
+        native["Agora 原生 SDK\niOS / Android / macOS / Win"]
+        web["agora-rtc-sdk-ng\n(Web SDK)"]
+    end
 
-  block:right
-    columns 1
-    twTitle["TS Wrapper (Web SDK)"]
-    twDesc["agora-rtc-sdk-ng 适配层"]
-  end
+    ts --> jsb & tw
+    jsb --> native
+    tw --> web
 
-  block:left2:1
-    native["Agora 原生 SDK\niOS / Android / macOS / Win"]
-  end
-
-  block:right2:1
-    web["agora-rtc-sdk-ng\n(Web SDK)"]
-  end
-
-  ts --> left & right
-  left --> left2
-  right --> right2
-
-  style ts fill:#4a90d9,color:#fff
-  style left fill:#67b168,color:#fff
-  style right fill:#67b168,color:#fff
-  style left2 fill:#e8a838,color:#fff
-  style right2 fill:#e8a838,color:#fff
+    style ts fill:#4a90d9,color:#fff
+    style jsb fill:#67b168,color:#fff
+    style tw fill:#67b168,color:#fff
+    style native fill:#e8a838,color:#fff
+    style web fill:#e8a838,color:#fff
+    style layer2 fill:none,stroke:none
+    style layer3 fill:none,stroke:none
 ```
 
 ### 各层说明
