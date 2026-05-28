@@ -482,32 +482,6 @@ static bool js_delete_RtcEngineExBridge(se::State& s)
 }
 SE_BIND_FINALIZE_FUNC(js_delete_RtcEngineExBridge) 
 
-static bool js_RtcEngineExBridge_getH265Transcoder(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    std::shared_ptr< H265TranscoderBridge > result;
-    
-    if(argc != 0) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    result = (arg1)->getH265Transcoder();
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject() /*ctx*/);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval());
-    
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_getH265Transcoder) 
-
 static bool js_RtcEngineExBridge_getVersion(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -11254,7 +11228,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     
     cls->defineStaticProperty("__isJSB", se::Value(true), se::PropertyAttribute::READ_ONLY | se::PropertyAttribute::DONT_ENUM | se::PropertyAttribute::DONT_DELETE);
     
-    cls->defineFunction("getH265Transcoder", _SE(js_RtcEngineExBridge_getH265Transcoder)); 
     cls->defineFunction("getVersion", _SE(js_RtcEngineExBridge_getVersion)); 
     cls->defineFunction("getErrorDescription", _SE(js_RtcEngineExBridge_getErrorDescription)); 
     cls->defineFunction("queryCodecCapability", _SE(js_RtcEngineExBridge_queryCodecCapability)); 
@@ -15489,6 +15462,36 @@ static bool js_MusicContentCenterBridge_initialize(se::State& s)
 }
 SE_BIND_FUNC(js_MusicContentCenterBridge_initialize) 
 
+static bool js_MusicContentCenterBridge_renewToken(se::State& s)
+{
+    CC_UNUSED bool ok = true;
+    const auto& args = s.args();
+    size_t argc = args.size();
+    MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
+    std::string *arg2 = 0 ;
+    std::string temp2 ;
+    int result;
+    
+    if(argc != 1) {
+        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+        return false;
+    }
+    arg1 = SE_THIS_OBJECT<MusicContentCenterBridge>(s);
+    if (nullptr == arg1) return true;
+    
+    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
+    arg2 = &temp2;
+    
+    result = (int)(arg1)->renewToken((std::string const &)*arg2);
+    
+    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
+    
+    
+    return true;
+}
+SE_BIND_FUNC(js_MusicContentCenterBridge_renewToken) 
+
 static bool js_MusicContentCenterBridge_registerEventHandler(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -15515,63 +15518,6 @@ static bool js_MusicContentCenterBridge_registerEventHandler(se::State& s)
     return true;
 }
 SE_BIND_FUNC(js_MusicContentCenterBridge_registerEventHandler) 
-
-static bool js_MusicContentCenterBridge_destroyMusicPlayer(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
-    std::shared_ptr< MusicPlayerBridge > arg2 ;
-    int result;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<MusicContentCenterBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    result = (int)(arg1)->destroyMusicPlayer(arg2);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_MusicContentCenterBridge_destroyMusicPlayer) 
-
-static bool js_MusicContentCenterBridge_getMusicPlayer(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
-    int arg2 ;
-    std::shared_ptr< MusicPlayerBridge > *result = 0 ;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<MusicContentCenterBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    result = (std::shared_ptr< MusicPlayerBridge > *)((MusicContentCenterBridge const *)arg1)->getMusicPlayer(arg2);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    SE_HOLD_RETURN_VALUE(result, s.thisObject(), s.rval()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_MusicContentCenterBridge_getMusicPlayer) 
 
 static bool js_MusicContentCenterBridge_getMusicCharts(se::State& s)
 {
@@ -16117,9 +16063,8 @@ bool js_register_MusicContentCenterBridge(se::Object* obj) {
     cls->defineStaticProperty("__isJSB", se::Value(true), se::PropertyAttribute::READ_ONLY | se::PropertyAttribute::DONT_ENUM | se::PropertyAttribute::DONT_DELETE);
     
     cls->defineFunction("initialize", _SE(js_MusicContentCenterBridge_initialize)); 
+    cls->defineFunction("renewToken", _SE(js_MusicContentCenterBridge_renewToken)); 
     cls->defineFunction("registerEventHandler", _SE(js_MusicContentCenterBridge_registerEventHandler)); 
-    cls->defineFunction("destroyMusicPlayer", _SE(js_MusicContentCenterBridge_destroyMusicPlayer)); 
-    cls->defineFunction("getMusicPlayer", _SE(js_MusicContentCenterBridge_getMusicPlayer)); 
     cls->defineFunction("getMusicCharts", _SE(js_MusicContentCenterBridge_getMusicCharts)); 
     cls->defineFunction("getMusicCollectionByMusicChartId", _SE(js_MusicContentCenterBridge_getMusicCollectionByMusicChartId)); 
     cls->defineFunction("searchMusic", _SE(js_MusicContentCenterBridge_searchMusic)); 

@@ -25,9 +25,7 @@ const char *nullableCString(const std::string &value) {
 
 RtcEngineExBridge::RtcEngineExBridge() = default;
 
-RtcEngineExBridge::~RtcEngineExBridge() {
-    release(true);
-}
+RtcEngineExBridge::~RtcEngineExBridge() {}
 
 void RtcEngineExBridge::release(bool sync) {
     (void)sync;
@@ -72,6 +70,7 @@ void RtcEngineExBridge::release(bool sync) {
         _engine = nullptr;
     }
     _eventHandler.reset();
+    delete this;
 }
 
 void RtcEngineExBridge::releaseMediaPlayers() {
@@ -119,7 +118,7 @@ int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, s
     return _engine->initialize(rtcContext);
 }
 
-std::shared_ptr<AudioDeviceManagerBridge> RtcEngineExBridge::getAudioDeviceManager() {
+AudioDeviceManagerBridge *RtcEngineExBridge::getAudioDeviceManager() {
     if (_engine == nullptr) { return nullptr; }
     if (!_audioDeviceManager || !_audioDeviceManager->hasAudioDeviceManager()) {
         agora::rtc::IAudioDeviceManager *rawPtr = nullptr;
@@ -128,10 +127,10 @@ std::shared_ptr<AudioDeviceManagerBridge> RtcEngineExBridge::getAudioDeviceManag
         _audioDeviceManager =
             std::make_shared<AudioDeviceManagerBridge>(agora::agora_refptr<agora::rtc::IAudioDeviceManager>(rawPtr));
     }
-    return _audioDeviceManager;
+    return _audioDeviceManager.get();
 }
 
-std::shared_ptr<VideoDeviceManagerBridge> RtcEngineExBridge::getVideoDeviceManager() {
+VideoDeviceManagerBridge *RtcEngineExBridge::getVideoDeviceManager() {
     if (_engine == nullptr) { return nullptr; }
     if (!_videoDeviceManager || !_videoDeviceManager->hasVideoDeviceManager()) {
         agora::rtc::IVideoDeviceManager *rawPtr = nullptr;
@@ -139,10 +138,10 @@ std::shared_ptr<VideoDeviceManagerBridge> RtcEngineExBridge::getVideoDeviceManag
         if (!rawPtr) { return nullptr; }
         _videoDeviceManager = std::make_shared<VideoDeviceManagerBridge>(rawPtr);
     }
-    return _videoDeviceManager;
+    return _videoDeviceManager.get();
 }
 
-std::shared_ptr<MusicContentCenterBridge> RtcEngineExBridge::getMusicContentCenter() {
+MusicContentCenterBridge *RtcEngineExBridge::getMusicContentCenter() {
     if (_engine == nullptr) { return nullptr; }
     if (!_musicContentCenter || !_musicContentCenter->hasMusicContentCenter()) {
         agora::rtc::IMusicContentCenter *rawPtr = nullptr;
@@ -150,19 +149,19 @@ std::shared_ptr<MusicContentCenterBridge> RtcEngineExBridge::getMusicContentCent
         if (!rawPtr) { return nullptr; }
         _musicContentCenter = std::make_shared<MusicContentCenterBridge>(rawPtr);
     }
-    return _musicContentCenter;
+    return _musicContentCenter.get();
 }
 
-std::shared_ptr<MediaPlayerCacheManagerBridge> RtcEngineExBridge::getMediaPlayerCacheManager() {
+MediaPlayerCacheManagerBridge *RtcEngineExBridge::getMediaPlayerCacheManager() {
     if (!_mediaPlayerCacheManager || !_mediaPlayerCacheManager->hasCacheManager()) {
         auto *cacheManager = ::getMediaPlayerCacheManager();
         if (!cacheManager) { return nullptr; }
         _mediaPlayerCacheManager = std::make_shared<MediaPlayerCacheManagerBridge>(cacheManager);
     }
-    return _mediaPlayerCacheManager;
+    return _mediaPlayerCacheManager.get();
 }
 
-std::shared_ptr<LocalSpatialAudioEngineBridge> RtcEngineExBridge::getLocalSpatialAudioEngine() {
+LocalSpatialAudioEngineBridge *RtcEngineExBridge::getLocalSpatialAudioEngine() {
     if (_engine == nullptr) { return nullptr; }
     if (!_localSpatialAudioEngine || !_localSpatialAudioEngine->hasSpatialAudioEngine()) {
         agora::rtc::ILocalSpatialAudioEngine *rawPtr = nullptr;
@@ -174,10 +173,10 @@ std::shared_ptr<LocalSpatialAudioEngineBridge> RtcEngineExBridge::getLocalSpatia
         _localSpatialAudioEngine = std::make_shared<LocalSpatialAudioEngineBridge>(
             agora::agora_refptr<agora::rtc::ILocalSpatialAudioEngine>(rawPtr));
     }
-    return _localSpatialAudioEngine;
+    return _localSpatialAudioEngine.get();
 }
 
-std::shared_ptr<H265TranscoderBridge> RtcEngineExBridge::getH265Transcoder() {
+H265TranscoderBridge *RtcEngineExBridge::getH265Transcoder() {
     if (_engine == nullptr) { return nullptr; }
     if (!_h265Transcoder || !_h265Transcoder->hasH265Transcoder()) {
         agora::rtc::IH265Transcoder *rawPtr = nullptr;
@@ -186,7 +185,7 @@ std::shared_ptr<H265TranscoderBridge> RtcEngineExBridge::getH265Transcoder() {
         _h265Transcoder =
             std::make_shared<H265TranscoderBridge>(agora::agora_refptr<agora::rtc::IH265Transcoder>(rawPtr));
     }
-    return _h265Transcoder;
+    return _h265Transcoder.get();
 }
 
 GetVersionResult RtcEngineExBridge::getVersion() {
@@ -393,23 +392,26 @@ int RtcEngineExBridge::setFilterEffectOptions(bool enabled, const agora::rtc::Fi
     return _engine->setFilterEffectOptions(enabled, options, type);
 }
 
-std::shared_ptr<VideoEffectObjectBridge> RtcEngineExBridge::createVideoEffectObject(
-    const std::string &bundlePath, agora::media::MEDIA_SOURCE_TYPE type) {
+VideoEffectObjectBridge *RtcEngineExBridge::createVideoEffectObject(const std::string &bundlePath,
+                                                                    agora::media::MEDIA_SOURCE_TYPE type) {
     if (_engine == nullptr) { return nullptr; }
     auto effect = _engine->createVideoEffectObject(bundlePath.c_str(), type);
     if (!effect) { return nullptr; }
     auto bridge = std::make_shared<VideoEffectObjectBridge>(effect);
     _videoEffects.push_back(bridge);
-    return bridge;
+    return bridge.get();
 }
 
-int RtcEngineExBridge::destroyVideoEffectObject(std::shared_ptr<VideoEffectObjectBridge> videoEffectObject) {
+int RtcEngineExBridge::destroyVideoEffectObject(VideoEffectObjectBridge *videoEffectObject) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     if (!videoEffectObject) { return -agora::ERR_INVALID_ARGUMENT; }
     int ret = _engine->destroyVideoEffectObject(videoEffectObject->videoEffectObject());
     if (ret == 0) {
         videoEffectObject->invalidate();
-        auto it = std::find(_videoEffects.begin(), _videoEffects.end(), videoEffectObject);
+        auto it = std::find_if(_videoEffects.begin(), _videoEffects.end(),
+                               [videoEffectObject](const std::shared_ptr<VideoEffectObjectBridge> &ptr) {
+                                   return ptr.get() == videoEffectObject;
+                               });
         if (it != _videoEffects.end()) { _videoEffects.erase(it); }
     }
     return ret;
@@ -600,23 +602,24 @@ int RtcEngineExBridge::stopAudioRecording() {
     return _engine->stopAudioRecording();
 }
 
-std::shared_ptr<MediaPlayerBridge> RtcEngineExBridge::createMediaPlayer() {
+MediaPlayerBridge *RtcEngineExBridge::createMediaPlayer() {
     if (_engine == nullptr) { return nullptr; }
     auto mediaPlayer = _engine->createMediaPlayer();
     if (!mediaPlayer) { return nullptr; }
 
     auto bridge = std::make_shared<MediaPlayerBridge>(mediaPlayer);
     _mediaPlayers.push_back(bridge);
-    return bridge;
+    return bridge.get();
 }
 
-int RtcEngineExBridge::destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer) {
+int RtcEngineExBridge::destroyMediaPlayer(MediaPlayerBridge *mediaPlayer) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     if (mediaPlayer == nullptr) { return -agora::ERR_INVALID_ARGUMENT; }
 
-    auto iter =
-        std::find_if(_mediaPlayers.begin(), _mediaPlayers.end(),
-                     [&mediaPlayer](const std::shared_ptr<MediaPlayerBridge> &item) { return item == mediaPlayer; });
+    auto iter = std::find_if(_mediaPlayers.begin(), _mediaPlayers.end(),
+                             [mediaPlayer](const std::shared_ptr<MediaPlayerBridge> &item) {
+                                 return item.get() == mediaPlayer;
+                             });
     if (iter == _mediaPlayers.end() || !(*iter)->hasMediaPlayer()) { return -agora::ERR_INVALID_ARGUMENT; }
 
     int result = _engine->destroyMediaPlayer((*iter)->mediaPlayer());
@@ -627,23 +630,25 @@ int RtcEngineExBridge::destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> med
     return result;
 }
 
-std::shared_ptr<MediaRecorderBridge> RtcEngineExBridge::createMediaRecorder(
-    const agora::rtc::RecorderStreamInfo &info) {
+MediaRecorderBridge *RtcEngineExBridge::createMediaRecorder(const agora::rtc::RecorderStreamInfo &info) {
     if (_engine == nullptr) { return nullptr; }
     auto recorder = _engine->createMediaRecorder(info);
     if (!recorder) { return nullptr; }
     auto bridge = std::make_shared<MediaRecorderBridge>(recorder);
     _mediaRecorders.push_back(bridge);
-    return bridge;
+    return bridge.get();
 }
 
-int RtcEngineExBridge::destroyMediaRecorder(std::shared_ptr<MediaRecorderBridge> mediaRecorder) {
+int RtcEngineExBridge::destroyMediaRecorder(MediaRecorderBridge *mediaRecorder) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     if (!mediaRecorder) { return -agora::ERR_INVALID_ARGUMENT; }
     int ret = _engine->destroyMediaRecorder(mediaRecorder->mediaRecorder());
     if (ret == 0) {
         mediaRecorder->invalidate();
-        auto it = std::find(_mediaRecorders.begin(), _mediaRecorders.end(), mediaRecorder);
+        auto it = std::find_if(_mediaRecorders.begin(), _mediaRecorders.end(),
+                               [mediaRecorder](const std::shared_ptr<MediaRecorderBridge> &ptr) {
+                                   return ptr.get() == mediaRecorder;
+                               });
         if (it != _mediaRecorders.end()) { _mediaRecorders.erase(it); }
     }
     return ret;
@@ -1183,8 +1188,7 @@ int RtcEngineExBridge::setExtensionProperty(const std::string &provider, const s
 }
 
 GetExtensionPropertyResult RtcEngineExBridge::getExtensionProperty(const std::string &provider,
-                                                                   const std::string &extension,
-                                                                   const std::string &key,
+                                                                   const std::string &extension, const std::string &key,
                                                                    agora::media::MEDIA_SOURCE_TYPE type) {
     GetExtensionPropertyResult result{};
     if (_engine == nullptr) {
@@ -1192,8 +1196,8 @@ GetExtensionPropertyResult RtcEngineExBridge::getExtensionProperty(const std::st
         return result;
     }
     char value[4096] = {};
-    result.errorCode = _engine->getExtensionProperty(provider.c_str(), extension.c_str(), key.c_str(),
-                                                     value, sizeof(value), type);
+    result.errorCode =
+        _engine->getExtensionProperty(provider.c_str(), extension.c_str(), key.c_str(), value, sizeof(value), type);
     result.value = value;
     return result;
 }
@@ -1319,14 +1323,15 @@ int RtcEngineExBridge::enableCameraCenterStage(bool enabled) {
     return _engine->enableCameraCenterStage(enabled);
 }
 
-std::shared_ptr<ScreenCaptureSourceListBridge> RtcEngineExBridge::getScreenCaptureSources(
-    const agora::rtc::SIZE &thumbSize, const agora::rtc::SIZE &iconSize, bool includeScreen) {
+ScreenCaptureSourceListBridge *RtcEngineExBridge::getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
+                                                                          const agora::rtc::SIZE &iconSize,
+                                                                          bool includeScreen) {
     if (_engine == nullptr) { return nullptr; }
     if (!_screenCaptureSources) { _screenCaptureSources = std::make_shared<ScreenCaptureSourceListBridge>(); }
     auto *list = _engine->getScreenCaptureSources(thumbSize, iconSize, includeScreen);
     if (!list) { return nullptr; }
     _screenCaptureSources->setList(list);
-    return _screenCaptureSources;
+    return _screenCaptureSources.get();
 }
 
 int RtcEngineExBridge::setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction) {

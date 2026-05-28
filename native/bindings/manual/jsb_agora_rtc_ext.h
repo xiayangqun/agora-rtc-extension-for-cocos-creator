@@ -128,17 +128,17 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::MusicContentCenterConf
 bool sevalue_to_native(const se::Value &from, agora::util::CopyableAutoPtr<agora::util::IString> *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::commons::LogConfig *to, se::Object *ctx);
 
-
 // Array type stubs for Optional<T> compatibility
-template<size_t N>
-bool sevalue_to_native(const se::Value &from, unsigned char (*to)[N], se::Object *ctx) { return true; }
-template<size_t N>
-bool sevalue_to_native(const se::Value &from, char (*to)[N], se::Object *ctx) { return true; }
+template <size_t N> bool sevalue_to_native(const se::Value &from, unsigned char (*to)[N], se::Object *ctx) {
+    return true;
+}
+template <size_t N> bool sevalue_to_native(const se::Value &from, char (*to)[N], se::Object *ctx) {
+    return true;
+}
 
 namespace agora {
 // Generic converter for Optional<T>
-template<typename T>
-bool sevalue_to_native(const se::Value &from, Optional<T> *to, se::Object *ctx) {
+template <typename T> bool sevalue_to_native(const se::Value &from, Optional<T> *to, se::Object *ctx) {
     if (from.isNullOrUndefined()) {
         *to = nullopt;
         return true;
@@ -148,6 +148,6 @@ bool sevalue_to_native(const se::Value &from, Optional<T> *to, se::Object *ctx) 
     *to = std::move(val);
     return true;
 }
-}
+} // namespace agora
 // USER CODE BLOCK END
 // AUTO-GENERATED DECLARATIONS END

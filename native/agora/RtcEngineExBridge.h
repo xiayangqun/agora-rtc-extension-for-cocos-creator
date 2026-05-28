@@ -98,17 +98,17 @@ public:
     int initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler);
 
     //jsb manual
-    std::shared_ptr<AudioDeviceManagerBridge> getAudioDeviceManager();
+    AudioDeviceManagerBridge *getAudioDeviceManager();
     //jsb manual
-    std::shared_ptr<VideoDeviceManagerBridge> getVideoDeviceManager();
+    VideoDeviceManagerBridge *getVideoDeviceManager();
     //jsb manual
-    std::shared_ptr<MusicContentCenterBridge> getMusicContentCenter();
+    MusicContentCenterBridge *getMusicContentCenter();
     //jsb manual
-    std::shared_ptr<MediaPlayerCacheManagerBridge> getMediaPlayerCacheManager();
+    MediaPlayerCacheManagerBridge *getMediaPlayerCacheManager();
     //jsb manual
-    std::shared_ptr<LocalSpatialAudioEngineBridge> getLocalSpatialAudioEngine();
+    LocalSpatialAudioEngineBridge *getLocalSpatialAudioEngine();
     //jsb manual
-    std::shared_ptr<H265TranscoderBridge> getH265Transcoder();
+    H265TranscoderBridge *getH265Transcoder();
 
     //not support
     // int queryInterface(int iid);
@@ -154,10 +154,10 @@ public:
     int setFilterEffectOptions(bool enabled, const agora::rtc::FilterEffectOptions &options,
                                agora::media::MEDIA_SOURCE_TYPE type);
     //jsb manual
-    std::shared_ptr<VideoEffectObjectBridge> createVideoEffectObject(const std::string &bundlePath,
-                                                                     agora::media::MEDIA_SOURCE_TYPE type);
+    VideoEffectObjectBridge *createVideoEffectObject(const std::string &bundlePath,
+                                                     agora::media::MEDIA_SOURCE_TYPE type);
     //jsb manual
-    int destroyVideoEffectObject(std::shared_ptr<VideoEffectObjectBridge> videoEffectObject);
+    int destroyVideoEffectObject(VideoEffectObjectBridge *videoEffectObject);
     int setLowlightEnhanceOptions(bool enabled, const agora::rtc::LowlightEnhanceOptions &options,
                                   agora::media::MEDIA_SOURCE_TYPE type);
     int setVideoDenoiserOptions(bool enabled, const agora::rtc::VideoDenoiserOptions &options,
@@ -202,13 +202,13 @@ public:
     //                                       agora::rtc::IAudioEncodedFrameObserver *observer);
     int stopAudioRecording();
     //jsb manual
-    std::shared_ptr<MediaPlayerBridge> createMediaPlayer();
+    MediaPlayerBridge *createMediaPlayer();
     //jsb manual
-    int destroyMediaPlayer(std::shared_ptr<MediaPlayerBridge> mediaPlayer);
+    int destroyMediaPlayer(MediaPlayerBridge *mediaPlayer);
     //jsb manual
-    std::shared_ptr<MediaRecorderBridge> createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
+    MediaRecorderBridge *createMediaRecorder(const agora::rtc::RecorderStreamInfo &info);
     //jsb manual
-    int destroyMediaRecorder(std::shared_ptr<MediaRecorderBridge> mediaRecorder);
+    int destroyMediaRecorder(MediaRecorderBridge *mediaRecorder);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle);
     int startAudioMixing(const std::string &filePath, bool loopback, int cycle, int startPos);
     int stopAudioMixing();
@@ -362,9 +362,8 @@ public:
     bool isCameraCenterStageSupported();
     int enableCameraCenterStage(bool enabled);
     //jsb manual
-    std::shared_ptr<ScreenCaptureSourceListBridge> getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
-                                                                           const agora::rtc::SIZE &iconSize,
-                                                                           bool includeScreen);
+    ScreenCaptureSourceListBridge *getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
+                                                           const agora::rtc::SIZE &iconSize, bool includeScreen);
     int setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction);
     int startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
                                       const agora::rtc::ScreenCaptureParameters &captureParams);

@@ -122,6 +122,7 @@ import {
     ScreenCaptureSourceType,
 } from "../../types/AgoraRtcEngine";
 import { RtcConnection } from "../../types/AgoraRtcEngineEx";
+import { IScreenCaptureSourceList } from "../../interface/IScreenCaptureSourceList";
 import { IRtcEngineEventHandler } from "../../interface/IRtcEngineEventHandler";
 import AgoraRTC, {
     IAgoraRTCClient,
@@ -1963,7 +1964,7 @@ export class RtcEngineWeb implements IRtcEngineEx {
         thumbSize: SIZE,
         iconSize: SIZE,
         includeScreen: boolean,
-    ): Promise<ScreenCaptureSourceInfo[]> {
+    ): Promise<IScreenCaptureSourceList> {
         console.warn("web screen capture sources wiill always return fake data");
         const sources: ScreenCaptureSourceInfo[] = [];
         sources.push({
@@ -1994,7 +1995,14 @@ export class RtcEngineWeb implements IRtcEngineEx {
             minimizeWindow: false,
             sourceDisplayId: 0,
         });
-        return sources;
+        return {
+            getCount(): number {
+                return sources.length;
+            },
+            getSourceInfo(index: number): ScreenCaptureSourceInfo {
+                return sources[index];
+            },
+        };
     }
 
     async setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): Promise<number> {

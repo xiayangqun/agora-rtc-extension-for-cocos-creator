@@ -183,6 +183,7 @@ const SKIP_STRUCTS = new Set([
     "AudioSessionConfiguration",
     "ChannelMediaOptions",
     "ScreenCaptureSourceInfo",
+    "ThumbImageBuffer",
     "SimulcastConfig",
     "AudioPcmFrame",
     "AgoraRhythmPlayerConfig",
@@ -812,6 +813,12 @@ function main() {
 
     fs.writeFileSync(OUTPUT_H, newH, "utf8");
     fs.writeFileSync(OUTPUT_CPP, newCpp, "utf8");
+
+    // Format generated files
+    const { spawnSync } = require("child_process");
+    for (const f of [OUTPUT_H, OUTPUT_CPP]) {
+        try { spawnSync("clang-format", ["-i", f], { stdio: "ignore" }); } catch (_) {}
+    }
 
     console.log(
         `[gen-native-tosevalue] Done: ${added} added, ${overwritten} overwritten, ${skipped} skipped (protected)`,

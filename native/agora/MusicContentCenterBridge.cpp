@@ -66,32 +66,26 @@ int MusicContentCenterBridge::unregisterEventHandler() {
     return ret;
 }
 
-std::shared_ptr<MusicPlayerBridge> MusicContentCenterBridge::createMusicPlayer() {
+MusicPlayerBridge *MusicContentCenterBridge::createMusicPlayer() {
     if (!_musicContentCenter) { return nullptr; }
     auto player = _musicContentCenter->createMusicPlayer();
     if (!player) { return nullptr; }
     auto bridge = std::make_shared<MusicPlayerBridge>(player);
     _musicPlayers.push_back(bridge);
-    return bridge;
+    return bridge.get();
 }
 
-int MusicContentCenterBridge::destroyMusicPlayer(std::shared_ptr<MusicPlayerBridge> musicPlayer) {
+int MusicContentCenterBridge::destroyMusicPlayer(MusicPlayerBridge *musicPlayer) {
     if (!_musicContentCenter) { return -agora::ERR_INVALID_ARGUMENT; }
     if (!musicPlayer) { return -agora::ERR_INVALID_ARGUMENT; }
     int ret = _musicContentCenter->destroyMusicPlayer(musicPlayer->musicPlayer());
     musicPlayer->invalidate();
-    auto it = std::find(_musicPlayers.begin(), _musicPlayers.end(), musicPlayer);
+    auto it = std::find_if(_musicPlayers.begin(), _musicPlayers.end(),
+        [musicPlayer](const std::shared_ptr<MusicPlayerBridge>& ptr) {
+            return ptr.get() == musicPlayer;
+        });
     if (it != _musicPlayers.end()) { it->reset(); }
     return ret;
-}
-
-std::shared_ptr<MusicPlayerBridge> *MusicContentCenterBridge::getMusicPlayer(int playerId) const {
-    auto it = std::find_if(_musicPlayers.begin(), _musicPlayers.end(),
-                           [playerId](const std::shared_ptr<MusicPlayerBridge> &bridge) {
-                               return bridge && bridge->getId() == playerId;
-                           });
-    if (it == _musicPlayers.end()) { return nullptr; }
-    return const_cast<std::shared_ptr<MusicPlayerBridge> *>(&(*it));
 }
 
 MCCRequestResult MusicContentCenterBridge::getMusicCharts() {

@@ -78,9 +78,9 @@ public:
     //jsb ignore
     void invalidate();
     //jsb manual
-    std::shared_ptr<AudioDeviceCollectionBridge> enumeratePlaybackDevices();
+    AudioDeviceCollectionBridge *enumeratePlaybackDevices();
     //jsb manual
-    std::shared_ptr<AudioDeviceCollectionBridge> enumerateRecordingDevices();
+    AudioDeviceCollectionBridge *enumerateRecordingDevices();
     int setPlaybackDevice(const std::string &deviceId);
     GetPlaybackDeviceResult getPlaybackDevice();
 

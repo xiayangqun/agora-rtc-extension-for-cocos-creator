@@ -681,6 +681,12 @@ function main() {
         USER_BLOCK_END + "\n" + cppParts.after;
     fs.writeFileSync(OUTPUT_CPP, newCpp, "utf8");
 
+    // Format generated files
+    const { spawnSync } = require("child_process");
+    for (const f of [OUTPUT_H, OUTPUT_CPP]) {
+        try { spawnSync("clang-format", ["-i", f], { stdio: "ignore" }); } catch (_) {}
+    }
+
     console.log(`[gen-sevalue] Done: ${added} added, ${overwritten} overwritten, ${skipped} skipped (protected)`);
     console.log(`[gen-sevalue] Output: ${OUTPUT_H}`);
     console.log(`[gen-sevalue] Output: ${OUTPUT_CPP}`);

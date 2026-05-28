@@ -2762,23 +2762,397 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcConnection *to, se:
     return ok;
 }
 // USER CODE BLOCK START
-bool sevalue_to_native(const se::Value &from, agora::media::SnapshotConfig *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::RtcImage *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfiguration *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastConfig *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfiguration *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::AgoraRhythmPlayerConfig *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::media::ContentInspectConfig *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::AdvancedAudioOptions *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::ImageTrackOptions *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVoicePositionInfo *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::SpatialAudioZone *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::media::MediaRecorderConfiguration *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::rtc::MusicContentCenterConfiguration *to, se::Object *ctx) { return true; }
+// Helper: read Optional field from JS object
+template<typename T>
+static void readOptionalField(se::Object *obj, const char *name, agora::Optional<T> &out, se::Object *ctx) {
+    se::Value tmp;
+    obj->getProperty(name, &tmp, true);
+    if (!tmp.isNullOrUndefined()) {
+        T val{};
+        if (sevalue_to_native(tmp, &val, ctx)) {
+            out = std::move(val);
+        }
+    }
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+
+    obj->getProperty("publishCameraTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCameraTrack = tmp.toBoolean(); }
+    obj->getProperty("publishSecondaryCameraTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishSecondaryCameraTrack = tmp.toBoolean(); }
+    obj->getProperty("publishThirdCameraTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishThirdCameraTrack = tmp.toBoolean(); }
+    obj->getProperty("publishFourthCameraTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishFourthCameraTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMicrophoneTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMicrophoneTrack = tmp.toBoolean(); }
+#if !defined(__ANDROID__) && !(defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) && !defined(__OHOS__)
+    obj->getProperty("publishScreenTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishScreenTrack = tmp.toBoolean(); }
+    obj->getProperty("publishSecondaryScreenTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishSecondaryScreenTrack = tmp.toBoolean(); }
+    obj->getProperty("publishThirdScreenTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishThirdScreenTrack = tmp.toBoolean(); }
+    obj->getProperty("publishFourthScreenTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishFourthScreenTrack = tmp.toBoolean(); }
+#endif
+    obj->getProperty("publishCustomAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCustomAudioTrack = tmp.toBoolean(); }
+    obj->getProperty("publishCustomAudioTrackId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCustomAudioTrackId = tmp.toInt32(); }
+    obj->getProperty("publishCustomVideoTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCustomVideoTrack = tmp.toBoolean(); }
+    obj->getProperty("publishEncodedVideoTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishEncodedVideoTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMediaPlayerAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMediaPlayerAudioTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMediaPlayerVideoTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMediaPlayerVideoTrack = tmp.toBoolean(); }
+    obj->getProperty("publishTranscodedVideoTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishTranscodedVideoTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMixedAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMixedAudioTrack = tmp.toBoolean(); }
+    obj->getProperty("publishLipSyncTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishLipSyncTrack = tmp.toBoolean(); }
+    obj->getProperty("autoSubscribeAudio", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->autoSubscribeAudio = tmp.toBoolean(); }
+    obj->getProperty("autoSubscribeVideo", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->autoSubscribeVideo = tmp.toBoolean(); }
+    obj->getProperty("enableAudioRecordingOrPlayout", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->enableAudioRecordingOrPlayout = tmp.toBoolean(); }
+    obj->getProperty("publishMediaPlayerId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMediaPlayerId = tmp.toInt32(); }
+    obj->getProperty("clientRoleType", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->clientRoleType = static_cast<agora::rtc::CLIENT_ROLE_TYPE>(tmp.toInt32()); }
+    obj->getProperty("audienceLatencyLevel", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->audienceLatencyLevel = static_cast<agora::rtc::AUDIENCE_LATENCY_LEVEL_TYPE>(tmp.toInt32()); }
+    obj->getProperty("defaultVideoStreamType", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->defaultVideoStreamType = static_cast<agora::rtc::VIDEO_STREAM_TYPE>(tmp.toInt32()); }
+    obj->getProperty("channelProfile", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->channelProfile = static_cast<agora::CHANNEL_PROFILE_TYPE>(tmp.toInt32()); }
+    obj->getProperty("audioDelayMs", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->audioDelayMs = tmp.toInt32(); }
+    obj->getProperty("mediaPlayerAudioDelayMs", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->mediaPlayerAudioDelayMs = tmp.toInt32(); }
+    obj->getProperty("token", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->token = tmp.toString().c_str(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::media::SnapshotConfig *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("filePath", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->filePath = tmp.toString().c_str(); }
+    obj->getProperty("position", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->position = static_cast<agora::media::base::VIDEO_MODULE_POSITION>(tmp.toInt32()); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RtcImage *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("url", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->url = tmp.toString().c_str(); }
+    obj->getProperty("x", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->x = tmp.toInt32(); }
+    obj->getProperty("y", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->y = tmp.toInt32(); }
+    obj->getProperty("width", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->width = tmp.toInt32(); }
+    obj->getProperty("height", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->height = tmp.toInt32(); }
+    obj->getProperty("zOrder", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->zOrder = tmp.toInt32(); }
+    obj->getProperty("alpha", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->alpha = static_cast<float>(tmp.toNumber()); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfiguration *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    obj->getProperty("cameraDirection", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->cameraDirection = static_cast<agora::rtc::CAMERA_DIRECTION>(tmp.toInt32()); }
+#else
+    obj->getProperty("deviceId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->deviceId = tmp.toString().c_str(); }
+#endif
+    obj->getProperty("followEncodeDimensionRatio", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->followEncodeDimensionRatio = tmp.toBoolean(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastConfig *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+
+    obj->getProperty("configs", &tmp, true);
+    if (tmp.isObject()) {
+        se::Object *arr = tmp.toObject();
+        uint32_t len = 0;
+        arr->getArrayLength(&len);
+        if (len > agora::rtc::SimulcastConfig::STREAM_LAYER_COUNT_MAX) {
+            len = agora::rtc::SimulcastConfig::STREAM_LAYER_COUNT_MAX;
+        }
+        for (uint32_t i = 0; i < len; i++) {
+            se::Value elem;
+            arr->getArrayElement(i, &elem);
+            if (elem.isObject()) {
+                se::Object *layerObj = elem.toObject();
+                se::Value layerTmp;
+                layerObj->getProperty("dimensions", &layerTmp, true);
+                if (layerTmp.isObject()) {
+                    sevalue_to_native(layerTmp, &(to->configs[i].dimensions), ctx);
+                }
+                layerObj->getProperty("framerate", &layerTmp, true);
+                if (!layerTmp.isNullOrUndefined()) { to->configs[i].framerate = layerTmp.toInt32(); }
+                layerObj->getProperty("enable", &layerTmp, true);
+                if (!layerTmp.isNullOrUndefined()) { to->configs[i].enable = layerTmp.toBoolean(); }
+            }
+        }
+    }
+
+    obj->getProperty("publish_fallback_enable", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publish_fallback_enable = tmp.toBoolean(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfiguration *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("isCaptureWindow", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->isCaptureWindow = tmp.toBoolean(); }
+    obj->getProperty("displayId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->displayId = tmp.toInt64(); }
+    obj->getProperty("windowId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->windowId = tmp.toInt64(); }
+    obj->getProperty("screenRect", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->screenRect), ctx);
+    }
+    obj->getProperty("params", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->params), ctx);
+    }
+    obj->getProperty("regionRect", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->regionRect), ctx);
+    }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("publishCameraTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCameraTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMicrophoneTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMicrophoneTrack = tmp.toBoolean(); }
+    obj->getProperty("publishCustomAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCustomAudioTrack = tmp.toBoolean(); }
+    obj->getProperty("publishCustomVideoTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishCustomVideoTrack = tmp.toBoolean(); }
+    obj->getProperty("publishMediaPlayerAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->publishMediaPlayerAudioTrack = tmp.toBoolean(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AgoraRhythmPlayerConfig *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("beatsPerMeasure", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->beatsPerMeasure = tmp.toInt32(); }
+    obj->getProperty("beatsPerMinute", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->beatsPerMinute = tmp.toInt32(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::media::ContentInspectConfig *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+
+    obj->getProperty("extraInfo", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->extraInfo = tmp.toString().c_str(); }
+
+    obj->getProperty("serverConfig", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->serverConfig = tmp.toString().c_str(); }
+
+    obj->getProperty("modules", &tmp, true);
+    if (tmp.isObject()) {
+        se::Object *arr = tmp.toObject();
+        uint32_t len = 0;
+        arr->getArrayLength(&len);
+        if (len > MAX_CONTENT_INSPECT_MODULE_COUNT) {
+            len = MAX_CONTENT_INSPECT_MODULE_COUNT;
+        }
+        for (uint32_t i = 0; i < len; i++) {
+            se::Value elem;
+            arr->getArrayElement(i, &elem);
+            if (elem.isObject()) {
+                se::Object *modObj = elem.toObject();
+                se::Value modTmp;
+                modObj->getProperty("type", &modTmp, true);
+                if (!modTmp.isNullOrUndefined()) {
+                    to->modules[i].type = static_cast<agora::media::CONTENT_INSPECT_TYPE>(modTmp.toInt32());
+                }
+                modObj->getProperty("interval", &modTmp, true);
+                if (!modTmp.isNullOrUndefined()) {
+                    to->modules[i].interval = static_cast<unsigned int>(modTmp.toInt32());
+                }
+                modObj->getProperty("position", &modTmp, true);
+                if (!modTmp.isNullOrUndefined()) {
+                    to->modules[i].position = static_cast<agora::media::base::VIDEO_MODULE_POSITION>(modTmp.toInt32());
+                }
+            }
+        }
+    }
+
+    obj->getProperty("moduleCount", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->moduleCount = tmp.toInt32(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::AdvancedAudioOptions *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("audioProcessingChannels", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->audioProcessingChannels = tmp.toInt32(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ImageTrackOptions *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("imageUrl", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->imageUrl = tmp.toString().c_str(); }
+    obj->getProperty("fps", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->fps = tmp.toInt32(); }
+    obj->getProperty("mirrorMode", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->mirrorMode = static_cast<agora::rtc::VIDEO_MIRROR_MODE_TYPE>(tmp.toInt32()); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVoicePositionInfo *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("position", &tmp, true);
+    if (tmp.isObject()) {
+        se::Object *arr = tmp.toObject();
+        for (int i = 0; i < 3; i++) {
+            se::Value elem;
+            arr->getArrayElement(i, &elem);
+            to->position[i] = static_cast<float>(elem.toNumber());
+        }
+    }
+    obj->getProperty("forward", &tmp, true);
+    if (tmp.isObject()) {
+        se::Object *arr = tmp.toObject();
+        for (int i = 0; i < 3; i++) {
+            se::Value elem;
+            arr->getArrayElement(i, &elem);
+            to->forward[i] = static_cast<float>(elem.toNumber());
+        }
+    }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::SpatialAudioZone *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("zoneSetId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->zoneSetId = tmp.toInt32(); }
+    // position, forward, right, up are float[3] arrays
+    auto readFloat3 = [&](const char *name, float *out) {
+        obj->getProperty(name, &tmp, true);
+        if (tmp.isObject()) {
+            se::Object *arr = tmp.toObject();
+            for (int i = 0; i < 3; i++) {
+                se::Value elem;
+                arr->getArrayElement(i, &elem);
+                out[i] = static_cast<float>(elem.toNumber());
+            }
+        }
+    };
+    readFloat3("position", to->position);
+    readFloat3("forward", to->forward);
+    readFloat3("right", to->right);
+    readFloat3("up", to->up);
+    obj->getProperty("forwardLength", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->forwardLength = static_cast<float>(tmp.toNumber()); }
+    obj->getProperty("rightLength", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->rightLength = static_cast<float>(tmp.toNumber()); }
+    obj->getProperty("upLength", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->upLength = static_cast<float>(tmp.toNumber()); }
+    obj->getProperty("audioAttenuation", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->audioAttenuation = static_cast<float>(tmp.toNumber()); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::media::MediaRecorderConfiguration *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("storagePath", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->storagePath = tmp.toString().c_str(); }
+    obj->getProperty("containerFormat", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->containerFormat = static_cast<agora::media::MediaRecorderContainerFormat>(tmp.toInt32()); }
+    obj->getProperty("streamType", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->streamType = static_cast<agora::media::MediaRecorderStreamType>(tmp.toInt32()); }
+    obj->getProperty("maxDurationMs", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->maxDurationMs = tmp.toInt32(); }
+    obj->getProperty("recorderInfoUpdateInterval", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->recorderInfoUpdateInterval = tmp.toInt32(); }
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::MusicContentCenterConfiguration *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("appId", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->appId = tmp.toString().c_str(); }
+    obj->getProperty("token", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->token = tmp.toString().c_str(); }
+    obj->getProperty("mccUid", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->mccUid = tmp.toInt64(); }
+    obj->getProperty("maxCacheSize", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->maxCacheSize = tmp.toInt32(); }
+    return true;
+}
+
+// CopyableAutoPtr<IString> is an internal smart pointer type, stub satisfies Optional<T> template
 bool sevalue_to_native(const se::Value &from, agora::util::CopyableAutoPtr<agora::util::IString> *to, se::Object *ctx) { return true; }
-bool sevalue_to_native(const se::Value &from, agora::commons::LogConfig *to, se::Object *ctx) { return true; }
+
+bool sevalue_to_native(const se::Value &from, agora::commons::LogConfig *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("filePath", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->filePath = tmp.toString().c_str(); }
+    obj->getProperty("fileSizeInKB", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->fileSizeInKB = static_cast<unsigned int>(tmp.toInt32()); }
+    obj->getProperty("level", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->level = static_cast<agora::commons::LOG_LEVEL>(tmp.toInt32()); }
+    return true;
+}
 // USER CODE BLOCK END
 // AUTO-GENERATED IMPLEMENTATIONS END
 

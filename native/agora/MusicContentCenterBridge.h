@@ -46,10 +46,9 @@ public:
     int registerEventHandler(se::Object *eventHandler);
     int unregisterEventHandler();
     //jsb manual
-    std::shared_ptr<MusicPlayerBridge> createMusicPlayer();
+    MusicPlayerBridge *createMusicPlayer();
     //jsb manual
-    int destroyMusicPlayer(std::shared_ptr<MusicPlayerBridge> musicPlayer);
-    std::shared_ptr<MusicPlayerBridge> *getMusicPlayer(int playerId) const;
+    int destroyMusicPlayer(MusicPlayerBridge *musicPlayer);
     MCCRequestResult getMusicCharts();
     MCCRequestResult getMusicCollectionByMusicChartId(int32_t musicChartId, int32_t page, int32_t pageSize,
                                                       const std::string &jsonOption = "");

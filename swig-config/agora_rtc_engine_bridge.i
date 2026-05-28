@@ -118,6 +118,7 @@
 %ignore MusicContentCenterBridge::hasMusicContentCenter;
 %ignore MusicContentCenterBridge::musicContentCenter;
 %ignore MusicContentCenterBridge::invalidate;
+%ignore MusicContentCenterBridge::getMusicPlayer;
 
 // MusicPlayerBridge
 %ignore MusicPlayerBridge::musicPlayer;
@@ -147,6 +148,7 @@
 // RtcEngineExBridge — manual bindings
 %ignore RtcEngineExBridge::release;
 %ignore RtcEngineExBridge::initialize;
+%ignore RtcEngineExBridge::getH265Transcoder;
 %ignore RtcEngineExBridge::getAudioDeviceManager;
 %ignore RtcEngineExBridge::getVideoDeviceManager;
 %ignore RtcEngineExBridge::getMusicContentCenter;
@@ -170,9 +172,9 @@
 %ignore MediaRecorderBridge::setMediaRecorderObserver;
 
 // MusicContentCenterBridge — manual bindings
-%ignore MusicContentCenterBridge::renewToken;
 %ignore MusicContentCenterBridge::unregisterEventHandler;
 %ignore MusicContentCenterBridge::createMusicPlayer;
+%ignore MusicContentCenterBridge::destroyMusicPlayer;
 
 // AudioDeviceCollectionBridge — manual bindings (merged overloads)
 %ignore AudioDeviceCollectionBridge::getDevice;

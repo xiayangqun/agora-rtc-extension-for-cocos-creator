@@ -35,24 +35,24 @@ void AudioDeviceManagerBridge::invalidate() {
     }
 }
 
-std::shared_ptr<AudioDeviceCollectionBridge> AudioDeviceManagerBridge::enumeratePlaybackDevices() {
+AudioDeviceCollectionBridge *AudioDeviceManagerBridge::enumeratePlaybackDevices() {
     if (!_audioDeviceManager) { return nullptr; }
     if (!_playbackDevices) {
         auto *collection = _audioDeviceManager->enumeratePlaybackDevices();
         if (!collection) { return nullptr; }
         _playbackDevices = std::make_shared<AudioDeviceCollectionBridge>(collection);
     }
-    return _playbackDevices;
+    return _playbackDevices.get();
 }
 
-std::shared_ptr<AudioDeviceCollectionBridge> AudioDeviceManagerBridge::enumerateRecordingDevices() {
+AudioDeviceCollectionBridge *AudioDeviceManagerBridge::enumerateRecordingDevices() {
     if (!_audioDeviceManager) { return nullptr; }
     if (!_recordingDevices) {
         auto *collection = _audioDeviceManager->enumerateRecordingDevices();
         if (!collection) { return nullptr; }
         _recordingDevices = std::make_shared<AudioDeviceCollectionBridge>(collection);
     }
-    return _recordingDevices;
+    return _recordingDevices.get();
 }
 
 int AudioDeviceManagerBridge::setPlaybackDevice(const std::string &deviceId) {

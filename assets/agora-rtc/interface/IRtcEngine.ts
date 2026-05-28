@@ -104,6 +104,7 @@ import { IMediaPlayerCacheManager } from "./IMediaPlayerCacheManager";
 import { IMediaRecorder } from "./IMediaRecorder";
 import { IMusicContentCenter } from "./IMusicContentCenter";
 import { IVideoDeviceManager } from "./IVideoDeviceManager";
+import { IScreenCaptureSourceList } from "./IScreenCaptureSourceList";
 import { IVideoEffectObject } from "./IVideoEffectObject";
 
 import { _decorator } from "cc";
@@ -608,11 +609,7 @@ export interface IRtcEngine {
 
     enableCameraCenterStage(enabled: boolean): Promise<number>;
 
-    getScreenCaptureSources(
-        thumbSize: SIZE,
-        iconSize: SIZE,
-        includeScreen: boolean,
-    ): Promise<ScreenCaptureSourceInfo[]>;
+    getScreenCaptureSources(thumbSize: SIZE, iconSize: SIZE, includeScreen: boolean): Promise<IScreenCaptureSourceList>;
 
     setAudioSessionOperationRestriction(restriction: AUDIO_SESSION_OPERATION_RESTRICTION): Promise<number>;
 

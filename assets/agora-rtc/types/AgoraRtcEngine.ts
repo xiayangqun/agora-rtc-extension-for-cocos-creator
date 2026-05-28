@@ -424,7 +424,7 @@ export interface SIZE {
 }
 
 export interface ThumbImageBuffer {
-    buffer: Uint8Array;
+    buffer: ArrayBuffer;
 
     length: number;
 

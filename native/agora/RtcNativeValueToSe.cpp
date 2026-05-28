@@ -9,8 +9,7 @@
 
 // AUTO-GENERATED IMPLEMENTATIONS START
 
-bool nativevalue_to_se(const agora::base::AgoraServiceConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::base::AgoraServiceConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -58,8 +57,7 @@ bool nativevalue_to_se(const agora::base::AgoraServiceConfiguration &from, se::V
     return ok;
 }
 
-bool nativevalue_to_se(const agora::base::SyncConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::base::SyncConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -77,8 +75,7 @@ bool nativevalue_to_se(const agora::base::SyncConfig &from, se::Value &to, se::O
     return ok;
 }
 
-bool nativevalue_to_se(const agora::commons::LogConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::commons::LogConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -93,8 +90,7 @@ bool nativevalue_to_se(const agora::commons::LogConfig &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::AudioSpectrumData &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::AudioSpectrumData &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -106,8 +102,7 @@ bool nativevalue_to_se(const agora::media::AudioSpectrumData &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::AudioEncodedFrameInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::AudioEncodedFrameInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -122,8 +117,7 @@ bool nativevalue_to_se(const agora::media::base::AudioEncodedFrameInfo &from, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::CacheStatistics &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::CacheStatistics &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -141,8 +135,7 @@ bool nativevalue_to_se(const agora::media::base::CacheStatistics &from, se::Valu
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::ColorSpace &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::ColorSpace &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -163,8 +156,7 @@ bool nativevalue_to_se(const agora::media::base::ColorSpace &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::ExternalVideoFrame &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::ExternalVideoFrame &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -255,8 +247,7 @@ bool nativevalue_to_se(const agora::media::base::ExternalVideoFrame &from, se::V
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::Hdr10MetadataInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::Hdr10MetadataInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -301,8 +292,7 @@ bool nativevalue_to_se(const agora::media::base::Hdr10MetadataInfo &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::MediaSource &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::MediaSource &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -332,8 +322,7 @@ bool nativevalue_to_se(const agora::media::base::MediaSource &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::PacketOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::PacketOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -348,8 +337,7 @@ bool nativevalue_to_se(const agora::media::base::PacketOptions &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::PlayerPlaybackStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::PlayerPlaybackStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -370,8 +358,7 @@ bool nativevalue_to_se(const agora::media::base::PlayerPlaybackStats &from, se::
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::PlayerStreamInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::PlayerStreamInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -417,8 +404,7 @@ bool nativevalue_to_se(const agora::media::base::PlayerStreamInfo &from, se::Val
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::PlayerUpdatedInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::PlayerUpdatedInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -442,8 +428,7 @@ bool nativevalue_to_se(const agora::media::base::PlayerUpdatedInfo &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::SrcInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::SrcInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -455,8 +440,7 @@ bool nativevalue_to_se(const agora::media::base::SrcInfo &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::base::VideoFrame &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::base::VideoFrame &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -544,8 +528,7 @@ bool nativevalue_to_se(const agora::media::base::VideoFrame &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::ContentInspectModule &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::ContentInspectModule &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -563,8 +546,7 @@ bool nativevalue_to_se(const agora::media::ContentInspectModule &from, se::Value
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::RecorderInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::RecorderInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -579,8 +561,7 @@ bool nativevalue_to_se(const agora::media::RecorderInfo &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::SnapshotConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::SnapshotConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -592,8 +573,7 @@ bool nativevalue_to_se(const agora::media::SnapshotConfig &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::media::UserAudioSpectrumInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::media::UserAudioSpectrumInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -608,8 +588,7 @@ bool nativevalue_to_se(const agora::media::UserAudioSpectrumInfo &from, se::Valu
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AdvancedConfigInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AdvancedConfigInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -621,8 +600,7 @@ bool nativevalue_to_se(const agora::rtc::AdvancedConfigInfo &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AdvanceOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AdvanceOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -640,8 +618,7 @@ bool nativevalue_to_se(const agora::rtc::AdvanceOptions &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioEncodedFrameObserverConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioEncodedFrameObserverConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -656,8 +633,7 @@ bool nativevalue_to_se(const agora::rtc::AudioEncodedFrameObserverConfig &from, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioParameters &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioParameters &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -675,8 +651,7 @@ bool nativevalue_to_se(const agora::rtc::AudioParameters &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioPcmDataInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioPcmDataInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -700,8 +675,7 @@ bool nativevalue_to_se(const agora::rtc::AudioPcmDataInfo &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioRecordingConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioRecordingConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -725,8 +699,7 @@ bool nativevalue_to_se(const agora::rtc::AudioRecordingConfiguration &from, se::
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioTrackConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioTrackConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -741,8 +714,7 @@ bool nativevalue_to_se(const agora::rtc::AudioTrackConfig &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::AudioVolumeInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::AudioVolumeInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -763,8 +735,7 @@ bool nativevalue_to_se(const agora::rtc::AudioVolumeInfo &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::BeautyOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::BeautyOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -788,8 +759,7 @@ bool nativevalue_to_se(const agora::rtc::BeautyOptions &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ChannelMediaInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ChannelMediaInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -801,8 +771,7 @@ bool nativevalue_to_se(const agora::rtc::ChannelMediaInfo &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ChannelMediaRelayConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ChannelMediaRelayConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -820,8 +789,7 @@ bool nativevalue_to_se(const agora::rtc::ChannelMediaRelayConfiguration &from, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ClientRoleOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ClientRoleOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -833,8 +801,7 @@ bool nativevalue_to_se(const agora::rtc::ClientRoleOptions &from, se::Value &to,
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::CodecCapInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::CodecCapInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -852,8 +819,7 @@ bool nativevalue_to_se(const agora::rtc::CodecCapInfo &from, se::Value &to, se::
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::CodecCapLevels &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::CodecCapLevels &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -868,8 +834,7 @@ bool nativevalue_to_se(const agora::rtc::CodecCapLevels &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ColorEnhanceOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ColorEnhanceOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -884,8 +849,7 @@ bool nativevalue_to_se(const agora::rtc::ColorEnhanceOptions &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::DataStreamConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::DataStreamConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -900,8 +864,7 @@ bool nativevalue_to_se(const agora::rtc::DataStreamConfig &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::DeviceInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::DeviceInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -913,8 +876,7 @@ bool nativevalue_to_se(const agora::rtc::DeviceInfo &from, se::Value &to, se::Ob
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::DirectCdnStreamingStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::DirectCdnStreamingStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -938,8 +900,7 @@ bool nativevalue_to_se(const agora::rtc::DirectCdnStreamingStats &from, se::Valu
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::DownlinkNetworkInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::DownlinkNetworkInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -963,8 +924,7 @@ bool nativevalue_to_se(const agora::rtc::DownlinkNetworkInfo &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::EchoTestConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::EchoTestConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -985,8 +945,7 @@ bool nativevalue_to_se(const agora::rtc::EchoTestConfiguration &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameAdvancedSettings &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameAdvancedSettings &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1001,8 +960,7 @@ bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameAdvancedSettings &from
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1029,8 +987,7 @@ bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameInfo &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::EncodedVideoFrameInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::EncodedVideoFrameInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1072,8 +1029,7 @@ bool nativevalue_to_se(const agora::rtc::EncodedVideoFrameInfo &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::EncryptionConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::EncryptionConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1098,8 +1054,7 @@ bool nativevalue_to_se(const agora::rtc::EncryptionConfig &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ExtensionContext &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ExtensionContext &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1114,8 +1069,7 @@ bool nativevalue_to_se(const agora::rtc::ExtensionContext &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ExtensionInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ExtensionInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1133,8 +1087,7 @@ bool nativevalue_to_se(const agora::rtc::ExtensionInfo &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::FaceShapeAreaOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::FaceShapeAreaOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1149,8 +1102,7 @@ bool nativevalue_to_se(const agora::rtc::FaceShapeAreaOptions &from, se::Value &
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::FaceShapeBeautyOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::FaceShapeBeautyOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1165,8 +1117,7 @@ bool nativevalue_to_se(const agora::rtc::FaceShapeBeautyOptions &from, se::Value
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::FilterEffectOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::FilterEffectOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1178,8 +1129,7 @@ bool nativevalue_to_se(const agora::rtc::FilterEffectOptions &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::FocalLengthInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::FocalLengthInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1194,8 +1144,7 @@ bool nativevalue_to_se(const agora::rtc::FocalLengthInfo &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::InjectStreamConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::InjectStreamConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1228,8 +1177,7 @@ bool nativevalue_to_se(const agora::rtc::InjectStreamConfig &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LastmileProbeConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LastmileProbeConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1250,8 +1198,7 @@ bool nativevalue_to_se(const agora::rtc::LastmileProbeConfig &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LastmileProbeOneWayResult &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LastmileProbeOneWayResult &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1269,8 +1216,7 @@ bool nativevalue_to_se(const agora::rtc::LastmileProbeOneWayResult &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LastmileProbeResult &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LastmileProbeResult &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1291,8 +1237,7 @@ bool nativevalue_to_se(const agora::rtc::LastmileProbeResult &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LeaveChannelOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LeaveChannelOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1310,8 +1255,7 @@ bool nativevalue_to_se(const agora::rtc::LeaveChannelOptions &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LiveStreamAdvancedFeature &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LiveStreamAdvancedFeature &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1323,8 +1267,7 @@ bool nativevalue_to_se(const agora::rtc::LiveStreamAdvancedFeature &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LiveTranscoding &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LiveTranscoding &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1396,8 +1339,7 @@ bool nativevalue_to_se(const agora::rtc::LiveTranscoding &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LocalAccessPointConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LocalAccessPointConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1421,8 +1363,7 @@ bool nativevalue_to_se(const agora::rtc::LocalAccessPointConfiguration &from, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LocalAudioMixerConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LocalAudioMixerConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1440,8 +1381,7 @@ bool nativevalue_to_se(const agora::rtc::LocalAudioMixerConfiguration &from, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LocalAudioStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LocalAudioStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1477,8 +1417,7 @@ bool nativevalue_to_se(const agora::rtc::LocalAudioStats &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LocalTranscoderConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LocalTranscoderConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1499,8 +1438,7 @@ bool nativevalue_to_se(const agora::rtc::LocalTranscoderConfiguration &from, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LogUploadServerInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LogUploadServerInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1515,8 +1453,7 @@ bool nativevalue_to_se(const agora::rtc::LogUploadServerInfo &from, se::Value &t
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::LowlightEnhanceOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::LowlightEnhanceOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1531,8 +1468,7 @@ bool nativevalue_to_se(const agora::rtc::LowlightEnhanceOptions &from, se::Value
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::MixedAudioStream &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::MixedAudioStream &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1550,8 +1486,7 @@ bool nativevalue_to_se(const agora::rtc::MixedAudioStream &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::MultipathStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::MultipathStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1581,8 +1516,7 @@ bool nativevalue_to_se(const agora::rtc::MultipathStats &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::PathStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::PathStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1600,8 +1534,7 @@ bool nativevalue_to_se(const agora::rtc::PathStats &from, se::Value &to, se::Obj
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::PublisherConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::PublisherConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1637,8 +1570,7 @@ bool nativevalue_to_se(const agora::rtc::PublisherConfiguration &from, se::Value
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::RecorderStreamInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::RecorderStreamInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1653,8 +1585,7 @@ bool nativevalue_to_se(const agora::rtc::RecorderStreamInfo &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::Rectangle &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::Rectangle &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1675,8 +1606,7 @@ bool nativevalue_to_se(const agora::rtc::Rectangle &from, se::Value &to, se::Obj
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::RemoteVideoStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::RemoteVideoStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1742,8 +1672,7 @@ bool nativevalue_to_se(const agora::rtc::RemoteVideoStats &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::RtcConnection &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::RtcConnection &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1755,8 +1684,7 @@ bool nativevalue_to_se(const agora::rtc::RtcConnection &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::RtcEngineContext &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::RtcEngineContext &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1795,8 +1723,7 @@ bool nativevalue_to_se(const agora::rtc::RtcEngineContext &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::RtcStats &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::RtcStats &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1907,8 +1834,7 @@ bool nativevalue_to_se(const agora::rtc::RtcStats &from, se::Value &to, se::Obje
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ScreenAudioParameters &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ScreenAudioParameters &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1929,8 +1855,7 @@ bool nativevalue_to_se(const agora::rtc::ScreenAudioParameters &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ScreenCaptureParameters &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::ScreenCaptureParameters &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1975,8 +1900,7 @@ bool nativevalue_to_se(const agora::rtc::ScreenCaptureParameters &from, se::Valu
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::SegmentationProperty &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::SegmentationProperty &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -1994,8 +1918,7 @@ bool nativevalue_to_se(const agora::rtc::SegmentationProperty &from, se::Value &
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::SenderOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::SenderOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2013,8 +1936,7 @@ bool nativevalue_to_se(const agora::rtc::SenderOptions &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2032,8 +1954,7 @@ bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2048,27 +1969,7 @@ bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx)
-{
-    se::HandleObject obj(se::Object::createPlainObject());
-    se::Value field;
-    bool ok = true;
-
-    ok &= nativevalue_to_se(from.length, field, ctx);
-    if (ok) { obj->setProperty("length", field); }
-
-    ok &= nativevalue_to_se(from.width, field, ctx);
-    if (ok) { obj->setProperty("width", field); }
-
-    ok &= nativevalue_to_se(from.height, field, ctx);
-    if (ok) { obj->setProperty("height", field); }
-
-    to.setObject(obj);
-    return ok;
-}
-
-bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2101,8 +2002,7 @@ bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::TranscodingVideoStream &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::TranscodingVideoStream &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2141,8 +2041,7 @@ bool nativevalue_to_se(const agora::rtc::TranscodingVideoStream &from, se::Value
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::UplinkNetworkInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::UplinkNetworkInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2154,8 +2053,7 @@ bool nativevalue_to_se(const agora::rtc::UplinkNetworkInfo &from, se::Value &to,
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::UserInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::UserInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2169,8 +2067,7 @@ bool nativevalue_to_se(const agora::rtc::UserInfo &from, se::Value &to, se::Obje
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoCanvas &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoCanvas &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2215,8 +2112,7 @@ bool nativevalue_to_se(const agora::rtc::VideoCanvas &from, se::Value &to, se::O
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoDenoiserOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoDenoiserOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2231,8 +2127,7 @@ bool nativevalue_to_se(const agora::rtc::VideoDenoiserOptions &from, se::Value &
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoDimensions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoDimensions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2247,8 +2142,7 @@ bool nativevalue_to_se(const agora::rtc::VideoDimensions &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoEncoderConfiguration &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoEncoderConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2284,8 +2178,7 @@ bool nativevalue_to_se(const agora::rtc::VideoEncoderConfiguration &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoFormat &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoFormat &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2303,8 +2196,7 @@ bool nativevalue_to_se(const agora::rtc::VideoFormat &from, se::Value &to, se::O
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoRenderingTracingInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoRenderingTracingInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2334,8 +2226,7 @@ bool nativevalue_to_se(const agora::rtc::VideoRenderingTracingInfo &from, se::Va
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoSubscriptionOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoSubscriptionOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2350,8 +2241,7 @@ bool nativevalue_to_se(const agora::rtc::VideoSubscriptionOptions &from, se::Val
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VideoTrackInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VideoTrackInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2381,8 +2271,7 @@ bool nativevalue_to_se(const agora::rtc::VideoTrackInfo &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::VirtualBackgroundSource &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::VirtualBackgroundSource &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2400,8 +2289,7 @@ bool nativevalue_to_se(const agora::rtc::VirtualBackgroundSource &from, se::Valu
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkBuffer &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkBuffer &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2422,8 +2310,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkBuffer &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkConfig &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2438,8 +2325,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkConfig &from, se::Value &to, s
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkLiteral &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkLiteral &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2454,8 +2340,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkLiteral &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkOptions &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkOptions &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2482,8 +2367,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkOptions &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkRatio &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkRatio &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2501,8 +2385,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkRatio &from, se::Value &to, se
     return ok;
 }
 
-bool nativevalue_to_se(const agora::rtc::WatermarkTimestamp &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::rtc::WatermarkTimestamp &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2517,8 +2400,7 @@ bool nativevalue_to_se(const agora::rtc::WatermarkTimestamp &from, se::Value &to
     return ok;
 }
 
-bool nativevalue_to_se(const agora::SpatialAudioParams &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::SpatialAudioParams &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2551,8 +2433,7 @@ bool nativevalue_to_se(const agora::SpatialAudioParams &from, se::Value &to, se:
     return ok;
 }
 
-bool nativevalue_to_se(const agora::UserInfo &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::UserInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2570,8 +2451,7 @@ bool nativevalue_to_se(const agora::UserInfo &from, se::Value &to, se::Object *c
     return ok;
 }
 
-bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object *ctx)
-{
+bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
@@ -2601,24 +2481,100 @@ bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object
     return ok;
 }
 // USER CODE BLOCK START
+
+// Helper: set property only when Optional has value
+template <typename T>
+static void setOptionalProp(const agora::Optional<T> &opt, const char *name, se::Object *obj, se::Object *ctx) {
+    if (opt.has_value()) {
+        se::Value val;
+        if (nativevalue_to_se(opt.value(), val, ctx)) { obj->setProperty(name, val); }
+    }
+}
+
 bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+
+    setOptionalProp(from.publishCameraTrack, "publishCameraTrack", obj, ctx);
+    setOptionalProp(from.publishSecondaryCameraTrack, "publishSecondaryCameraTrack", obj, ctx);
+    setOptionalProp(from.publishThirdCameraTrack, "publishThirdCameraTrack", obj, ctx);
+    setOptionalProp(from.publishFourthCameraTrack, "publishFourthCameraTrack", obj, ctx);
+    setOptionalProp(from.publishMicrophoneTrack, "publishMicrophoneTrack", obj, ctx);
+#if defined(__ANDROID__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || defined(__OHOS__)
+    setOptionalProp(from.publishScreenCaptureAudio, "publishScreenCaptureAudio", obj, ctx);
+    setOptionalProp(from.publishScreenCaptureVideo, "publishScreenCaptureVideo", obj, ctx);
+#else
+    setOptionalProp(from.publishScreenTrack, "publishScreenTrack", obj, ctx);
+    setOptionalProp(from.publishSecondaryScreenTrack, "publishSecondaryScreenTrack", obj, ctx);
+    setOptionalProp(from.publishThirdScreenTrack, "publishThirdScreenTrack", obj, ctx);
+    setOptionalProp(from.publishFourthScreenTrack, "publishFourthScreenTrack", obj, ctx);
+#endif
+    setOptionalProp(from.publishCustomAudioTrack, "publishCustomAudioTrack", obj, ctx);
+    setOptionalProp(from.publishCustomAudioTrackId, "publishCustomAudioTrackId", obj, ctx);
+    setOptionalProp(from.publishCustomVideoTrack, "publishCustomVideoTrack", obj, ctx);
+    setOptionalProp(from.publishEncodedVideoTrack, "publishEncodedVideoTrack", obj, ctx);
+    setOptionalProp(from.publishMediaPlayerAudioTrack, "publishMediaPlayerAudioTrack", obj, ctx);
+    setOptionalProp(from.publishMediaPlayerVideoTrack, "publishMediaPlayerVideoTrack", obj, ctx);
+    setOptionalProp(from.publishTranscodedVideoTrack, "publishTranscodedVideoTrack", obj, ctx);
+    setOptionalProp(from.publishMixedAudioTrack, "publishMixedAudioTrack", obj, ctx);
+    setOptionalProp(from.publishLipSyncTrack, "publishLipSyncTrack", obj, ctx);
+    setOptionalProp(from.autoSubscribeAudio, "autoSubscribeAudio", obj, ctx);
+    setOptionalProp(from.autoSubscribeVideo, "autoSubscribeVideo", obj, ctx);
+    setOptionalProp(from.enableAudioRecordingOrPlayout, "enableAudioRecordingOrPlayout", obj, ctx);
+    setOptionalProp(from.publishMediaPlayerId, "publishMediaPlayerId", obj, ctx);
+    setOptionalProp(from.clientRoleType, "clientRoleType", obj, ctx);
+    setOptionalProp(from.audienceLatencyLevel, "audienceLatencyLevel", obj, ctx);
+    setOptionalProp(from.defaultVideoStreamType, "defaultVideoStreamType", obj, ctx);
+    setOptionalProp(from.channelProfile, "channelProfile", obj, ctx);
+    setOptionalProp(from.audioDelayMs, "audioDelayMs", obj, ctx);
+    setOptionalProp(from.mediaPlayerAudioDelayMs, "mediaPlayerAudioDelayMs", obj, ctx);
+    setOptionalProp(from.token, "token", obj, ctx);
+
+    to.setObject(obj);
+    return true;
+}
+
+bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    if (from.buffer && from.length > 0) {
+        se::HandleObject arrayBuf(se::Object::createArrayBufferObject(from.buffer, from.length));
+        obj->setProperty("buffer", se::Value(arrayBuf));
+    } else {
+        obj->setProperty("buffer", se::Value::Null);
+    }
+    obj->setProperty("length", se::Value(from.length));
+    obj->setProperty("width", se::Value(from.width));
+    obj->setProperty("height", se::Value(from.height));
+    to.setObject(obj);
+    return true;
+}
+
+bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
     bool ok = true;
-    ok &= nativevalue_to_se(from.autoSubscribeAudio, field, ctx);
-    if (ok) { obj->setProperty("autoSubscribeAudio", field); }
-    ok &= nativevalue_to_se(from.autoSubscribeVideo, field, ctx);
-    if (ok) { obj->setProperty("autoSubscribeVideo", field); }
-    ok &= nativevalue_to_se(from.publishCameraTrack, field, ctx);
-    if (ok) { obj->setProperty("publishCameraTrack", field); }
-    ok &= nativevalue_to_se(from.publishMicrophoneTrack, field, ctx);
-    if (ok) { obj->setProperty("publishMicrophoneTrack", field); }
-    ok &= nativevalue_to_se(from.publishScreenTrack, field, ctx);
-    if (ok) { obj->setProperty("publishScreenTrack", field); }
-    ok &= nativevalue_to_se(from.clientRoleType, field, ctx);
-    if (ok) { obj->setProperty("clientRoleType", field); }
-    ok &= nativevalue_to_se(from.channelProfile, field, ctx);
-    if (ok) { obj->setProperty("channelProfile", field); }
+
+    ok &= nativevalue_to_se(from.type, field, ctx);
+    if (ok) { obj->setProperty("type", field); }
+
+    ok &= nativevalue_to_se(from.sourceId, field, ctx);
+    if (ok) { obj->setProperty("sourceId", field); }
+
+    obj->setProperty("sourceName", se::Value(from.sourceName ? from.sourceName : ""));
+
+    nativevalue_to_se(from.thumbImage, field, ctx);
+    obj->setProperty("thumbImage", field);
+
+    nativevalue_to_se(from.iconImage, field, ctx);
+    obj->setProperty("iconImage", field);
+
+    obj->setProperty("processPath", se::Value(from.processPath ? from.processPath : ""));
+    obj->setProperty("sourceTitle", se::Value(from.sourceTitle ? from.sourceTitle : ""));
+    obj->setProperty("primaryMonitor", se::Value(from.primaryMonitor));
+    obj->setProperty("isOccluded", se::Value(from.isOccluded));
+
+    ok &= nativevalue_to_se(from.position, field, ctx);
+    if (ok) { obj->setProperty("position", field); }
+
     to.setObject(obj);
     return ok;
 }
