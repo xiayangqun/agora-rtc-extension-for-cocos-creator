@@ -70,7 +70,10 @@ void RtcEngineExBridge::release(bool sync) {
         _engine = nullptr;
     }
     _eventHandler.reset();
-    delete this;
+
+    //do not delete this, when let rtcEngine = new jsb.agora.RtcEngineExBridge(), prt will store in a std:shared_ptr, when call release, it will call delete this, if we call delete this here, it will cause double free.
+    //when rtcEngine GC, shared_ptr will call delete this, if we call delete this here, it will cause double free.
+    //delete this;
 }
 
 void RtcEngineExBridge::releaseMediaPlayers() {
@@ -109,9 +112,9 @@ void RtcEngineExBridge::releaseVideoEffects() {
 }
 
 int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler) {
-    release(true);
+    if (_engine != nullptr) { return -agora::ERR_ALREADY_IN_USE; }
     _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngine());
-    if (_engine == nullptr) { return -1; }
+    if (_engine == nullptr) { return -agora::ERR_FAILED; }
     _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
     agora::rtc::RtcEngineContext rtcContext = context;
     rtcContext.eventHandler = _eventHandler.get();

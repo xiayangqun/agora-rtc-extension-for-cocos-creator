@@ -2644,6 +2644,11 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcEngineContext *to, 
     se::Value field;
     bool ok = true;
 
+    json->getProperty("appId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->appId = strdup(field.toString().c_str());
+    }
+
     json->getProperty("channelProfile", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->channelProfile), ctx);

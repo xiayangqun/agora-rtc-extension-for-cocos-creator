@@ -543,31 +543,33 @@ bool register_agora_rtc_manual(se::Object *global) {
     // Merge manual bindings into auto-generated classes registered under jsb.agora
 
     // --- RtcEngineExBridge ---
-    if (__jsb_RtcEngineExBridge_class) {
-        auto *cls = __jsb_RtcEngineExBridge_class;
-        cls->defineFunction("initialize", _SE(js_agora_RtcEngineBridge_initialize));
-        cls->defineFunction("joinChannel", _SE(js_agora_RtcEngineBridge_joinChannel));
-        cls->defineFunction("release", _SE(js_agora_RtcEngineBridge_release));
-        cls->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineBridge_createMediaPlayer));
-        cls->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
-        cls->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));
-        cls->defineFunction("destroyMediaRecorder", _SE(js_agora_RtcEngineBridge_destroyMediaRecorder));
-        cls->defineFunction("getScreenCaptureSources", _SE(js_agora_RtcEngineBridge_getScreenCaptureSources));
-        cls->defineFunction("addVideoWatermark", _SE(js_agora_RtcEngineBridge_addVideoWatermark));
-        cls->defineFunction("enableExtension", _SE(js_agora_RtcEngineBridge_enableExtension));
-        cls->defineFunction("getExtensionProperty", _SE(js_agora_RtcEngineBridge_getExtensionProperty));
-        cls->defineFunction("setExtensionProperty", _SE(js_agora_RtcEngineBridge_setExtensionProperty));
-        cls->defineFunction("takeSnapshot", _SE(js_agora_RtcEngineBridge_takeSnapshot));
-        cls->defineFunction("takeSnapshotEx", _SE(js_agora_RtcEngineBridge_takeSnapshotEx));
-        cls->defineFunction("getAudioDeviceManager", _SE(js_agora_RtcEngineBridge_getAudioDeviceManager));
-        cls->defineFunction("getVideoDeviceManager", _SE(js_agora_RtcEngineBridge_getVideoDeviceManager));
-        cls->defineFunction("getMusicContentCenter", _SE(js_agora_RtcEngineBridge_getMusicContentCenter));
-        cls->defineFunction("getMediaPlayerCacheManager", _SE(js_agora_RtcEngineBridge_getMediaPlayerCacheManager));
-        cls->defineFunction("getLocalSpatialAudioEngine", _SE(js_agora_RtcEngineBridge_getLocalSpatialAudioEngine));
-        cls->defineFunction("createVideoEffectObject", _SE(js_agora_RtcEngineBridge_createVideoEffectObject));
-        cls->defineFunction("destroyVideoEffectObject", _SE(js_agora_RtcEngineBridge_destroyVideoEffectObject));
-        cls->defineFunction("getH265Transcoder", _SE(js_agora_RtcEngineBridge_getH265Transcoder));
-        cls->install();
+    // The auto-generated code calls cls->install() which creates the V8 Function
+    // from a cached template. A second cls->install() doesn't update the live
+    // prototype. We must patch the prototype object directly.
+    if (__jsb_RtcEngineExBridge_proto) {
+        auto *proto = __jsb_RtcEngineExBridge_proto;
+        proto->defineFunction("initialize", _SE(js_agora_RtcEngineBridge_initialize));
+        proto->defineFunction("joinChannel", _SE(js_agora_RtcEngineBridge_joinChannel));
+        proto->defineFunction("release", _SE(js_agora_RtcEngineBridge_release));
+        proto->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineBridge_createMediaPlayer));
+        proto->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
+        proto->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));
+        proto->defineFunction("destroyMediaRecorder", _SE(js_agora_RtcEngineBridge_destroyMediaRecorder));
+        proto->defineFunction("getScreenCaptureSources", _SE(js_agora_RtcEngineBridge_getScreenCaptureSources));
+        proto->defineFunction("addVideoWatermark", _SE(js_agora_RtcEngineBridge_addVideoWatermark));
+        proto->defineFunction("enableExtension", _SE(js_agora_RtcEngineBridge_enableExtension));
+        proto->defineFunction("getExtensionProperty", _SE(js_agora_RtcEngineBridge_getExtensionProperty));
+        proto->defineFunction("setExtensionProperty", _SE(js_agora_RtcEngineBridge_setExtensionProperty));
+        proto->defineFunction("takeSnapshot", _SE(js_agora_RtcEngineBridge_takeSnapshot));
+        proto->defineFunction("takeSnapshotEx", _SE(js_agora_RtcEngineBridge_takeSnapshotEx));
+        proto->defineFunction("getAudioDeviceManager", _SE(js_agora_RtcEngineBridge_getAudioDeviceManager));
+        proto->defineFunction("getVideoDeviceManager", _SE(js_agora_RtcEngineBridge_getVideoDeviceManager));
+        proto->defineFunction("getMusicContentCenter", _SE(js_agora_RtcEngineBridge_getMusicContentCenter));
+        proto->defineFunction("getMediaPlayerCacheManager", _SE(js_agora_RtcEngineBridge_getMediaPlayerCacheManager));
+        proto->defineFunction("getLocalSpatialAudioEngine", _SE(js_agora_RtcEngineBridge_getLocalSpatialAudioEngine));
+        proto->defineFunction("createVideoEffectObject", _SE(js_agora_RtcEngineBridge_createVideoEffectObject));
+        proto->defineFunction("destroyVideoEffectObject", _SE(js_agora_RtcEngineBridge_destroyVideoEffectObject));
+        proto->defineFunction("getH265Transcoder", _SE(js_agora_RtcEngineBridge_getH265Transcoder));
     }
 
     // --- MediaPlayerBridge ---
