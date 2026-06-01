@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "target": "ES2015",
+        "module": "ES2015",
+        "lib": ["ES2015"],
+        "outDir": "../dist",
+        "rootDir": "../../..",
+        "strict": false,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "baseUrl": "../../..",
+        "paths": {
+            "agora-rtc/*": ["assets/agora-rtc/*"]
+        }
+    },
+    "include": [
+        "ts/**/*.ts",
+        "ts/**/*.d.ts",
+        "../../../assets/agora-rtc/interface/**/*.ts",
+        "../../../assets/agora-rtc/types/**/*.ts"
+    ],
+    "exclude": ["node_modules", "../../../assets/agora-rtc/impl/**", "../../../assets/agora-rtc/interface/index.ts"]
+}

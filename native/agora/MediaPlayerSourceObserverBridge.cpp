@@ -56,16 +56,18 @@ void MediaPlayerSourceObserverBridge::onPlayerEvent(agora::media::base::MEDIA_PL
 }
 
 void MediaPlayerSourceObserverBridge::onMetaData(const void *data, int length) {
-    //todo 等到处理buffer的时候一起处理
-    std::string dataCopy(data != nullptr ? static_cast<const char *>(data) : "",
-                         data != nullptr ? static_cast<size_t>(length) : 0);
+    std::vector<uint8_t> dataCopy(data != nullptr ? static_cast<const uint8_t*>(data) : nullptr,
+                                  data != nullptr ? static_cast<const uint8_t*>(data) + length : nullptr);
     auto lengthCopy = length;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([self, dataCopy, lengthCopy]() {
         if (!isScriptEngineValid()) { return; }
         se::AutoHandleScope handleScope;
         se::ValueArray args;
-        pushArg(args, dataCopy);
+        se::HandleObject typedArr(se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, dataCopy.data(), dataCopy.size()));
+        se::Value dataVal;
+        dataVal.setObject(typedArr);
+        args.push_back(dataVal);
         pushArg(args, lengthCopy);
         callHandler(self, "onMetaData", args);
     });

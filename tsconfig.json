@@ -12,5 +12,5 @@
         "resolveJsonModule": true,
         "paths": {}
     },
-    "exclude": ["./assets", "./agora-sdk-export-test"]
+    "exclude": ["./assets", "./agora-sdk-export-test", "./tests"]
 }

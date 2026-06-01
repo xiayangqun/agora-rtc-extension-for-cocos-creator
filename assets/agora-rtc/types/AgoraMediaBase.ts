@@ -1,5 +1,3 @@
-import { IVideoFrameMetaInfo } from "../interface/IVideoFrameMetaInfo";
-
 export interface ExtensionContext {
     isValid: boolean;
 
@@ -494,8 +492,6 @@ export interface VideoFrame {
     alphaStitchMode: ALPHA_STITCH_MODE;
 
     pixelBuffer: unknown;
-
-    metaInfo: IVideoFrameMetaInfo;
 
     hdr10MetadataInfo: Hdr10MetadataInfo;
 

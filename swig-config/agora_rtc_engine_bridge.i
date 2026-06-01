@@ -161,6 +161,14 @@
 %ignore RtcEngineExBridge::createMediaRecorder;
 %ignore RtcEngineExBridge::destroyMediaRecorder;
 %ignore RtcEngineExBridge::getScreenCaptureSources;
+%ignore RtcEngineExBridge::sendStreamMessage;
+%ignore RtcEngineExBridge::sendStreamMessageEx;
+%ignore RtcEngineExBridge::sendRdtMessage;
+%ignore RtcEngineExBridge::sendRdtMessageEx;
+%ignore RtcEngineExBridge::sendMediaControlMessage;
+%ignore RtcEngineExBridge::sendMediaControlMessageEx;
+%ignore RtcEngineExBridge::sendAudioMetadata;
+%ignore RtcEngineExBridge::sendAudioMetadataEx;
 
 // MediaPlayerBridge — manual bindings
 %ignore MediaPlayerBridge::registerPlayerSourceObserver;

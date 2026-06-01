@@ -1417,6 +1417,169 @@ bool nativevalue_to_se(const agora::rtc::LocalAudioStats &from, se::Value &to, s
     return ok;
 }
 
+// do not gen code cover it
+bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    se::Value field;
+    bool ok = true;
+
+    ok &= nativevalue_to_se(from.uid, field, ctx);
+    if (ok) { obj->setProperty("uid", field); }
+
+    ok &= nativevalue_to_se(from.sentBitrate, field, ctx);
+    if (ok) { obj->setProperty("sentBitrate", field); }
+
+    ok &= nativevalue_to_se(from.sentFrameRate, field, ctx);
+    if (ok) { obj->setProperty("sentFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.captureFrameRate, field, ctx);
+    if (ok) { obj->setProperty("captureFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.captureFrameWidth, field, ctx);
+    if (ok) { obj->setProperty("captureFrameWidth", field); }
+
+    ok &= nativevalue_to_se(from.captureFrameHeight, field, ctx);
+    if (ok) { obj->setProperty("captureFrameHeight", field); }
+
+    ok &= nativevalue_to_se(from.regulatedCaptureFrameRate, field, ctx);
+    if (ok) { obj->setProperty("regulatedCaptureFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.regulatedCaptureFrameWidth, field, ctx);
+    if (ok) { obj->setProperty("regulatedCaptureFrameWidth", field); }
+
+    ok &= nativevalue_to_se(from.regulatedCaptureFrameHeight, field, ctx);
+    if (ok) { obj->setProperty("regulatedCaptureFrameHeight", field); }
+
+    ok &= nativevalue_to_se(from.encoderOutputFrameRate, field, ctx);
+    if (ok) { obj->setProperty("encoderOutputFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.encodedFrameWidth, field, ctx);
+    if (ok) { obj->setProperty("encodedFrameWidth", field); }
+
+    ok &= nativevalue_to_se(from.encodedFrameHeight, field, ctx);
+    if (ok) { obj->setProperty("encodedFrameHeight", field); }
+
+    ok &= nativevalue_to_se(from.rendererOutputFrameRate, field, ctx);
+    if (ok) { obj->setProperty("rendererOutputFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.targetBitrate, field, ctx);
+    if (ok) { obj->setProperty("targetBitrate", field); }
+
+    ok &= nativevalue_to_se(from.targetFrameRate, field, ctx);
+    if (ok) { obj->setProperty("targetFrameRate", field); }
+
+    ok &= nativevalue_to_se(from.qualityAdaptIndication, field, ctx);
+    if (ok) { obj->setProperty("qualityAdaptIndication", field); }
+
+    ok &= nativevalue_to_se(from.encodedBitrate, field, ctx);
+    if (ok) { obj->setProperty("encodedBitrate", field); }
+
+    ok &= nativevalue_to_se(from.encodedFrameCount, field, ctx);
+    if (ok) { obj->setProperty("encodedFrameCount", field); }
+
+    ok &= nativevalue_to_se(from.codecType, field, ctx);
+    if (ok) { obj->setProperty("codecType", field); }
+
+    ok &= nativevalue_to_se(from.txPacketLossRate, field, ctx);
+    if (ok) { obj->setProperty("txPacketLossRate", field); }
+
+    ok &= nativevalue_to_se(from.captureBrightnessLevel, field, ctx);
+    if (ok) { obj->setProperty("captureBrightnessLevel", field); }
+
+    ok &= nativevalue_to_se(from.dualStreamEnabled, field, ctx);
+    if (ok) { obj->setProperty("dualStreamEnabled", field); }
+
+    ok &= nativevalue_to_se(from.hwEncoderAccelerating, field, ctx);
+    if (ok) { obj->setProperty("hwEncoderAccelerating", field); }
+
+    se::HandleObject array(se::Object::createArrayObject(agora::rtc::SimulcastConfig::STREAM_LAYER_COUNT_MAX));
+    for (uint32_t i = 0; i < agora::rtc::SimulcastConfig::STREAM_LAYER_COUNT_MAX; ++i) {
+        se::Value item;
+        ok &= nativevalue_to_se(from.simulcastDimensions[i], item, ctx);
+        if (ok) { array->setArrayElement(i, item); }
+    }
+    obj->setProperty("simulcastDimensions", se::Value(array));
+
+    ok &= nativevalue_to_se(from.encodedFrameDepth, field, ctx);
+    if (ok) { obj->setProperty("encodedFrameDepth", field); }
+
+    to.setObject(obj);
+    return ok;
+}
+
+// do not gen code cover it
+bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    se::Value field;
+    bool ok = true;
+
+    ok &= nativevalue_to_se(from.uid, field, ctx);
+    if (ok) { obj->setProperty("uid", field); }
+
+    ok &= nativevalue_to_se(from.quality, field, ctx);
+    if (ok) { obj->setProperty("quality", field); }
+
+    ok &= nativevalue_to_se(from.networkTransportDelay, field, ctx);
+    if (ok) { obj->setProperty("networkTransportDelay", field); }
+
+    ok &= nativevalue_to_se(from.jitterBufferDelay, field, ctx);
+    if (ok) { obj->setProperty("jitterBufferDelay", field); }
+
+    ok &= nativevalue_to_se(from.audioLossRate, field, ctx);
+    if (ok) { obj->setProperty("audioLossRate", field); }
+
+    ok &= nativevalue_to_se(from.numChannels, field, ctx);
+    if (ok) { obj->setProperty("numChannels", field); }
+
+    ok &= nativevalue_to_se(from.receivedSampleRate, field, ctx);
+    if (ok) { obj->setProperty("receivedSampleRate", field); }
+
+    ok &= nativevalue_to_se(from.receivedBitrate, field, ctx);
+    if (ok) { obj->setProperty("receivedBitrate", field); }
+
+    ok &= nativevalue_to_se(from.totalFrozenTime, field, ctx);
+    if (ok) { obj->setProperty("totalFrozenTime", field); }
+
+    ok &= nativevalue_to_se(from.frozenRate, field, ctx);
+    if (ok) { obj->setProperty("frozenRate", field); }
+
+    ok &= nativevalue_to_se(from.mosValue, field, ctx);
+    if (ok) { obj->setProperty("mosValue", field); }
+
+    ok &= nativevalue_to_se(from.frozenRateByCustomPlcCount, field, ctx);
+    if (ok) { obj->setProperty("frozenRateByCustomPlcCount", field); }
+
+    ok &= nativevalue_to_se(from.plcCount, field, ctx);
+    if (ok) { obj->setProperty("plcCount", field); }
+
+    ok &= nativevalue_to_se(from.frozenCntByCustom, field, ctx);
+    if (ok) { obj->setProperty("frozenCntByCustom", field); }
+
+    ok &= nativevalue_to_se(from.frozenTimeByCustom, field, ctx);
+    if (ok) { obj->setProperty("frozenTimeByCustom", field); }
+
+    ok &= nativevalue_to_se(from.totalActiveTime, field, ctx);
+    if (ok) { obj->setProperty("totalActiveTime", field); }
+
+    ok &= nativevalue_to_se(from.publishDuration, field, ctx);
+    if (ok) { obj->setProperty("publishDuration", field); }
+
+    ok &= nativevalue_to_se(from.qoeQuality, field, ctx);
+    if (ok) { obj->setProperty("qoeQuality", field); }
+
+    ok &= nativevalue_to_se(from.qualityChangedReason, field, ctx);
+    if (ok) { obj->setProperty("qualityChangedReason", field); }
+
+    ok &= nativevalue_to_se(from.rxAudioBytes, field, ctx);
+    if (ok) { obj->setProperty("rxAudioBytes", field); }
+
+    ok &= nativevalue_to_se(from.e2eDelay, field, ctx);
+    if (ok) { obj->setProperty("e2eDelay", field); }
+
+    to.setObject(obj);
+    return ok;
+}
+
 bool nativevalue_to_se(const agora::rtc::LocalTranscoderConfiguration &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
@@ -2489,6 +2652,18 @@ static void setOptionalProp(const agora::Optional<T> &opt, const char *name, se:
         se::Value val;
         if (nativevalue_to_se(opt.value(), val, ctx)) { obj->setProperty(name, val); }
     }
+}
+
+bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject array(se::Object::createArrayObject(from.size()));
+    bool ok = true;
+    for (uint32_t i = 0; i < from.size(); ++i) {
+        se::Value item;
+        ok &= nativevalue_to_se(from[i], item, ctx);
+        if (ok) { array->setArrayElement(i, item); }
+    }
+    to.setObject(array);
+    return ok;
 }
 
 bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx) {

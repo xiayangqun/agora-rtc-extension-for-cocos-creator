@@ -17,3 +17,18 @@ agora_web_moudle
 .trae
 docs
 .understand-anything
+.codegraph
+
+# Tests build artifacts
+tests/native-integration/build/
+tests/native-integration/dist/
+tests/native-integration/declarations/
+tests/native-integration/scripts/node_modules/
+tests/native-integration/.DS_Store
+
+# TypeScript compilation artifacts (auto-generated before tests)
+assets/agora-rtc/**/*.js
+assets/agora-rtc/**/*.js.map
+assets/agora-rtc/**/*.d.ts
+assets/agora-rtc/**/*.d.ts.map
+.omo

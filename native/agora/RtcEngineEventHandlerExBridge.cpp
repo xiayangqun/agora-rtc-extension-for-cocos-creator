@@ -1593,7 +1593,8 @@ void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connect
     connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto streamIdCopy = streamId;
-    std::string dataCopy(data != nullptr ? data : "", data != nullptr ? length : 0);
+    std::vector<uint8_t> dataCopy(data != nullptr ? reinterpret_cast<const uint8_t*>(data) : nullptr,
+                                  data != nullptr ? reinterpret_cast<const uint8_t*>(data) + length : nullptr);
     auto lengthCopy = length;
     auto sentTsCopy = sentTs;
     auto self = shared_from_this();
@@ -1605,7 +1606,11 @@ void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connect
             pushArg(args, connCopy);
             pushArg(args, remoteUidCopy);
             pushArg(args, streamIdCopy);
-            pushArg(args, dataCopy);
+            se::HandleObject typedArr(se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, dataCopy.data(), dataCopy.size()));
+            se::Value dataVal;
+            dataVal.setObject(typedArr);
+            args.push_back(dataVal);
+            pushArg(args, lengthCopy);
             pushArg(args, sentTsCopy);
             callHandler(self, "onStreamMessage", args);
         });
@@ -1654,6 +1659,7 @@ void RtcEngineEventHandlerExBridge::onRdtMessage(const RtcConnection& connection
             pushArg(args, userIdCopy);
             pushArg(args, typeCopy);
             pushArg(args, dataCopy);
+            pushArg(args, lengthCopy);
             callHandler(self, "onRdtMessage", args);
         });
 }
@@ -1693,6 +1699,7 @@ void RtcEngineEventHandlerExBridge::onMediaControlMessage(const RtcConnection& c
             pushArg(args, connCopy);
             pushArg(args, userIdCopy);
             pushArg(args, dataCopy);
+            pushArg(args, lengthCopy);
             callHandler(self, "onMediaControlMessage", args);
         });
 }
@@ -2132,7 +2139,8 @@ void RtcEngineEventHandlerExBridge::onAudioMetadataReceived(const RtcConnection&
     agora::rtc::RtcConnection connCopy = connection;
     connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
-    std::string metadataCopy(metadata != nullptr ? metadata : "", metadata != nullptr ? length : 0);
+    std::vector<uint8_t> metadataCopy(metadata != nullptr ? reinterpret_cast<const uint8_t*>(metadata) : nullptr,
+                                      metadata != nullptr ? reinterpret_cast<const uint8_t*>(metadata) + length : nullptr);
     auto lengthCopy = length;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
@@ -2142,7 +2150,11 @@ void RtcEngineEventHandlerExBridge::onAudioMetadataReceived(const RtcConnection&
             se::ValueArray args;
             pushArg(args, connCopy);
             pushArg(args, uidCopy);
-            pushArg(args, metadataCopy);
+            se::HandleObject typedArr(se::Object::createTypedArray(se::Object::TypedArrayType::UINT8, metadataCopy.data(), metadataCopy.size()));
+            se::Value metadataVal;
+            metadataVal.setObject(typedArr);
+            args.push_back(metadataVal);
+            pushArg(args, lengthCopy);
             callHandler(self, "onAudioMetadataReceived", args);
         });
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <vector>
 
 #include "AgoraBase.h"
 #include "AgoraExtensionVersion.h"
@@ -175,5 +176,8 @@ bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object
 bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &to, se::Object *ctx);
 // USER CODE BLOCK END
 // AUTO-GENERATED DECLARATIONS END

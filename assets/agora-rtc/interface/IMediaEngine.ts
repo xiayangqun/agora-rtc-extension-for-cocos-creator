@@ -1,12 +1,11 @@
 import type { AUDIO_TRACK_TYPE, AudioTrackConfig, EncodedVideoFrameInfo, SenderOptions } from "../types/AgoraBase";
 import type { AudioFrame, EXTERNAL_VIDEO_SOURCE_TYPE, ExternalVideoFrame } from "../types/AgoraMediaBase";
 import type { IFaceInfoObserver } from "./IFaceInfoObserver";
-import type { IVideoFrameObserver } from "./IVideoFrameObserver";
 
 export interface IMediaEngine {
     registerAudioFrameObserver(observer: unknown): Promise<number>;
 
-    registerVideoFrameObserver(observer: IVideoFrameObserver): Promise<number>;
+    registerVideoFrameObserver(observer: unknown): Promise<number>;
 
     registerVideoEncodedFrameObserver(observer: unknown): Promise<number>;
 

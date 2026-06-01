@@ -2019,6 +2019,11 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::EncryptionConfig *to, 
         ok &= sevalue_to_native(field, &(to->encryptionMode), ctx);
     }
 
+    json->getProperty("encryptionKey", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->encryptionKey = strdup(field.toString().c_str());
+    }
+
     json->getProperty("encryptionKdfSalt", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->encryptionKdfSalt), ctx);
