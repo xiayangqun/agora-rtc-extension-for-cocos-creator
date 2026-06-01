@@ -47,7 +47,7 @@ if (result.error) {
 
 // Post-process: inject ScopedCStringGuard into every binding function so that
 // ScopedCString::dup'd const char* strings are automatically freed on exit.
-// See jsb_agora_rtc_ext.h for ScopedCString / ScopedCStringGuard definitions.
+// See RtcNativeValueToSe.h for ScopedCString / ScopedCStringGuard definitions.
 if (result.status === 0) {
     const autoFile = path.join(autoDir, "jsb_agora_rtc_engine_bridge_auto.cpp");
     if (fs.existsSync(autoFile)) {

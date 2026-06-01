@@ -1,5 +1,6 @@
 #include "MockFactory.h"
 #include "MockIRtcEngineEx.h"
+#include "MockSubObjects.h"
 #include "IAgoraMediaPlayer.h"
 
 agora::rtc::IRtcEngine* createAgoraRtcEngine() {
@@ -12,8 +13,9 @@ void IRtcEngine::release(RtcEngineReleaseCallback /*callback*/) {}
 } // namespace rtc
 } // namespace agora
 
+static agora::rtc::MockIMediaPlayerCacheManager g_mockCacheManager;
 agora::rtc::IMediaPlayerCacheManager* getMediaPlayerCacheManager() {
-    return nullptr;
+    return &g_mockCacheManager;
 }
 
 namespace se { class Object; }

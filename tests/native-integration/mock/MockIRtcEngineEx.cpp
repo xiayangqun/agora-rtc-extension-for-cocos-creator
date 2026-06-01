@@ -21,44 +21,19 @@ namespace agora {
 namespace rtc {
 
 void MockIRtcEngineEx::setLogPath(const std::string& path) {
-    logFilePath_ = path;
+    mock::MockLog::instance().setLogPath(path);
 }
 
 void MockIRtcEngineEx::clearLog() {
-    if (logFilePath_.empty()) return;
-    std::ofstream ofs(logFilePath_, std::ios::trunc);
-    ofs.close();
+    mock::MockLog::instance().clearLog();
 }
 
 std::string MockIRtcEngineEx::readLog() {
-    if (logFilePath_.empty()) return "[]";
-    std::ifstream ifs(logFilePath_);
-    if (!ifs.is_open()) {
-        return "[]";
-    }
-    std::stringstream ss;
-    ss << "[";
-    std::string line;
-    bool first = true;
-    while (std::getline(ifs, line)) {
-        if (line.empty()) continue;
-        if (!first) ss << ",";
-        ss << line;
-        first = false;
-    }
-    ss << "]";
-    return ss.str();
+    return mock::MockLog::instance().readLog();
 }
 
 void MockIRtcEngineEx::appendLog(const std::string& functionName, const std::string& paramsJson) {
-    if (logFilePath_.empty()) return;
-
-    auto now = std::chrono::system_clock::now();
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-
-    std::ofstream ofs(logFilePath_, std::ios::app);
-    ofs << "{\"ts\":" << ms << ",\"fn\":\"" << functionName << "\",\"params\":" << paramsJson << "}" << std::endl;
-    ofs.close();
+    mock::MockLog::instance().appendLog(functionName, paramsJson);
 }
 
 void MockIRtcEngineEx::release() {
@@ -85,8 +60,26 @@ int MockIRtcEngineEx::initialize(const RtcEngineContext& context) {
 
 int MockIRtcEngineEx::queryInterface(INTERFACE_ID_TYPE iid, void** inter) {
     if (!inter) return -1;
-    *inter = nullptr;
-    return -1;
+    switch (iid) {
+        case AGORA_IID_AUDIO_DEVICE_MANAGER:
+            *inter = static_cast<IAudioDeviceManager*>(mockAudioDeviceMgr_);
+            return 0;
+        case AGORA_IID_VIDEO_DEVICE_MANAGER:
+            *inter = static_cast<IVideoDeviceManager*>(mockVideoDeviceMgr_);
+            return 0;
+        case AGORA_IID_H265_TRANSCODER:
+            *inter = static_cast<IH265Transcoder*>(mockH265Transcoder_);
+            return 0;
+        case AGORA_IID_LOCAL_SPATIAL_AUDIO:
+            *inter = static_cast<ILocalSpatialAudioEngine*>(mockSpatialAudioEngine_);
+            return 0;
+        case AGORA_IID_MUSIC_CONTENT_CENTER:
+            *inter = static_cast<IMusicContentCenter*>(mockMusicContentCenter_);
+            return 0;
+        default:
+            *inter = nullptr;
+            return -1;
+    }
 }
 
 const char* MockIRtcEngineEx::getVersion(int* build) {
@@ -467,7 +460,10 @@ int MockIRtcEngineEx::setFilterEffectOptions(bool enabled, const FilterEffectOpt
 }
 
 agora_refptr<IVideoEffectObject> MockIRtcEngineEx::createVideoEffectObject(const char* bundlePath, agora::media::MEDIA_SOURCE_TYPE type) {
-    return {};
+    int id = ++nextVideoEffectId_;
+    auto* mock = new MockIVideoEffectObject(id);
+    appendLog("createVideoEffectObject", "{}");
+    return agora_refptr<IVideoEffectObject>(mock);
 }
 
 int MockIRtcEngineEx::destroyVideoEffectObject(agora_refptr<IVideoEffectObject> videoEffectObject) {
@@ -875,7 +871,10 @@ int MockIRtcEngineEx::stopAudioRecording() {
 }
 
 agora_refptr<IMediaPlayer> MockIRtcEngineEx::createMediaPlayer() {
-    return {};
+    int id = ++nextMediaPlayerId_;
+    auto* mock = new MockIMediaPlayer(id);
+    appendLog("createMediaPlayer", "{}");
+    return agora_refptr<IMediaPlayer>(mock);
 }
 
 int MockIRtcEngineEx::destroyMediaPlayer(agora_refptr<IMediaPlayer> media_player) {
@@ -884,7 +883,10 @@ int MockIRtcEngineEx::destroyMediaPlayer(agora_refptr<IMediaPlayer> media_player
 }
 
 agora_refptr<IMediaRecorder> MockIRtcEngineEx::createMediaRecorder(const RecorderStreamInfo& info) {
-    return {};
+    int id = ++nextMediaRecorderId_;
+    auto* mock = new MockIMediaRecorder(id);
+    appendLog("createMediaRecorder", "{}");
+    return agora_refptr<IMediaRecorder>(mock);
 }
 
 int MockIRtcEngineEx::destroyMediaRecorder(agora_refptr<IMediaRecorder> mediaRecorder) {
@@ -2297,7 +2299,8 @@ int MockIRtcEngineEx::enableCameraCenterStage(bool enabled) {
 
 #if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 IScreenCaptureSourceList* MockIRtcEngineEx::getScreenCaptureSources(const SIZE& thumbSize, const SIZE& iconSize, const bool includeScreen) {
-    return nullptr;
+    appendLog("getScreenCaptureSources", "{}");
+    return &mockScreenCaptureSourceList_;
 }
 #endif
 

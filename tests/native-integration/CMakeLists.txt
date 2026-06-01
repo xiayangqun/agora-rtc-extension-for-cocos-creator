@@ -62,7 +62,7 @@ set(AGORA_RTC_SOURCES
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicContentCenterEventHandlerBridge.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicPlayerBridge.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_manual.cpp
-  ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_ext.cpp
+  ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/RtcNativeValueToSe.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/register.cpp
 )
 

@@ -6,9 +6,12 @@
 #include "IAgoraH265Transcoder.h"
 #include "IAgoraMusicContentCenter.h"
 #include "IAudioDeviceManager.h"
+#include "MockLog.h"
+#include "MockSubObjects.h"
 #include <string>
 #include <fstream>
 #include <chrono>
+#include <memory>
 
 namespace agora {
 namespace rtc {
@@ -419,6 +422,15 @@ public:
     int preloadEffectEx(const RtcConnection& connection, int soundId, const char* filePath, int startPos = 0) override;
     int playEffectEx(const RtcConnection& connection, int soundId, const char* filePath, int loopCount, double pitch, double pan, int gain, bool publish = false, int startPos = 0) override;
 
+    // Mock sub-object instances (heap-allocated, ref-counted)
+    MockIAudioDeviceManager* mockAudioDeviceMgr_ = new MockIAudioDeviceManager();
+    MockIVideoDeviceManager* mockVideoDeviceMgr_ = new MockIVideoDeviceManager();
+    MockIH265Transcoder* mockH265Transcoder_ = new MockIH265Transcoder();
+    MockILocalSpatialAudioEngine* mockSpatialAudioEngine_ = new MockILocalSpatialAudioEngine();
+    MockIMusicContentCenter* mockMusicContentCenter_ = new MockIMusicContentCenter();
+    MockIMediaPlayerCacheManager* mockCacheManager_ = new MockIMediaPlayerCacheManager();
+    MockIScreenCaptureSourceList mockScreenCaptureSourceList_;
+
 private:
     MockIRtcEngineEx() = default;
     ~MockIRtcEngineEx() override = default;
@@ -426,6 +438,9 @@ private:
     MockIRtcEngineEx& operator=(const MockIRtcEngineEx&) = delete;
 
     std::string logFilePath_;
+    int nextMediaPlayerId_{0};
+    int nextMediaRecorderId_{0};
+    int nextVideoEffectId_{0};
 };
 
 }  // namespace rtc

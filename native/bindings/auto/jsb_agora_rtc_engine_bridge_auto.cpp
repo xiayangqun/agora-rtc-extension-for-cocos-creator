@@ -59,7 +59,7 @@
 
 
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
-#include "bindings/manual/jsb_agora_rtc_ext.h"
+#include "bindings/manual/RtcNativeValueToSe.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"
