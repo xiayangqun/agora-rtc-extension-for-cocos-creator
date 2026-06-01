@@ -32,3 +32,4 @@ assets/agora-rtc/**/*.js.map
 assets/agora-rtc/**/*.d.ts
 assets/agora-rtc/**/*.d.ts.map
 .omo
+agora_test_log.jsonl

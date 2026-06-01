@@ -47,7 +47,7 @@ int MediaRecorderBridge::startRecording(const agora::media::MediaRecorderConfigu
 int MediaRecorderBridge::stopRecording() {
     if (!_mediaRecorder) { return -agora::ERR_INVALID_ARGUMENT; }
     auto ret = _mediaRecorder->stopRecording();
-    if (ret == 0) {
+    if (ret == 0 && _recorderObserver != nullptr) {
         _recorderObserver->invalidateCallbacks();
         _recorderObserver.reset();
     }
