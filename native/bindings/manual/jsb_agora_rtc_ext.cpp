@@ -1724,6 +1724,9 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::VirtualBackgroundSourc
         ok &= sevalue_to_native(field, &(to->background_source_type), ctx);
     }
 
+    json->getProperty("source", &field, true);
+    if (!field.isNullOrUndefined()) { to->source = ScopedCString::dup(field.toString().c_str()); }
+
     json->getProperty("color", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->color), ctx);
@@ -1884,6 +1887,9 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::AudioRecordingConfigur
     se::Value field;
     bool ok = true;
 
+    json->getProperty("filePath", &field, true);
+    if (!field.isNullOrUndefined()) { to->filePath = ScopedCString::dup(field.toString().c_str()); }
+
     json->getProperty("encode", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->encode), ctx);
@@ -2021,7 +2027,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::EncryptionConfig *to, 
 
     json->getProperty("encryptionKey", &field, true);
     if (!field.isNullOrUndefined()) {
-        to->encryptionKey = strdup(field.toString().c_str());
+        to->encryptionKey = ScopedCString::dup(field.toString().c_str());
     }
 
     json->getProperty("encryptionKdfSalt", &field, true);
@@ -2651,7 +2657,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcEngineContext *to, 
 
     json->getProperty("appId", &field, true);
     if (!field.isNullOrUndefined()) {
-        to->appId = strdup(field.toString().c_str());
+        to->appId = ScopedCString::dup(field.toString().c_str());
     }
 
     json->getProperty("channelProfile", &field, true);
@@ -2849,7 +2855,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *t
     obj->getProperty("mediaPlayerAudioDelayMs", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->mediaPlayerAudioDelayMs = tmp.toInt32(); }
     obj->getProperty("token", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->token = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->token = ScopedCString::dup(tmp.toString().c_str()); }
     return true;
 }
 
@@ -2858,7 +2864,7 @@ bool sevalue_to_native(const se::Value &from, agora::media::SnapshotConfig *to, 
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("filePath", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->filePath = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->filePath = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("position", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->position = static_cast<agora::media::base::VIDEO_MODULE_POSITION>(tmp.toInt32()); }
     return true;
@@ -2869,7 +2875,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcImage *to, se::Obje
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("url", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->url = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->url = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("x", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->x = tmp.toInt32(); }
     obj->getProperty("y", &tmp, true);
@@ -2894,7 +2900,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfigur
     if (!tmp.isNullOrUndefined()) { to->cameraDirection = static_cast<agora::rtc::CAMERA_DIRECTION>(tmp.toInt32()); }
 #else
     obj->getProperty("deviceId", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->deviceId = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->deviceId = ScopedCString::dup(tmp.toString().c_str()); }
 #endif
     obj->getProperty("followEncodeDimensionRatio", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->followEncodeDimensionRatio = tmp.toBoolean(); }
@@ -2996,10 +3002,10 @@ bool sevalue_to_native(const se::Value &from, agora::media::ContentInspectConfig
     se::Value tmp;
 
     obj->getProperty("extraInfo", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->extraInfo = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->extraInfo = ScopedCString::dup(tmp.toString().c_str()); }
 
     obj->getProperty("serverConfig", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->serverConfig = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->serverConfig = ScopedCString::dup(tmp.toString().c_str()); }
 
     obj->getProperty("modules", &tmp, true);
     if (tmp.isObject()) {
@@ -3050,7 +3056,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ImageTrackOptions *to,
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("imageUrl", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->imageUrl = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->imageUrl = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("fps", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->fps = tmp.toInt32(); }
     obj->getProperty("mirrorMode", &tmp, true);
@@ -3121,7 +3127,7 @@ bool sevalue_to_native(const se::Value &from, agora::media::MediaRecorderConfigu
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("storagePath", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->storagePath = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->storagePath = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("containerFormat", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->containerFormat = static_cast<agora::media::MediaRecorderContainerFormat>(tmp.toInt32()); }
     obj->getProperty("streamType", &tmp, true);
@@ -3138,9 +3144,9 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::MusicContentCenterConf
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("appId", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->appId = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->appId = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("token", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->token = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->token = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("mccUid", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->mccUid = tmp.toInt64(); }
     obj->getProperty("maxCacheSize", &tmp, true);
@@ -3156,7 +3162,7 @@ bool sevalue_to_native(const se::Value &from, agora::commons::LogConfig *to, se:
     se::Object *obj = from.toObject();
     se::Value tmp;
     obj->getProperty("filePath", &tmp, true);
-    if (!tmp.isNullOrUndefined()) { to->filePath = tmp.toString().c_str(); }
+    if (!tmp.isNullOrUndefined()) { to->filePath = ScopedCString::dup(tmp.toString().c_str()); }
     obj->getProperty("fileSizeInKB", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->fileSizeInKB = static_cast<unsigned int>(tmp.toInt32()); }
     obj->getProperty("level", &tmp, true);

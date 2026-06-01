@@ -84,6 +84,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_AgoraRtcNativeContext)
 static bool js_AgoraRtcNativeContext_appId_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
@@ -103,6 +104,7 @@ SE_BIND_PROP_SET(js_AgoraRtcNativeContext_appId_set)
 static bool js_AgoraRtcNativeContext_appId_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
     
     arg1 = SE_THIS_OBJECT<AgoraRtcNativeContext>(s);
@@ -121,6 +123,7 @@ SE_BIND_PROP_GET(js_AgoraRtcNativeContext_appId_get)
 static bool js_AgoraRtcNativeContext_channelProfile_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
@@ -139,6 +142,7 @@ SE_BIND_PROP_SET(js_AgoraRtcNativeContext_channelProfile_set)
 static bool js_AgoraRtcNativeContext_channelProfile_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
     
     arg1 = SE_THIS_OBJECT<AgoraRtcNativeContext>(s);
@@ -154,6 +158,7 @@ SE_BIND_PROP_GET(js_AgoraRtcNativeContext_channelProfile_get)
 static bool js_AgoraRtcNativeContext_audioScenario_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
@@ -172,6 +177,7 @@ SE_BIND_PROP_SET(js_AgoraRtcNativeContext_audioScenario_set)
 static bool js_AgoraRtcNativeContext_audioScenario_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
     
     arg1 = SE_THIS_OBJECT<AgoraRtcNativeContext>(s);
@@ -187,6 +193,7 @@ SE_BIND_PROP_GET(js_AgoraRtcNativeContext_audioScenario_get)
 static bool js_AgoraRtcNativeContext_areaCode_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
@@ -206,6 +213,7 @@ SE_BIND_PROP_SET(js_AgoraRtcNativeContext_areaCode_set)
 static bool js_AgoraRtcNativeContext_areaCode_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     AgoraRtcNativeContext *arg1 = (AgoraRtcNativeContext *) NULL ;
     
     arg1 = SE_THIS_OBJECT<AgoraRtcNativeContext>(s);
@@ -221,6 +229,7 @@ SE_BIND_PROP_GET(js_AgoraRtcNativeContext_areaCode_get)
 static bool js_new_AgoraRtcNativeContext(se::State& s) // NOLINT(readability-identifier-naming)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -314,6 +323,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_UploadLogFileResult)
 static bool js_UploadLogFileResult_errorCode_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     UploadLogFileResult *arg1 = (UploadLogFileResult *) NULL ;
@@ -332,6 +342,7 @@ SE_BIND_PROP_SET(js_UploadLogFileResult_errorCode_set)
 static bool js_UploadLogFileResult_errorCode_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     UploadLogFileResult *arg1 = (UploadLogFileResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<UploadLogFileResult>(s);
@@ -347,6 +358,7 @@ SE_BIND_PROP_GET(js_UploadLogFileResult_errorCode_get)
 static bool js_UploadLogFileResult_requestId_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     UploadLogFileResult *arg1 = (UploadLogFileResult *) NULL ;
@@ -366,6 +378,7 @@ SE_BIND_PROP_SET(js_UploadLogFileResult_requestId_set)
 static bool js_UploadLogFileResult_requestId_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     UploadLogFileResult *arg1 = (UploadLogFileResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<UploadLogFileResult>(s);
@@ -384,6 +397,7 @@ SE_BIND_PROP_GET(js_UploadLogFileResult_requestId_get)
 static bool js_new_UploadLogFileResult(se::State& s) // NOLINT(readability-identifier-naming)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -463,6 +477,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_RtcEngineExBridge)
 static bool js_new_RtcEngineExBridge(se::State& s) // NOLINT(readability-identifier-naming)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -485,6 +500,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_RtcEngineExBridge)
 static bool js_RtcEngineExBridge_getVersion(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -512,6 +528,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getVersion)
 static bool js_RtcEngineExBridge_getErrorDescription(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -542,6 +559,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getErrorDescription)
 static bool js_RtcEngineExBridge_queryCodecCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -576,6 +594,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_queryCodecCapability)
 static bool js_RtcEngineExBridge_queryDeviceScore(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -599,6 +618,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_queryDeviceScore)
 static bool js_RtcEngineExBridge_preloadChannel(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -641,6 +661,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_preloadChannel)
 static bool js_RtcEngineExBridge_preloadChannelWithUserAccount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -685,6 +706,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_preloadChannelWithUserAccount)
 static bool js_RtcEngineExBridge_updatePreloadChannelToken(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -715,6 +737,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updatePreloadChannelToken)
 static bool js_RtcEngineExBridge_updateChannelMediaOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -745,6 +768,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateChannelMediaOptions)
 static bool js_RtcEngineExBridge_leaveChannel__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int result;
@@ -762,6 +786,7 @@ static bool js_RtcEngineExBridge_leaveChannel__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_leaveChannel__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::LeaveChannelOptions *arg2 = 0 ;
@@ -786,6 +811,7 @@ static bool js_RtcEngineExBridge_leaveChannel__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_leaveChannel(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -810,6 +836,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_leaveChannel)
 static bool js_RtcEngineExBridge_renewToken(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -840,6 +867,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_renewToken)
 static bool js_RtcEngineExBridge_setChannelProfile(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -868,6 +896,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setChannelProfile)
 static bool js_RtcEngineExBridge_setClientRole__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::CLIENT_ROLE_TYPE arg2 ;
@@ -890,6 +919,7 @@ static bool js_RtcEngineExBridge_setClientRole__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_setClientRole__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::CLIENT_ROLE_TYPE arg2 ;
@@ -919,6 +949,7 @@ static bool js_RtcEngineExBridge_setClientRole__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_setClientRole(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -943,6 +974,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setClientRole)
 static bool js_RtcEngineExBridge_startEchoTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -973,6 +1005,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startEchoTest)
 static bool js_RtcEngineExBridge_stopEchoTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -996,6 +1029,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopEchoTest)
 static bool js_RtcEngineExBridge_enableMultiCamera(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1030,6 +1064,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableMultiCamera)
 static bool js_RtcEngineExBridge_enableVideo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1053,6 +1088,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableVideo)
 static bool js_RtcEngineExBridge_disableVideo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1076,6 +1112,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_disableVideo)
 static bool js_RtcEngineExBridge_startPreview__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int result;
@@ -1093,6 +1130,7 @@ static bool js_RtcEngineExBridge_startPreview__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_startPreview__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::VIDEO_SOURCE_TYPE arg2 ;
@@ -1115,6 +1153,7 @@ static bool js_RtcEngineExBridge_startPreview__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_startPreview(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -1139,6 +1178,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startPreview)
 static bool js_RtcEngineExBridge_stopPreview__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int result;
@@ -1156,6 +1196,7 @@ static bool js_RtcEngineExBridge_stopPreview__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_stopPreview__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::VIDEO_SOURCE_TYPE arg2 ;
@@ -1178,6 +1219,7 @@ static bool js_RtcEngineExBridge_stopPreview__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_stopPreview(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -1202,6 +1244,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopPreview)
 static bool js_RtcEngineExBridge_startLastmileProbeTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1232,6 +1275,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startLastmileProbeTest)
 static bool js_RtcEngineExBridge_stopLastmileProbeTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1255,6 +1299,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopLastmileProbeTest)
 static bool js_RtcEngineExBridge_setVideoEncoderConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1285,6 +1330,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVideoEncoderConfiguration)
 static bool js_RtcEngineExBridge_setBeautyEffectOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1324,6 +1370,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setBeautyEffectOptions)
 static bool js_RtcEngineExBridge_setFaceShapeBeautyOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1363,6 +1410,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setFaceShapeBeautyOptions)
 static bool js_RtcEngineExBridge_setFaceShapeAreaOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1398,6 +1446,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setFaceShapeAreaOptions)
 static bool js_RtcEngineExBridge_getFaceShapeBeautyOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1432,6 +1481,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getFaceShapeBeautyOptions)
 static bool js_RtcEngineExBridge_getFaceShapeAreaOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1471,6 +1521,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getFaceShapeAreaOptions)
 static bool js_RtcEngineExBridge_setFilterEffectOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1510,6 +1561,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setFilterEffectOptions)
 static bool js_RtcEngineExBridge_setLowlightEnhanceOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1549,6 +1601,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLowlightEnhanceOptions)
 static bool js_RtcEngineExBridge_setVideoDenoiserOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1588,6 +1641,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVideoDenoiserOptions)
 static bool js_RtcEngineExBridge_setColorEnhanceOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1627,6 +1681,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setColorEnhanceOptions)
 static bool js_RtcEngineExBridge_enableVirtualBackground(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1673,6 +1728,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableVirtualBackground)
 static bool js_RtcEngineExBridge_setupRemoteVideo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1703,6 +1759,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setupRemoteVideo)
 static bool js_RtcEngineExBridge_setupLocalVideo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1733,6 +1790,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setupLocalVideo)
 static bool js_RtcEngineExBridge_setVideoScenario(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1761,6 +1819,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVideoScenario)
 static bool js_RtcEngineExBridge_setVideoQoEPreference(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1789,6 +1848,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVideoQoEPreference)
 static bool js_RtcEngineExBridge_enableAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1812,6 +1872,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableAudio)
 static bool js_RtcEngineExBridge_disableAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1835,6 +1896,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_disableAudio)
 static bool js_RtcEngineExBridge_setAudioProfile__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::AUDIO_PROFILE_TYPE arg2 ;
@@ -1862,6 +1924,7 @@ static bool js_RtcEngineExBridge_setAudioProfile__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_setAudioProfile__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::AUDIO_PROFILE_TYPE arg2 ;
@@ -1884,6 +1947,7 @@ static bool js_RtcEngineExBridge_setAudioProfile__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_setAudioProfile(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -1908,6 +1972,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioProfile)
 static bool js_RtcEngineExBridge_setAudioScenario(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1936,6 +2001,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioScenario)
 static bool js_RtcEngineExBridge_enableLocalAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1963,6 +2029,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableLocalAudio)
 static bool js_RtcEngineExBridge_muteLocalAudioStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -1990,6 +2057,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteLocalAudioStream)
 static bool js_RtcEngineExBridge_muteAllRemoteAudioStreams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2017,6 +2085,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteAllRemoteAudioStreams)
 static bool js_RtcEngineExBridge_muteRemoteAudioStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2049,6 +2118,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRemoteAudioStream)
 static bool js_RtcEngineExBridge_muteLocalVideoStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2076,6 +2146,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteLocalVideoStream)
 static bool js_RtcEngineExBridge_enableLocalVideo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2103,6 +2174,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableLocalVideo)
 static bool js_RtcEngineExBridge_muteAllRemoteVideoStreams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2130,6 +2202,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteAllRemoteVideoStreams)
 static bool js_RtcEngineExBridge_setRemoteDefaultVideoStreamType(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2158,6 +2231,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteDefaultVideoStreamType)
 static bool js_RtcEngineExBridge_muteRemoteVideoStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2190,6 +2264,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRemoteVideoStream)
 static bool js_RtcEngineExBridge_setRemoteVideoStreamType(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2223,6 +2298,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVideoStreamType)
 static bool js_RtcEngineExBridge_setRemoteVideoSubscriptionOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2258,6 +2334,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVideoSubscriptionOptions)
 static bool js_RtcEngineExBridge_setSubscribeAudioBlocklist(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2288,6 +2365,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeAudioBlocklist)
 static bool js_RtcEngineExBridge_setSubscribeAudioAllowlist(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2318,6 +2396,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeAudioAllowlist)
 static bool js_RtcEngineExBridge_setSubscribeVideoBlocklist(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2348,6 +2427,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeVideoBlocklist)
 static bool js_RtcEngineExBridge_setSubscribeVideoAllowlist(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2378,6 +2458,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeVideoAllowlist)
 static bool js_RtcEngineExBridge_enableAudioVolumeIndication(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2413,6 +2494,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableAudioVolumeIndication)
 static bool js_RtcEngineExBridge_startAudioRecording__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -2442,6 +2524,7 @@ static bool js_RtcEngineExBridge_startAudioRecording__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_startAudioRecording__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -2475,6 +2558,7 @@ static bool js_RtcEngineExBridge_startAudioRecording__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_startAudioRecording__SWIG_2(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::AudioRecordingConfiguration *arg2 = 0 ;
@@ -2499,6 +2583,7 @@ static bool js_RtcEngineExBridge_startAudioRecording__SWIG_2(se::State& s)
 static bool js_RtcEngineExBridge_startAudioRecording(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -2529,6 +2614,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startAudioRecording)
 static bool js_RtcEngineExBridge_stopAudioRecording(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2552,6 +2638,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopAudioRecording)
 static bool js_RtcEngineExBridge_startAudioMixing__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -2584,6 +2671,7 @@ static bool js_RtcEngineExBridge_startAudioMixing__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_startAudioMixing__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -2620,6 +2708,7 @@ static bool js_RtcEngineExBridge_startAudioMixing__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_startAudioMixing(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -2644,6 +2733,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startAudioMixing)
 static bool js_RtcEngineExBridge_stopAudioMixing(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2667,6 +2757,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopAudioMixing)
 static bool js_RtcEngineExBridge_pauseAudioMixing(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2690,6 +2781,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseAudioMixing)
 static bool js_RtcEngineExBridge_resumeAudioMixing(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2713,6 +2805,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeAudioMixing)
 static bool js_RtcEngineExBridge_selectAudioTrack(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2740,6 +2833,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_selectAudioTrack)
 static bool js_RtcEngineExBridge_getAudioTrackCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2763,6 +2857,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioTrackCount)
 static bool js_RtcEngineExBridge_adjustAudioMixingVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2790,6 +2885,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustAudioMixingVolume)
 static bool js_RtcEngineExBridge_adjustAudioMixingPublishVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2817,6 +2913,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustAudioMixingPublishVolume)
 static bool js_RtcEngineExBridge_getAudioMixingPublishVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2840,6 +2937,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioMixingPublishVolume)
 static bool js_RtcEngineExBridge_adjustAudioMixingPlayoutVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2867,6 +2965,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustAudioMixingPlayoutVolume)
 static bool js_RtcEngineExBridge_getAudioMixingPlayoutVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2890,6 +2989,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioMixingPlayoutVolume)
 static bool js_RtcEngineExBridge_getAudioMixingDuration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2913,6 +3013,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioMixingDuration)
 static bool js_RtcEngineExBridge_getAudioMixingCurrentPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2936,6 +3037,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioMixingCurrentPosition)
 static bool js_RtcEngineExBridge_setAudioMixingPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2963,6 +3065,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioMixingPosition)
 static bool js_RtcEngineExBridge_setAudioMixingDualMonoMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -2991,6 +3094,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioMixingDualMonoMode)
 static bool js_RtcEngineExBridge_setAudioMixingPitch(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3018,6 +3122,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioMixingPitch)
 static bool js_RtcEngineExBridge_setAudioMixingPlaybackSpeed(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3045,6 +3150,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioMixingPlaybackSpeed)
 static bool js_RtcEngineExBridge_getEffectsVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3068,6 +3174,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getEffectsVolume)
 static bool js_RtcEngineExBridge_setEffectsVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3095,6 +3202,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setEffectsVolume)
 static bool js_RtcEngineExBridge_preloadEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3133,6 +3241,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_preloadEffect)
 static bool js_RtcEngineExBridge_playEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3191,6 +3300,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_playEffect)
 static bool js_RtcEngineExBridge_playAllEffects(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3234,6 +3344,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_playAllEffects)
 static bool js_RtcEngineExBridge_getVolumeOfEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3261,6 +3372,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getVolumeOfEffect)
 static bool js_RtcEngineExBridge_setVolumeOfEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3292,6 +3404,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVolumeOfEffect)
 static bool js_RtcEngineExBridge_pauseEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3319,6 +3432,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseEffect)
 static bool js_RtcEngineExBridge_pauseAllEffects(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3342,6 +3456,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseAllEffects)
 static bool js_RtcEngineExBridge_resumeEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3369,6 +3484,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeEffect)
 static bool js_RtcEngineExBridge_resumeAllEffects(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3392,6 +3508,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeAllEffects)
 static bool js_RtcEngineExBridge_stopEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3419,6 +3536,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopEffect)
 static bool js_RtcEngineExBridge_stopAllEffects(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3442,6 +3560,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopAllEffects)
 static bool js_RtcEngineExBridge_unloadEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3469,6 +3588,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_unloadEffect)
 static bool js_RtcEngineExBridge_unloadAllEffects(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3492,6 +3612,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_unloadAllEffects)
 static bool js_RtcEngineExBridge_getEffectDuration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3522,6 +3643,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getEffectDuration)
 static bool js_RtcEngineExBridge_setEffectPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3553,6 +3675,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setEffectPosition)
 static bool js_RtcEngineExBridge_getEffectCurrentPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3580,6 +3703,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getEffectCurrentPosition)
 static bool js_RtcEngineExBridge_enableSoundPositionIndication(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3607,6 +3731,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableSoundPositionIndication)
 static bool js_RtcEngineExBridge_setRemoteVoicePosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3643,6 +3768,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVoicePosition)
 static bool js_RtcEngineExBridge_enableSpatialAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3670,6 +3796,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableSpatialAudio)
 static bool js_RtcEngineExBridge_setRemoteUserSpatialAudioParams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3705,6 +3832,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteUserSpatialAudioParams)
 static bool js_RtcEngineExBridge_setVoiceBeautifierPreset(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3733,6 +3861,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVoiceBeautifierPreset)
 static bool js_RtcEngineExBridge_setAudioEffectPreset(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3761,6 +3890,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioEffectPreset)
 static bool js_RtcEngineExBridge_setVoiceConversionPreset(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3789,6 +3919,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVoiceConversionPreset)
 static bool js_RtcEngineExBridge_setAudioEffectParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3825,6 +3956,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioEffectParameters)
 static bool js_RtcEngineExBridge_setVoiceBeautifierParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3861,6 +3993,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVoiceBeautifierParameters)
 static bool js_RtcEngineExBridge_setVoiceConversionParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3897,6 +4030,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVoiceConversionParameters)
 static bool js_RtcEngineExBridge_setLocalVoicePitch(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3924,6 +4058,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalVoicePitch)
 static bool js_RtcEngineExBridge_setLocalVoiceFormant(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3951,6 +4086,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalVoiceFormant)
 static bool js_RtcEngineExBridge_setLocalVoiceEqualization(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -3983,6 +4119,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalVoiceEqualization)
 static bool js_RtcEngineExBridge_setLocalVoiceReverb(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4015,6 +4152,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalVoiceReverb)
 static bool js_RtcEngineExBridge_setHeadphoneEQPreset(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4043,6 +4181,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setHeadphoneEQPreset)
 static bool js_RtcEngineExBridge_setHeadphoneEQParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4074,6 +4213,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setHeadphoneEQParameters)
 static bool js_RtcEngineExBridge_enableVoiceAITuner(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4106,6 +4246,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableVoiceAITuner)
 static bool js_RtcEngineExBridge_setLogFile(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4136,6 +4277,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLogFile)
 static bool js_RtcEngineExBridge_setLogFilter(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4164,6 +4306,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLogFilter)
 static bool js_RtcEngineExBridge_setLogLevel(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4192,6 +4335,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLogLevel)
 static bool js_RtcEngineExBridge_setLogFileSize(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4220,6 +4364,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLogFileSize)
 static bool js_RtcEngineExBridge_uploadLogFile(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4246,6 +4391,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_uploadLogFile)
 static bool js_RtcEngineExBridge_writeLog(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4281,6 +4427,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_writeLog)
 static bool js_RtcEngineExBridge_setLocalRenderMode__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::media::base::RENDER_MODE_TYPE arg2 ;
@@ -4308,6 +4455,7 @@ static bool js_RtcEngineExBridge_setLocalRenderMode__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_setRemoteRenderMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4346,6 +4494,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteRenderMode)
 static bool js_RtcEngineExBridge_setLocalRenderTargetFps(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4378,6 +4527,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalRenderTargetFps)
 static bool js_RtcEngineExBridge_setRemoteRenderTargetFps(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4405,6 +4555,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteRenderTargetFps)
 static bool js_RtcEngineExBridge_setLocalRenderMode__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::media::base::RENDER_MODE_TYPE arg2 ;
@@ -4427,6 +4578,7 @@ static bool js_RtcEngineExBridge_setLocalRenderMode__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_setLocalRenderMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -4451,6 +4603,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalRenderMode)
 static bool js_RtcEngineExBridge_setLocalVideoMirrorMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4479,6 +4632,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalVideoMirrorMode)
 static bool js_RtcEngineExBridge_enableDualStreamMode__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     bool arg2 ;
@@ -4500,6 +4654,7 @@ static bool js_RtcEngineExBridge_enableDualStreamMode__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_enableDualStreamMode__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     bool arg2 ;
@@ -4528,6 +4683,7 @@ static bool js_RtcEngineExBridge_enableDualStreamMode__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_enableDualStreamMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -4552,6 +4708,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableDualStreamMode)
 static bool js_RtcEngineExBridge_setDualStreamMode__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::SIMULCAST_STREAM_MODE arg2 ;
@@ -4574,6 +4731,7 @@ static bool js_RtcEngineExBridge_setDualStreamMode__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_setSimulcastConfig(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4604,6 +4762,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSimulcastConfig)
 static bool js_RtcEngineExBridge_setDualStreamMode__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::SIMULCAST_STREAM_MODE arg2 ;
@@ -4633,6 +4792,7 @@ static bool js_RtcEngineExBridge_setDualStreamMode__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_setDualStreamMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -4657,6 +4817,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setDualStreamMode)
 static bool js_RtcEngineExBridge_enableCustomAudioLocalPlayback(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4689,6 +4850,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableCustomAudioLocalPlayback)
 static bool js_RtcEngineExBridge_setRecordingAudioFrameParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4729,6 +4891,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRecordingAudioFrameParameters)
 static bool js_RtcEngineExBridge_setPlaybackAudioFrameParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4769,6 +4932,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setPlaybackAudioFrameParameters)
 static bool js_RtcEngineExBridge_setMixedAudioFrameParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4804,6 +4968,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setMixedAudioFrameParameters)
 static bool js_RtcEngineExBridge_setEarMonitoringAudioFrameParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4844,6 +5009,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setEarMonitoringAudioFrameParameters)
 static bool js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int arg2 ;
@@ -4869,6 +5035,7 @@ static bool js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters__SW
 static bool js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int arg2 ;
@@ -4898,6 +5065,7 @@ static bool js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters__SW
 static bool js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -4922,6 +5090,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setPlaybackAudioFrameBeforeMixingParameters)
 static bool js_RtcEngineExBridge_enableAudioSpectrumMonitor(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4949,6 +5118,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableAudioSpectrumMonitor)
 static bool js_RtcEngineExBridge_disableAudioSpectrumMonitor(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4972,6 +5142,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_disableAudioSpectrumMonitor)
 static bool js_RtcEngineExBridge_adjustRecordingSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -4999,6 +5170,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustRecordingSignalVolume)
 static bool js_RtcEngineExBridge_muteRecordingSignal(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5026,6 +5198,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRecordingSignal)
 static bool js_RtcEngineExBridge_adjustPlaybackSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5053,6 +5226,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustPlaybackSignalVolume)
 static bool js_RtcEngineExBridge_adjustUserPlaybackSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5085,6 +5259,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustUserPlaybackSignalVolume)
 static bool js_RtcEngineExBridge_setRemoteSubscribeFallbackOption(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5113,6 +5288,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteSubscribeFallbackOption)
 static bool js_RtcEngineExBridge_setHighPriorityUserList(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5148,6 +5324,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setHighPriorityUserList)
 static bool js_RtcEngineExBridge_enableLoopbackRecording(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5182,6 +5359,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableLoopbackRecording)
 static bool js_RtcEngineExBridge_adjustLoopbackSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5209,6 +5387,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustLoopbackSignalVolume)
 static bool js_RtcEngineExBridge_getLoopbackRecordingVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5232,6 +5411,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getLoopbackRecordingVolume)
 static bool js_RtcEngineExBridge_enableInEarMonitoring(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5263,6 +5443,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableInEarMonitoring)
 static bool js_RtcEngineExBridge_setInEarMonitoringVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5290,6 +5471,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setInEarMonitoringVolume)
 static bool js_RtcEngineExBridge_loadExtensionProvider__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -5318,6 +5500,7 @@ static bool js_RtcEngineExBridge_loadExtensionProvider__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_loadExtensionProvider__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -5342,6 +5525,7 @@ static bool js_RtcEngineExBridge_loadExtensionProvider__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_loadExtensionProvider(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -5366,6 +5550,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_loadExtensionProvider)
 static bool js_RtcEngineExBridge_setExtensionProviderProperty(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5410,6 +5595,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setExtensionProviderProperty)
 static bool js_RtcEngineExBridge_registerExtension__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -5446,6 +5632,7 @@ static bool js_RtcEngineExBridge_registerExtension__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_registerExtension__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -5477,6 +5664,7 @@ static bool js_RtcEngineExBridge_registerExtension__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_registerExtension(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -5501,6 +5689,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_registerExtension)
 static bool js_RtcEngineExBridge_setCameraCapturerConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5531,6 +5720,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraCapturerConfiguration)
 static bool js_RtcEngineExBridge_switchCamera(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5554,6 +5744,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_switchCamera)
 static bool js_RtcEngineExBridge_isCameraZoomSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5577,6 +5768,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraZoomSupported)
 static bool js_RtcEngineExBridge_isCameraFaceDetectSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5600,6 +5792,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraFaceDetectSupported)
 static bool js_RtcEngineExBridge_isCameraTorchSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5623,6 +5816,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraTorchSupported)
 static bool js_RtcEngineExBridge_isCameraFocusSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5646,6 +5840,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraFocusSupported)
 static bool js_RtcEngineExBridge_isCameraAutoFocusFaceModeSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5669,6 +5864,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraAutoFocusFaceModeSupported)
 static bool js_RtcEngineExBridge_setCameraZoomFactor(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5696,6 +5892,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraZoomFactor)
 static bool js_RtcEngineExBridge_enableFaceDetection(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5723,6 +5920,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableFaceDetection)
 static bool js_RtcEngineExBridge_getCameraMaxZoomFactor(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5746,6 +5944,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getCameraMaxZoomFactor)
 static bool js_RtcEngineExBridge_setCameraFocusPositionInPreview(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5777,6 +5976,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraFocusPositionInPreview)
 static bool js_RtcEngineExBridge_setCameraTorchOn(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5804,6 +6004,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraTorchOn)
 static bool js_RtcEngineExBridge_setCameraAutoFocusFaceModeEnabled(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5831,6 +6032,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraAutoFocusFaceModeEnabled)
 static bool js_RtcEngineExBridge_isCameraExposurePositionSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5854,6 +6056,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraExposurePositionSupported)
 static bool js_RtcEngineExBridge_setCameraExposurePosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5885,6 +6088,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraExposurePosition)
 static bool js_RtcEngineExBridge_isCameraExposureSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5908,6 +6112,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraExposureSupported)
 static bool js_RtcEngineExBridge_setCameraExposureFactor(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5935,6 +6140,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraExposureFactor)
 static bool js_RtcEngineExBridge_isCameraAutoExposureFaceModeSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5958,6 +6164,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraAutoExposureFaceModeSupported)
 static bool js_RtcEngineExBridge_setCameraAutoExposureFaceModeEnabled(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -5985,6 +6192,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraAutoExposureFaceModeEnabled)
 static bool js_RtcEngineExBridge_setCameraStabilizationMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6013,6 +6221,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraStabilizationMode)
 static bool js_RtcEngineExBridge_setDefaultAudioRouteToSpeakerphone(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6040,6 +6249,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setDefaultAudioRouteToSpeakerphone)
 static bool js_RtcEngineExBridge_setEnableSpeakerphone(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6067,6 +6277,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setEnableSpeakerphone)
 static bool js_RtcEngineExBridge_isSpeakerphoneEnabled(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6090,6 +6301,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isSpeakerphoneEnabled)
 static bool js_RtcEngineExBridge_setRouteInCommunicationMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6117,6 +6329,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRouteInCommunicationMode)
 static bool js_RtcEngineExBridge_isCameraCenterStageSupported(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6140,6 +6353,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isCameraCenterStageSupported)
 static bool js_RtcEngineExBridge_enableCameraCenterStage(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6167,6 +6381,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableCameraCenterStage)
 static bool js_RtcEngineExBridge_setAudioSessionOperationRestriction(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6195,6 +6410,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAudioSessionOperationRestriction)
 static bool js_RtcEngineExBridge_startScreenCaptureByDisplayId(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6236,6 +6452,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startScreenCaptureByDisplayId)
 static bool js_RtcEngineExBridge_startScreenCaptureByScreenRect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6280,6 +6497,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startScreenCaptureByScreenRect)
 static bool js_RtcEngineExBridge_getAudioDeviceInfo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6309,6 +6527,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getAudioDeviceInfo)
 static bool js_RtcEngineExBridge_startScreenCaptureByWindowId(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6350,6 +6569,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startScreenCaptureByWindowId)
 static bool js_RtcEngineExBridge_setScreenCaptureContentHint(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6378,6 +6598,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setScreenCaptureContentHint)
 static bool js_RtcEngineExBridge_updateScreenCaptureRegion(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6408,6 +6629,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateScreenCaptureRegion)
 static bool js_RtcEngineExBridge_updateScreenCaptureParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6438,6 +6660,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateScreenCaptureParameters)
 static bool js_RtcEngineExBridge_queryScreenCaptureCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6461,6 +6684,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_queryScreenCaptureCapability)
 static bool js_RtcEngineExBridge_queryCameraFocalLengthCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6498,6 +6722,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_queryCameraFocalLengthCapability)
 static bool js_RtcEngineExBridge_setExternalMediaProjection(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6524,6 +6749,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setExternalMediaProjection)
 static bool js_RtcEngineExBridge_setScreenCaptureScenario(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6552,6 +6778,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setScreenCaptureScenario)
 static bool js_RtcEngineExBridge_stopScreenCapture__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     int result;
@@ -6569,6 +6796,7 @@ static bool js_RtcEngineExBridge_stopScreenCapture__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_getCallId(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6596,6 +6824,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getCallId)
 static bool js_RtcEngineExBridge_rate(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6637,6 +6866,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_rate)
 static bool js_RtcEngineExBridge_complain(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6674,6 +6904,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_complain)
 static bool js_RtcEngineExBridge_startRtmpStreamWithoutTranscoding(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6704,6 +6935,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startRtmpStreamWithoutTranscoding)
 static bool js_RtcEngineExBridge_startRtmpStreamWithTranscoding(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6741,6 +6973,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startRtmpStreamWithTranscoding)
 static bool js_RtcEngineExBridge_updateRtmpTranscoding(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6771,6 +7004,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateRtmpTranscoding)
 static bool js_RtcEngineExBridge_startLocalVideoTranscoder(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6801,6 +7035,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startLocalVideoTranscoder)
 static bool js_RtcEngineExBridge_updateLocalTranscoderConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6831,6 +7066,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateLocalTranscoderConfiguration)
 static bool js_RtcEngineExBridge_stopRtmpStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6861,6 +7097,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopRtmpStream)
 static bool js_RtcEngineExBridge_stopLocalVideoTranscoder(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6884,6 +7121,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopLocalVideoTranscoder)
 static bool js_RtcEngineExBridge_startLocalAudioMixer(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6914,6 +7152,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startLocalAudioMixer)
 static bool js_RtcEngineExBridge_updateLocalAudioMixerConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6944,6 +7183,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateLocalAudioMixerConfiguration)
 static bool js_RtcEngineExBridge_stopLocalAudioMixer(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -6967,6 +7207,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopLocalAudioMixer)
 static bool js_RtcEngineExBridge_startCameraCapture(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7002,6 +7243,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startCameraCapture)
 static bool js_RtcEngineExBridge_stopCameraCapture(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7030,6 +7272,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopCameraCapture)
 static bool js_RtcEngineExBridge_setCameraDeviceOrientation(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7063,6 +7306,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCameraDeviceOrientation)
 static bool js_RtcEngineExBridge_setScreenCaptureOrientation(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7096,6 +7340,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setScreenCaptureOrientation)
 static bool js_RtcEngineExBridge_startScreenCapture(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7131,6 +7376,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startScreenCapture)
 static bool js_RtcEngineExBridge_stopScreenCapture__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::VIDEO_SOURCE_TYPE arg2 ;
@@ -7153,6 +7399,7 @@ static bool js_RtcEngineExBridge_stopScreenCapture__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_stopScreenCapture(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -7177,6 +7424,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopScreenCapture)
 static bool js_RtcEngineExBridge_getConnectionState(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7200,6 +7448,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getConnectionState)
 static bool js_RtcEngineExBridge_setRemoteUserPriority(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7233,6 +7482,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteUserPriority)
 static bool js_RtcEngineExBridge_enableEncryption(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7267,6 +7517,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableEncryption)
 static bool js_RtcEngineExBridge_createDataStream__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     bool arg2 ;
@@ -7296,6 +7547,7 @@ static bool js_RtcEngineExBridge_createDataStream__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_createDataStream__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::DataStreamConfig *arg2 = 0 ;
@@ -7324,6 +7576,7 @@ static bool js_RtcEngineExBridge_createDataStream__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_createDataStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -7348,6 +7601,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_createDataStream)
 static bool js_RtcEngineExBridge_sendStreamMessage(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7383,6 +7637,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendStreamMessage)
 static bool js_RtcEngineExBridge_sendRdtMessage(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7424,6 +7679,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendRdtMessage)
 static bool js_RtcEngineExBridge_sendMediaControlMessage(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7460,6 +7716,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendMediaControlMessage)
 static bool js_RtcEngineExBridge_removeVideoWatermark(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7490,6 +7747,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_removeVideoWatermark)
 static bool js_RtcEngineExBridge_clearVideoWatermarks(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7513,6 +7771,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_clearVideoWatermarks)
 static bool js_RtcEngineExBridge_pauseAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7536,6 +7795,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseAudio)
 static bool js_RtcEngineExBridge_resumeAudio(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7559,6 +7819,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeAudio)
 static bool js_RtcEngineExBridge_enableWebSdkInteroperability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7586,6 +7847,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableWebSdkInteroperability)
 static bool js_RtcEngineExBridge_sendCustomReportMessage(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7641,6 +7903,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendCustomReportMessage)
 static bool js_RtcEngineExBridge_startAudioFrameDump(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7676,6 +7939,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startAudioFrameDump)
 static bool js_RtcEngineExBridge_stopAudioFrameDump(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7711,6 +7975,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopAudioFrameDump)
 static bool js_RtcEngineExBridge_setAINSMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7743,6 +8008,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAINSMode)
 static bool js_RtcEngineExBridge_registerLocalUserAccount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7780,6 +8046,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_registerLocalUserAccount)
 static bool js_RtcEngineExBridge_joinChannelWithUserAccount__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -7818,6 +8085,7 @@ static bool js_RtcEngineExBridge_joinChannelWithUserAccount__SWIG_0(se::State& s
 static bool js_RtcEngineExBridge_joinChannelWithUserAccount__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -7863,6 +8131,7 @@ static bool js_RtcEngineExBridge_joinChannelWithUserAccount__SWIG_1(se::State& s
 static bool js_RtcEngineExBridge_joinChannelWithUserAccount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -7887,6 +8156,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_joinChannelWithUserAccount)
 static bool js_RtcEngineExBridge_getUserInfoByUserAccount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7923,6 +8193,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getUserInfoByUserAccount)
 static bool js_RtcEngineExBridge_getUserInfoByUid(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7957,6 +8228,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getUserInfoByUid)
 static bool js_RtcEngineExBridge_startOrUpdateChannelMediaRelay(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -7987,6 +8259,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startOrUpdateChannelMediaRelay)
 static bool js_RtcEngineExBridge_stopChannelMediaRelay(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8010,6 +8283,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopChannelMediaRelay)
 static bool js_RtcEngineExBridge_pauseAllChannelMediaRelay(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8033,6 +8307,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseAllChannelMediaRelay)
 static bool js_RtcEngineExBridge_resumeAllChannelMediaRelay(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8056,6 +8331,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeAllChannelMediaRelay)
 static bool js_RtcEngineExBridge_setDirectCdnStreamingAudioConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8084,6 +8360,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setDirectCdnStreamingAudioConfiguration)
 static bool js_RtcEngineExBridge_setDirectCdnStreamingVideoConfiguration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8114,6 +8391,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setDirectCdnStreamingVideoConfiguration)
 static bool js_RtcEngineExBridge_startDirectCdnStreaming(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8151,6 +8429,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startDirectCdnStreaming)
 static bool js_RtcEngineExBridge_stopDirectCdnStreaming(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8174,6 +8453,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopDirectCdnStreaming)
 static bool js_RtcEngineExBridge_updateDirectCdnStreamingMediaOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8204,6 +8484,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateDirectCdnStreamingMediaOptions)
 static bool js_RtcEngineExBridge_startRhythmPlayer(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8248,6 +8529,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startRhythmPlayer)
 static bool js_RtcEngineExBridge_stopRhythmPlayer(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8271,6 +8553,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopRhythmPlayer)
 static bool js_RtcEngineExBridge_configRhythmPlayer(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8301,6 +8584,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_configRhythmPlayer)
 static bool js_RtcEngineExBridge_enableContentInspect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8335,6 +8619,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableContentInspect)
 static bool js_RtcEngineExBridge_adjustCustomAudioPublishVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8367,6 +8652,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustCustomAudioPublishVolume)
 static bool js_RtcEngineExBridge_adjustCustomAudioPlayoutVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8399,6 +8685,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustCustomAudioPlayoutVolume)
 static bool js_RtcEngineExBridge_setCloudProxy(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8427,6 +8714,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setCloudProxy)
 static bool js_RtcEngineExBridge_setLocalAccessPoint(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8457,6 +8745,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setLocalAccessPoint)
 static bool js_RtcEngineExBridge_setAdvancedAudioOptions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8491,6 +8780,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAdvancedAudioOptions)
 static bool js_RtcEngineExBridge_setAVSyncSource(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8526,6 +8816,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setAVSyncSource)
 static bool js_RtcEngineExBridge_enableVideoImageSource(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8560,6 +8851,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableVideoImageSource)
 static bool js_RtcEngineExBridge_getCurrentMonotonicTimeInMs(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8583,6 +8875,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getCurrentMonotonicTimeInMs)
 static bool js_RtcEngineExBridge_getNetworkType(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8606,6 +8899,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getNetworkType)
 static bool js_RtcEngineExBridge_setParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8636,6 +8930,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setParameters)
 static bool js_RtcEngineExBridge_startMediaRenderingTracing(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8659,6 +8954,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startMediaRenderingTracing)
 static bool js_RtcEngineExBridge_enableInstantMediaRendering(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8682,6 +8978,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableInstantMediaRendering)
 static bool js_RtcEngineExBridge_getNtpWallTimeInMs(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8705,6 +9002,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getNtpWallTimeInMs)
 static bool js_RtcEngineExBridge_isFeatureAvailableOnDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8733,6 +9031,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_isFeatureAvailableOnDevice)
 static bool js_RtcEngineExBridge_sendAudioMetadata(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8764,6 +9063,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendAudioMetadata)
 static bool js_RtcEngineExBridge_queryHDRCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8796,6 +9096,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_queryHDRCapability)
 static bool js_RtcEngineExBridge_joinChannelEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -8840,6 +9141,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_joinChannelEx)
 static bool js_RtcEngineExBridge_leaveChannelEx__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::RtcConnection *arg2 = 0 ;
@@ -8864,6 +9166,7 @@ static bool js_RtcEngineExBridge_leaveChannelEx__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_leaveChannelEx__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::RtcConnection *arg2 = 0 ;
@@ -8895,6 +9198,7 @@ static bool js_RtcEngineExBridge_leaveChannelEx__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_leaveChannelEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -8919,6 +9223,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_leaveChannelEx)
 static bool js_RtcEngineExBridge_leaveChannelWithUserAccountEx__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -8950,6 +9255,7 @@ static bool js_RtcEngineExBridge_leaveChannelWithUserAccountEx__SWIG_0(se::State
 static bool js_RtcEngineExBridge_leaveChannelWithUserAccountEx__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -8988,6 +9294,7 @@ static bool js_RtcEngineExBridge_leaveChannelWithUserAccountEx__SWIG_1(se::State
 static bool js_RtcEngineExBridge_leaveChannelWithUserAccountEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -9012,6 +9319,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_leaveChannelWithUserAccountEx)
 static bool js_RtcEngineExBridge_updateChannelMediaOptionsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9049,6 +9357,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateChannelMediaOptionsEx)
 static bool js_RtcEngineExBridge_setVideoEncoderConfigurationEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9086,6 +9395,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setVideoEncoderConfigurationEx)
 static bool js_RtcEngineExBridge_setupRemoteVideoEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9123,6 +9433,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setupRemoteVideoEx)
 static bool js_RtcEngineExBridge_muteRemoteAudioStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9162,6 +9473,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRemoteAudioStreamEx)
 static bool js_RtcEngineExBridge_muteRemoteVideoStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9201,6 +9513,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRemoteVideoStreamEx)
 static bool js_RtcEngineExBridge_setRemoteVideoStreamTypeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9241,6 +9554,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVideoStreamTypeEx)
 static bool js_RtcEngineExBridge_muteLocalAudioStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9275,6 +9589,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteLocalAudioStreamEx)
 static bool js_RtcEngineExBridge_muteLocalVideoStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9309,6 +9624,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteLocalVideoStreamEx)
 static bool js_RtcEngineExBridge_muteAllRemoteAudioStreamsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9343,6 +9659,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteAllRemoteAudioStreamsEx)
 static bool js_RtcEngineExBridge_muteAllRemoteVideoStreamsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9377,6 +9694,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteAllRemoteVideoStreamsEx)
 static bool js_RtcEngineExBridge_setSubscribeAudioBlocklistEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9414,6 +9732,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeAudioBlocklistEx)
 static bool js_RtcEngineExBridge_setSubscribeAudioAllowlistEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9451,6 +9770,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeAudioAllowlistEx)
 static bool js_RtcEngineExBridge_setSubscribeVideoBlocklistEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9488,6 +9808,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeVideoBlocklistEx)
 static bool js_RtcEngineExBridge_setSubscribeVideoAllowlistEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9525,6 +9846,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSubscribeVideoAllowlistEx)
 static bool js_RtcEngineExBridge_setRemoteVideoSubscriptionOptionsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9567,6 +9889,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVideoSubscriptionOptionsEx)
 static bool js_RtcEngineExBridge_setRemoteVoicePositionEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9610,6 +9933,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteVoicePositionEx)
 static bool js_RtcEngineExBridge_setRemoteUserSpatialAudioParamsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9652,6 +9976,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteUserSpatialAudioParamsEx)
 static bool js_RtcEngineExBridge_setRemoteRenderModeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9697,6 +10022,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setRemoteRenderModeEx)
 static bool js_RtcEngineExBridge_enableLoopbackRecordingEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9738,6 +10064,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableLoopbackRecordingEx)
 static bool js_RtcEngineExBridge_adjustRecordingSignalVolumeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9772,6 +10099,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustRecordingSignalVolumeEx)
 static bool js_RtcEngineExBridge_muteRecordingSignalEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9806,6 +10134,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_muteRecordingSignalEx)
 static bool js_RtcEngineExBridge_adjustUserPlaybackSignalVolumeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9845,6 +10174,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_adjustUserPlaybackSignalVolumeEx)
 static bool js_RtcEngineExBridge_getConnectionStateEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9875,6 +10205,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getConnectionStateEx)
 static bool js_RtcEngineExBridge_enableEncryptionEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -9916,6 +10247,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableEncryptionEx)
 static bool js_RtcEngineExBridge_createDataStreamEx__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     bool arg2 ;
@@ -9952,6 +10284,7 @@ static bool js_RtcEngineExBridge_createDataStreamEx__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_createDataStreamEx__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::DataStreamConfig *arg2 = 0 ;
@@ -9987,6 +10320,7 @@ static bool js_RtcEngineExBridge_createDataStreamEx__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_createDataStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -10011,6 +10345,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_createDataStreamEx)
 static bool js_RtcEngineExBridge_sendStreamMessageEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10053,6 +10388,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendStreamMessageEx)
 static bool js_RtcEngineExBridge_sendRdtMessageEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10101,6 +10437,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendRdtMessageEx)
 static bool js_RtcEngineExBridge_sendMediaControlMessageEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10144,6 +10481,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendMediaControlMessageEx)
 static bool js_RtcEngineExBridge_addVideoWatermarkEx__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -10182,6 +10520,7 @@ static bool js_RtcEngineExBridge_addVideoWatermarkEx__SWIG_0(se::State& s)
 static bool js_RtcEngineExBridge_addVideoWatermarkEx__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
     agora::rtc::WatermarkConfig *arg2 = 0 ;
@@ -10213,6 +10552,7 @@ static bool js_RtcEngineExBridge_addVideoWatermarkEx__SWIG_1(se::State& s)
 static bool js_RtcEngineExBridge_addVideoWatermarkEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -10237,6 +10577,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_addVideoWatermarkEx)
 static bool js_RtcEngineExBridge_removeVideoWatermarkEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10274,6 +10615,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_removeVideoWatermarkEx)
 static bool js_RtcEngineExBridge_clearVideoWatermarkEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10304,6 +10646,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_clearVideoWatermarkEx)
 static bool js_RtcEngineExBridge_sendCustomReportMessageEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10366,6 +10709,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendCustomReportMessageEx)
 static bool js_RtcEngineExBridge_enableAudioVolumeIndicationEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10408,6 +10752,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableAudioVolumeIndicationEx)
 static bool js_RtcEngineExBridge_startRtmpStreamWithoutTranscodingEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10445,6 +10790,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startRtmpStreamWithoutTranscodingEx)
 static bool js_RtcEngineExBridge_startRtmpStreamWithTranscodingEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10489,6 +10835,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startRtmpStreamWithTranscodingEx)
 static bool js_RtcEngineExBridge_updateRtmpTranscodingEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10526,6 +10873,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_updateRtmpTranscodingEx)
 static bool js_RtcEngineExBridge_stopRtmpStreamEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10563,6 +10911,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopRtmpStreamEx)
 static bool js_RtcEngineExBridge_startOrUpdateChannelMediaRelayEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10600,6 +10949,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startOrUpdateChannelMediaRelayEx)
 static bool js_RtcEngineExBridge_stopChannelMediaRelayEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10630,6 +10980,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_stopChannelMediaRelayEx)
 static bool js_RtcEngineExBridge_pauseAllChannelMediaRelayEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10660,6 +11011,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_pauseAllChannelMediaRelayEx)
 static bool js_RtcEngineExBridge_resumeAllChannelMediaRelayEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10690,6 +11042,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_resumeAllChannelMediaRelayEx)
 static bool js_RtcEngineExBridge_getUserInfoByUserAccountEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10733,6 +11086,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getUserInfoByUserAccountEx)
 static bool js_RtcEngineExBridge_getUserInfoByUidEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10774,6 +11128,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getUserInfoByUidEx)
 static bool js_RtcEngineExBridge_enableDualStreamModeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10815,6 +11170,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableDualStreamModeEx)
 static bool js_RtcEngineExBridge_setDualStreamModeEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10857,6 +11213,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setDualStreamModeEx)
 static bool js_RtcEngineExBridge_setSimulcastConfigEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10894,6 +11251,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setSimulcastConfigEx)
 static bool js_RtcEngineExBridge_setHighPriorityUserListEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10936,6 +11294,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setHighPriorityUserListEx)
 static bool js_RtcEngineExBridge_enableContentInspectEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -10977,6 +11336,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_enableContentInspectEx)
 static bool js_RtcEngineExBridge_startMediaRenderingTracingEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11007,6 +11367,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_startMediaRenderingTracingEx)
 static bool js_RtcEngineExBridge_setParametersEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11044,6 +11405,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_setParametersEx)
 static bool js_RtcEngineExBridge_getCallIdEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11078,6 +11440,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_getCallIdEx)
 static bool js_RtcEngineExBridge_sendAudioMetadataEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11116,6 +11479,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_sendAudioMetadataEx)
 static bool js_RtcEngineExBridge_preloadEffectEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11161,6 +11525,7 @@ SE_BIND_FUNC(js_RtcEngineExBridge_preloadEffectEx)
 static bool js_RtcEngineExBridge_playEffectEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
@@ -11561,6 +11926,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_GetAudioCollectionDeviceInfoResult)
 static bool js_GetAudioCollectionDeviceInfoResult_errorCode_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
@@ -11579,6 +11945,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoResult_errorCode_set)
 static bool js_GetAudioCollectionDeviceInfoResult_errorCode_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoResult>(s);
@@ -11594,6 +11961,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoResult_errorCode_get)
 static bool js_GetAudioCollectionDeviceInfoResult_deviceName_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
@@ -11613,6 +11981,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoResult_deviceName_set)
 static bool js_GetAudioCollectionDeviceInfoResult_deviceName_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoResult>(s);
@@ -11631,6 +12000,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoResult_deviceName_get)
 static bool js_GetAudioCollectionDeviceInfoResult_deviceId_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
@@ -11650,6 +12020,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoResult_deviceId_set)
 static bool js_GetAudioCollectionDeviceInfoResult_deviceId_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoResult *arg1 = (GetAudioCollectionDeviceInfoResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoResult>(s);
@@ -11668,6 +12039,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoResult_deviceId_get)
 static bool js_new_GetAudioCollectionDeviceInfoResult(se::State& s) // NOLINT(readability-identifier-naming)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -11754,6 +12126,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_GetAudioCollectionDeviceInfoExResult)
 static bool js_GetAudioCollectionDeviceInfoExResult_errorCode_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
@@ -11772,6 +12145,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoExResult_errorCode_set)
 static bool js_GetAudioCollectionDeviceInfoExResult_errorCode_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoExResult>(s);
@@ -11787,6 +12161,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoExResult_errorCode_get)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceName_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
@@ -11806,6 +12181,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoExResult_deviceName_set)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceName_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoExResult>(s);
@@ -11824,6 +12200,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoExResult_deviceName_get)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceTypeName_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
@@ -11843,6 +12220,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoExResult_deviceTypeName_set)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceTypeName_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoExResult>(s);
@@ -11861,6 +12239,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoExResult_deviceTypeName_get)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceId_set(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
@@ -11880,6 +12259,7 @@ SE_BIND_PROP_SET(js_GetAudioCollectionDeviceInfoExResult_deviceId_set)
 static bool js_GetAudioCollectionDeviceInfoExResult_deviceId_get(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     GetAudioCollectionDeviceInfoExResult *arg1 = (GetAudioCollectionDeviceInfoExResult *) NULL ;
     
     arg1 = SE_THIS_OBJECT<GetAudioCollectionDeviceInfoExResult>(s);
@@ -11898,6 +12278,7 @@ SE_BIND_PROP_GET(js_GetAudioCollectionDeviceInfoExResult_deviceId_get)
 static bool js_new_GetAudioCollectionDeviceInfoExResult(se::State& s) // NOLINT(readability-identifier-naming)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -11997,6 +12378,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_AudioDeviceCollectionBridge)
 static bool js_AudioDeviceCollectionBridge_getCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12020,6 +12402,7 @@ SE_BIND_FUNC(js_AudioDeviceCollectionBridge_getCount)
 static bool js_AudioDeviceCollectionBridge_setDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12050,6 +12433,7 @@ SE_BIND_FUNC(js_AudioDeviceCollectionBridge_setDevice)
 static bool js_AudioDeviceCollectionBridge_setApplicationVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12077,6 +12461,7 @@ SE_BIND_FUNC(js_AudioDeviceCollectionBridge_setApplicationVolume)
 static bool js_AudioDeviceCollectionBridge_getApplicationVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12104,6 +12489,7 @@ SE_BIND_FUNC(js_AudioDeviceCollectionBridge_getApplicationVolume)
 static bool js_AudioDeviceCollectionBridge_setApplicationMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12131,6 +12517,7 @@ SE_BIND_FUNC(js_AudioDeviceCollectionBridge_setApplicationMute)
 static bool js_AudioDeviceCollectionBridge_isApplicationMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceCollectionBridge *arg1 = (AudioDeviceCollectionBridge *) NULL ;
@@ -12196,6 +12583,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_AudioDeviceManagerBridge)
 static bool js_AudioDeviceManagerBridge_hasAudioDeviceManager(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12219,6 +12607,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_hasAudioDeviceManager)
 static bool js_AudioDeviceManagerBridge_setPlaybackDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12249,6 +12638,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setPlaybackDevice)
 static bool js_AudioDeviceManagerBridge_setPlaybackDeviceVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12276,6 +12666,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setPlaybackDeviceVolume)
 static bool js_AudioDeviceManagerBridge_getPlaybackDeviceVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12303,6 +12694,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_getPlaybackDeviceVolume)
 static bool js_AudioDeviceManagerBridge_setRecordingDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12333,6 +12725,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setRecordingDevice)
 static bool js_AudioDeviceManagerBridge_setRecordingDeviceVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12360,6 +12753,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setRecordingDeviceVolume)
 static bool js_AudioDeviceManagerBridge_getRecordingDeviceVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12387,6 +12781,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_getRecordingDeviceVolume)
 static bool js_AudioDeviceManagerBridge_setLoopbackDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12417,6 +12812,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setLoopbackDevice)
 static bool js_AudioDeviceManagerBridge_getLoopbackDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12444,6 +12840,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_getLoopbackDevice)
 static bool js_AudioDeviceManagerBridge_setPlaybackDeviceMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12471,6 +12868,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setPlaybackDeviceMute)
 static bool js_AudioDeviceManagerBridge_getPlaybackDeviceMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12498,6 +12896,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_getPlaybackDeviceMute)
 static bool js_AudioDeviceManagerBridge_setRecordingDeviceMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12525,6 +12924,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_setRecordingDeviceMute)
 static bool js_AudioDeviceManagerBridge_getRecordingDeviceMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12552,6 +12952,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_getRecordingDeviceMute)
 static bool js_AudioDeviceManagerBridge_startPlaybackDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12582,6 +12983,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_startPlaybackDeviceTest)
 static bool js_AudioDeviceManagerBridge_stopPlaybackDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12605,6 +13007,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_stopPlaybackDeviceTest)
 static bool js_AudioDeviceManagerBridge_startRecordingDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12632,6 +13035,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_startRecordingDeviceTest)
 static bool js_AudioDeviceManagerBridge_stopRecordingDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12655,6 +13059,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_stopRecordingDeviceTest)
 static bool js_AudioDeviceManagerBridge_startAudioDeviceLoopbackTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12682,6 +13087,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_startAudioDeviceLoopbackTest)
 static bool js_AudioDeviceManagerBridge_stopAudioDeviceLoopbackTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12705,6 +13111,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_stopAudioDeviceLoopbackTest)
 static bool js_AudioDeviceManagerBridge_followSystemPlaybackDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12732,6 +13139,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_followSystemPlaybackDevice)
 static bool js_AudioDeviceManagerBridge_followSystemRecordingDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12759,6 +13167,7 @@ SE_BIND_FUNC(js_AudioDeviceManagerBridge_followSystemRecordingDevice)
 static bool js_AudioDeviceManagerBridge_followSystemLoopbackDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     AudioDeviceManagerBridge *arg1 = (AudioDeviceManagerBridge *) NULL ;
@@ -12840,6 +13249,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_H265TranscoderBridge)
 static bool js_H265TranscoderBridge_hasH265Transcoder(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -12863,6 +13273,7 @@ SE_BIND_FUNC(js_H265TranscoderBridge_hasH265Transcoder)
 static bool js_H265TranscoderBridge_invalidate(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -12883,6 +13294,7 @@ SE_BIND_FUNC(js_H265TranscoderBridge_invalidate)
 static bool js_H265TranscoderBridge_enableTranscode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -12925,6 +13337,7 @@ SE_BIND_FUNC(js_H265TranscoderBridge_enableTranscode)
 static bool js_H265TranscoderBridge_queryChannel(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -12967,6 +13380,7 @@ SE_BIND_FUNC(js_H265TranscoderBridge_queryChannel)
 static bool js_H265TranscoderBridge_triggerTranscode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -13009,6 +13423,7 @@ SE_BIND_FUNC(js_H265TranscoderBridge_triggerTranscode)
 static bool js_H265TranscoderBridge_unregisterTranscoderObserver(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     H265TranscoderBridge *arg1 = (H265TranscoderBridge *) NULL ;
@@ -13070,6 +13485,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_LocalSpatialAudioEngineBridge)
 static bool js_LocalSpatialAudioEngineBridge_hasSpatialAudioEngine(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13093,6 +13509,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_hasSpatialAudioEngine)
 static bool js_LocalSpatialAudioEngineBridge_updateRemotePosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13128,6 +13545,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_updateRemotePosition)
 static bool js_LocalSpatialAudioEngineBridge_updateRemotePositionEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13170,6 +13588,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_updateRemotePositionEx)
 static bool js_LocalSpatialAudioEngineBridge_removeRemotePosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13198,6 +13617,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_removeRemotePosition)
 static bool js_LocalSpatialAudioEngineBridge_removeRemotePositionEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13233,6 +13653,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_removeRemotePositionEx)
 static bool js_LocalSpatialAudioEngineBridge_clearRemotePositionsEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13263,6 +13684,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_clearRemotePositionsEx)
 static bool js_LocalSpatialAudioEngineBridge_updateSelfPositionEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13321,6 +13743,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_updateSelfPositionEx)
 static bool js_LocalSpatialAudioEngineBridge_setMaxAudioRecvCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13348,6 +13771,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setMaxAudioRecvCount)
 static bool js_LocalSpatialAudioEngineBridge_setAudioRecvRange(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13375,6 +13799,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setAudioRecvRange)
 static bool js_LocalSpatialAudioEngineBridge_setDistanceUnit(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13402,6 +13827,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setDistanceUnit)
 static bool js_LocalSpatialAudioEngineBridge_updateSelfPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13453,6 +13879,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_updateSelfPosition)
 static bool js_LocalSpatialAudioEngineBridge_updatePlayerPositionInfo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13487,6 +13914,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_updatePlayerPositionInfo)
 static bool js_LocalSpatialAudioEngineBridge_setParameters(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13517,6 +13945,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setParameters)
 static bool js_LocalSpatialAudioEngineBridge_muteLocalAudioStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13544,6 +13973,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_muteLocalAudioStream)
 static bool js_LocalSpatialAudioEngineBridge_muteAllRemoteAudioStreams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13571,6 +14001,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_muteAllRemoteAudioStreams)
 static bool js_LocalSpatialAudioEngineBridge_muteRemoteAudioStream(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13603,6 +14034,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_muteRemoteAudioStream)
 static bool js_LocalSpatialAudioEngineBridge_setRemoteAudioAttenuation(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13639,6 +14071,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setRemoteAudioAttenuation)
 static bool js_LocalSpatialAudioEngineBridge_setPlayerAttenuation(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13674,6 +14107,7 @@ SE_BIND_FUNC(js_LocalSpatialAudioEngineBridge_setPlayerAttenuation)
 static bool js_LocalSpatialAudioEngineBridge_clearRemotePositions(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     LocalSpatialAudioEngineBridge *arg1 = (LocalSpatialAudioEngineBridge *) NULL ;
@@ -13748,6 +14182,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_MediaPlayerBridge)
 static bool js_MediaPlayerBridge_getId(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13771,6 +14206,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getId)
 static bool js_MediaPlayerBridge_open(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13805,6 +14241,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_open)
 static bool js_MediaPlayerBridge_play(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13828,6 +14265,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_play)
 static bool js_MediaPlayerBridge_pause(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13851,6 +14289,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_pause)
 static bool js_MediaPlayerBridge_stop(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13874,6 +14313,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_stop)
 static bool js_MediaPlayerBridge_resume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13897,6 +14337,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_resume)
 static bool js_MediaPlayerBridge_seek(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13924,6 +14365,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_seek)
 static bool js_MediaPlayerBridge_setAudioPitch(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13951,6 +14393,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setAudioPitch)
 static bool js_MediaPlayerBridge_getDuration(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -13978,6 +14421,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getDuration)
 static bool js_MediaPlayerBridge_getPlayPosition(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14005,6 +14449,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getPlayPosition)
 static bool js_MediaPlayerBridge_getStreamCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14032,6 +14477,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getStreamCount)
 static bool js_MediaPlayerBridge_getStreamInfo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14065,6 +14511,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getStreamInfo)
 static bool js_MediaPlayerBridge_setLoopCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14092,6 +14539,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setLoopCount)
 static bool js_MediaPlayerBridge_setPlaybackSpeed(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14119,6 +14567,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setPlaybackSpeed)
 static bool js_MediaPlayerBridge_selectAudioTrack(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14146,6 +14595,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_selectAudioTrack)
 static bool js_MediaPlayerBridge_selectMultiAudioTrack(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14177,6 +14627,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_selectMultiAudioTrack)
 static bool js_MediaPlayerBridge_takeScreenshot(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14207,6 +14658,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_takeScreenshot)
 static bool js_MediaPlayerBridge_selectInternalSubtitle(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14234,6 +14686,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_selectInternalSubtitle)
 static bool js_MediaPlayerBridge_setExternalSubtitle(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14264,6 +14717,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setExternalSubtitle)
 static bool js_MediaPlayerBridge_mute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14291,6 +14745,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_mute)
 static bool js_MediaPlayerBridge_getMute(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14318,6 +14773,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getMute)
 static bool js_MediaPlayerBridge_adjustPlayoutVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14345,6 +14801,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_adjustPlayoutVolume)
 static bool js_MediaPlayerBridge_getPlayoutVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14372,6 +14829,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getPlayoutVolume)
 static bool js_MediaPlayerBridge_adjustPublishSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14399,6 +14857,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_adjustPublishSignalVolume)
 static bool js_MediaPlayerBridge_getPublishSignalVolume(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14426,6 +14885,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getPublishSignalVolume)
 static bool js_MediaPlayerBridge_unregisterPlayerSourceObserver(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14449,6 +14909,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_unregisterPlayerSourceObserver)
 static bool js_MediaPlayerBridge_setAudioDualMonoMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14477,6 +14938,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setAudioDualMonoMode)
 static bool js_MediaPlayerBridge_getPlayerSdkVersion(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14503,6 +14965,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getPlayerSdkVersion)
 static bool js_MediaPlayerBridge_getPlaySrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14529,6 +14992,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getPlaySrc)
 static bool js_MediaPlayerBridge_openWithAgoraCDNSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14563,6 +15027,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_openWithAgoraCDNSrc)
 static bool js_MediaPlayerBridge_getAgoraCDNLineCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14586,6 +15051,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getAgoraCDNLineCount)
 static bool js_MediaPlayerBridge_switchAgoraCDNLineByIndex(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14613,6 +15079,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_switchAgoraCDNLineByIndex)
 static bool js_MediaPlayerBridge_getCurrentAgoraCDNIndex(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14636,6 +15103,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_getCurrentAgoraCDNIndex)
 static bool js_MediaPlayerBridge_enableAutoSwitchAgoraCDN(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14663,6 +15131,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_enableAutoSwitchAgoraCDN)
 static bool js_MediaPlayerBridge_renewAgoraCDNSrcToken(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14697,6 +15166,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_renewAgoraCDNSrcToken)
 static bool js_MediaPlayerBridge_switchAgoraCDNSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14731,6 +15201,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_switchAgoraCDNSrc)
 static bool js_MediaPlayerBridge_switchSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14765,6 +15236,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_switchSrc)
 static bool js_MediaPlayerBridge_preloadSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14799,6 +15271,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_preloadSrc)
 static bool js_MediaPlayerBridge_playPreloadedSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14829,6 +15302,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_playPreloadedSrc)
 static bool js_MediaPlayerBridge_unloadSrc(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14859,6 +15333,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_unloadSrc)
 static bool js_MediaPlayerBridge_setSpatialAudioParams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14889,6 +15364,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setSpatialAudioParams)
 static bool js_MediaPlayerBridge_setSoundPositionParams(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -14920,6 +15396,7 @@ SE_BIND_FUNC(js_MediaPlayerBridge_setSoundPositionParams)
 static bool js_MediaPlayerBridge_getAudioBufferDelay(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
@@ -15022,6 +15499,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_MediaPlayerCacheManagerBridge)
 static bool js_MediaPlayerCacheManagerBridge_removeAllCaches(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15045,6 +15523,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_removeAllCaches)
 static bool js_MediaPlayerCacheManagerBridge_removeOldCache(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15068,6 +15547,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_removeOldCache)
 static bool js_MediaPlayerCacheManagerBridge_removeCacheByUri(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15098,6 +15578,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_removeCacheByUri)
 static bool js_MediaPlayerCacheManagerBridge_setCacheDir(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15128,6 +15609,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_setCacheDir)
 static bool js_MediaPlayerCacheManagerBridge_setMaxCacheFileCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15155,6 +15637,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_setMaxCacheFileCount)
 static bool js_MediaPlayerCacheManagerBridge_setMaxCacheFileSize(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15182,6 +15665,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_setMaxCacheFileSize)
 static bool js_MediaPlayerCacheManagerBridge_enableAutoRemoveCache(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15209,6 +15693,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_enableAutoRemoveCache)
 static bool js_MediaPlayerCacheManagerBridge_getCacheDir(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15236,6 +15721,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_getCacheDir)
 static bool js_MediaPlayerCacheManagerBridge_getMaxCacheFileCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15259,6 +15745,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_getMaxCacheFileCount)
 static bool js_MediaPlayerCacheManagerBridge_getMaxCacheFileSize(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15282,6 +15769,7 @@ SE_BIND_FUNC(js_MediaPlayerCacheManagerBridge_getMaxCacheFileSize)
 static bool js_MediaPlayerCacheManagerBridge_getCacheFileCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
@@ -15348,6 +15836,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_MediaRecorderBridge)
 static bool js_MediaRecorderBridge_startRecording(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaRecorderBridge *arg1 = (MediaRecorderBridge *) NULL ;
@@ -15378,6 +15867,7 @@ SE_BIND_FUNC(js_MediaRecorderBridge_startRecording)
 static bool js_MediaRecorderBridge_stopRecording(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MediaRecorderBridge *arg1 = (MediaRecorderBridge *) NULL ;
@@ -15435,6 +15925,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_MusicContentCenterBridge)
 static bool js_MusicContentCenterBridge_initialize(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15465,6 +15956,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_initialize)
 static bool js_MusicContentCenterBridge_renewToken(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15495,6 +15987,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_renewToken)
 static bool js_MusicContentCenterBridge_registerEventHandler(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15522,6 +16015,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_registerEventHandler)
 static bool js_MusicContentCenterBridge_getMusicCharts(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15549,6 +16043,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_getMusicCharts)
 static bool js_MusicContentCenterBridge_getMusicCollectionByMusicChartId__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int32_t arg2 ;
@@ -15589,6 +16084,7 @@ static bool js_MusicContentCenterBridge_getMusicCollectionByMusicChartId__SWIG_0
 static bool js_MusicContentCenterBridge_getMusicCollectionByMusicChartId__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int32_t arg2 ;
@@ -15622,6 +16118,7 @@ static bool js_MusicContentCenterBridge_getMusicCollectionByMusicChartId__SWIG_1
 static bool js_MusicContentCenterBridge_getMusicCollectionByMusicChartId(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -15646,6 +16143,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_getMusicCollectionByMusicChartId)
 static bool js_MusicContentCenterBridge_searchMusic__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -15689,6 +16187,7 @@ static bool js_MusicContentCenterBridge_searchMusic__SWIG_0(se::State& s)
 static bool js_MusicContentCenterBridge_searchMusic__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     std::string *arg2 = 0 ;
@@ -15725,6 +16224,7 @@ static bool js_MusicContentCenterBridge_searchMusic__SWIG_1(se::State& s)
 static bool js_MusicContentCenterBridge_searchMusic(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -15749,6 +16249,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_searchMusic)
 static bool js_MusicContentCenterBridge_preload__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int64_t arg2 ;
@@ -15777,6 +16278,7 @@ static bool js_MusicContentCenterBridge_preload__SWIG_0(se::State& s)
 static bool js_MusicContentCenterBridge_preload__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int64_t arg2 ;
@@ -15802,6 +16304,7 @@ static bool js_MusicContentCenterBridge_preload__SWIG_1(se::State& s)
 static bool js_MusicContentCenterBridge_preload(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -15826,6 +16329,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_preload)
 static bool js_MusicContentCenterBridge_removeCache(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15853,6 +16357,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_removeCache)
 static bool js_MusicContentCenterBridge_getCaches(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15886,6 +16391,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_getCaches)
 static bool js_MusicContentCenterBridge_isPreloaded(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -15913,6 +16419,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_isPreloaded)
 static bool js_MusicContentCenterBridge_getLyric__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int64_t arg2 ;
@@ -15942,6 +16449,7 @@ static bool js_MusicContentCenterBridge_getLyric__SWIG_0(se::State& s)
 static bool js_MusicContentCenterBridge_getLyric__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
     int64_t arg2 ;
@@ -15967,6 +16475,7 @@ static bool js_MusicContentCenterBridge_getLyric__SWIG_1(se::State& s)
 static bool js_MusicContentCenterBridge_getLyric(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -15991,6 +16500,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_getLyric)
 static bool js_MusicContentCenterBridge_getSongSimpleInfo(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -16022,6 +16532,7 @@ SE_BIND_FUNC(js_MusicContentCenterBridge_getSongSimpleInfo)
 static bool js_MusicContentCenterBridge_getInternalSongCode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicContentCenterBridge *arg1 = (MusicContentCenterBridge *) NULL ;
@@ -16099,6 +16610,7 @@ SE_DECLARE_FINALIZE_FUNC(js_delete_MusicPlayerBridge)
 static bool js_MusicPlayerBridge_openWithSongCode__SWIG_0(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicPlayerBridge *arg1 = (MusicPlayerBridge *) NULL ;
     int64_t arg2 ;
@@ -16124,6 +16636,7 @@ static bool js_MusicPlayerBridge_openWithSongCode__SWIG_0(se::State& s)
 static bool js_MusicPlayerBridge_openWithSongCode__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     MusicPlayerBridge *arg1 = (MusicPlayerBridge *) NULL ;
     int64_t arg2 ;
@@ -16145,6 +16658,7 @@ static bool js_MusicPlayerBridge_openWithSongCode__SWIG_1(se::State& s)
 static bool js_MusicPlayerBridge_openWithSongCode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     
@@ -16169,6 +16683,7 @@ SE_BIND_FUNC(js_MusicPlayerBridge_openWithSongCode)
 static bool js_MusicPlayerBridge_setPlayMode(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     MusicPlayerBridge *arg1 = (MusicPlayerBridge *) NULL ;
@@ -16237,6 +16752,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_ScreenCaptureSourceListBridge)
 static bool js_ScreenCaptureSourceListBridge_getCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     ScreenCaptureSourceListBridge *arg1 = (ScreenCaptureSourceListBridge *) NULL ;
@@ -16293,6 +16809,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_VideoDeviceCollectionBridge)
 static bool js_VideoDeviceCollectionBridge_getCount(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceCollectionBridge *arg1 = (VideoDeviceCollectionBridge *) NULL ;
@@ -16316,6 +16833,7 @@ SE_BIND_FUNC(js_VideoDeviceCollectionBridge_getCount)
 static bool js_VideoDeviceCollectionBridge_setDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceCollectionBridge *arg1 = (VideoDeviceCollectionBridge *) NULL ;
@@ -16346,6 +16864,7 @@ SE_BIND_FUNC(js_VideoDeviceCollectionBridge_setDevice)
 static bool js_VideoDeviceCollectionBridge_getDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceCollectionBridge *arg1 = (VideoDeviceCollectionBridge *) NULL ;
@@ -16413,6 +16932,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_VideoDeviceManagerBridge)
 static bool js_VideoDeviceManagerBridge_enumerateVideoDevices(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16439,6 +16959,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_enumerateVideoDevices)
 static bool js_VideoDeviceManagerBridge_setDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16469,6 +16990,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_setDevice)
 static bool js_VideoDeviceManagerBridge_getDevice(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16496,6 +17018,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_getDevice)
 static bool js_VideoDeviceManagerBridge_numberOfCapabilities(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16526,6 +17049,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_numberOfCapabilities)
 static bool js_VideoDeviceManagerBridge_getCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16567,6 +17091,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_getCapability)
 static bool js_VideoDeviceManagerBridge_startDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16595,6 +17120,7 @@ SE_BIND_FUNC(js_VideoDeviceManagerBridge_startDeviceTest)
 static bool js_VideoDeviceManagerBridge_stopDeviceTest(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoDeviceManagerBridge *arg1 = (VideoDeviceManagerBridge *) NULL ;
@@ -16657,6 +17183,7 @@ SE_BIND_FINALIZE_FUNC(js_delete_VideoEffectObjectBridge)
 static bool js_VideoEffectObjectBridge_addOrUpdateVideoEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16692,6 +17219,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_addOrUpdateVideoEffect)
 static bool js_VideoEffectObjectBridge_removeVideoEffect(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16720,6 +17248,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_removeVideoEffect)
 static bool js_VideoEffectObjectBridge_performVideoEffectAction(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16753,6 +17282,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_performVideoEffectAction)
 static bool js_VideoEffectObjectBridge_setVideoEffectFloatParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16794,6 +17324,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_setVideoEffectFloatParam)
 static bool js_VideoEffectObjectBridge_setVideoEffectIntParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16835,6 +17366,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_setVideoEffectIntParam)
 static bool js_VideoEffectObjectBridge_setVideoEffectBoolParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16876,6 +17408,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_setVideoEffectBoolParam)
 static bool js_VideoEffectObjectBridge_getVideoEffectFloatParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16913,6 +17446,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_getVideoEffectFloatParam)
 static bool js_VideoEffectObjectBridge_getVideoEffectIntParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;
@@ -16950,6 +17484,7 @@ SE_BIND_FUNC(js_VideoEffectObjectBridge_getVideoEffectIntParam)
 static bool js_VideoEffectObjectBridge_getVideoEffectBoolParam(se::State& s)
 {
     CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
     const auto& args = s.args();
     size_t argc = args.size();
     VideoEffectObjectBridge *arg1 = (VideoEffectObjectBridge *) NULL ;

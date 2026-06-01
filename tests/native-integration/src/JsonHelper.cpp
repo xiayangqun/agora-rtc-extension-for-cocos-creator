@@ -441,6 +441,330 @@ std::string toJson(const VideoRenderingTracingInfo& info) {
 }
 
 // ==========================================================================
+// VideoCanvas
+// ==========================================================================
+std::string toJson(const VideoCanvas& canvas) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("renderMode", static_cast<int>(canvas.renderMode), alloc);
+    d.AddMember("uid", canvas.uid, alloc);
+    d.AddMember("sourceType", static_cast<int>(canvas.sourceType), alloc);
+    d.AddMember("mirrorMode", static_cast<int>(canvas.mirrorMode), alloc);
+    d.AddMember("mediaPlayerId", canvas.mediaPlayerId, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// VirtualBackgroundSource
+// ==========================================================================
+std::string toJson(const VirtualBackgroundSource& source) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("background_source_type", static_cast<int>(source.background_source_type), alloc);
+    addString(d, "source", source.source, alloc);
+    d.AddMember("color", source.color, alloc);
+    d.AddMember("blur_degree", static_cast<int>(source.blur_degree), alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// SegmentationProperty
+// ==========================================================================
+std::string toJson(const SegmentationProperty& prop) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("modelType", static_cast<int>(prop.modelType), alloc);
+    d.AddMember("greenCapacity", prop.greenCapacity, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// AudioRecordingConfiguration
+// ==========================================================================
+std::string toJson(const AudioRecordingConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    addString(d, "filePath", config.filePath, alloc);
+    d.AddMember("encode", static_cast<int>(config.encode), alloc);
+    d.AddMember("sampleRate", config.recordingChannel, alloc);
+    d.AddMember("fileRecordingType", static_cast<int>(config.fileRecordingType), alloc);
+    d.AddMember("quality", static_cast<int>(config.quality), alloc);
+    d.AddMember("recordingChannel", config.recordingChannel, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// SpatialAudioParams
+// ==========================================================================
+std::string toJson(const agora::SpatialAudioParams& params) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    if (params.speaker_azimuth) d.AddMember("speaker_azimuth", params.speaker_azimuth.value(), alloc);
+    if (params.speaker_elevation) d.AddMember("speaker_elevation", params.speaker_elevation.value(), alloc);
+    if (params.speaker_distance) d.AddMember("speaker_distance", params.speaker_distance.value(), alloc);
+    if (params.speaker_orientation) d.AddMember("speaker_orientation", params.speaker_orientation.value(), alloc);
+    if (params.enable_blur) d.AddMember("enable_blur", params.enable_blur.value(), alloc);
+    if (params.enable_air_absorb) d.AddMember("enable_air_absorb", params.enable_air_absorb.value(), alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// LiveTranscoding
+// ==========================================================================
+std::string toJson(const LiveTranscoding& transcoding) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("width", transcoding.width, alloc);
+    d.AddMember("height", transcoding.height, alloc);
+    d.AddMember("videoBitrate", transcoding.videoBitrate, alloc);
+    d.AddMember("videoFramerate", transcoding.videoFramerate, alloc);
+    d.AddMember("lowLatency", transcoding.lowLatency, alloc);
+    d.AddMember("videoGop", transcoding.videoGop, alloc);
+    d.AddMember("videoCodecProfile", static_cast<int>(transcoding.videoCodecProfile), alloc);
+    d.AddMember("backgroundColor", transcoding.backgroundColor, alloc);
+    d.AddMember("userCount", transcoding.userCount, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// LocalTranscoderConfiguration
+// ==========================================================================
+std::string toJson(const LocalTranscoderConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("streamCount", config.streamCount, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// LocalAudioMixerConfiguration
+// ==========================================================================
+std::string toJson(const LocalAudioMixerConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("streamCount", config.streamCount, alloc);
+    d.AddMember("syncWithLocalMic", config.syncWithLocalMic, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// VideoEncoderConfiguration
+// ==========================================================================
+std::string toJson(const VideoEncoderConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("codecType", static_cast<int>(config.codecType), alloc);
+    d.AddMember("orientationMode", static_cast<int>(config.orientationMode), alloc);
+    d.AddMember("degradationPreference", static_cast<int>(config.degradationPreference), alloc);
+    d.AddMember("mirrorMode", static_cast<int>(config.mirrorMode), alloc);
+    d.AddMember("frameRate", static_cast<int>(config.frameRate), alloc);
+    d.AddMember("bitrate", config.bitrate, alloc);
+    d.AddMember("minBitrate", config.minBitrate, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// ContentInspectConfig
+// ==========================================================================
+std::string toJson(const agora::media::ContentInspectConfig& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("moduleCount", config.moduleCount, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// ImageTrackOptions
+// ==========================================================================
+std::string toJson(const ImageTrackOptions& options) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    addString(d, "imageUrl", options.imageUrl, alloc);
+    d.AddMember("fps", options.fps, alloc);
+    d.AddMember("mirrorMode", static_cast<int>(options.mirrorMode), alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// WatermarkOptions
+// ==========================================================================
+std::string toJson(const WatermarkOptions& options) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("visibleInPreview", options.visibleInPreview, alloc);
+    d.AddMember("posInLandscape_x", options.positionInLandscapeMode.x, alloc);
+    d.AddMember("posInLandscape_y", options.positionInLandscapeMode.y, alloc);
+    d.AddMember("posInLandscape_w", options.positionInLandscapeMode.width, alloc);
+    d.AddMember("posInLandscape_h", options.positionInLandscapeMode.height, alloc);
+    d.AddMember("posInPortrait_x", options.positionInPortraitMode.x, alloc);
+    d.AddMember("posInPortrait_y", options.positionInPortraitMode.y, alloc);
+    d.AddMember("posInPortrait_w", options.positionInPortraitMode.width, alloc);
+    d.AddMember("posInPortrait_h", options.positionInPortraitMode.height, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// ScreenCaptureParameters
+// ==========================================================================
+std::string toJson(const ScreenCaptureParameters& params) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("dimensionsWidth", params.dimensions.width, alloc);
+    d.AddMember("dimensionsHeight", params.dimensions.height, alloc);
+    d.AddMember("frameRate", params.frameRate, alloc);
+    d.AddMember("bitrate", params.bitrate, alloc);
+    d.AddMember("captureMouseCursor", params.captureMouseCursor, alloc);
+    d.AddMember("windowFocus", params.windowFocus, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// ScreenCaptureConfiguration
+// ==========================================================================
+std::string toJson(const ScreenCaptureConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("isCaptureWindow", config.isCaptureWindow, alloc);
+    d.AddMember("displayId", config.displayId, alloc);
+    rapidjson::Value params(rapidjson::kObjectType);
+    params.AddMember("dimensionsWidth", config.params.dimensions.width, alloc);
+    params.AddMember("dimensionsHeight", config.params.dimensions.height, alloc);
+    params.AddMember("frameRate", config.params.frameRate, alloc);
+    params.AddMember("bitrate", config.params.bitrate, alloc);
+    d.AddMember("params", params, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// ChannelMediaRelayConfiguration
+// ==========================================================================
+std::string toJson(const ChannelMediaRelayConfiguration& config) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    if (config.srcInfo) {
+        rapidjson::Value src(rapidjson::kObjectType);
+        { rapidjson::Value v; v.SetString(config.srcInfo->channelName ? config.srcInfo->channelName : "", alloc); src.AddMember("channelName", v, alloc); }
+        src.AddMember("uid", config.srcInfo->uid, alloc);
+        { rapidjson::Value v; v.SetString(config.srcInfo->token ? config.srcInfo->token : "", alloc); src.AddMember("token", v, alloc); }
+        d.AddMember("srcInfo", src, alloc);
+    }
+    if (config.destInfos) {
+        rapidjson::Value dests(rapidjson::kArrayType);
+        for (int i = 0; i < config.destCount; i++) {
+            rapidjson::Value dest(rapidjson::kObjectType);
+            { rapidjson::Value v; v.SetString(config.destInfos[i].channelName ? config.destInfos[i].channelName : "", alloc); dest.AddMember("channelName", v, alloc); }
+            dest.AddMember("uid", config.destInfos[i].uid, alloc);
+            { rapidjson::Value v; v.SetString(config.destInfos[i].token ? config.destInfos[i].token : "", alloc); dest.AddMember("token", v, alloc); }
+            dests.PushBack(dest, alloc);
+        }
+        d.AddMember("destInfos", dests, alloc);
+    }
+    d.AddMember("destCount", config.destCount, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// LeaveChannelOptions
+// ==========================================================================
+std::string toJson(const LeaveChannelOptions& options) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    d.AddMember("stopAudioMixing", options.stopAudioMixing, alloc);
+    d.AddMember("stopAllEffect", options.stopAllEffect, alloc);
+    d.AddMember("stopMicrophoneRecording", options.stopMicrophoneRecording, alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
+// DirectCdnStreamingMediaOptions
+// ==========================================================================
+std::string toJson(const DirectCdnStreamingMediaOptions& options) {
+    rapidjson::Document d;
+    d.SetObject();
+    auto& alloc = d.GetAllocator();
+    if (options.publishCameraTrack.has_value())
+        d.AddMember("publishCameraTrack", options.publishCameraTrack.value(), alloc);
+    if (options.publishMicrophoneTrack.has_value())
+        d.AddMember("publishMicrophoneTrack", options.publishMicrophoneTrack.value(), alloc);
+    if (options.publishCustomAudioTrack.has_value())
+        d.AddMember("publishCustomAudioTrack", options.publishCustomAudioTrack.value(), alloc);
+    if (options.publishCustomVideoTrack.has_value())
+        d.AddMember("publishCustomVideoTrack", options.publishCustomVideoTrack.value(), alloc);
+    if (options.publishMediaPlayerAudioTrack.has_value())
+        d.AddMember("publishMediaPlayerAudioTrack", options.publishMediaPlayerAudioTrack.value(), alloc);
+    if (options.customVideoTrackId.has_value())
+        d.AddMember("customVideoTrackId", options.customVideoTrackId.value(), alloc);
+    rapidjson::StringBuffer buf;
+    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
+    d.Accept(w);
+    return buf.GetString();
+}
+
+// ==========================================================================
 // Primitive types
 // ==========================================================================
 std::string toJson(int value) {

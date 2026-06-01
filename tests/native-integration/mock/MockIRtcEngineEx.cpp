@@ -525,13 +525,8 @@ int MockIRtcEngineEx::enableVirtualBackground(bool enabled, VirtualBackgroundSou
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("enabled", enabled, a);
-    d.AddMember("background_source_type", backgroundSource.background_source_type, a);
-    rapidjson::Value v;
-    v.SetString(backgroundSource.source ? backgroundSource.source : "", a); d.AddMember("source", v, a);
-    d.AddMember("color", backgroundSource.color, a);
-    d.AddMember("blur_degree", backgroundSource.blur_degree, a);
-    d.AddMember("modelType", segproperty.modelType, a);
-    d.AddMember("greenCapacity", segproperty.greenCapacity, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(backgroundSource), v, a); d.AddMember("backgroundSource", v, a); }
+    { rapidjson::Value v; parseJsonInto(json::toJson(segproperty), v, a); d.AddMember("segproperty", v, a); }
     d.AddMember("type", type, a);
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -541,34 +536,14 @@ int MockIRtcEngineEx::enableVirtualBackground(bool enabled, VirtualBackgroundSou
 }
 
 int MockIRtcEngineEx::setupRemoteVideo(const VideoCanvas& canvas) {
-    rapidjson::Document d;
-    d.SetObject();
-    auto& a = d.GetAllocator();
-    d.AddMember("renderMode", canvas.renderMode, a);
-    d.AddMember("uid", canvas.uid, a);
-    d.AddMember("sourceType", canvas.sourceType, a);
-    d.AddMember("mirrorMode", canvas.mirrorMode, a);
-    d.AddMember("mediaPlayerId", canvas.mediaPlayerId, a);
-    rapidjson::StringBuffer buf;
-    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
-    d.Accept(w);
-    appendLog("setupRemoteVideo", buf.GetString());
+    std::string jsonStr = json::toJson(canvas);
+    appendLog("setupRemoteVideo", jsonStr.c_str());
     return 0;
 }
 
 int MockIRtcEngineEx::setupLocalVideo(const VideoCanvas& canvas) {
-    rapidjson::Document d;
-    d.SetObject();
-    auto& a = d.GetAllocator();
-    d.AddMember("renderMode", canvas.renderMode, a);
-    d.AddMember("uid", canvas.uid, a);
-    d.AddMember("sourceType", canvas.sourceType, a);
-    d.AddMember("mirrorMode", canvas.mirrorMode, a);
-    d.AddMember("mediaPlayerId", canvas.mediaPlayerId, a);
-    rapidjson::StringBuffer buf;
-    rapidjson::Writer<rapidjson::StringBuffer> w(buf);
-    d.Accept(w);
-    appendLog("setupLocalVideo", buf.GetString());
+    std::string jsonStr = json::toJson(canvas);
+    appendLog("setupLocalVideo", jsonStr.c_str());
     return 0;
 }
 
@@ -844,13 +819,7 @@ int MockIRtcEngineEx::startAudioRecording(const AudioRecordingConfiguration& con
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    rapidjson::Value v;
-    v.SetString(config.filePath ? config.filePath : "", a); d.AddMember("filePath", v, a);
-    d.AddMember("encode", config.encode, a);
-    d.AddMember("sampleRate", config.recordingChannel, a);
-    d.AddMember("fileRecordingType", config.fileRecordingType, a);
-    d.AddMember("quality", config.quality, a);
-    d.AddMember("recordingChannel", config.recordingChannel, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -1313,12 +1282,7 @@ int MockIRtcEngineEx::setRemoteUserSpatialAudioParams(uid_t uid, const agora::Sp
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("uid", uid, a);
-    if (params.speaker_azimuth) d.AddMember("speaker_azimuth", params.speaker_azimuth.value(), a);
-    if (params.speaker_elevation) d.AddMember("speaker_elevation", params.speaker_elevation.value(), a);
-    if (params.speaker_distance) d.AddMember("speaker_distance", params.speaker_distance.value(), a);
-    if (params.speaker_orientation) d.AddMember("speaker_orientation", params.speaker_orientation.value(), a);
-    if (params.enable_blur) d.AddMember("enable_blur", params.enable_blur.value(), a);
-    if (params.enable_air_absorb) d.AddMember("enable_air_absorb", params.enable_air_absorb.value(), a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(params), v, a); d.AddMember("params", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2360,12 +2324,7 @@ int MockIRtcEngineEx::startScreenCaptureByDisplayId(int64_t displayId, const Rec
     d.AddMember("regionRect_y", regionRect.y, a);
     d.AddMember("regionRect_width", regionRect.width, a);
     d.AddMember("regionRect_height", regionRect.height, a);
-    d.AddMember("captureWidth", captureParams.dimensions.width, a);
-    d.AddMember("captureHeight", captureParams.dimensions.height, a);
-    d.AddMember("frameRate", captureParams.frameRate, a);
-    d.AddMember("bitrate", captureParams.bitrate, a);
-    d.AddMember("captureMouseCursor", captureParams.captureMouseCursor, a);
-    d.AddMember("windowFocus", captureParams.windowFocus, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(captureParams), v, a); d.AddMember("captureParams", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2386,10 +2345,7 @@ int MockIRtcEngineEx::startScreenCaptureByScreenRect(const Rectangle& screenRect
     d.AddMember("regionRect_y", regionRect.y, a);
     d.AddMember("regionRect_width", regionRect.width, a);
     d.AddMember("regionRect_height", regionRect.height, a);
-    d.AddMember("captureWidth", captureParams.dimensions.width, a);
-    d.AddMember("captureHeight", captureParams.dimensions.height, a);
-    d.AddMember("frameRate", captureParams.frameRate, a);
-    d.AddMember("bitrate", captureParams.bitrate, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(captureParams), v, a); d.AddMember("captureParams", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2416,12 +2372,7 @@ int MockIRtcEngineEx::startScreenCaptureByWindowId(int64_t windowId, const Recta
     d.AddMember("regionRect_y", regionRect.y, a);
     d.AddMember("regionRect_width", regionRect.width, a);
     d.AddMember("regionRect_height", regionRect.height, a);
-    d.AddMember("captureWidth", captureParams.dimensions.width, a);
-    d.AddMember("captureHeight", captureParams.dimensions.height, a);
-    d.AddMember("frameRate", captureParams.frameRate, a);
-    d.AddMember("bitrate", captureParams.bitrate, a);
-    d.AddMember("captureMouseCursor", captureParams.captureMouseCursor, a);
-    d.AddMember("windowFocus", captureParams.windowFocus, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(captureParams), v, a); d.AddMember("captureParams", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2598,17 +2549,8 @@ int MockIRtcEngineEx::startRtmpStreamWithTranscoding(const char* url, const Live
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    rapidjson::Value v;
-    v.SetString(url ? url : "", a); d.AddMember("url", v, a);
-    d.AddMember("width", transcoding.width, a);
-    d.AddMember("height", transcoding.height, a);
-    d.AddMember("videoBitrate", transcoding.videoBitrate, a);
-    d.AddMember("videoFramerate", transcoding.videoFramerate, a);
-    d.AddMember("lowLatency", transcoding.lowLatency, a);
-    d.AddMember("videoGop", transcoding.videoGop, a);
-    d.AddMember("videoCodecProfile", transcoding.videoCodecProfile, a);
-    d.AddMember("backgroundColor", transcoding.backgroundColor, a);
-    d.AddMember("userCount", transcoding.userCount, a);
+    { rapidjson::Value v; v.SetString(url ? url : "", a); d.AddMember("url", v, a); }
+    { rapidjson::Value v; parseJsonInto(json::toJson(transcoding), v, a); d.AddMember("transcoding", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2620,15 +2562,7 @@ int MockIRtcEngineEx::updateRtmpTranscoding(const LiveTranscoding& transcoding) 
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("width", transcoding.width, a);
-    d.AddMember("height", transcoding.height, a);
-    d.AddMember("videoBitrate", transcoding.videoBitrate, a);
-    d.AddMember("videoFramerate", transcoding.videoFramerate, a);
-    d.AddMember("lowLatency", transcoding.lowLatency, a);
-    d.AddMember("videoGop", transcoding.videoGop, a);
-    d.AddMember("videoCodecProfile", transcoding.videoCodecProfile, a);
-    d.AddMember("backgroundColor", transcoding.backgroundColor, a);
-    d.AddMember("userCount", transcoding.userCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(transcoding), v, a); d.AddMember("transcoding", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2640,7 +2574,7 @@ int MockIRtcEngineEx::startLocalVideoTranscoder(const LocalTranscoderConfigurati
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("streamCount", config.streamCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2652,7 +2586,7 @@ int MockIRtcEngineEx::updateLocalTranscoderConfiguration(const LocalTranscoderCo
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("streamCount", config.streamCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2682,7 +2616,7 @@ int MockIRtcEngineEx::startLocalAudioMixer(const LocalAudioMixerConfiguration& c
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("audioSourceCount", 0 /*audioSourceCount*/, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2694,7 +2628,7 @@ int MockIRtcEngineEx::updateLocalAudioMixerConfiguration(const LocalAudioMixerCo
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("audioSourceCount", 0 /*audioSourceCount*/, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -3190,13 +3124,7 @@ int MockIRtcEngineEx::setDirectCdnStreamingVideoConfiguration(const VideoEncoder
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("codecType", config.codecType, a);
-    d.AddMember("orientationMode", config.orientationMode, a);
-    d.AddMember("degradationPreference", config.degradationPreference, a);
-    d.AddMember("mirrorMode", config.mirrorMode, a);
-    d.AddMember("frameRate", config.frameRate, a);
-    d.AddMember("bitrate", config.bitrate, a);
-    d.AddMember("minBitrate", config.minBitrate, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -3294,7 +3222,7 @@ int MockIRtcEngineEx::enableContentInspect(bool enabled, const media::ContentIns
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("enabled", enabled, a);
-    d.AddMember("moduleCount", config.moduleCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -3376,9 +3304,7 @@ int MockIRtcEngineEx::enableVideoImageSource(bool enable, const ImageTrackOption
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("enable", enable, a);
-    rapidjson::Value v;
-    v.SetString(options.imageUrl ? options.imageUrl : "", a); d.AddMember("imageUrl", v, a);
-    d.AddMember("fps", options.fps, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(options), v, a); d.AddMember("options", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -3534,13 +3460,7 @@ int MockIRtcEngineEx::setVideoEncoderConfigurationEx(const VideoEncoderConfigura
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("codecType", config.codecType, a);
-    d.AddMember("orientationMode", config.orientationMode, a);
-    d.AddMember("degradationPreference", config.degradationPreference, a);
-    d.AddMember("mirrorMode", config.mirrorMode, a);
-    d.AddMember("frameRate", config.frameRate, a);
-    d.AddMember("bitrate", config.bitrate, a);
-    d.AddMember("minBitrate", config.minBitrate, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -3553,11 +3473,7 @@ int MockIRtcEngineEx::setupRemoteVideoEx(const VideoCanvas& canvas, const RtcCon
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("renderMode", canvas.renderMode, a);
-    d.AddMember("uid", canvas.uid, a);
-    d.AddMember("sourceType", canvas.sourceType, a);
-    d.AddMember("mirrorMode", canvas.mirrorMode, a);
-    d.AddMember("mediaPlayerId", canvas.mediaPlayerId, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(canvas), v, a); d.AddMember("canvas", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -3757,12 +3673,7 @@ int MockIRtcEngineEx::setRemoteUserSpatialAudioParamsEx(uid_t uid, const agora::
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("uid", static_cast<int>(uid), a);
-    if (params.speaker_azimuth) d.AddMember("speaker_azimuth", params.speaker_azimuth.value(), a);
-    if (params.speaker_elevation) d.AddMember("speaker_elevation", params.speaker_elevation.value(), a);
-    if (params.speaker_distance) d.AddMember("speaker_distance", params.speaker_distance.value(), a);
-    if (params.speaker_orientation) d.AddMember("speaker_orientation", params.speaker_orientation.value(), a);
-    if (params.enable_blur) d.AddMember("enable_blur", params.enable_blur.value(), a);
-    if (params.enable_air_absorb) d.AddMember("enable_air_absorb", params.enable_air_absorb.value(), a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(params), v, a); d.AddMember("params", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -3946,15 +3857,7 @@ int MockIRtcEngineEx::addVideoWatermarkEx(const char* watermarkUrl, const Waterm
     d.SetObject();
     auto& a = d.GetAllocator();
     { rapidjson::Value v; v.SetString(watermarkUrl ? watermarkUrl : "", a); d.AddMember("watermarkUrl", v, a); }
-    d.AddMember("visibleInPreview", options.visibleInPreview, a);
-    d.AddMember("posInLandscape_x", options.positionInLandscapeMode.x, a);
-    d.AddMember("posInLandscape_y", options.positionInLandscapeMode.y, a);
-    d.AddMember("posInLandscape_w", options.positionInLandscapeMode.width, a);
-    d.AddMember("posInLandscape_h", options.positionInLandscapeMode.height, a);
-    d.AddMember("posInPortrait_x", options.positionInPortraitMode.x, a);
-    d.AddMember("posInPortrait_y", options.positionInPortraitMode.y, a);
-    d.AddMember("posInPortrait_w", options.positionInPortraitMode.width, a);
-    d.AddMember("posInPortrait_h", options.positionInPortraitMode.height, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(options), v, a); d.AddMember("options", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -4050,15 +3953,7 @@ int MockIRtcEngineEx::startRtmpStreamWithTranscodingEx(const char* url, const Li
     d.SetObject();
     auto& a = d.GetAllocator();
     { rapidjson::Value v; v.SetString(url ? url : "", a); d.AddMember("url", v, a); }
-    d.AddMember("width", transcoding.width, a);
-    d.AddMember("height", transcoding.height, a);
-    d.AddMember("videoBitrate", transcoding.videoBitrate, a);
-    d.AddMember("videoFramerate", transcoding.videoFramerate, a);
-    d.AddMember("lowLatency", transcoding.lowLatency, a);
-    d.AddMember("videoGop", transcoding.videoGop, a);
-    d.AddMember("videoCodecProfile", transcoding.videoCodecProfile, a);
-    d.AddMember("backgroundColor", transcoding.backgroundColor, a);
-    d.AddMember("userCount", transcoding.userCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(transcoding), v, a); d.AddMember("transcoding", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -4071,15 +3966,7 @@ int MockIRtcEngineEx::updateRtmpTranscodingEx(const LiveTranscoding& transcoding
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
-    d.AddMember("width", transcoding.width, a);
-    d.AddMember("height", transcoding.height, a);
-    d.AddMember("videoBitrate", transcoding.videoBitrate, a);
-    d.AddMember("videoFramerate", transcoding.videoFramerate, a);
-    d.AddMember("lowLatency", transcoding.lowLatency, a);
-    d.AddMember("videoGop", transcoding.videoGop, a);
-    d.AddMember("videoCodecProfile", transcoding.videoCodecProfile, a);
-    d.AddMember("backgroundColor", transcoding.backgroundColor, a);
-    d.AddMember("userCount", transcoding.userCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(transcoding), v, a); d.AddMember("transcoding", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -4105,6 +3992,7 @@ int MockIRtcEngineEx::startOrUpdateChannelMediaRelayEx(const ChannelMediaRelayCo
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
+    { rapidjson::Value v; parseJsonInto(json::toJson(configuration), v, a); d.AddMember("configuration", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
@@ -4266,7 +4154,7 @@ int MockIRtcEngineEx::enableContentInspectEx(bool enabled, const media::ContentI
     d.SetObject();
     auto& a = d.GetAllocator();
     d.AddMember("enabled", enabled, a);
-    d.AddMember("moduleCount", config.moduleCount, a);
+    { rapidjson::Value v; parseJsonInto(json::toJson(config), v, a); d.AddMember("config", v, a); }
     { rapidjson::Value v; parseJsonInto(json::toJson(connection), v, a); d.AddMember("connection", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);

@@ -45,4 +45,21 @@ if (result.error) {
     process.exit(1);
 }
 
+// Post-process: inject ScopedCStringGuard into every binding function so that
+// ScopedCString::dup'd const char* strings are automatically freed on exit.
+// See jsb_agora_rtc_ext.h for ScopedCString / ScopedCStringGuard definitions.
+if (result.status === 0) {
+    const autoFile = path.join(autoDir, "jsb_agora_rtc_engine_bridge_auto.cpp");
+    if (fs.existsSync(autoFile)) {
+        let code = fs.readFileSync(autoFile, "utf8");
+        let count = 0;
+        code = code.replace(
+            /(    CC_UNUSED bool ok = true;\n)/g,
+            (match) => { count++; return match + '    ScopedCStringGuard _cstrGuard;\n'; }
+        );
+        fs.writeFileSync(autoFile, code, "utf8");
+        console.log(`[genbindings] Injected ScopedCStringGuard into ${count} binding functions`);
+    }
+}
+
 process.exit(result.status || 0);

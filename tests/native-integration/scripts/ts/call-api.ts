@@ -124,6 +124,23 @@ export class CallApiTestSuite extends TestCase {
         await this.testStartMediaRenderingTracing(runner);
         await this.testEnableInstantMediaRendering(runner);
 
+        // ── Complex type parameter verification tests ──
+        await this.testSetupLocalVideoParams(runner);
+        await this.testSetupRemoteVideoParams(runner);
+        await this.testSetVideoEncoderConfigurationParams(runner);
+        await this.testEnableVirtualBackground(runner);
+        await this.testStartAudioRecordingWithConfig(runner);
+        await this.testSetRemoteUserSpatialAudioParams(runner);
+        await this.testStartRtmpStreamWithTranscoding(runner);
+        await this.testUpdateRtmpTranscoding(runner);
+        await this.testStartLocalVideoTranscoder(runner);
+        await this.testUpdateLocalTranscoderConfiguration(runner);
+        await this.testStartLocalAudioMixer(runner);
+        await this.testUpdateLocalAudioMixerConfiguration(runner);
+        await this.testEnableContentInspect(runner);
+        await this.testEnableVideoImageSource(runner);
+        await this.testSetDirectCdnStreamingVideoConfiguration(runner);
+
         await this.testCreateDataStream(runner);
         await this.testSendStreamMessage(runner);
         await this.testSendStreamMessageEx(runner);
@@ -1436,6 +1453,397 @@ export class CallApiTestSuite extends TestCase {
             data: "ag",
             length: 2,
             connection: { channelId: "", localUid: 42 },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    // ──────────────────────────── Complex Type Parameter Tests ────────────────────────────
+
+    private async testSetupLocalVideoParams(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testSetupLocalVideoParams ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.setupLocalVideo({
+            view: null as any,
+            renderMode: 1,
+            uid: 42,
+            sourceType: 3,
+            mirrorMode: 2,
+            mediaPlayerId: 7,
+        });
+        this.assertLogEntry(runner, "setupLocalVideo", callTime, {
+            renderMode: 1,
+            uid: 42,
+            sourceType: 3,
+            mirrorMode: 2,
+            mediaPlayerId: 7,
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testSetupRemoteVideoParams(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testSetupRemoteVideoParams ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.setupRemoteVideo({
+            view: null as any,
+            renderMode: 2,
+            uid: 888,
+            sourceType: 1,
+            mirrorMode: 1,
+            mediaPlayerId: 5,
+        });
+        this.assertLogEntry(runner, "setupRemoteVideo", callTime, {
+            renderMode: 2,
+            uid: 888,
+            sourceType: 1,
+            mirrorMode: 1,
+            mediaPlayerId: 5,
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testSetVideoEncoderConfigurationParams(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testSetVideoEncoderConfigurationParams ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.setVideoEncoderConfiguration({
+            dimensions: { width: 1280, height: 720 },
+            codecType: 3,
+            orientationMode: 1,
+            degradationPreference: 2,
+            mirrorMode: 1,
+            frameRate: 30,
+            bitrate: 2000,
+            minBitrate: 800,
+            advanceOptions: { compressionPreference: 0, encodingPreference: 0, encodeAlpha: false },
+        });
+        this.assertLogEntry(runner, "setVideoEncoderConfiguration", callTime, {
+            codecType: 3,
+            orientationMode: 1,
+            degradationPreference: 2,
+            mirrorMode: 1,
+            frameRate: 30,
+            bitrate: 2000,
+            minBitrate: 800,
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testEnableVirtualBackground(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testEnableVirtualBackground ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.enableVirtualBackground(
+            true,
+            {
+                background_source_type: 1,
+                source: "https://example.com/bg.png",
+                color: 0xff0000,
+                blur_degree: 2,
+            },
+            {
+                modelType: 1,
+                greenCapacity: 0.5,
+                screenColorType: 0,
+            },
+            0,
+        );
+        this.assertLogEntry(runner, "enableVirtualBackground", callTime, {
+            enabled: true,
+            backgroundSource: {
+                background_source_type: 1,
+                source: "https://example.com/bg.png",
+                color: 0xff0000,
+                blur_degree: 2,
+            },
+            segproperty: {
+                modelType: 1,
+                greenCapacity: 0.5,
+            },
+            type: 0,
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testStartAudioRecordingWithConfig(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testStartAudioRecordingWithConfig ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.startAudioRecording({
+            filePath: "/tmp/record.aac",
+            encode: 1,
+            sampleRate: 44100,
+            fileRecordingType: 2,
+            quality: 3,
+            recordingChannel: 2,
+        } as any);
+        this.assertLogEntry(runner, "startAudioRecording", callTime, {
+            config: {
+                filePath: "/tmp/record.aac",
+                encode: 1,
+                sampleRate: 2,
+                fileRecordingType: 2,
+                quality: 3,
+                recordingChannel: 2,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testSetRemoteUserSpatialAudioParams(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testSetRemoteUserSpatialAudioParams ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.setRemoteUserSpatialAudioParams(42, {
+            speaker_azimuth: 90.0,
+            speaker_elevation: 45.0,
+            speaker_distance: 5.0,
+            speaker_orientation: 0.0,
+            enable_blur: true,
+            enable_air_absorb: false,
+        });
+        this.assertLogEntry(runner, "setRemoteUserSpatialAudioParams", callTime, {
+            uid: 42,
+            params: {
+                speaker_azimuth: 90.0,
+                speaker_elevation: 45.0,
+                speaker_distance: 5.0,
+                speaker_orientation: 0.0,
+                enable_blur: true,
+                enable_air_absorb: false,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testStartRtmpStreamWithTranscoding(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testStartRtmpStreamWithTranscoding ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.startRtmpStreamWithTranscoding("rtmp://live.example.com/stream", {
+            width: 640,
+            height: 480,
+            videoBitrate: 800,
+            videoFramerate: 15,
+            lowLatency: false,
+            videoGop: 30,
+            videoCodecProfile: 2,
+            backgroundColor: 0x000000,
+            userCount: 0,
+            transcodingUsers: [],
+        } as any);
+        this.assertLogEntry(runner, "startRtmpStreamWithTranscoding", callTime, {
+            url: "rtmp://live.example.com/stream",
+            transcoding: {
+                width: 640,
+                height: 480,
+                videoBitrate: 800,
+                videoFramerate: 15,
+                lowLatency: false,
+                videoGop: 30,
+                videoCodecProfile: 2,
+                backgroundColor: 0x000000,
+                userCount: 0,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testUpdateRtmpTranscoding(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testUpdateRtmpTranscoding ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.updateRtmpTranscoding({
+            width: 1280,
+            height: 720,
+            videoBitrate: 1500,
+            videoFramerate: 30,
+            lowLatency: true,
+            videoGop: 60,
+            videoCodecProfile: 1,
+            backgroundColor: 0xffffff,
+            userCount: 2,
+            transcodingUsers: [],
+        } as any);
+        this.assertLogEntry(runner, "updateRtmpTranscoding", callTime, {
+            transcoding: {
+                width: 1280,
+                height: 720,
+                videoBitrate: 1500,
+                videoFramerate: 30,
+                lowLatency: true,
+                videoGop: 60,
+                videoCodecProfile: 1,
+                backgroundColor: 0xffffff,
+                userCount: 2,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testStartLocalVideoTranscoder(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testStartLocalVideoTranscoder ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.startLocalVideoTranscoder({
+            streamCount: 2,
+            VideoInputStreams: [],
+            videoOutputConfiguration: {} as any,
+        } as any);
+        this.assertLogEntry(runner, "startLocalVideoTranscoder", callTime, {
+            config: {
+                streamCount: 2,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testUpdateLocalTranscoderConfiguration(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testUpdateLocalTranscoderConfiguration ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.updateLocalTranscoderConfiguration({
+            streamCount: 3,
+            VideoInputStreams: [],
+            videoOutputConfiguration: {} as any,
+        } as any);
+        this.assertLogEntry(runner, "updateLocalTranscoderConfiguration", callTime, {
+            config: {
+                streamCount: 3,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testStartLocalAudioMixer(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testStartLocalAudioMixer ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.startLocalAudioMixer({
+            streamCount: 2,
+            audioInputStreams: [],
+            syncWithLocalMic: true,
+        } as any);
+        this.assertLogEntry(runner, "startLocalAudioMixer", callTime, {
+            config: {
+                streamCount: 2,
+                syncWithLocalMic: true,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testUpdateLocalAudioMixerConfiguration(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testUpdateLocalAudioMixerConfiguration ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.updateLocalAudioMixerConfiguration({
+            streamCount: 4,
+            audioInputStreams: [],
+            syncWithLocalMic: false,
+        } as any);
+        this.assertLogEntry(runner, "updateLocalAudioMixerConfiguration", callTime, {
+            config: {
+                streamCount: 4,
+                syncWithLocalMic: false,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testEnableContentInspect(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testEnableContentInspect ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.enableContentInspect(true, {
+            moduleCount: 2,
+            modules: [],
+        } as any);
+        this.assertLogEntry(runner, "enableContentInspect", callTime, {
+            enabled: true,
+            config: {
+                moduleCount: 2,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testEnableVideoImageSource(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testEnableVideoImageSource ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.enableVideoImageSource(true, {
+            imageUrl: "https://example.com/image.png",
+            fps: 15,
+            mirrorMode: 0,
+        });
+        this.assertLogEntry(runner, "enableVideoImageSource", callTime, {
+            enable: true,
+            options: {
+                imageUrl: "https://example.com/image.png",
+                fps: 15,
+                mirrorMode: 0,
+            },
+        });
+        await bridge.release(true);
+        await this.delay(200);
+    }
+
+    private async testSetDirectCdnStreamingVideoConfiguration(runner: TestRunner): Promise<void> {
+        runner.log("\n--- Test: testSetDirectCdnStreamingVideoConfiguration ---");
+        const bridge = this.createBridgeAndInit();
+
+        const callTime = Date.now();
+        await bridge.setDirectCdnStreamingVideoConfiguration({
+            dimensions: { width: 1280, height: 720 },
+            codecType: 2,
+            orientationMode: 0,
+            degradationPreference: 1,
+            mirrorMode: 0,
+            frameRate: 24,
+            bitrate: 1500,
+            minBitrate: 600,
+            advanceOptions: { compressionPreference: 0, encodingPreference: 0, encodeAlpha: false },
+        });
+        this.assertLogEntry(runner, "setDirectCdnStreamingVideoConfiguration", callTime, {
+            config: {
+                codecType: 2,
+                orientationMode: 0,
+                degradationPreference: 1,
+                mirrorMode: 0,
+                frameRate: 24,
+                bitrate: 1500,
+                minBitrate: 600,
+            },
         });
         await bridge.release(true);
         await this.delay(200);

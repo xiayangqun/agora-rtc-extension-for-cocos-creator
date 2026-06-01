@@ -49,6 +49,57 @@ std::string toJson(const MultipathStats& stats);
 // Serialize VideoRenderingTracingInfo to JSON
 std::string toJson(const VideoRenderingTracingInfo& info);
 
+// Serialize VideoCanvas to JSON
+std::string toJson(const VideoCanvas& canvas);
+
+// Serialize VirtualBackgroundSource to JSON
+std::string toJson(const VirtualBackgroundSource& source);
+
+// Serialize SegmentationProperty to JSON
+std::string toJson(const SegmentationProperty& prop);
+
+// Serialize AudioRecordingConfiguration to JSON
+std::string toJson(const AudioRecordingConfiguration& config);
+
+// Serialize SpatialAudioParams to JSON
+std::string toJson(const agora::SpatialAudioParams& params);
+
+// Serialize LiveTranscoding to JSON
+std::string toJson(const LiveTranscoding& transcoding);
+
+// Serialize LocalTranscoderConfiguration to JSON
+std::string toJson(const LocalTranscoderConfiguration& config);
+
+// Serialize LocalAudioMixerConfiguration to JSON
+std::string toJson(const LocalAudioMixerConfiguration& config);
+
+// Serialize VideoEncoderConfiguration to JSON
+std::string toJson(const VideoEncoderConfiguration& config);
+
+// Serialize ContentInspectConfig to JSON
+std::string toJson(const agora::media::ContentInspectConfig& config);
+
+// Serialize ImageTrackOptions to JSON
+std::string toJson(const ImageTrackOptions& options);
+
+// Serialize WatermarkOptions to JSON
+std::string toJson(const WatermarkOptions& options);
+
+// Serialize ScreenCaptureParameters to JSON
+std::string toJson(const ScreenCaptureParameters& params);
+
+// Serialize ScreenCaptureConfiguration to JSON
+std::string toJson(const ScreenCaptureConfiguration& config);
+
+// Serialize ChannelMediaRelayConfiguration to JSON
+std::string toJson(const ChannelMediaRelayConfiguration& config);
+
+// Serialize LeaveChannelOptions to JSON
+std::string toJson(const LeaveChannelOptions& options);
+
+// Serialize DirectCdnStreamingMediaOptions to JSON
+std::string toJson(const DirectCdnStreamingMediaOptions& options);
+
 // Primitive type serializers
 std::string toJson(int value);
 std::string toJson(unsigned int value);
