@@ -1994,10 +1994,10 @@ export class RtcEngineWeb implements IRtcEngineEx {
             sourceDisplayId: 0,
         });
         return {
-            getCount(): number {
+            async getCount(): Promise<number> {
                 return sources.length;
             },
-            getSourceInfo(index: number): ScreenCaptureSourceInfo {
+            async getSourceInfo(index: number): Promise<ScreenCaptureSourceInfo> {
                 return sources[index];
             },
         };

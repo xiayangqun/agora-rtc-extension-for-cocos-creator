@@ -59,10 +59,11 @@ int MusicContentCenterBridge::registerEventHandler(se::Object *eventHandler) {
 
 int MusicContentCenterBridge::unregisterEventHandler() {
     if (!_musicContentCenter) { return -agora::ERR_INVALID_ARGUMENT; }
-    if (_eventHandler == nullptr) { return -agora::ERR_INVALID_ARGUMENT; }
     int ret = _musicContentCenter->unregisterEventHandler();
-    _eventHandler->invalidateCallbacks();
-    _eventHandler.reset();
+    if (_eventHandler != nullptr) {
+        _eventHandler->invalidateCallbacks();
+        _eventHandler.reset();
+    }
     return ret;
 }
 

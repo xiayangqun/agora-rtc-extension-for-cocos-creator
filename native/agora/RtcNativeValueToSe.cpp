@@ -1840,6 +1840,9 @@ bool nativevalue_to_se(const agora::rtc::RtcConnection &from, se::Value &to, se:
     se::Value field;
     bool ok = true;
 
+    ok &= nativevalue_to_se(from.channelId ? from.channelId : "", field, ctx);
+    if (ok) { obj->setProperty("channelId", field); }
+
     ok &= nativevalue_to_se(from.localUid, field, ctx);
     if (ok) { obj->setProperty("localUid", field); }
 

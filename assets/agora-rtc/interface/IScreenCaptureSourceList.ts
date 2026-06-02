@@ -1,7 +1,7 @@
 import { SIZE, ScreenCaptureSourceInfo } from "../types/AgoraRtcEngine";
 
 export interface IScreenCaptureSourceList {
-    getCount(): number;
+    getCount(): Promise<number>;
 
-    getSourceInfo(index: number): ScreenCaptureSourceInfo;
+    getSourceInfo(index: number): Promise<ScreenCaptureSourceInfo>;
 }

@@ -51,16 +51,8 @@ public:
     uint32_t getObservedFramePosition() override;
 
 private:
-    enum class BindingKind {
-        Local,
-        MediaPlayer,
-        RemoteMain,
-        RemoteEx,
-    };
-
     struct BindingEntry {
         std::string key;
-        BindingKind kind{BindingKind::Local};
         agora::rtc::uid_t uid{0};
         agora::rtc::VIDEO_SOURCE_TYPE sourceType{agora::rtc::VIDEO_SOURCE_CAMERA};
         int mediaPlayerId{0};
@@ -76,21 +68,16 @@ private:
         int textureHeight{0};
         int lastAspectWidth{0};
         int lastAspectHeight{0};
-        int acceptedFrameLogCount{0};
-        int rejectedFrameLogCount{0};
-        int uploadLogCount{0};
         se::Object *onAspectRatioChanged{nullptr};
         bool dirty{false};
         bool released{false};
     };
 
-    static const char *bindingKindName(BindingKind kind);
     static std::string localKey(const VideoTextureCanvas &canvas);
     static std::string remoteKey(agora::rtc::uid_t uid);
     static std::string remoteKey(agora::rtc::uid_t uid, const agora::rtc::RtcConnection &connection);
 
-    int bind(const std::string &key, const VideoTextureCanvas &canvas, BindingKind kind,
-             const agora::rtc::RtcConnection *connection);
+    int bind(const std::string &key, const VideoTextureCanvas &canvas, const agora::rtc::RtcConnection *connection);
     void unbind(const std::string &key);
     void handleFrame(const std::shared_ptr<BindingEntry> &entry, const VideoFrame &frame);
     void startFrameFlush();

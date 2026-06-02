@@ -1649,6 +1649,11 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::FilterEffectOptions *t
         ok &= sevalue_to_native(field, &(to->strength), ctx);
     }
 
+    json->getProperty("path", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->path = ScopedCString::dup(field.toString().c_str());
+    }
+
     return ok;
 }
 
@@ -1967,6 +1972,16 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::EchoTestConfiguration 
     json->getProperty("enableVideo", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->enableVideo), ctx);
+    }
+
+    json->getProperty("token", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->token = ScopedCString::dup(field.toString().c_str());
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->channelId = ScopedCString::dup(field.toString().c_str());
     }
 
     json->getProperty("intervalInSeconds", &field, true);
@@ -2619,6 +2634,11 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcConnection *to, se:
     se::Value field;
     bool ok = true;
 
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->channelId = ScopedCString::dup(field.toString().c_str());
+    }
+
     json->getProperty("localUid", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->localUid), ctx);
@@ -2874,6 +2894,30 @@ bool sevalue_to_native(const se::Value &from, agora::media::SnapshotConfig *to, 
     return true;
 }
 
+bool sevalue_to_native(const se::Value &from, agora::media::base::MediaSource *to, se::Object *ctx) {
+    (void)ctx;
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+    obj->getProperty("url", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->url = ScopedCString::dup(tmp.toString().c_str()); }
+    obj->getProperty("uri", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->uri = ScopedCString::dup(tmp.toString().c_str()); }
+    obj->getProperty("startPos", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->startPos = tmp.toInt64(); }
+    obj->getProperty("autoPlay", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->autoPlay = tmp.toBoolean(); }
+    obj->getProperty("enableCache", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->enableCache = tmp.toBoolean(); }
+    obj->getProperty("enableMultiAudioTrack", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->enableMultiAudioTrack = tmp.toBoolean(); }
+    obj->getProperty("isAgoraSource", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->isAgoraSource = tmp.toBoolean(); }
+    obj->getProperty("isLiveSource", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->isLiveSource = tmp.toBoolean(); }
+    return true;
+}
+
 bool sevalue_to_native(const se::Value &from, agora::rtc::RtcImage *to, se::Object *ctx) {
     if (!from.isObject()) return false;
     se::Object *obj = from.toObject();
@@ -2908,6 +2952,19 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfigur
 #endif
     obj->getProperty("followEncodeDimensionRatio", &tmp, true);
     if (!tmp.isNullOrUndefined()) { to->followEncodeDimensionRatio = tmp.toBoolean(); }
+
+    obj->getProperty("format", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        se::Object *fmt = tmp.toObject();
+        se::Value fmtField;
+        fmt->getProperty("width", &fmtField, true);
+        if (!fmtField.isNullOrUndefined()) { to->format.width = fmtField.toInt32(); }
+        fmt->getProperty("height", &fmtField, true);
+        if (!fmtField.isNullOrUndefined()) { to->format.height = fmtField.toInt32(); }
+        fmt->getProperty("fps", &fmtField, true);
+        if (!fmtField.isNullOrUndefined()) { to->format.fps = fmtField.toInt32(); }
+    }
+
     return true;
 }
 

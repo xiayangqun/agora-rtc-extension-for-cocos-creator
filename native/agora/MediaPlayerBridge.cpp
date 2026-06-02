@@ -36,6 +36,11 @@ int MediaPlayerBridge::open(const std::string &url, int64_t startPos) {
     return _mediaPlayer->open(url.c_str(), startPos);
 }
 
+int MediaPlayerBridge::openWithMediaSource(const agora::media::base::MediaSource &source) {
+    if (!_mediaPlayer) { return -agora::ERR_INVALID_ARGUMENT; }
+    return _mediaPlayer->openWithMediaSource(source);
+}
+
 int MediaPlayerBridge::play() {
     if (!_mediaPlayer) { return -agora::ERR_INVALID_ARGUMENT; }
     return _mediaPlayer->play();

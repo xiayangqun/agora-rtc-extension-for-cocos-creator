@@ -2323,6 +2323,7 @@ int MockIRtcEngineEx::setAudioSessionOperationRestriction(AUDIO_SESSION_OPERATIO
 
 #if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 int MockIRtcEngineEx::startScreenCaptureByDisplayId(int64_t displayId, const Rectangle& regionRect, const ScreenCaptureParameters& captureParams) {
+    (void)captureParams;
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
@@ -2331,7 +2332,6 @@ int MockIRtcEngineEx::startScreenCaptureByDisplayId(int64_t displayId, const Rec
     d.AddMember("regionRect_y", regionRect.y, a);
     d.AddMember("regionRect_width", regionRect.width, a);
     d.AddMember("regionRect_height", regionRect.height, a);
-    { rapidjson::Value v; parseJsonInto(json::toJson(captureParams), v, a); d.AddMember("captureParams", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);
@@ -2371,6 +2371,7 @@ int MockIRtcEngineEx::getAudioDeviceInfo(DeviceInfo& deviceInfo) {
 
 #if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 int MockIRtcEngineEx::startScreenCaptureByWindowId(int64_t windowId, const Rectangle& regionRect, const ScreenCaptureParameters& captureParams) {
+    (void)captureParams;
     rapidjson::Document d;
     d.SetObject();
     auto& a = d.GetAllocator();
@@ -2379,7 +2380,6 @@ int MockIRtcEngineEx::startScreenCaptureByWindowId(int64_t windowId, const Recta
     d.AddMember("regionRect_y", regionRect.y, a);
     d.AddMember("regionRect_width", regionRect.width, a);
     d.AddMember("regionRect_height", regionRect.height, a);
-    { rapidjson::Value v; parseJsonInto(json::toJson(captureParams), v, a); d.AddMember("captureParams", v, a); }
     rapidjson::StringBuffer buf;
     rapidjson::Writer<rapidjson::StringBuffer> w(buf);
     d.Accept(w);

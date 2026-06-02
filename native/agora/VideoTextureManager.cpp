@@ -11,7 +11,6 @@
 
 namespace {
 constexpr int BYTES_PER_RGBA_PIXEL = 4;
-constexpr int MAX_VIDEO_TEXTURE_DEBUG_LOGS = 8;
 constexpr char VIDEO_TEXTURE_FLUSH_KEY[] = "AgoraVideoTextureManagerFlush";
 
 void initializePlaceholderTexture(cc::Texture2D *texture) {
@@ -36,36 +35,38 @@ bool isCameraSource(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
            sourceType == VIDEO_SOURCE_CAMERA_FOURTH;
 }
 
+bool isScreenSource(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
+    using agora::rtc::VIDEO_SOURCE_SCREEN;
+    using agora::rtc::VIDEO_SOURCE_SCREEN_FOURTH;
+    using agora::rtc::VIDEO_SOURCE_SCREEN_PRIMARY;
+    using agora::rtc::VIDEO_SOURCE_SCREEN_SECONDARY;
+    using agora::rtc::VIDEO_SOURCE_SCREEN_THIRD;
+
+    return sourceType == VIDEO_SOURCE_SCREEN || sourceType == VIDEO_SOURCE_SCREEN_PRIMARY ||
+           sourceType == VIDEO_SOURCE_SCREEN_SECONDARY || sourceType == VIDEO_SOURCE_SCREEN_THIRD ||
+           sourceType == VIDEO_SOURCE_SCREEN_FOURTH;
+}
+
 bool sourceMatches(agora::rtc::VIDEO_SOURCE_TYPE expected, agora::rtc::VIDEO_SOURCE_TYPE actual) {
     if (expected == actual) { return true; }
-    return isCameraSource(expected) && actual == agora::rtc::VIDEO_SOURCE_CAMERA;
+    if (isCameraSource(expected) && actual == agora::rtc::VIDEO_SOURCE_CAMERA) { return true; }
+    return isScreenSource(expected) && actual == agora::rtc::VIDEO_SOURCE_SCREEN;
+}
+
+bool hasPrefix(const std::string &value, const char *prefix) {
+    return value.rfind(prefix, 0) == 0;
 }
 } // namespace
 
 VideoTextureManager::VideoTextureManager(agora::media::IMediaEngine *mediaEngine) : _mediaEngine(mediaEngine) {
     if (_mediaEngine) {
-        auto ret = _mediaEngine->addVideoFrameRenderer(this);
-        fprintf(stderr, "VideoTextureManager: addVideoFrameRenderer returned %d\n", ret);
+        _mediaEngine->addVideoFrameRenderer(this);
     }
     startFrameFlush();
 }
 
 VideoTextureManager::~VideoTextureManager() {
     release();
-}
-
-const char *VideoTextureManager::bindingKindName(BindingKind kind) {
-    switch (kind) {
-        case BindingKind::Local:
-            return "Local";
-        case BindingKind::MediaPlayer:
-            return "MediaPlayer";
-        case BindingKind::RemoteMain:
-            return "RemoteMain";
-        case BindingKind::RemoteEx:
-            return "RemoteEx";
-    }
-    return "Unknown";
 }
 
 std::string VideoTextureManager::localKey(const VideoTextureCanvas &canvas) {
@@ -90,10 +91,7 @@ int VideoTextureManager::setupLocalVideo(const VideoTextureCanvas &canvas) {
         unbind(key);
         return agora::ERR_OK;
     }
-    return bind(key, canvas,
-                canvas.sourceType == agora::rtc::VIDEO_SOURCE_MEDIA_PLAYER ? BindingKind::MediaPlayer
-                                                                           : BindingKind::Local,
-                nullptr);
+    return bind(key, canvas, nullptr);
 }
 
 int VideoTextureManager::setupRemoteVideo(const VideoTextureCanvas &canvas) {
@@ -102,7 +100,7 @@ int VideoTextureManager::setupRemoteVideo(const VideoTextureCanvas &canvas) {
         unbind(key);
         return agora::ERR_OK;
     }
-    return bind(key, canvas, BindingKind::RemoteMain, nullptr);
+    return bind(key, canvas, nullptr);
 }
 
 int VideoTextureManager::setupRemoteVideoEx(const VideoTextureCanvas &canvas,
@@ -112,10 +110,10 @@ int VideoTextureManager::setupRemoteVideoEx(const VideoTextureCanvas &canvas,
         unbind(key);
         return agora::ERR_OK;
     }
-    return bind(key, canvas, BindingKind::RemoteEx, &connection);
+    return bind(key, canvas, &connection);
 }
 
-int VideoTextureManager::bind(const std::string &key, const VideoTextureCanvas &canvas, BindingKind kind,
+int VideoTextureManager::bind(const std::string &key, const VideoTextureCanvas &canvas,
                               const agora::rtc::RtcConnection *connection) {
     if (_released.load()) { return -agora::ERR_NOT_INITIALIZED; }
     if (!canvas.texture) { return -agora::ERR_INVALID_ARGUMENT; }
@@ -123,7 +121,6 @@ int VideoTextureManager::bind(const std::string &key, const VideoTextureCanvas &
 
     auto entry = std::make_shared<BindingEntry>();
     entry->key = key;
-    entry->kind = kind;
     entry->uid = canvas.uid;
     entry->sourceType = canvas.sourceType;
     entry->mediaPlayerId = canvas.mediaPlayerId;
@@ -138,13 +135,6 @@ int VideoTextureManager::bind(const std::string &key, const VideoTextureCanvas &
         entry->channelId = connection->channelId ? connection->channelId : "";
         entry->localUid = static_cast<int>(connection->localUid);
     }
-
-    fprintf(stderr,
-            "VideoTextureManager: bind key=%s kind=%s uid=%u sourceType=%d mediaPlayerId=%d texture=%p callback=%p "
-            "channel=%s localUid=%d\n",
-            key.c_str(), bindingKindName(kind), static_cast<unsigned>(canvas.uid), static_cast<int>(canvas.sourceType),
-            canvas.mediaPlayerId, static_cast<void *>(canvas.texture), static_cast<void *>(canvas.onAspectRatioChanged),
-            connection && connection->channelId ? connection->channelId : "", connection ? static_cast<int>(connection->localUid) : 0);
 
     std::shared_ptr<BindingEntry> oldEntry;
     {
@@ -193,19 +183,7 @@ void VideoTextureManager::release() {
 
 bool VideoTextureManager::onCaptureVideoFrame(agora::rtc::VIDEO_SOURCE_TYPE sourceType, VideoFrame &videoFrame) {
     auto entry = findLocalEntry(sourceType);
-    if (entry) {
-        handleFrame(entry, videoFrame);
-    } else {
-        static std::atomic<int> noEntryLogCount{0};
-        const int logIndex = noEntryLogCount.fetch_add(1);
-        if (logIndex < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
-            fprintf(stderr,
-                    "VideoTextureManager: onCapture no local entry sourceType=%d frameType=%d size=%dx%d stride=%d "
-                    "buffer=%p\n",
-                    static_cast<int>(sourceType), static_cast<int>(videoFrame.type), videoFrame.width, videoFrame.height,
-                    videoFrame.yStride, static_cast<void *>(videoFrame.yBuffer));
-        }
-    }
+    if (entry) { handleFrame(entry, videoFrame); }
     return true;
 }
 
@@ -261,7 +239,10 @@ std::shared_ptr<VideoTextureManager::BindingEntry> VideoTextureManager::findLoca
     std::lock_guard<std::mutex> lock(_entriesMutex);
     for (const auto &item : _entries) {
         const auto &entry = item.second;
-        if (entry->kind == BindingKind::Local && sourceMatches(entry->sourceType, sourceType)) { return entry; }
+        if (hasPrefix(entry->key, "local_") && entry->sourceType != agora::rtc::VIDEO_SOURCE_MEDIA_PLAYER &&
+            sourceMatches(entry->sourceType, sourceType)) {
+            return entry;
+        }
     }
     return nullptr;
 }
@@ -270,7 +251,9 @@ std::shared_ptr<VideoTextureManager::BindingEntry> VideoTextureManager::findMedi
     std::lock_guard<std::mutex> lock(_entriesMutex);
     for (const auto &item : _entries) {
         const auto &entry = item.second;
-        if (entry->kind == BindingKind::MediaPlayer && entry->mediaPlayerId == mediaPlayerId) { return entry; }
+        if (entry->sourceType == agora::rtc::VIDEO_SOURCE_MEDIA_PLAYER && entry->mediaPlayerId == mediaPlayerId) {
+            return entry;
+        }
     }
     return nullptr;
 }
@@ -284,9 +267,9 @@ std::vector<std::shared_ptr<VideoTextureManager::BindingEntry>> VideoTextureMana
     for (const auto &item : _entries) {
         const auto &entry = item.second;
         if (entry->uid != uid) { continue; }
-        if (entry->kind == BindingKind::RemoteEx && entry->channelId == channel) {
+        if (entry->key == remoteKey(uid)) {
             matches.push_back(entry);
-        } else if (entry->kind == BindingKind::RemoteMain) {
+        } else if (hasPrefix(entry->key, "remote_") && entry->channelId == channel) {
             matches.push_back(entry);
         }
     }
@@ -296,18 +279,6 @@ std::vector<std::shared_ptr<VideoTextureManager::BindingEntry>> VideoTextureMana
 void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry, const VideoFrame &frame) {
     if (_released.load() || !entry || frame.type != agora::media::base::VIDEO_PIXEL_RGBA || !frame.yBuffer ||
         frame.width <= 0 || frame.height <= 0) {
-        if (entry) {
-            std::lock_guard<std::mutex> lock(entry->mutex);
-            if (entry->rejectedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
-                ++entry->rejectedFrameLogCount;
-                fprintf(stderr,
-                        "VideoTextureManager: reject frame key=%s kind=%s released=%d texture=%p frameType=%d size=%dx%d "
-                        "stride=%d buffer=%p managerReleased=%d\n",
-                        entry->key.c_str(), bindingKindName(entry->kind), entry->released ? 1 : 0,
-                        static_cast<void *>(entry->texture.get()), static_cast<int>(frame.type), frame.width, frame.height,
-                        frame.yStride, static_cast<void *>(frame.yBuffer), _released.load() ? 1 : 0);
-            }
-        }
         return;
     }
 
@@ -327,15 +298,6 @@ void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry
         } else if (reportedStride >= rowBytes) {
             sourceRowBytes = reportedStride;
         } else {
-            std::lock_guard<std::mutex> lock(entry->mutex);
-            if (entry->rejectedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
-                ++entry->rejectedFrameLogCount;
-                fprintf(stderr,
-                        "VideoTextureManager: reject stride key=%s kind=%s frameType=%d size=%dx%d stride=%d rowBytes=%zu "
-                        "frameBytes=%zu buffer=%p\n",
-                        entry->key.c_str(), bindingKindName(entry->kind), static_cast<int>(frame.type), frame.width,
-                        frame.height, frame.yStride, rowBytes, frameBytes, static_cast<void *>(frame.yBuffer));
-            }
             return;
         }
     }
@@ -343,15 +305,6 @@ void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry
     {
         std::lock_guard<std::mutex> lock(entry->mutex);
         if (entry->released || !entry->texture) { return; }
-        if (entry->acceptedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
-            ++entry->acceptedFrameLogCount;
-            fprintf(stderr,
-                    "VideoTextureManager: accept frame key=%s kind=%s sourceType=%d uid=%u frameType=%d size=%dx%d "
-                    "stride=%d rowBytes=%zu sourceRowBytes=%zu texture=%p\n",
-                    entry->key.c_str(), bindingKindName(entry->kind), static_cast<int>(entry->sourceType),
-                    static_cast<unsigned>(entry->uid), static_cast<int>(frame.type), frame.width, frame.height,
-                    frame.yStride, rowBytes, sourceRowBytes, static_cast<void *>(entry->texture.get()));
-        }
         entry->pixels.resize(frameBytes);
         if (sourceRowBytes != rowBytes) {
             for (int y = 0; y < frame.height; ++y) {
@@ -420,13 +373,6 @@ void VideoTextureManager::uploadEntryOnCocosThread(const std::shared_ptr<Binding
         pixels = entry->pixels;
         width = entry->width;
         height = entry->height;
-        if (entry->uploadLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
-            ++entry->uploadLogCount;
-            fprintf(stderr,
-                    "VideoTextureManager: upload dirty key=%s kind=%s size=%dx%d bytes=%zu texture=%p textureSize=%dx%d\n",
-                    entry->key.c_str(), bindingKindName(entry->kind), width, height, pixels.size(),
-                    static_cast<void *>(texture.get()), entry->textureWidth, entry->textureHeight);
-        }
         entry->dirty = false;
     }
 

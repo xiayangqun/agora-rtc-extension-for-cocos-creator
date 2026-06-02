@@ -69,7 +69,14 @@ int MockIMediaPlayer::setAudioPitch(int pitch) {
 int MockIMediaPlayer::getDuration(int64_t& duration) { duration = 0; MockLog::instance().appendLog("getDuration", "{}"); return 0; }
 int MockIMediaPlayer::getPlayPosition(int64_t& pos) { pos = 0; MockLog::instance().appendLog("getPlayPosition", "{}"); return 0; }
 int MockIMediaPlayer::getStreamCount(int64_t& count) { count = 0; MockLog::instance().appendLog("getStreamCount", "{}"); return 0; }
-int MockIMediaPlayer::getStreamInfo(int64_t index, media::base::PlayerStreamInfo* info) { MockLog::instance().appendLog("getStreamInfo", "{}"); return 0; }
+int MockIMediaPlayer::getStreamInfo(int64_t index, media::base::PlayerStreamInfo* info) {
+    (void)info;
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("index", static_cast<int64_t>(index), d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("getStreamInfo", buf.GetString());
+    return 0;
+}
 
 int MockIMediaPlayer::setLoopCount(int loopCount) {
     rapidjson::Document d; d.SetObject();
@@ -356,7 +363,7 @@ int MockIAudioDeviceCollection::getDevice(int index, char deviceName[MAX_DEVICE_
     rapidjson::Document d; d.SetObject();
     d.AddMember("index", index, d.GetAllocator());
     rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
-    MockLog::instance().appendLog("getDeviceEx", buf.GetString());
+    MockLog::instance().appendLog("getDeviceType", buf.GetString());
     if (deviceName) strcpy(deviceName, "mock-audio-device");
     if (deviceTypeName) strcpy(deviceTypeName, "mock-audio-device-type");
     if (deviceId) strcpy(deviceId, "mock-audio-device-id");
@@ -380,7 +387,7 @@ int MockIAudioDeviceCollection::getDefaultDevice(char deviceName[MAX_DEVICE_ID_L
 
 int MockIAudioDeviceCollection::getDefaultDevice(char deviceName[MAX_DEVICE_ID_LENGTH], char deviceTypeName[MAX_DEVICE_ID_LENGTH],
                                                   char deviceId[MAX_DEVICE_ID_LENGTH]) {
-    MockLog::instance().appendLog("getDefaultDeviceEx", "{}");
+    MockLog::instance().appendLog("getDefaultDeviceType", "{}");
     if (deviceName) strcpy(deviceName, "mock-default-audio-device");
     if (deviceTypeName) strcpy(deviceTypeName, "mock-default-audio-device-type");
     if (deviceId) strcpy(deviceId, "mock-default-audio-device-id");

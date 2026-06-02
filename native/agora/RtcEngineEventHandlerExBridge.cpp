@@ -1083,11 +1083,11 @@ void RtcEngineEventHandlerExBridge::onRenewTokenResult(const char* token, RENEW_
 void RtcEngineEventHandlerExBridge::onJoinChannelSuccess(const RtcConnection& connection, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1100,11 +1100,11 @@ void RtcEngineEventHandlerExBridge::onJoinChannelSuccess(const RtcConnection& co
 void RtcEngineEventHandlerExBridge::onRejoinChannelSuccess(const RtcConnection& connection, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1117,14 +1117,14 @@ void RtcEngineEventHandlerExBridge::onRejoinChannelSuccess(const RtcConnection& 
 void RtcEngineEventHandlerExBridge::onAudioQuality(const RtcConnection& connection, uid_t remoteUid, int quality, unsigned short delay, unsigned short lost) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto qualityCopy = quality;
     auto delayCopy = delay;
     auto lostCopy = lost;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, qualityCopy, delayCopy, lostCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, qualityCopy, delayCopy, lostCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1140,13 +1140,13 @@ void RtcEngineEventHandlerExBridge::onAudioQuality(const RtcConnection& connecti
 void RtcEngineEventHandlerExBridge::onAudioVolumeIndication(const RtcConnection& connection, const AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     std::vector<AudioVolumeInfo> speakersCopy(speakers, speakers != nullptr ? speakers + speakerNumber : speakers);
     auto speakerNumberCopy = speakerNumber;
     auto totalVolumeCopy = totalVolume;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, speakersCopy, speakerNumberCopy, totalVolumeCopy]() {
+        [self, channelIdCopy, connCopy, speakersCopy, speakerNumberCopy, totalVolumeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1161,11 +1161,11 @@ void RtcEngineEventHandlerExBridge::onAudioVolumeIndication(const RtcConnection&
 void RtcEngineEventHandlerExBridge::onLeaveChannel(const RtcConnection& connection, const RtcStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1178,11 +1178,11 @@ void RtcEngineEventHandlerExBridge::onLeaveChannel(const RtcConnection& connecti
 void RtcEngineEventHandlerExBridge::onRtcStats(const RtcConnection& connection, const RtcStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1195,13 +1195,13 @@ void RtcEngineEventHandlerExBridge::onRtcStats(const RtcConnection& connection, 
 void RtcEngineEventHandlerExBridge::onNetworkQuality(const RtcConnection& connection, uid_t remoteUid, int txQuality, int rxQuality) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto txQualityCopy = txQuality;
     auto rxQualityCopy = rxQuality;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, txQualityCopy, rxQualityCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, txQualityCopy, rxQualityCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1216,10 +1216,10 @@ void RtcEngineEventHandlerExBridge::onNetworkQuality(const RtcConnection& connec
 void RtcEngineEventHandlerExBridge::onIntraRequestReceived(const RtcConnection& connection) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy]() {
+        [self, channelIdCopy, connCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1231,11 +1231,11 @@ void RtcEngineEventHandlerExBridge::onIntraRequestReceived(const RtcConnection& 
 void RtcEngineEventHandlerExBridge::onFirstLocalVideoFramePublished(const RtcConnection& connection, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1248,14 +1248,14 @@ void RtcEngineEventHandlerExBridge::onFirstLocalVideoFramePublished(const RtcCon
 void RtcEngineEventHandlerExBridge::onFirstRemoteVideoDecoded(const RtcConnection& connection, uid_t remoteUid, int width, int height, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto widthCopy = width;
     auto heightCopy = height;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, widthCopy, heightCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, widthCopy, heightCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1271,7 +1271,6 @@ void RtcEngineEventHandlerExBridge::onFirstRemoteVideoDecoded(const RtcConnectio
 void RtcEngineEventHandlerExBridge::onVideoSizeChanged(const RtcConnection& connection, VIDEO_SOURCE_TYPE sourceType, uid_t uid, int width, int height, int rotation) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto sourceTypeCopy = sourceType;
     auto uidCopy = uid;
     auto widthCopy = width;
@@ -1279,7 +1278,8 @@ void RtcEngineEventHandlerExBridge::onVideoSizeChanged(const RtcConnection& conn
     auto rotationCopy = rotation;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, sourceTypeCopy, uidCopy, widthCopy, heightCopy, rotationCopy]() {
+        [self, channelIdCopy, connCopy, sourceTypeCopy, uidCopy, widthCopy, heightCopy, rotationCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1296,14 +1296,14 @@ void RtcEngineEventHandlerExBridge::onVideoSizeChanged(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onRemoteVideoStateChanged(const RtcConnection& connection, uid_t remoteUid, REMOTE_VIDEO_STATE state, REMOTE_VIDEO_STATE_REASON reason, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto stateCopy = state;
     auto reasonCopy = reason;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy, reasonCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy, reasonCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1319,14 +1319,14 @@ void RtcEngineEventHandlerExBridge::onRemoteVideoStateChanged(const RtcConnectio
 void RtcEngineEventHandlerExBridge::onFirstRemoteVideoFrame(const RtcConnection& connection, uid_t remoteUid, int width, int height, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto widthCopy = width;
     auto heightCopy = height;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, widthCopy, heightCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, widthCopy, heightCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1342,12 +1342,12 @@ void RtcEngineEventHandlerExBridge::onFirstRemoteVideoFrame(const RtcConnection&
 void RtcEngineEventHandlerExBridge::onUserJoined(const RtcConnection& connection, uid_t remoteUid, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1361,12 +1361,12 @@ void RtcEngineEventHandlerExBridge::onUserJoined(const RtcConnection& connection
 void RtcEngineEventHandlerExBridge::onUserOffline(const RtcConnection& connection, uid_t remoteUid, USER_OFFLINE_REASON_TYPE reason) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto reasonCopy = reason;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, reasonCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, reasonCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1380,12 +1380,12 @@ void RtcEngineEventHandlerExBridge::onUserOffline(const RtcConnection& connectio
 void RtcEngineEventHandlerExBridge::onUserMuteAudio(const RtcConnection& connection, uid_t remoteUid, bool muted) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto mutedCopy = muted;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, mutedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, mutedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1399,12 +1399,12 @@ void RtcEngineEventHandlerExBridge::onUserMuteAudio(const RtcConnection& connect
 void RtcEngineEventHandlerExBridge::onUserMuteVideo(const RtcConnection& connection, uid_t remoteUid, bool muted) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto mutedCopy = muted;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, mutedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, mutedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1418,12 +1418,12 @@ void RtcEngineEventHandlerExBridge::onUserMuteVideo(const RtcConnection& connect
 void RtcEngineEventHandlerExBridge::onUserEnableVideo(const RtcConnection& connection, uid_t remoteUid, bool enabled) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto enabledCopy = enabled;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, enabledCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, enabledCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1437,12 +1437,12 @@ void RtcEngineEventHandlerExBridge::onUserEnableVideo(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onUserEnableLocalVideo(const RtcConnection& connection, uid_t remoteUid, bool enabled) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto enabledCopy = enabled;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, enabledCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, enabledCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1456,12 +1456,12 @@ void RtcEngineEventHandlerExBridge::onUserEnableLocalVideo(const RtcConnection& 
 void RtcEngineEventHandlerExBridge::onUserStateChanged(const RtcConnection& connection, uid_t remoteUid, uint32_t state) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto stateCopy = state;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1475,11 +1475,11 @@ void RtcEngineEventHandlerExBridge::onUserStateChanged(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onLocalAudioStats(const RtcConnection& connection, const LocalAudioStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1492,11 +1492,11 @@ void RtcEngineEventHandlerExBridge::onLocalAudioStats(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onRemoteAudioStats(const RtcConnection& connection, const RemoteAudioStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1509,12 +1509,12 @@ void RtcEngineEventHandlerExBridge::onRemoteAudioStats(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onLocalVideoStats(const RtcConnection& connection, VIDEO_SOURCE_TYPE sourceType, const LocalVideoStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto sourceTypeCopy = sourceType;
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, sourceTypeCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, sourceTypeCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1528,11 +1528,11 @@ void RtcEngineEventHandlerExBridge::onLocalVideoStats(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onRemoteVideoStats(const RtcConnection& connection, const RemoteVideoStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1545,10 +1545,10 @@ void RtcEngineEventHandlerExBridge::onRemoteVideoStats(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onConnectionLost(const RtcConnection& connection) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy]() {
+        [self, channelIdCopy, connCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1560,10 +1560,10 @@ void RtcEngineEventHandlerExBridge::onConnectionLost(const RtcConnection& connec
 void RtcEngineEventHandlerExBridge::onConnectionInterrupted(const RtcConnection& connection) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy]() {
+        [self, channelIdCopy, connCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1575,10 +1575,10 @@ void RtcEngineEventHandlerExBridge::onConnectionInterrupted(const RtcConnection&
 void RtcEngineEventHandlerExBridge::onConnectionBanned(const RtcConnection& connection) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy]() {
+        [self, channelIdCopy, connCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1590,7 +1590,6 @@ void RtcEngineEventHandlerExBridge::onConnectionBanned(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connection, uid_t remoteUid, int streamId, const char* data, size_t length, uint64_t sentTs) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto streamIdCopy = streamId;
     std::vector<uint8_t> dataCopy(data != nullptr ? reinterpret_cast<const uint8_t*>(data) : nullptr,
@@ -1599,7 +1598,8 @@ void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connect
     auto sentTsCopy = sentTs;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, streamIdCopy, dataCopy, lengthCopy, sentTsCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, streamIdCopy, dataCopy, lengthCopy, sentTsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1619,7 +1619,6 @@ void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connect
 void RtcEngineEventHandlerExBridge::onStreamMessageError(const RtcConnection& connection, uid_t remoteUid, int streamId, int code, int missed, int cached) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto streamIdCopy = streamId;
     auto codeCopy = code;
@@ -1627,7 +1626,8 @@ void RtcEngineEventHandlerExBridge::onStreamMessageError(const RtcConnection& co
     auto cachedCopy = cached;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, streamIdCopy, codeCopy, missedCopy, cachedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, streamIdCopy, codeCopy, missedCopy, cachedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1644,14 +1644,14 @@ void RtcEngineEventHandlerExBridge::onStreamMessageError(const RtcConnection& co
 void RtcEngineEventHandlerExBridge::onRdtMessage(const RtcConnection& connection, uid_t userId, RdtStreamType type, const char *data, size_t length) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto userIdCopy = userId;
     auto typeCopy = type;
     std::string dataCopy(data != nullptr ? data : "", data != nullptr ? length : 0);
     auto lengthCopy = length;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, userIdCopy, typeCopy, dataCopy, lengthCopy]() {
+        [self, channelIdCopy, connCopy, userIdCopy, typeCopy, dataCopy, lengthCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1667,12 +1667,12 @@ void RtcEngineEventHandlerExBridge::onRdtMessage(const RtcConnection& connection
 void RtcEngineEventHandlerExBridge::onRdtStateChanged(const RtcConnection& connection, uid_t userId, RdtState state) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto userIdCopy = userId;
     auto stateCopy = state;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, userIdCopy, stateCopy]() {
+        [self, channelIdCopy, connCopy, userIdCopy, stateCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1686,13 +1686,13 @@ void RtcEngineEventHandlerExBridge::onRdtStateChanged(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onMediaControlMessage(const RtcConnection& connection, uid_t userId, const char* data, size_t length) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto userIdCopy = userId;
     std::string dataCopy(data != nullptr ? data : "", data != nullptr ? length : 0);
     auto lengthCopy = length;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, userIdCopy, dataCopy, lengthCopy]() {
+        [self, channelIdCopy, connCopy, userIdCopy, dataCopy, lengthCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1707,10 +1707,10 @@ void RtcEngineEventHandlerExBridge::onMediaControlMessage(const RtcConnection& c
 void RtcEngineEventHandlerExBridge::onRequestToken(const RtcConnection& connection) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy]() {
+        [self, channelIdCopy, connCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1722,11 +1722,11 @@ void RtcEngineEventHandlerExBridge::onRequestToken(const RtcConnection& connecti
 void RtcEngineEventHandlerExBridge::onLicenseValidationFailure(const RtcConnection& connection, LICENSE_ERROR_TYPE reason) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto reasonCopy = reason;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, reasonCopy]() {
+        [self, channelIdCopy, connCopy, reasonCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1739,11 +1739,11 @@ void RtcEngineEventHandlerExBridge::onLicenseValidationFailure(const RtcConnecti
 void RtcEngineEventHandlerExBridge::onTokenPrivilegeWillExpire(const RtcConnection& connection, const char* token) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     std::string tokenCopy(token != nullptr ? token : "");
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, tokenCopy]() {
+        [self, channelIdCopy, connCopy, tokenCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1756,11 +1756,11 @@ void RtcEngineEventHandlerExBridge::onTokenPrivilegeWillExpire(const RtcConnecti
 void RtcEngineEventHandlerExBridge::onFirstLocalAudioFramePublished(const RtcConnection& connection, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1773,12 +1773,12 @@ void RtcEngineEventHandlerExBridge::onFirstLocalAudioFramePublished(const RtcCon
 void RtcEngineEventHandlerExBridge::onFirstRemoteAudioFrame(const RtcConnection& connection, uid_t userId, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto userIdCopy = userId;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, userIdCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, userIdCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1792,12 +1792,12 @@ void RtcEngineEventHandlerExBridge::onFirstRemoteAudioFrame(const RtcConnection&
 void RtcEngineEventHandlerExBridge::onFirstRemoteAudioDecoded(const RtcConnection& connection, uid_t uid, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1811,12 +1811,12 @@ void RtcEngineEventHandlerExBridge::onFirstRemoteAudioDecoded(const RtcConnectio
 void RtcEngineEventHandlerExBridge::onLocalAudioStateChanged(const RtcConnection& connection, LOCAL_AUDIO_STREAM_STATE state, LOCAL_AUDIO_STREAM_REASON reason) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto stateCopy = state;
     auto reasonCopy = reason;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, stateCopy, reasonCopy]() {
+        [self, channelIdCopy, connCopy, stateCopy, reasonCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1830,14 +1830,14 @@ void RtcEngineEventHandlerExBridge::onLocalAudioStateChanged(const RtcConnection
 void RtcEngineEventHandlerExBridge::onRemoteAudioStateChanged(const RtcConnection& connection, uid_t remoteUid, REMOTE_AUDIO_STATE state, REMOTE_AUDIO_STATE_REASON reason, int elapsed) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto stateCopy = state;
     auto reasonCopy = reason;
     auto elapsedCopy = elapsed;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy, reasonCopy, elapsedCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, stateCopy, reasonCopy, elapsedCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1853,11 +1853,11 @@ void RtcEngineEventHandlerExBridge::onRemoteAudioStateChanged(const RtcConnectio
 void RtcEngineEventHandlerExBridge::onActiveSpeaker(const RtcConnection& connection, uid_t uid) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1870,13 +1870,13 @@ void RtcEngineEventHandlerExBridge::onActiveSpeaker(const RtcConnection& connect
 void RtcEngineEventHandlerExBridge::onClientRoleChanged(const RtcConnection& connection, CLIENT_ROLE_TYPE oldRole, CLIENT_ROLE_TYPE newRole, const ClientRoleOptions& newRoleOptions) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto oldRoleCopy = oldRole;
     auto newRoleCopy = newRole;
     auto newRoleOptionsCopy = newRoleOptions;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, oldRoleCopy, newRoleCopy, newRoleOptionsCopy]() {
+        [self, channelIdCopy, connCopy, oldRoleCopy, newRoleCopy, newRoleOptionsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1891,12 +1891,12 @@ void RtcEngineEventHandlerExBridge::onClientRoleChanged(const RtcConnection& con
 void RtcEngineEventHandlerExBridge::onClientRoleChangeFailed(const RtcConnection& connection, CLIENT_ROLE_CHANGE_FAILED_REASON reason, CLIENT_ROLE_TYPE currentRole) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto reasonCopy = reason;
     auto currentRoleCopy = currentRole;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, reasonCopy, currentRoleCopy]() {
+        [self, channelIdCopy, connCopy, reasonCopy, currentRoleCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1910,14 +1910,14 @@ void RtcEngineEventHandlerExBridge::onClientRoleChangeFailed(const RtcConnection
 void RtcEngineEventHandlerExBridge::onRemoteAudioTransportStats(const RtcConnection& connection, uid_t remoteUid, unsigned short delay, unsigned short lost, unsigned short rxKBitRate) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto delayCopy = delay;
     auto lostCopy = lost;
     auto rxKBitRateCopy = rxKBitRate;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, delayCopy, lostCopy, rxKBitRateCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, delayCopy, lostCopy, rxKBitRateCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1933,14 +1933,14 @@ void RtcEngineEventHandlerExBridge::onRemoteAudioTransportStats(const RtcConnect
 void RtcEngineEventHandlerExBridge::onRemoteVideoTransportStats(const RtcConnection& connection, uid_t remoteUid, unsigned short delay, unsigned short lost, unsigned short rxKBitRate) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     auto delayCopy = delay;
     auto lostCopy = lost;
     auto rxKBitRateCopy = rxKBitRate;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, delayCopy, lostCopy, rxKBitRateCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, delayCopy, lostCopy, rxKBitRateCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1956,12 +1956,12 @@ void RtcEngineEventHandlerExBridge::onRemoteVideoTransportStats(const RtcConnect
 void RtcEngineEventHandlerExBridge::onConnectionStateChanged(const RtcConnection& connection, CONNECTION_STATE_TYPE state, CONNECTION_CHANGED_REASON_TYPE reason) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto stateCopy = state;
     auto reasonCopy = reason;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, stateCopy, reasonCopy]() {
+        [self, channelIdCopy, connCopy, stateCopy, reasonCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1975,11 +1975,11 @@ void RtcEngineEventHandlerExBridge::onConnectionStateChanged(const RtcConnection
 void RtcEngineEventHandlerExBridge::onNetworkTypeChanged(const RtcConnection& connection, NETWORK_TYPE type) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto typeCopy = type;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, typeCopy]() {
+        [self, channelIdCopy, connCopy, typeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -1992,11 +1992,11 @@ void RtcEngineEventHandlerExBridge::onNetworkTypeChanged(const RtcConnection& co
 void RtcEngineEventHandlerExBridge::onEncryptionError(const RtcConnection& connection, ENCRYPTION_ERROR_TYPE errorType) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto errorTypeCopy = errorType;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, errorTypeCopy]() {
+        [self, channelIdCopy, connCopy, errorTypeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2009,13 +2009,13 @@ void RtcEngineEventHandlerExBridge::onEncryptionError(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onUploadLogResult(const RtcConnection& connection, const char* requestId, bool success, UPLOAD_ERROR_REASON reason) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     std::string requestIdCopy(requestId != nullptr ? requestId : "");
     auto successCopy = success;
     auto reasonCopy = reason;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, requestIdCopy, successCopy, reasonCopy]() {
+        [self, channelIdCopy, connCopy, requestIdCopy, successCopy, reasonCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2030,12 +2030,12 @@ void RtcEngineEventHandlerExBridge::onUploadLogResult(const RtcConnection& conne
 void RtcEngineEventHandlerExBridge::onUserAccountUpdated(const RtcConnection& connection, uid_t remoteUid, const char* remoteUserAccount) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto remoteUidCopy = remoteUid;
     std::string remoteUserAccountCopy(remoteUserAccount != nullptr ? remoteUserAccount : "");
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, remoteUidCopy, remoteUserAccountCopy]() {
+        [self, channelIdCopy, connCopy, remoteUidCopy, remoteUserAccountCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2049,7 +2049,6 @@ void RtcEngineEventHandlerExBridge::onUserAccountUpdated(const RtcConnection& co
 void RtcEngineEventHandlerExBridge::onSnapshotTaken(const RtcConnection& connection, uid_t uid, const char* filePath, int width, int height, int errCode) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     std::string filePathCopy(filePath != nullptr ? filePath : "");
     auto widthCopy = width;
@@ -2057,7 +2056,8 @@ void RtcEngineEventHandlerExBridge::onSnapshotTaken(const RtcConnection& connect
     auto errCodeCopy = errCode;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy, filePathCopy, widthCopy, heightCopy, errCodeCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy, filePathCopy, widthCopy, heightCopy, errCodeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2074,13 +2074,13 @@ void RtcEngineEventHandlerExBridge::onSnapshotTaken(const RtcConnection& connect
 void RtcEngineEventHandlerExBridge::onVideoRenderingTracingResult(const RtcConnection& connection, uid_t uid, MEDIA_TRACE_EVENT currentEvent, VideoRenderingTracingInfo tracingInfo) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     auto currentEventCopy = currentEvent;
     auto tracingInfoCopy = tracingInfo;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy, currentEventCopy, tracingInfoCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy, currentEventCopy, tracingInfoCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2095,11 +2095,11 @@ void RtcEngineEventHandlerExBridge::onVideoRenderingTracingResult(const RtcConne
 void RtcEngineEventHandlerExBridge::onSetRtmFlagResult(const RtcConnection& connection, int code) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto codeCopy = code;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, codeCopy]() {
+        [self, channelIdCopy, connCopy, codeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2112,7 +2112,6 @@ void RtcEngineEventHandlerExBridge::onSetRtmFlagResult(const RtcConnection& conn
 void RtcEngineEventHandlerExBridge::onTranscodedStreamLayoutInfo(const RtcConnection& connection, uid_t uid, int width, int height, int layoutCount,const VideoLayout* layoutlist) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     auto widthCopy = width;
     auto heightCopy = height;
@@ -2120,7 +2119,8 @@ void RtcEngineEventHandlerExBridge::onTranscodedStreamLayoutInfo(const RtcConnec
     std::vector<VideoLayout> layoutlistCopy(layoutlist, layoutlist != nullptr ? layoutlist + layoutCount : layoutlist);
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy, widthCopy, heightCopy, layoutCountCopy, layoutlistCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy, widthCopy, heightCopy, layoutCountCopy, layoutlistCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2137,14 +2137,14 @@ void RtcEngineEventHandlerExBridge::onTranscodedStreamLayoutInfo(const RtcConnec
 void RtcEngineEventHandlerExBridge::onAudioMetadataReceived(const RtcConnection& connection, uid_t uid, const char* metadata, size_t length) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto uidCopy = uid;
     std::vector<uint8_t> metadataCopy(metadata != nullptr ? reinterpret_cast<const uint8_t*>(metadata) : nullptr,
                                       metadata != nullptr ? reinterpret_cast<const uint8_t*>(metadata) + length : nullptr);
     auto lengthCopy = length;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, uidCopy, metadataCopy, lengthCopy]() {
+        [self, channelIdCopy, connCopy, uidCopy, metadataCopy, lengthCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2162,11 +2162,11 @@ void RtcEngineEventHandlerExBridge::onAudioMetadataReceived(const RtcConnection&
 void RtcEngineEventHandlerExBridge::onMultipathStats(const RtcConnection& connection, const MultipathStats& stats) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     auto statsCopy = stats;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, statsCopy]() {
+        [self, channelIdCopy, connCopy, statsCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;
@@ -2179,12 +2179,12 @@ void RtcEngineEventHandlerExBridge::onMultipathStats(const RtcConnection& connec
 void RtcEngineEventHandlerExBridge::onRenewTokenResult(const RtcConnection& connection, const char* token, RENEW_TOKEN_ERROR_CODE code) {
     std::string channelIdCopy(connection.channelId != nullptr ? connection.channelId : "");
     agora::rtc::RtcConnection connCopy = connection;
-    connCopy.channelId = channelIdCopy.c_str();
     std::string tokenCopy(token != nullptr ? token : "");
     auto codeCopy = code;
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
-        [self, channelIdCopy, connCopy, tokenCopy, codeCopy]() {
+        [self, channelIdCopy, connCopy, tokenCopy, codeCopy]() mutable {
+            connCopy.channelId = channelIdCopy.c_str();
             if (!isScriptEngineValid()) { return; }
             se::AutoHandleScope handleScope;
             se::ValueArray args;

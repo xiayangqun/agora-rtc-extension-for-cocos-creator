@@ -66,8 +66,7 @@ public:
     virtual void invalidate();
 
     int open(const std::string &url, int64_t startPos);
-    //not support
-    // int openWithMediaSource(const agora::media::base::MediaSource &source);
+    int openWithMediaSource(const agora::media::base::MediaSource &source);
     int play();
     int pause();
     int stop();

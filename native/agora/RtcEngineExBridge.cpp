@@ -131,9 +131,7 @@ agora::media::IMediaEngine *RtcEngineExBridge::mediaEngine() {
 VideoTextureManager *RtcEngineExBridge::videoTextureManager() {
     auto *engine = mediaEngine();
     if (engine == nullptr) { return nullptr; }
-    if (!_videoTextureManager) {
-        _videoTextureManager = std::make_shared<VideoTextureManager>(engine);
-    }
+    if (!_videoTextureManager) { _videoTextureManager = std::make_shared<VideoTextureManager>(engine); }
     return _videoTextureManager.get();
 }
 
@@ -145,9 +143,7 @@ int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, s
     agora::rtc::RtcEngineContext rtcContext = context;
     rtcContext.eventHandler = _eventHandler.get();
     auto ret = _engine->initialize(rtcContext);
-    if (ret == agora::ERR_OK) {
-        videoTextureManager();
-    }
+    if (ret == agora::ERR_OK) { videoTextureManager(); }
     return ret;
 }
 
@@ -1332,13 +1328,23 @@ int RtcEngineExBridge::setCameraStabilizationMode(agora::rtc::CAMERA_STABILIZATI
 }
 
 int RtcEngineExBridge::setDefaultAudioRouteToSpeakerphone(bool defaultToSpeaker) {
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return _engine->setDefaultAudioRouteToSpeakerphone(defaultToSpeaker);
+#else
     (void)defaultToSpeaker;
     return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 int RtcEngineExBridge::setEnableSpeakerphone(bool speakerOn) {
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return _engine->setEnableSpeakerphone(speakerOn);
+#else
     (void)speakerOn;
     return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 bool RtcEngineExBridge::isSpeakerphoneEnabled() {
@@ -1346,8 +1352,13 @@ bool RtcEngineExBridge::isSpeakerphoneEnabled() {
 }
 
 int RtcEngineExBridge::setRouteInCommunicationMode(int route) {
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return _engine->setRouteInCommunicationMode(route);
+#else
     (void)route;
     return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 bool RtcEngineExBridge::isCameraCenterStageSupported() {
@@ -1904,7 +1915,7 @@ QueryHDRCapabilityResult RtcEngineExBridge::queryHDRCapability(agora::rtc::VIDEO
 int RtcEngineExBridge::joinChannelEx(const std::string &token, const agora::rtc::RtcConnection &connection,
                                      const agora::rtc::ChannelMediaOptions &options) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->joinChannelEx(nullableCString(token), connection, options, _eventHandler.get());
+    return _engine->joinChannelEx(nullableCString(token), connection, options, nullptr);
 }
 
 int RtcEngineExBridge::leaveChannelEx(const agora::rtc::RtcConnection &connection) {

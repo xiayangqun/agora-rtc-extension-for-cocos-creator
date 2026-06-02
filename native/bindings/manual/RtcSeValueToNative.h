@@ -117,6 +117,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::RtcEngineContext *to, 
 #include "ScopedCString.h"
 
 bool sevalue_to_native(const se::Value &from, agora::media::SnapshotConfig *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, agora::media::base::MediaSource *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::RtcImage *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfiguration *to, se::Object *ctx);

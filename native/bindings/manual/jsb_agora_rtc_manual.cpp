@@ -316,6 +316,16 @@ static bool js_agora_RtcEngineBridge_addVideoWatermark(se::State &s) {
     const auto &args = s.args();
     auto *bridge = getRtcEngineBridge(s);
     if (bridge == nullptr || args.empty()) { s.rval().setInt32(-7); return true; }
+    if (args.size() >= 2 && args[0].isString() && args[1].isObject()) {
+        std::string watermarkUrl = args[0].toString();
+        agora::rtc::WatermarkOptions options;
+        if (!sevalue_to_native(args[1], &options, s.thisObject())) {
+            s.rval().setInt32(-2);
+            return true;
+        }
+        s.rval().setInt32(bridge->addVideoWatermark(watermarkUrl, options));
+        return true;
+    }
     agora::rtc::WatermarkConfig configs;
     if (sevalue_to_native(args[0], &configs, s.thisObject())) {
         s.rval().setInt32(bridge->addVideoWatermark(configs));
@@ -529,6 +539,29 @@ static bool js_agora_MediaPlayerBridge_registerPlayerSourceObserver(se::State &s
 }
 SE_BIND_FUNC(js_agora_MediaPlayerBridge_registerPlayerSourceObserver)
 
+static bool js_agora_MediaPlayerBridge_openWithMediaSource(se::State &s) {
+    ScopedCStringGuard _cstrGuard;
+    const auto &args = s.args();
+    auto *player = getMediaPlayerBridge(s);
+    if (player == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
+    agora::media::base::MediaSource source;
+    if (!sevalue_to_native(args[0], &source, s.thisObject())) {
+        SE_REPORT_ERROR("openWithMediaSource: failed to convert MediaSource");
+        return false;
+    }
+    s.rval().setInt32(player->openWithMediaSource(source));
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaPlayerBridge_openWithMediaSource)
+
+static bool js_agora_MediaPlayerBridge_getState(se::State &s) {
+    auto *player = getMediaPlayerBridge(s);
+    if (player == nullptr) { s.rval().setInt32(-2); return true; }
+    s.rval().setInt32(static_cast<int>(player->getState()));
+    return true;
+}
+SE_BIND_FUNC(js_agora_MediaPlayerBridge_getState)
+
 static bool js_agora_MediaPlayerBridge_setPlayerOption(se::State &s) {
     const auto &args = s.args();
     auto *player = getMediaPlayerBridge(s);
@@ -604,11 +637,19 @@ static bool js_agora_AudioDeviceCollectionBridge_getDevice(se::State &s) {
     if (collection == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
     int index = args[0].toInt32();
     auto exResult = collection->getDeviceEx(index);
+    se::HandleObject obj(se::Object::createPlainObject());
     if (exResult.errorCode == 0) {
-        nativevalue_to_se(exResult, s.rval(), s.thisObject());
+        obj->setProperty("errorCode", se::Value(exResult.errorCode));
+        obj->setProperty("deviceName", se::Value(exResult.deviceName));
+        obj->setProperty("deviceTypeName", se::Value(exResult.deviceTypeName));
+        obj->setProperty("deviceId", se::Value(exResult.deviceId));
     } else {
-        nativevalue_to_se(collection->getDevice(index), s.rval(), s.thisObject());
+        auto result = collection->getDevice(index);
+        obj->setProperty("errorCode", se::Value(result.errorCode));
+        obj->setProperty("deviceName", se::Value(result.deviceName));
+        obj->setProperty("deviceId", se::Value(result.deviceId));
     }
+    s.rval().setObject(obj);
     return true;
 }
 SE_BIND_FUNC(js_agora_AudioDeviceCollectionBridge_getDevice)
@@ -617,11 +658,19 @@ static bool js_agora_AudioDeviceCollectionBridge_getDefaultDevice(se::State &s) 
     auto *collection = static_cast<AudioDeviceCollectionBridge *>(s.nativeThisObject());
     if (collection == nullptr) { s.rval().setInt32(-2); return true; }
     auto exResult = collection->getDefaultDeviceEx();
+    se::HandleObject obj(se::Object::createPlainObject());
     if (exResult.errorCode == 0) {
-        nativevalue_to_se(exResult, s.rval(), s.thisObject());
+        obj->setProperty("errorCode", se::Value(exResult.errorCode));
+        obj->setProperty("deviceName", se::Value(exResult.deviceName));
+        obj->setProperty("deviceTypeName", se::Value(exResult.deviceTypeName));
+        obj->setProperty("deviceId", se::Value(exResult.deviceId));
     } else {
-        nativevalue_to_se(collection->getDefaultDevice(), s.rval(), s.thisObject());
+        auto result = collection->getDefaultDevice();
+        obj->setProperty("errorCode", se::Value(result.errorCode));
+        obj->setProperty("deviceName", se::Value(result.deviceName));
+        obj->setProperty("deviceId", se::Value(result.deviceId));
     }
+    s.rval().setObject(obj);
     return true;
 }
 SE_BIND_FUNC(js_agora_AudioDeviceCollectionBridge_getDefaultDevice)
@@ -886,6 +935,8 @@ bool register_agora_rtc_manual(se::Object *global) {
     if (__jsb_MediaPlayerBridge_proto) {
         auto *proto = __jsb_MediaPlayerBridge_proto;
         proto->defineFunction("registerPlayerSourceObserver", _SE(js_agora_MediaPlayerBridge_registerPlayerSourceObserver));
+        proto->defineFunction("openWithMediaSource", _SE(js_agora_MediaPlayerBridge_openWithMediaSource));
+        proto->defineFunction("getState", _SE(js_agora_MediaPlayerBridge_getState));
         proto->defineFunction("setPlayerOption", _SE(js_agora_MediaPlayerBridge_setPlayerOption));
     }
 
@@ -913,7 +964,9 @@ bool register_agora_rtc_manual(se::Object *global) {
     if (__jsb_AudioDeviceCollectionBridge_proto) {
         auto *proto = __jsb_AudioDeviceCollectionBridge_proto;
         proto->defineFunction("getDevice", _SE(js_agora_AudioDeviceCollectionBridge_getDevice));
+        proto->defineFunction("getDeviceType", _SE(js_agora_AudioDeviceCollectionBridge_getDevice));
         proto->defineFunction("getDefaultDevice", _SE(js_agora_AudioDeviceCollectionBridge_getDefaultDevice));
+        proto->defineFunction("getDefaultDeviceType", _SE(js_agora_AudioDeviceCollectionBridge_getDefaultDevice));
     }
 
     // --- AudioDeviceManagerBridge ---
