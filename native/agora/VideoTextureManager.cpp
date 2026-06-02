@@ -47,21 +47,13 @@ bool isScreenSource(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
            sourceType == VIDEO_SOURCE_SCREEN_FOURTH;
 }
 
-bool sourceMatches(agora::rtc::VIDEO_SOURCE_TYPE expected, agora::rtc::VIDEO_SOURCE_TYPE actual) {
-    if (expected == actual) { return true; }
-    if (isCameraSource(expected) && actual == agora::rtc::VIDEO_SOURCE_CAMERA) { return true; }
-    return isScreenSource(expected) && actual == agora::rtc::VIDEO_SOURCE_SCREEN;
-}
-
 bool hasPrefix(const std::string &value, const char *prefix) {
     return value.rfind(prefix, 0) == 0;
 }
 } // namespace
 
 VideoTextureManager::VideoTextureManager(agora::media::IMediaEngine *mediaEngine) : _mediaEngine(mediaEngine) {
-    if (_mediaEngine) {
-        _mediaEngine->addVideoFrameRenderer(this);
-    }
+    if (_mediaEngine) { _mediaEngine->addVideoFrameRenderer(this); }
     startFrameFlush();
 }
 
@@ -240,7 +232,7 @@ std::shared_ptr<VideoTextureManager::BindingEntry> VideoTextureManager::findLoca
     for (const auto &item : _entries) {
         const auto &entry = item.second;
         if (hasPrefix(entry->key, "local_") && entry->sourceType != agora::rtc::VIDEO_SOURCE_MEDIA_PLAYER &&
-            sourceMatches(entry->sourceType, sourceType)) {
+            entry->sourceType == sourceType) {
             return entry;
         }
     }
@@ -400,6 +392,8 @@ void VideoTextureManager::uploadEntryOnCocosThread(const std::shared_ptr<Binding
 
     if (aspectChanged) {
         callAspectRatioChanged(aspectCallback, width, height);
+        fprintf(stderr, "VideoTextureManager: aspect changed sourceType %d, %d x %d\n", (int)entry->sourceType, width,
+                height);
     }
 }
 
