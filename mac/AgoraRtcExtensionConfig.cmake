@@ -21,6 +21,7 @@ endif()
 add_library(AgoraRtcExtension STATIC
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/ObserverBridgeBase.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineExBridge.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/agora/VideoTextureManager.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineEventHandlerExBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerSourceObserverBridge.cpp
@@ -42,7 +43,7 @@ add_library(AgoraRtcExtension STATIC
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicContentCenterEventHandlerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MusicPlayerBridge.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_manual.cpp
-    ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/jsb_agora_rtc_ext.cpp
+    ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual/RtcNativeValueToSe.cpp
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/register.cpp
 )
 
@@ -56,6 +57,10 @@ if(CMAKE_GENERATOR STREQUAL "Xcode")
     set_target_properties(AgoraRtcExtension PROPERTIES
         XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
         XCODE_ATTRIBUTE_ARCHS "$(ARCHS_STANDARD)"
+        XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=Debug] "dwarf"
+        XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0"
+        XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=RelWithDebInfo] "dwarf-with-dsym"
+        XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=RelWithDebInfo] "Os"
     )
 endif()
 

@@ -1725,68 +1725,6 @@ static bool js_RtcEngineExBridge_enableVirtualBackground(se::State& s)
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_enableVirtualBackground) 
 
-static bool js_RtcEngineExBridge_setupRemoteVideo(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::VideoCanvas *arg2 = 0 ;
-    agora::rtc::VideoCanvas temp2 ;
-    int result;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = &temp2;
-    
-    result = (int)(arg1)->setupRemoteVideo((agora::rtc::VideoCanvas const &)*arg2);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_setupRemoteVideo) 
-
-static bool js_RtcEngineExBridge_setupLocalVideo(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::VideoCanvas *arg2 = 0 ;
-    agora::rtc::VideoCanvas temp2 ;
-    int result;
-    
-    if(argc != 1) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = &temp2;
-    
-    result = (int)(arg1)->setupLocalVideo((agora::rtc::VideoCanvas const &)*arg2);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_setupLocalVideo) 
-
 static bool js_RtcEngineExBridge_setVideoScenario(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -7598,121 +7536,6 @@ static bool js_RtcEngineExBridge_createDataStream(se::State& s)
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_createDataStream) 
 
-static bool js_RtcEngineExBridge_sendStreamMessage(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    int arg2 ;
-    void *arg3 = (void *) NULL ;
-    size_t arg4 ;
-    int result;
-    
-    if(argc != 3) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    ok &= sevalue_to_native(args[1], &arg3);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[2], &arg4, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    result = (int)(arg1)->sendStreamMessage(arg2,(void const *)arg3,arg4);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendStreamMessage) 
-
-static bool js_RtcEngineExBridge_sendRdtMessage(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::uid_t arg2 ;
-    agora::rtc::RdtStreamType arg3 ;
-    void *arg4 = (void *) NULL ;
-    size_t arg5 ;
-    int result;
-    
-    if(argc != 4) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    
-    ok &= sevalue_to_native(args[1], &arg3, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    ok &= sevalue_to_native(args[2], &arg4);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[3], &arg5, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    result = (int)(arg1)->sendRdtMessage(arg2,arg3,(void const *)arg4,arg5);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendRdtMessage) 
-
-static bool js_RtcEngineExBridge_sendMediaControlMessage(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::uid_t arg2 ;
-    void *arg3 = (void *) NULL ;
-    size_t arg4 ;
-    int result;
-    
-    if(argc != 3) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    ok &= sevalue_to_native(args[1], &arg3);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[2], &arg4, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    result = (int)(arg1)->sendMediaControlMessage(arg2,(void const *)arg3,arg4);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendMediaControlMessage) 
-
 static bool js_RtcEngineExBridge_removeVideoWatermark(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -9028,38 +8851,6 @@ static bool js_RtcEngineExBridge_isFeatureAvailableOnDevice(se::State& s)
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_isFeatureAvailableOnDevice) 
 
-static bool js_RtcEngineExBridge_sendAudioMetadata(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    void *arg2 = (void *) NULL ;
-    size_t arg3 ;
-    int result;
-    
-    if(argc != 2) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    ok &= sevalue_to_native(args[0], &arg2);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[1], &arg3, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    result = (int)(arg1)->sendAudioMetadata((void const *)arg2,arg3);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendAudioMetadata) 
-
 static bool js_RtcEngineExBridge_queryHDRCapability(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -9391,44 +9182,6 @@ static bool js_RtcEngineExBridge_setVideoEncoderConfigurationEx(se::State& s)
     return true;
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_setVideoEncoderConfigurationEx) 
-
-static bool js_RtcEngineExBridge_setupRemoteVideoEx(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::VideoCanvas *arg2 = 0 ;
-    agora::rtc::RtcConnection *arg3 = 0 ;
-    agora::rtc::VideoCanvas temp2 ;
-    agora::rtc::RtcConnection temp3 ;
-    int result;
-    
-    if(argc != 2) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = &temp2;
-    
-    
-    ok &= sevalue_to_native(args[1], &temp3, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg3 = &temp3;
-    
-    result = (int)(arg1)->setupRemoteVideoEx((agora::rtc::VideoCanvas const &)*arg2,(agora::rtc::RtcConnection const &)*arg3);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_setupRemoteVideoEx) 
 
 static bool js_RtcEngineExBridge_muteRemoteAudioStreamEx(se::State& s)
 {
@@ -10341,142 +10094,6 @@ static bool js_RtcEngineExBridge_createDataStreamEx(se::State& s)
     return false;
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_createDataStreamEx) 
-
-static bool js_RtcEngineExBridge_sendStreamMessageEx(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    int arg2 ;
-    void *arg3 = (void *) NULL ;
-    size_t arg4 ;
-    agora::rtc::RtcConnection *arg5 = 0 ;
-    agora::rtc::RtcConnection temp5 ;
-    int result;
-    
-    if(argc != 4) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    ok &= sevalue_to_native(args[1], &arg3);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[2], &arg4, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    
-    ok &= sevalue_to_native(args[3], &temp5, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg5 = &temp5;
-    
-    result = (int)(arg1)->sendStreamMessageEx(arg2,(void const *)arg3,arg4,(agora::rtc::RtcConnection const &)*arg5);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendStreamMessageEx) 
-
-static bool js_RtcEngineExBridge_sendRdtMessageEx(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::uid_t arg2 ;
-    agora::rtc::RdtStreamType arg3 ;
-    void *arg4 = (void *) NULL ;
-    size_t arg5 ;
-    agora::rtc::RtcConnection *arg6 = 0 ;
-    agora::rtc::RtcConnection temp6 ;
-    int result;
-    
-    if(argc != 5) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 5);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    
-    ok &= sevalue_to_native(args[1], &arg3, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    ok &= sevalue_to_native(args[2], &arg4);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[3], &arg5, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    
-    ok &= sevalue_to_native(args[4], &temp6, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg6 = &temp6;
-    
-    result = (int)(arg1)->sendRdtMessageEx(arg2,arg3,(void const *)arg4,arg5,(agora::rtc::RtcConnection const &)*arg6);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendRdtMessageEx) 
-
-static bool js_RtcEngineExBridge_sendMediaControlMessageEx(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::uid_t arg2 ;
-    void *arg3 = (void *) NULL ;
-    size_t arg4 ;
-    agora::rtc::RtcConnection *arg5 = 0 ;
-    agora::rtc::RtcConnection temp5 ;
-    int result;
-    
-    if(argc != 4) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 4);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    ok &= sevalue_to_native(args[1], &arg3);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[2], &arg4, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    
-    ok &= sevalue_to_native(args[3], &temp5, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg5 = &temp5;
-    
-    result = (int)(arg1)->sendMediaControlMessageEx(arg2,(void const *)arg3,arg4,(agora::rtc::RtcConnection const &)*arg5);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendMediaControlMessageEx) 
 
 static bool js_RtcEngineExBridge_addVideoWatermarkEx__SWIG_0(se::State& s)
 {
@@ -11437,45 +11054,6 @@ static bool js_RtcEngineExBridge_getCallIdEx(se::State& s)
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_getCallIdEx) 
 
-static bool js_RtcEngineExBridge_sendAudioMetadataEx(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::RtcConnection *arg2 = 0 ;
-    void *arg3 = (void *) NULL ;
-    size_t arg4 ;
-    agora::rtc::RtcConnection temp2 ;
-    int result;
-    
-    if(argc != 3) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 3);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg2 = &temp2;
-    
-    ok &= sevalue_to_native(args[1], &arg3);
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    ok &= sevalue_to_native(args[2], &arg4, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    
-    result = (int)(arg1)->sendAudioMetadataEx((agora::rtc::RtcConnection const &)*arg2,(void const *)arg3,arg4);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_sendAudioMetadataEx) 
-
 static bool js_RtcEngineExBridge_preloadEffectEx(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -11625,8 +11203,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("setVideoDenoiserOptions", _SE(js_RtcEngineExBridge_setVideoDenoiserOptions)); 
     cls->defineFunction("setColorEnhanceOptions", _SE(js_RtcEngineExBridge_setColorEnhanceOptions)); 
     cls->defineFunction("enableVirtualBackground", _SE(js_RtcEngineExBridge_enableVirtualBackground)); 
-    cls->defineFunction("setupRemoteVideo", _SE(js_RtcEngineExBridge_setupRemoteVideo)); 
-    cls->defineFunction("setupLocalVideo", _SE(js_RtcEngineExBridge_setupLocalVideo)); 
     cls->defineFunction("setVideoScenario", _SE(js_RtcEngineExBridge_setVideoScenario)); 
     cls->defineFunction("setVideoQoEPreference", _SE(js_RtcEngineExBridge_setVideoQoEPreference)); 
     cls->defineFunction("enableAudio", _SE(js_RtcEngineExBridge_enableAudio)); 
@@ -11800,9 +11376,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("setRemoteUserPriority", _SE(js_RtcEngineExBridge_setRemoteUserPriority)); 
     cls->defineFunction("enableEncryption", _SE(js_RtcEngineExBridge_enableEncryption)); 
     cls->defineFunction("createDataStream", _SE(js_RtcEngineExBridge_createDataStream)); 
-    cls->defineFunction("sendStreamMessage", _SE(js_RtcEngineExBridge_sendStreamMessage)); 
-    cls->defineFunction("sendRdtMessage", _SE(js_RtcEngineExBridge_sendRdtMessage)); 
-    cls->defineFunction("sendMediaControlMessage", _SE(js_RtcEngineExBridge_sendMediaControlMessage)); 
     cls->defineFunction("removeVideoWatermark", _SE(js_RtcEngineExBridge_removeVideoWatermark)); 
     cls->defineFunction("clearVideoWatermarks", _SE(js_RtcEngineExBridge_clearVideoWatermarks)); 
     cls->defineFunction("pauseAudio", _SE(js_RtcEngineExBridge_pauseAudio)); 
@@ -11843,14 +11416,12 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("enableInstantMediaRendering", _SE(js_RtcEngineExBridge_enableInstantMediaRendering)); 
     cls->defineFunction("getNtpWallTimeInMs", _SE(js_RtcEngineExBridge_getNtpWallTimeInMs)); 
     cls->defineFunction("isFeatureAvailableOnDevice", _SE(js_RtcEngineExBridge_isFeatureAvailableOnDevice)); 
-    cls->defineFunction("sendAudioMetadata", _SE(js_RtcEngineExBridge_sendAudioMetadata)); 
     cls->defineFunction("queryHDRCapability", _SE(js_RtcEngineExBridge_queryHDRCapability)); 
     cls->defineFunction("joinChannelEx", _SE(js_RtcEngineExBridge_joinChannelEx)); 
     cls->defineFunction("leaveChannelEx", _SE(js_RtcEngineExBridge_leaveChannelEx)); 
     cls->defineFunction("leaveChannelWithUserAccountEx", _SE(js_RtcEngineExBridge_leaveChannelWithUserAccountEx)); 
     cls->defineFunction("updateChannelMediaOptionsEx", _SE(js_RtcEngineExBridge_updateChannelMediaOptionsEx)); 
     cls->defineFunction("setVideoEncoderConfigurationEx", _SE(js_RtcEngineExBridge_setVideoEncoderConfigurationEx)); 
-    cls->defineFunction("setupRemoteVideoEx", _SE(js_RtcEngineExBridge_setupRemoteVideoEx)); 
     cls->defineFunction("muteRemoteAudioStreamEx", _SE(js_RtcEngineExBridge_muteRemoteAudioStreamEx)); 
     cls->defineFunction("muteRemoteVideoStreamEx", _SE(js_RtcEngineExBridge_muteRemoteVideoStreamEx)); 
     cls->defineFunction("setRemoteVideoStreamTypeEx", _SE(js_RtcEngineExBridge_setRemoteVideoStreamTypeEx)); 
@@ -11873,9 +11444,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("getConnectionStateEx", _SE(js_RtcEngineExBridge_getConnectionStateEx)); 
     cls->defineFunction("enableEncryptionEx", _SE(js_RtcEngineExBridge_enableEncryptionEx)); 
     cls->defineFunction("createDataStreamEx", _SE(js_RtcEngineExBridge_createDataStreamEx)); 
-    cls->defineFunction("sendStreamMessageEx", _SE(js_RtcEngineExBridge_sendStreamMessageEx)); 
-    cls->defineFunction("sendRdtMessageEx", _SE(js_RtcEngineExBridge_sendRdtMessageEx)); 
-    cls->defineFunction("sendMediaControlMessageEx", _SE(js_RtcEngineExBridge_sendMediaControlMessageEx)); 
     cls->defineFunction("addVideoWatermarkEx", _SE(js_RtcEngineExBridge_addVideoWatermarkEx)); 
     cls->defineFunction("removeVideoWatermarkEx", _SE(js_RtcEngineExBridge_removeVideoWatermarkEx)); 
     cls->defineFunction("clearVideoWatermarkEx", _SE(js_RtcEngineExBridge_clearVideoWatermarkEx)); 
@@ -11899,7 +11467,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("startMediaRenderingTracingEx", _SE(js_RtcEngineExBridge_startMediaRenderingTracingEx)); 
     cls->defineFunction("setParametersEx", _SE(js_RtcEngineExBridge_setParametersEx)); 
     cls->defineFunction("getCallIdEx", _SE(js_RtcEngineExBridge_getCallIdEx)); 
-    cls->defineFunction("sendAudioMetadataEx", _SE(js_RtcEngineExBridge_sendAudioMetadataEx)); 
     cls->defineFunction("preloadEffectEx", _SE(js_RtcEngineExBridge_preloadEffectEx)); 
     cls->defineFunction("playEffectEx", _SE(js_RtcEngineExBridge_playEffectEx)); 
     

@@ -6,6 +6,7 @@
 
 #include "IAgoraRtcEngine.h"
 #include "IAgoraRtcEngineEx.h"
+#include "agora/VideoTextureManager.h"
 
 namespace se {
 class Object;
@@ -167,8 +168,8 @@ public:
     int enableVirtualBackground(bool enabled, const agora::rtc::VirtualBackgroundSource &backgroundSource,
                                 const agora::rtc::SegmentationProperty &segproperty,
                                 agora::media::MEDIA_SOURCE_TYPE type);
-    int setupRemoteVideo(const agora::rtc::VideoCanvas &canvas);
-    int setupLocalVideo(const agora::rtc::VideoCanvas &canvas);
+    int setupRemoteVideo(const VideoTextureCanvas &canvas);
+    int setupLocalVideo(const VideoTextureCanvas &canvas);
     int setVideoScenario(agora::rtc::VIDEO_APPLICATION_SCENARIO_TYPE scenarioType);
     int setVideoQoEPreference(agora::rtc::VIDEO_QOE_PREFERENCE_TYPE qoePreference);
     int enableAudio();
@@ -498,7 +499,7 @@ public:
                                     const agora::rtc::RtcConnection &connection);
     int setVideoEncoderConfigurationEx(const agora::rtc::VideoEncoderConfiguration &config,
                                        const agora::rtc::RtcConnection &connection);
-    int setupRemoteVideoEx(const agora::rtc::VideoCanvas &canvas, const agora::rtc::RtcConnection &connection);
+    int setupRemoteVideoEx(const VideoTextureCanvas &canvas, const agora::rtc::RtcConnection &connection);
     int muteRemoteAudioStreamEx(agora::rtc::uid_t uid, bool mute, const agora::rtc::RtcConnection &connection);
     int muteRemoteVideoStreamEx(agora::rtc::uid_t uid, bool mute, const agora::rtc::RtcConnection &connection);
     int setRemoteVideoStreamTypeEx(agora::rtc::uid_t uid, agora::rtc::VIDEO_STREAM_TYPE streamType,
@@ -595,8 +596,12 @@ private:
     void releaseMediaPlayers();
     void releaseMediaRecorders();
     void releaseVideoEffects();
+    agora::media::IMediaEngine *mediaEngine();
+    VideoTextureManager *videoTextureManager();
 
     agora::rtc::IRtcEngineEx *_engine{nullptr};
+    agora::media::IMediaEngine *_mediaEngine{nullptr};
+    std::shared_ptr<VideoTextureManager> _videoTextureManager;
     std::shared_ptr<RtcEngineEventHandlerExBridge> _eventHandler;
     std::vector<std::shared_ptr<MediaPlayerBridge>> _mediaPlayers;
     std::vector<std::shared_ptr<MediaRecorderBridge>> _mediaRecorders;

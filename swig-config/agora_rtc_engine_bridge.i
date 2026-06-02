@@ -169,6 +169,9 @@
 %ignore RtcEngineExBridge::sendMediaControlMessageEx;
 %ignore RtcEngineExBridge::sendAudioMetadata;
 %ignore RtcEngineExBridge::sendAudioMetadataEx;
+%ignore RtcEngineExBridge::setupRemoteVideo;
+%ignore RtcEngineExBridge::setupLocalVideo;
+%ignore RtcEngineExBridge::setupRemoteVideoEx;
 
 // MediaPlayerBridge — manual bindings
 %ignore MediaPlayerBridge::registerPlayerSourceObserver;

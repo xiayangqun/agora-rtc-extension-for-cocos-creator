@@ -18,6 +18,9 @@
 #include "bindings/manual/jsb_classtype.h"
 #include "bindings/manual/jsb_global.h"
 #include "bindings/jswrapper/SeApi.h"
+#include "core/assets/Texture2D.h"
+
+#include <cstring>
 
 namespace {
 
@@ -37,6 +40,70 @@ bool getArrayBufferOrTypedArray(const se::Value &val, uint8_t **outPtr, size_t *
     if (obj->isArrayBuffer()) return obj->getArrayBufferData(outPtr, outLen);
     if (obj->isTypedArray()) return obj->getTypedArrayData(outPtr, outLen);
     return false;
+}
+
+cc::Texture2D *getTexture2DFromJsbObject(se::Object *obj) {
+    if (!obj || obj->_getClass() == nullptr) {
+        return nullptr;
+    }
+
+    const auto *className = obj->_getClass()->getName();
+    if (className != nullptr && strcmp(className, "Texture2D") == 0) {
+        return static_cast<cc::Texture2D *>(obj->getPrivateData());
+    }
+    return nullptr;
+}
+
+cc::Texture2D *getTexture2DFromValue(const se::Value &value) {
+    if (!value.isObject()) {
+        return nullptr;
+    }
+
+    auto *obj = value.toObject();
+    if (auto *texture = getTexture2DFromJsbObject(obj)) {
+        return texture;
+    }
+
+    se::Value nativeValue;
+    if (obj->getProperty("_native", &nativeValue, true) && nativeValue.isObject()) {
+        return getTexture2DFromValue(nativeValue);
+    }
+    return nullptr;
+}
+
+bool sevalue_to_video_texture_canvas(const se::Value &value, VideoTextureCanvas *canvas) {
+    if (!canvas || !value.isObject()) {
+        return false;
+    }
+
+    auto *obj = value.toObject();
+    se::Value field;
+    if (obj->getProperty("uid", &field, true) && !field.isNullOrUndefined()) {
+        canvas->uid = static_cast<agora::rtc::uid_t>(field.toUint32());
+    }
+    if (obj->getProperty("sourceType", &field, true) && !field.isNullOrUndefined()) {
+        canvas->sourceType = static_cast<agora::rtc::VIDEO_SOURCE_TYPE>(field.toInt32());
+    }
+    if (obj->getProperty("mediaPlayerId", &field, true) && !field.isNullOrUndefined()) {
+        canvas->mediaPlayerId = field.toInt32();
+    }
+    if (obj->getProperty("view", &field, true) && !field.isNullOrUndefined()) {
+        canvas->texture = getTexture2DFromValue(field);
+    }
+
+    return true;
+}
+
+void set_video_texture_aspect_callback(const se::ValueArray &args, size_t index, VideoTextureCanvas *canvas) {
+    if (!canvas || args.size() <= index || !args[index].isObject()) {
+        return;
+    }
+    auto *callback = args[index].toObject();
+    if (callback && callback->isFunction()) {
+        callback->incRef();
+        callback->root();
+        canvas->onAspectRatioChanged = callback;
+    }
 }
 
 // ===== RtcEngineExBridge manual bindings ====================================
@@ -114,6 +181,65 @@ static bool js_agora_RtcEngineBridge_release(se::State &s) {
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_release)
+
+static bool js_agora_RtcEngineBridge_setupRemoteVideo(se::State &s) {
+    const auto &args = s.args();
+    if (args.empty() || !args[0].isObject()) {
+        SE_REPORT_ERROR("setupRemoteVideo expects a canvas object");
+        return false;
+    }
+    VideoTextureCanvas canvas;
+    if (!sevalue_to_video_texture_canvas(args[0], &canvas)) {
+        SE_REPORT_ERROR("setupRemoteVideo failed to convert canvas");
+        return false;
+    }
+    set_video_texture_aspect_callback(args, 1, &canvas);
+    auto *bridge = getRtcEngineBridge(s);
+    s.rval().setInt32(bridge ? bridge->setupRemoteVideo(canvas) : -7);
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_setupRemoteVideo)
+
+static bool js_agora_RtcEngineBridge_setupLocalVideo(se::State &s) {
+    const auto &args = s.args();
+    if (args.empty() || !args[0].isObject()) {
+        SE_REPORT_ERROR("setupLocalVideo expects a canvas object");
+        return false;
+    }
+    VideoTextureCanvas canvas;
+    if (!sevalue_to_video_texture_canvas(args[0], &canvas)) {
+        SE_REPORT_ERROR("setupLocalVideo failed to convert canvas");
+        return false;
+    }
+    set_video_texture_aspect_callback(args, 1, &canvas);
+    auto *bridge = getRtcEngineBridge(s);
+    s.rval().setInt32(bridge ? bridge->setupLocalVideo(canvas) : -7);
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_setupLocalVideo)
+
+static bool js_agora_RtcEngineBridge_setupRemoteVideoEx(se::State &s) {
+    const auto &args = s.args();
+    if (args.size() < 2 || !args[0].isObject() || !args[1].isObject()) {
+        SE_REPORT_ERROR("setupRemoteVideoEx expects canvas and connection objects");
+        return false;
+    }
+    VideoTextureCanvas canvas;
+    if (!sevalue_to_video_texture_canvas(args[0], &canvas)) {
+        SE_REPORT_ERROR("setupRemoteVideoEx failed to convert canvas");
+        return false;
+    }
+    agora::rtc::RtcConnection connection;
+    if (!sevalue_to_native(args[1], &connection, s.thisObject())) {
+        SE_REPORT_ERROR("setupRemoteVideoEx failed to convert RtcConnection");
+        return false;
+    }
+    set_video_texture_aspect_callback(args, 2, &canvas);
+    auto *bridge = getRtcEngineBridge(s);
+    s.rval().setInt32(bridge ? bridge->setupRemoteVideoEx(canvas, connection) : -7);
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_setupRemoteVideoEx)
 
 static bool js_agora_RtcEngineBridge_createMediaPlayer(se::State &s) {
     auto *bridge = getRtcEngineBridge(s);
@@ -716,6 +842,9 @@ bool register_agora_rtc_manual(se::Object *global) {
         proto->defineFunction("initialize", _SE(js_agora_RtcEngineBridge_initialize));
         proto->defineFunction("joinChannel", _SE(js_agora_RtcEngineBridge_joinChannel));
         proto->defineFunction("release", _SE(js_agora_RtcEngineBridge_release));
+        proto->defineFunction("setupRemoteVideo", _SE(js_agora_RtcEngineBridge_setupRemoteVideo));
+        proto->defineFunction("setupLocalVideo", _SE(js_agora_RtcEngineBridge_setupLocalVideo));
+        proto->defineFunction("setupRemoteVideoEx", _SE(js_agora_RtcEngineBridge_setupRemoteVideoEx));
         proto->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineBridge_createMediaPlayer));
         proto->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
         proto->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));

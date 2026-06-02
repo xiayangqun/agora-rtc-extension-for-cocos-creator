@@ -12,6 +12,7 @@
 #include "agora/VideoDeviceManagerBridge.h"
 #include "agora/VideoEffectObjectBridge.h"
 
+#include "IAgoraMediaEngine.h"
 #include "IAgoraMediaPlayer.h"
 #include "IAgoraMediaRecorder.h"
 
@@ -65,6 +66,14 @@ void RtcEngineExBridge::release(bool sync) {
         _h265Transcoder->invalidate();
         _h265Transcoder.reset();
     }
+    if (_videoTextureManager) {
+        _videoTextureManager->release();
+        _videoTextureManager.reset();
+    }
+    if (_mediaEngine) {
+        _mediaEngine->release();
+        _mediaEngine = nullptr;
+    }
     if (_engine != nullptr) {
         agora::rtc::IRtcEngine::release(nullptr);
         _engine = nullptr;
@@ -111,6 +120,23 @@ void RtcEngineExBridge::releaseVideoEffects() {
     _videoEffects.clear();
 }
 
+agora::media::IMediaEngine *RtcEngineExBridge::mediaEngine() {
+    if (_engine == nullptr) { return nullptr; }
+    if (_mediaEngine == nullptr) {
+        _engine->queryInterface(agora::rtc::AGORA_IID_MEDIA_ENGINE, reinterpret_cast<void **>(&_mediaEngine));
+    }
+    return _mediaEngine;
+}
+
+VideoTextureManager *RtcEngineExBridge::videoTextureManager() {
+    auto *engine = mediaEngine();
+    if (engine == nullptr) { return nullptr; }
+    if (!_videoTextureManager) {
+        _videoTextureManager = std::make_shared<VideoTextureManager>(engine);
+    }
+    return _videoTextureManager.get();
+}
+
 int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler) {
     if (_engine != nullptr) { return -agora::ERR_ALREADY_IN_USE; }
     _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngine());
@@ -118,7 +144,11 @@ int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, s
     _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
     agora::rtc::RtcEngineContext rtcContext = context;
     rtcContext.eventHandler = _eventHandler.get();
-    return _engine->initialize(rtcContext);
+    auto ret = _engine->initialize(rtcContext);
+    if (ret == agora::ERR_OK) {
+        videoTextureManager();
+    }
+    return ret;
 }
 
 AudioDeviceManagerBridge *RtcEngineExBridge::getAudioDeviceManager() {
@@ -446,14 +476,18 @@ int RtcEngineExBridge::enableVirtualBackground(bool enabled,
     return _engine->enableVirtualBackground(enabled, backgroundSource, segproperty, type);
 }
 
-int RtcEngineExBridge::setupRemoteVideo(const agora::rtc::VideoCanvas &canvas) {
+int RtcEngineExBridge::setupRemoteVideo(const VideoTextureCanvas &canvas) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->setupRemoteVideo(canvas);
+    auto *manager = videoTextureManager();
+    if (manager == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return manager->setupRemoteVideo(canvas);
 }
 
-int RtcEngineExBridge::setupLocalVideo(const agora::rtc::VideoCanvas &canvas) {
+int RtcEngineExBridge::setupLocalVideo(const VideoTextureCanvas &canvas) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->setupLocalVideo(canvas);
+    auto *manager = videoTextureManager();
+    if (manager == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return manager->setupLocalVideo(canvas);
 }
 
 int RtcEngineExBridge::setVideoScenario(agora::rtc::VIDEO_APPLICATION_SCENARIO_TYPE scenarioType) {
@@ -1907,10 +1941,12 @@ int RtcEngineExBridge::setVideoEncoderConfigurationEx(const agora::rtc::VideoEnc
     return _engine->setVideoEncoderConfigurationEx(config, connection);
 }
 
-int RtcEngineExBridge::setupRemoteVideoEx(const agora::rtc::VideoCanvas &canvas,
+int RtcEngineExBridge::setupRemoteVideoEx(const VideoTextureCanvas &canvas,
                                           const agora::rtc::RtcConnection &connection) {
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
-    return _engine->setupRemoteVideoEx(canvas, connection);
+    auto *manager = videoTextureManager();
+    if (manager == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
+    return manager->setupRemoteVideoEx(canvas, connection);
 }
 
 int RtcEngineExBridge::muteRemoteAudioStreamEx(agora::rtc::uid_t uid, bool mute,
