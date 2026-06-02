@@ -24,6 +24,4 @@ export interface IAudioDeviceCollection {
     setApplicationMute(mute: boolean): Promise<number>;
 
     isApplicationMute(): Promise<{ mute: boolean; errorCode: number }>;
-
-    release(): Promise<void>;
 }

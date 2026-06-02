@@ -431,6 +431,10 @@ public:
     MockIMediaPlayerCacheManager* mockCacheManager_ = new MockIMediaPlayerCacheManager();
     MockIScreenCaptureSourceList mockScreenCaptureSourceList_;
 
+    // Stored last created mock objects for callback testing
+    agora_refptr<IMediaPlayer> mockMediaPlayer_;
+    agora_refptr<IMediaRecorder> mockMediaRecorder_;
+
 private:
     MockIRtcEngineEx() = default;
     ~MockIRtcEngineEx() override = default;

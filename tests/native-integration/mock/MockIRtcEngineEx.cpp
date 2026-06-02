@@ -873,11 +873,13 @@ int MockIRtcEngineEx::stopAudioRecording() {
 agora_refptr<IMediaPlayer> MockIRtcEngineEx::createMediaPlayer() {
     int id = ++nextMediaPlayerId_;
     auto* mock = new MockIMediaPlayer(id);
+    mockMediaPlayer_ = agora_refptr<IMediaPlayer>(mock);
     appendLog("createMediaPlayer", "{}");
-    return agora_refptr<IMediaPlayer>(mock);
+    return mockMediaPlayer_;
 }
 
 int MockIRtcEngineEx::destroyMediaPlayer(agora_refptr<IMediaPlayer> media_player) {
+    mockMediaPlayer_ = nullptr;
     appendLog("destroyMediaPlayer", "{}");
     return 0;
 }
@@ -885,11 +887,13 @@ int MockIRtcEngineEx::destroyMediaPlayer(agora_refptr<IMediaPlayer> media_player
 agora_refptr<IMediaRecorder> MockIRtcEngineEx::createMediaRecorder(const RecorderStreamInfo& info) {
     int id = ++nextMediaRecorderId_;
     auto* mock = new MockIMediaRecorder(id);
+    mockMediaRecorder_ = agora_refptr<IMediaRecorder>(mock);
     appendLog("createMediaRecorder", "{}");
-    return agora_refptr<IMediaRecorder>(mock);
+    return mockMediaRecorder_;
 }
 
 int MockIRtcEngineEx::destroyMediaRecorder(agora_refptr<IMediaRecorder> mediaRecorder) {
+    mockMediaRecorder_ = nullptr;
     appendLog("destroyMediaRecorder", "{}");
     return 0;
 }

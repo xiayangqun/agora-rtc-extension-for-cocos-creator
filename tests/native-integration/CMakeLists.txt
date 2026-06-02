@@ -161,6 +161,8 @@ if(NPM_CMD)
       ${TS_SOURCE_DIR}/main.ts
       ${TS_SOURCE_DIR}/call-api.ts
       ${TS_SOURCE_DIR}/callback.ts
+      ${TS_SOURCE_DIR}/sub-api.ts
+      ${TS_SOURCE_DIR}/sub-callback.ts
       ${TS_SOURCE_DIR}/test-framework.ts
       ${AGORA_RTC_INTERFACE_TS}
       ${AGORA_RTC_TYPES_TS}

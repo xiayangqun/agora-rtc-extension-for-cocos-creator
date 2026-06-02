@@ -9,6 +9,7 @@ import { TestRunner } from "./test-framework";
 import { CallApiTestSuite } from "./call-api";
 import { CallbackTestSuite } from "./callback";
 import { SubApiTestSuite } from "./sub-api";
+import { SubCallbackTestSuite } from "./sub-callback";
 
 declare const cc: any;
 
@@ -21,6 +22,7 @@ async function main(): Promise<void> {
     runner.addTestSuite(new CallApiTestSuite());
     runner.addTestSuite(new CallbackTestSuite());
     runner.addTestSuite(new SubApiTestSuite());
+    runner.addTestSuite(new SubCallbackTestSuite());
 
     await runner.runAll();
 }

@@ -64,7 +64,7 @@ public:
     int initialize(base::IAgoraService*) override { return 0; }
     int getMediaPlayerId() const override;
     int open(const char* url, int64_t startPos) override;
-    int openWithMediaSource(const media::base::MediaSource&) override { return 0; }
+    int openWithMediaSource(const media::base::MediaSource& source) override;
     int play() override;
     int pause() override;
     int stop() override;
@@ -119,6 +119,10 @@ public:
     int setSpatialAudioParams(const SpatialAudioParams& params) override;
     int setSoundPositionParams(float pan, float gain) override;
     int getAudioBufferDelay(int32_t& delayMs) override;
+
+    // Stored observer for callback testing
+    IMediaPlayerSourceObserver* playerSourceObserver{nullptr};
+
 private:
     int id_;
 };
@@ -130,8 +134,41 @@ public:
     int setMediaRecorderObserver(media::IMediaRecorderObserver* callback) override;
     int startRecording(const media::MediaRecorderConfiguration& config) override;
     int stopRecording() override;
+
+    // Stored observer for callback testing
+    media::IMediaRecorderObserver* recorderObserver{nullptr};
+
 private:
     int id_;
+};
+
+// ─── MockIAudioDeviceCollection ──────────────────────────────────────────
+class MockIAudioDeviceCollection : public IAudioDeviceCollection {
+public:
+    MockIAudioDeviceCollection() = default;
+    int getCount() override;
+    int getDevice(int index, char deviceName[MAX_DEVICE_ID_LENGTH], char deviceId[MAX_DEVICE_ID_LENGTH]) override;
+    int getDevice(int index, char deviceName[MAX_DEVICE_ID_LENGTH], char deviceTypeName[MAX_DEVICE_ID_LENGTH],
+                  char deviceId[MAX_DEVICE_ID_LENGTH]) override;
+    int setDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) override;
+    int getDefaultDevice(char deviceName[MAX_DEVICE_ID_LENGTH], char deviceId[MAX_DEVICE_ID_LENGTH]) override;
+    int getDefaultDevice(char deviceName[MAX_DEVICE_ID_LENGTH], char deviceTypeName[MAX_DEVICE_ID_LENGTH],
+                         char deviceId[MAX_DEVICE_ID_LENGTH]) override;
+    int setApplicationVolume(int volume) override;
+    int getApplicationVolume(int &volume) override;
+    int setApplicationMute(bool mute) override;
+    int isApplicationMute(bool &mute) override;
+    void release() override {}
+};
+
+// ─── MockIVideoDeviceCollection ──────────────────────────────────────────
+class MockIVideoDeviceCollection : public IVideoDeviceCollection {
+public:
+    MockIVideoDeviceCollection() = default;
+    int getCount() override;
+    int setDevice(const char deviceIdUTF8[MAX_DEVICE_ID_LENGTH]) override;
+    int getDevice(int index, char deviceNameUTF8[MAX_DEVICE_ID_LENGTH], char deviceIdUTF8[MAX_DEVICE_ID_LENGTH]) override;
+    void release() override {}
 };
 
 // ─── MockIAudioDeviceManager ─────────────────────────────────────────────
@@ -168,6 +205,10 @@ public:
     int followSystemRecordingDevice(bool enable) override;
     int followSystemLoopbackDevice(bool enable) override;
     void release() override {}
+
+    // Stored mock collections
+    MockIAudioDeviceCollection* playbackCollection_ = new MockIAudioDeviceCollection();
+    MockIAudioDeviceCollection* recordingCollection_ = new MockIAudioDeviceCollection();
 };
 
 // ─── MockIVideoDeviceManager ─────────────────────────────────────────────
@@ -182,6 +223,9 @@ public:
     int startDeviceTest(view_t hwnd) override { return 0; }
     int stopDeviceTest() override;
     void release() override {}
+
+    // Stored mock collection
+    MockIVideoDeviceCollection* videoCollection_ = new MockIVideoDeviceCollection();
 };
 
 // ─── MockIH265Transcoder ────────────────────────────────────────────────
@@ -193,6 +237,9 @@ public:
     int triggerTranscode(const char* token, const char* channel, uid_t uid) override;
     int registerTranscoderObserver(IH265TranscoderObserver* observer) override;
     int unregisterTranscoderObserver(IH265TranscoderObserver* observer) override;
+
+    // Stored observer for callback testing
+    IH265TranscoderObserver* transcoderObserver{nullptr};
 };
 
 // ─── MockILocalSpatialAudioEngine ────────────────────────────────────────
@@ -244,6 +291,9 @@ public:
     int getLyric(agora::util::AString& requestId, int64_t songCode, int32_t lyricType = 0) override;
     int getSongSimpleInfo(agora::util::AString& requestId, int64_t songCode) override;
     int getInternalSongCode(int64_t songCode, const char* jsonOption, int64_t& internalSongCode) override;
+
+    // Stored event handler for callback testing
+    IMusicContentCenterEventHandler* musicContentCenterEventHandler{nullptr};
 };
 
 // ─── MockIMediaPlayerCacheManager ────────────────────────────────────────

@@ -11,6 +11,7 @@
 
 #include "SeApi.h"
 #include "MockIRtcEngineEx.h"
+#include "IAgoraMediaPlayerSource.h"
 
 namespace {
 
@@ -801,6 +802,298 @@ static bool js_trigger_onExtensionStoppedWithContext(se::State &s) {
 SE_BIND_FUNC(js_trigger_onExtensionStoppedWithContext)
 
 // ============================================================================
+// Sub-Observer trigger functions
+// ============================================================================
+
+// --- MediaRecorderObserver triggers ---
+
+static bool js_trigger_onRecorderStateChanged(se::State &s) {
+    auto& m = mock();
+    auto* recorder = dynamic_cast<agora::rtc::MockIMediaRecorder*>(
+        m.mockMediaRecorder_.get());
+    if (recorder && recorder->recorderObserver) {
+        recorder->recorderObserver->onRecorderStateChanged("agora", 2,
+            agora::media::RECORDER_STATE_START, agora::media::RECORDER_REASON_NONE);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onRecorderStateChanged)
+
+static bool js_trigger_onRecorderInfoUpdated(se::State &s) {
+    auto& m = mock();
+    auto* recorder = dynamic_cast<agora::rtc::MockIMediaRecorder*>(
+        m.mockMediaRecorder_.get());
+    if (recorder && recorder->recorderObserver) {
+        agora::media::RecorderInfo info{};
+        info.fileSize = 2;
+        info.durationMs = 2;
+        recorder->recorderObserver->onRecorderInfoUpdated("agora", 2, info);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onRecorderInfoUpdated)
+
+// --- MediaPlayerSourceObserver triggers ---
+
+static bool js_trigger_onPlayerSourceStateChanged(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onPlayerSourceStateChanged(
+            agora::media::base::PLAYER_STATE_OPENING,
+            agora::media::base::PLAYER_REASON_NONE);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerSourceStateChanged)
+
+static bool js_trigger_onPositionChanged(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onPositionChanged(2, 2);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPositionChanged)
+
+static bool js_trigger_onPlayerEvent(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onPlayerEvent(
+            agora::media::base::PLAYER_EVENT_BUFFER_LOW, 2, "agora");
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerEvent)
+
+static bool js_trigger_onMetaData(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        uint8_t data[] = {97, 103}; // "ag"
+        player->playerSourceObserver->onMetaData(data, 2);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onMetaData)
+
+static bool js_trigger_onPlayBufferUpdated(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onPlayBufferUpdated(2);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayBufferUpdated)
+
+static bool js_trigger_onPreloadEvent(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onPreloadEvent("agora",
+            agora::media::base::PLAYER_PRELOAD_EVENT_COMPLETE);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPreloadEvent)
+
+static bool js_trigger_onCompleted(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onCompleted();
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onCompleted)
+
+static bool js_trigger_onAgoraCDNTokenWillExpire(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onAgoraCDNTokenWillExpire();
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onAgoraCDNTokenWillExpire)
+
+static bool js_trigger_onPlayerSrcInfoChanged(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        agora::media::base::SrcInfo from{};
+        from.bitrateInKbps = 2;
+        from.name = "agora";
+        agora::media::base::SrcInfo to{};
+        to.bitrateInKbps = 2;
+        to.name = "agora";
+        player->playerSourceObserver->onPlayerSrcInfoChanged(from, to);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerSrcInfoChanged)
+
+static bool js_trigger_onPlayerInfoUpdated(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        agora::media::base::PlayerUpdatedInfo info{};
+        info.internalPlayerUuid = "agora";
+        info.deviceId = "agora";
+        info.videoHeight = 2;
+        info.videoWidth = 2;
+        info.audioSampleRate = 2;
+        info.audioChannels = 2;
+        player->playerSourceObserver->onPlayerInfoUpdated(info);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerInfoUpdated)
+
+static bool js_trigger_onPlayerCacheStats(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        agora::media::base::CacheStatistics stats{};
+        stats.cacheSize = 2;
+        stats.downloadSize = 2;
+        player->playerSourceObserver->onPlayerCacheStats(stats);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerCacheStats)
+
+static bool js_trigger_onPlayerPlaybackStats(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        agora::media::base::PlayerPlaybackStats stats{};
+        stats.videoBitrateInKbps = 2;
+        stats.audioBitrateInKbps = 2;
+        stats.videoFps = 2;
+        stats.totalBitrateInKbps = 2;
+        player->playerSourceObserver->onPlayerPlaybackStats(stats);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPlayerPlaybackStats)
+
+static bool js_trigger_onAudioVolumeIndication(se::State &s) {
+    auto& m = mock();
+    auto* player = dynamic_cast<agora::rtc::MockIMediaPlayer*>(
+        m.mockMediaPlayer_.get());
+    if (player && player->playerSourceObserver) {
+        player->playerSourceObserver->onAudioVolumeIndication(2);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onAudioVolumeIndication)
+
+// --- H265TranscoderObserver triggers ---
+
+static bool js_trigger_onEnableTranscode(se::State &s) {
+    auto& m = mock();
+    if (m.mockH265Transcoder_ && m.mockH265Transcoder_->transcoderObserver) {
+        m.mockH265Transcoder_->transcoderObserver->onEnableTranscode(
+            agora::rtc::H265_TRANSCODE_RESULT_SUCCESS);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onEnableTranscode)
+
+static bool js_trigger_onQueryChannel(se::State &s) {
+    auto& m = mock();
+    if (m.mockH265Transcoder_ && m.mockH265Transcoder_->transcoderObserver) {
+        m.mockH265Transcoder_->transcoderObserver->onQueryChannel(
+            agora::rtc::H265_TRANSCODE_RESULT_SUCCESS, "agora", "agora");
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onQueryChannel)
+
+static bool js_trigger_onTriggerTranscode(se::State &s) {
+    auto& m = mock();
+    if (m.mockH265Transcoder_ && m.mockH265Transcoder_->transcoderObserver) {
+        m.mockH265Transcoder_->transcoderObserver->onTriggerTranscode(
+            agora::rtc::H265_TRANSCODE_RESULT_SUCCESS);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onTriggerTranscode)
+
+// --- MusicContentCenterEventHandler triggers ---
+
+static bool js_trigger_onMusicChartsResult(se::State &s) {
+    auto& m = mock();
+    if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        // Create a mock MusicChartCollection
+        // Since we can't easily create agora_refptr objects, we'll call with nullptr
+        // The test should verify the callback was called
+        m.mockMusicContentCenter_->musicContentCenterEventHandler->onMusicChartsResult(
+            "agora", nullptr, agora::rtc::kMusicContentCenterReasonOk);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onMusicChartsResult)
+
+static bool js_trigger_onMusicCollectionResult(se::State &s) {
+    auto& m = mock();
+    if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        m.mockMusicContentCenter_->musicContentCenterEventHandler->onMusicCollectionResult(
+            "agora", nullptr, agora::rtc::kMusicContentCenterReasonOk);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onMusicCollectionResult)
+
+static bool js_trigger_onLyricResult(se::State &s) {
+    auto& m = mock();
+    if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        m.mockMusicContentCenter_->musicContentCenterEventHandler->onLyricResult(
+            "agora", 2, "agora", agora::rtc::kMusicContentCenterReasonOk);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onLyricResult)
+
+static bool js_trigger_onSongSimpleInfoResult(se::State &s) {
+    auto& m = mock();
+    if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        m.mockMusicContentCenter_->musicContentCenterEventHandler->onSongSimpleInfoResult(
+            "agora", 2, "agora", agora::rtc::kMusicContentCenterReasonOk);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onSongSimpleInfoResult)
+
+static bool js_trigger_onPreLoadEvent(se::State &s) {
+    auto& m = mock();
+    if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        m.mockMusicContentCenter_->musicContentCenterEventHandler->onPreLoadEvent(
+            "agora", 2, 2, "agora",
+            agora::rtc::kPreloadStateCompleted,
+            agora::rtc::kMusicContentCenterReasonOk);
+    }
+    return true;
+}
+SE_BIND_FUNC(js_trigger_onPreLoadEvent)
+
+// ============================================================================
 // Log and utility functions
 // ============================================================================
 
@@ -942,6 +1235,38 @@ bool register_agora_trigger_events(se::Object *global) {
     testObj->defineFunction("triggerOnExtensionEventWithContext", _SE(js_trigger_onExtensionEventWithContext));
     testObj->defineFunction("triggerOnExtensionStartedWithContext", _SE(js_trigger_onExtensionStartedWithContext));
     testObj->defineFunction("triggerOnExtensionStoppedWithContext", _SE(js_trigger_onExtensionStoppedWithContext));
+    
+    // Sub-Observer trigger functions
+    // MediaRecorderObserver
+    testObj->defineFunction("triggerOnRecorderStateChanged", _SE(js_trigger_onRecorderStateChanged));
+    testObj->defineFunction("triggerOnRecorderInfoUpdated", _SE(js_trigger_onRecorderInfoUpdated));
+    
+    // MediaPlayerSourceObserver
+    testObj->defineFunction("triggerOnPlayerSourceStateChanged", _SE(js_trigger_onPlayerSourceStateChanged));
+    testObj->defineFunction("triggerOnPositionChanged", _SE(js_trigger_onPositionChanged));
+    testObj->defineFunction("triggerOnPlayerEvent", _SE(js_trigger_onPlayerEvent));
+    testObj->defineFunction("triggerOnMetaData", _SE(js_trigger_onMetaData));
+    testObj->defineFunction("triggerOnPlayBufferUpdated", _SE(js_trigger_onPlayBufferUpdated));
+    testObj->defineFunction("triggerOnPreloadEvent", _SE(js_trigger_onPreloadEvent));
+    testObj->defineFunction("triggerOnCompleted", _SE(js_trigger_onCompleted));
+    testObj->defineFunction("triggerOnAgoraCDNTokenWillExpire", _SE(js_trigger_onAgoraCDNTokenWillExpire));
+    testObj->defineFunction("triggerOnPlayerSrcInfoChanged", _SE(js_trigger_onPlayerSrcInfoChanged));
+    testObj->defineFunction("triggerOnPlayerInfoUpdated", _SE(js_trigger_onPlayerInfoUpdated));
+    testObj->defineFunction("triggerOnPlayerCacheStats", _SE(js_trigger_onPlayerCacheStats));
+    testObj->defineFunction("triggerOnPlayerPlaybackStats", _SE(js_trigger_onPlayerPlaybackStats));
+    testObj->defineFunction("triggerOnAudioVolumeIndication", _SE(js_trigger_onAudioVolumeIndication));
+    
+    // H265TranscoderObserver
+    testObj->defineFunction("triggerOnEnableTranscode", _SE(js_trigger_onEnableTranscode));
+    testObj->defineFunction("triggerOnQueryChannel", _SE(js_trigger_onQueryChannel));
+    testObj->defineFunction("triggerOnTriggerTranscode", _SE(js_trigger_onTriggerTranscode));
+    
+    // MusicContentCenterEventHandler
+    testObj->defineFunction("triggerOnMusicChartsResult", _SE(js_trigger_onMusicChartsResult));
+    testObj->defineFunction("triggerOnMusicCollectionResult", _SE(js_trigger_onMusicCollectionResult));
+    testObj->defineFunction("triggerOnLyricResult", _SE(js_trigger_onLyricResult));
+    testObj->defineFunction("triggerOnSongSimpleInfoResult", _SE(js_trigger_onSongSimpleInfoResult));
+    testObj->defineFunction("triggerOnPreLoadEvent", _SE(js_trigger_onPreLoadEvent));
     
     // Utility functions
     testObj->defineFunction("reset", _SE(js_trigger_reset));

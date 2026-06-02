@@ -25,6 +25,26 @@ int MockIMediaPlayer::open(const char* url, int64_t startPos) {
     MockLog::instance().appendLog("open", buf.GetString());
     return 0;
 }
+
+int MockIMediaPlayer::openWithMediaSource(const media::base::MediaSource& source) {
+    rapidjson::Document d; d.SetObject(); auto& a = d.GetAllocator();
+    { rapidjson::Value v; v.SetString(source.url ? source.url : "", a); d.AddMember("url", v, a); }
+    { rapidjson::Value v; v.SetString(source.uri ? source.uri : "", a); d.AddMember("uri", v, a); }
+    d.AddMember("startPos", static_cast<int64_t>(source.startPos), a);
+    d.AddMember("autoPlay", source.autoPlay, a);
+    d.AddMember("enableCache", source.enableCache, a);
+    d.AddMember("enableMultiAudioTrack", source.enableMultiAudioTrack, a);
+    if (source.isAgoraSource.has_value()) {
+        d.AddMember("isAgoraSource", source.isAgoraSource.value(), a);
+    }
+    if (source.isLiveSource.has_value()) {
+        d.AddMember("isLiveSource", source.isLiveSource.value(), a);
+    }
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("openWithMediaSource", buf.GetString());
+    return 0;
+}
+
 int MockIMediaPlayer::play() { MockLog::instance().appendLog("play", "{}"); return 0; }
 int MockIMediaPlayer::pause() { MockLog::instance().appendLog("pause", "{}"); return 0; }
 int MockIMediaPlayer::stop() { MockLog::instance().appendLog("stop", "{}"); return 0; }
@@ -162,10 +182,12 @@ int MockIMediaPlayer::adjustPublishSignalVolume(int volume) {
 int MockIMediaPlayer::getPublishSignalVolume(int& volume) { volume = 0; MockLog::instance().appendLog("getPublishSignalVolume", "{}"); return 0; }
 
 int MockIMediaPlayer::registerPlayerSourceObserver(IMediaPlayerSourceObserver* observer) {
+    playerSourceObserver = observer;
     MockLog::instance().appendLog("registerPlayerSourceObserver", "{}");
     return 0;
 }
 int MockIMediaPlayer::unregisterPlayerSourceObserver(IMediaPlayerSourceObserver* observer) {
+    playerSourceObserver = nullptr;
     MockLog::instance().appendLog("unregisterPlayerSourceObserver", "{}");
     return 0;
 }
@@ -291,6 +313,7 @@ int MockIMediaPlayer::getAudioBufferDelay(int32_t& delayMs) { delayMs = 0; MockL
 // ═══════════════════════════════════════════════════════════════════════════
 
 int MockIMediaRecorder::setMediaRecorderObserver(media::IMediaRecorderObserver* callback) {
+    recorderObserver = callback;
     MockLog::instance().appendLog("setMediaRecorderObserver", "{}");
     return 0;
 }
@@ -310,11 +333,121 @@ int MockIMediaRecorder::startRecording(const media::MediaRecorderConfiguration& 
 int MockIMediaRecorder::stopRecording() { MockLog::instance().appendLog("stopRecording", "{}"); return 0; }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// MockIAudioDeviceCollection
+// ═══════════════════════════════════════════════════════════════════════════
+
+int MockIAudioDeviceCollection::getCount() {
+    MockLog::instance().appendLog("getCount", "{}");
+    return 0;
+}
+
+int MockIAudioDeviceCollection::getDevice(int index, char deviceName[MAX_DEVICE_ID_LENGTH], char deviceId[MAX_DEVICE_ID_LENGTH]) {
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("index", index, d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("getDevice", buf.GetString());
+    if (deviceName) strcpy(deviceName, "mock-audio-device");
+    if (deviceId) strcpy(deviceId, "mock-audio-device-id");
+    return 0;
+}
+
+int MockIAudioDeviceCollection::getDevice(int index, char deviceName[MAX_DEVICE_ID_LENGTH], char deviceTypeName[MAX_DEVICE_ID_LENGTH],
+                                          char deviceId[MAX_DEVICE_ID_LENGTH]) {
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("index", index, d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("getDeviceEx", buf.GetString());
+    if (deviceName) strcpy(deviceName, "mock-audio-device");
+    if (deviceTypeName) strcpy(deviceTypeName, "mock-audio-device-type");
+    if (deviceId) strcpy(deviceId, "mock-audio-device-id");
+    return 0;
+}
+
+int MockIAudioDeviceCollection::setDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) {
+    rapidjson::Document d; d.SetObject(); auto& a = d.GetAllocator();
+    { rapidjson::Value v; v.SetString(deviceId ? deviceId : "", a); d.AddMember("deviceId", v, a); }
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("setDevice", buf.GetString());
+    return 0;
+}
+
+int MockIAudioDeviceCollection::getDefaultDevice(char deviceName[MAX_DEVICE_ID_LENGTH], char deviceId[MAX_DEVICE_ID_LENGTH]) {
+    MockLog::instance().appendLog("getDefaultDevice", "{}");
+    if (deviceName) strcpy(deviceName, "mock-default-audio-device");
+    if (deviceId) strcpy(deviceId, "mock-default-audio-device-id");
+    return 0;
+}
+
+int MockIAudioDeviceCollection::getDefaultDevice(char deviceName[MAX_DEVICE_ID_LENGTH], char deviceTypeName[MAX_DEVICE_ID_LENGTH],
+                                                  char deviceId[MAX_DEVICE_ID_LENGTH]) {
+    MockLog::instance().appendLog("getDefaultDeviceEx", "{}");
+    if (deviceName) strcpy(deviceName, "mock-default-audio-device");
+    if (deviceTypeName) strcpy(deviceTypeName, "mock-default-audio-device-type");
+    if (deviceId) strcpy(deviceId, "mock-default-audio-device-id");
+    return 0;
+}
+
+int MockIAudioDeviceCollection::setApplicationVolume(int volume) {
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("volume", volume, d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("setApplicationVolume", buf.GetString());
+    return 0;
+}
+
+int MockIAudioDeviceCollection::getApplicationVolume(int &volume) {
+    MockLog::instance().appendLog("getApplicationVolume", "{}");
+    volume = 50;
+    return 0;
+}
+
+int MockIAudioDeviceCollection::setApplicationMute(bool mute) {
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("mute", mute, d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("setApplicationMute", buf.GetString());
+    return 0;
+}
+
+int MockIAudioDeviceCollection::isApplicationMute(bool &mute) {
+    MockLog::instance().appendLog("isApplicationMute", "{}");
+    mute = false;
+    return 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// MockIVideoDeviceCollection
+// ═══════════════════════════════════════════════════════════════════════════
+
+int MockIVideoDeviceCollection::getCount() {
+    MockLog::instance().appendLog("getCount", "{}");
+    return 0;
+}
+
+int MockIVideoDeviceCollection::setDevice(const char deviceIdUTF8[MAX_DEVICE_ID_LENGTH]) {
+    rapidjson::Document d; d.SetObject(); auto& a = d.GetAllocator();
+    { rapidjson::Value v; v.SetString(deviceIdUTF8 ? deviceIdUTF8 : "", a); d.AddMember("deviceId", v, a); }
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("setDevice", buf.GetString());
+    return 0;
+}
+
+int MockIVideoDeviceCollection::getDevice(int index, char deviceNameUTF8[MAX_DEVICE_ID_LENGTH], char deviceIdUTF8[MAX_DEVICE_ID_LENGTH]) {
+    rapidjson::Document d; d.SetObject();
+    d.AddMember("index", index, d.GetAllocator());
+    rapidjson::StringBuffer buf; rapidjson::Writer<rapidjson::StringBuffer> w(buf); d.Accept(w);
+    MockLog::instance().appendLog("getDevice", buf.GetString());
+    if (deviceNameUTF8) strcpy(deviceNameUTF8, "mock-video-device");
+    if (deviceIdUTF8) strcpy(deviceIdUTF8, "mock-video-device-id");
+    return 0;
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // MockIAudioDeviceManager
 // ═══════════════════════════════════════════════════════════════════════════
 
-IAudioDeviceCollection* MockIAudioDeviceManager::enumeratePlaybackDevices() { MockLog::instance().appendLog("enumeratePlaybackDevices", "{}"); return nullptr; }
-IAudioDeviceCollection* MockIAudioDeviceManager::enumerateRecordingDevices() { MockLog::instance().appendLog("enumerateRecordingDevices", "{}"); return nullptr; }
+IAudioDeviceCollection* MockIAudioDeviceManager::enumeratePlaybackDevices() { MockLog::instance().appendLog("enumeratePlaybackDevices", "{}"); return playbackCollection_; }
+IAudioDeviceCollection* MockIAudioDeviceManager::enumerateRecordingDevices() { MockLog::instance().appendLog("enumerateRecordingDevices", "{}"); return recordingCollection_; }
 
 int MockIAudioDeviceManager::setPlaybackDevice(const char deviceId[MAX_DEVICE_ID_LENGTH]) {
     rapidjson::Document d; d.SetObject(); auto& a = d.GetAllocator();
@@ -426,7 +559,7 @@ int MockIAudioDeviceManager::followSystemLoopbackDevice(bool enable) {
 // MockIVideoDeviceManager
 // ═══════════════════════════════════════════════════════════════════════════
 
-IVideoDeviceCollection* MockIVideoDeviceManager::enumerateVideoDevices() { MockLog::instance().appendLog("enumerateVideoDevices", "{}"); return nullptr; }
+IVideoDeviceCollection* MockIVideoDeviceManager::enumerateVideoDevices() { MockLog::instance().appendLog("enumerateVideoDevices", "{}"); return videoCollection_; }
 int MockIVideoDeviceManager::setDevice(const char deviceIdUTF8[MAX_DEVICE_ID_LENGTH]) {
     rapidjson::Document d; d.SetObject(); auto& a = d.GetAllocator();
     { rapidjson::Value v; v.SetString(deviceIdUTF8 ? deviceIdUTF8 : "", a); d.AddMember("deviceId", v, a); }
@@ -483,8 +616,16 @@ int MockIH265Transcoder::triggerTranscode(const char* token, const char* channel
     MockLog::instance().appendLog("triggerTranscode", buf.GetString());
     return 0;
 }
-int MockIH265Transcoder::registerTranscoderObserver(IH265TranscoderObserver*) { MockLog::instance().appendLog("registerTranscoderObserver", "{}"); return 0; }
-int MockIH265Transcoder::unregisterTranscoderObserver(IH265TranscoderObserver*) { MockLog::instance().appendLog("unregisterTranscoderObserver", "{}"); return 0; }
+int MockIH265Transcoder::registerTranscoderObserver(IH265TranscoderObserver* observer) {
+    transcoderObserver = observer;
+    MockLog::instance().appendLog("registerTranscoderObserver", "{}");
+    return 0;
+}
+int MockIH265Transcoder::unregisterTranscoderObserver(IH265TranscoderObserver* observer) {
+    transcoderObserver = nullptr;
+    MockLog::instance().appendLog("unregisterTranscoderObserver", "{}");
+    return 0;
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // MockILocalSpatialAudioEngine
@@ -624,8 +765,16 @@ int MockIMusicContentCenter::renewToken(const char* token) {
     MockLog::instance().appendLog("renewToken", buf.GetString());
     return 0;
 }
-int MockIMusicContentCenter::registerEventHandler(IMusicContentCenterEventHandler*) { MockLog::instance().appendLog("registerEventHandler", "{}"); return 0; }
-int MockIMusicContentCenter::unregisterEventHandler() { MockLog::instance().appendLog("unregisterEventHandler", "{}"); return 0; }
+int MockIMusicContentCenter::registerEventHandler(IMusicContentCenterEventHandler* eventHandler) {
+    musicContentCenterEventHandler = eventHandler;
+    MockLog::instance().appendLog("registerEventHandler", "{}");
+    return 0;
+}
+int MockIMusicContentCenter::unregisterEventHandler() {
+    musicContentCenterEventHandler = nullptr;
+    MockLog::instance().appendLog("unregisterEventHandler", "{}");
+    return 0;
+}
 agora_refptr<IMusicPlayer> MockIMusicContentCenter::createMusicPlayer() { MockLog::instance().appendLog("createMusicPlayer", "{}"); return nullptr; }
 int MockIMusicContentCenter::destroyMusicPlayer(agora_refptr<IMusicPlayer>) { MockLog::instance().appendLog("destroyMusicPlayer", "{}"); return 0; }
 int MockIMusicContentCenter::getMusicCharts(agora::util::AString& requestId) { setMockAString(requestId, "mock-request-id"); MockLog::instance().appendLog("getMusicCharts", "{}"); return 0; }

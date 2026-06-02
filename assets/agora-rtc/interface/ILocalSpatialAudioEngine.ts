@@ -2,8 +2,6 @@ import type { RemoteVoicePositionInfo, SpatialAudioZone } from "../types/AgoraSp
 import type { RtcConnection } from "../types/AgoraRtcEngineEx";
 
 export interface ILocalSpatialAudioEngine {
-    dispose(): Promise<void>;
-
     updateRemotePosition(uid: number, posInfo: RemoteVoicePositionInfo): Promise<number>;
 
     updateRemotePositionEx(uid: number, posInfo: RemoteVoicePositionInfo, connection: RtcConnection): Promise<number>;
