@@ -11,7 +11,18 @@
 
 namespace {
 constexpr int BYTES_PER_RGBA_PIXEL = 4;
+constexpr int MAX_VIDEO_TEXTURE_DEBUG_LOGS = 8;
 constexpr char VIDEO_TEXTURE_FLUSH_KEY[] = "AgoraVideoTextureManagerFlush";
+
+void initializePlaceholderTexture(cc::Texture2D *texture) {
+    if (!texture) { return; }
+
+    // Cocos may render the Sprite before the first video frame arrives; keep its sampler valid.
+    static constexpr uint8_t PLACEHOLDER_RGBA[] = {0, 0, 0, 255};
+    texture->reset({1, 1, cc::Texture2D::PixelFormat::RGBA8888, 1, 0, 1000});
+    texture->uploadData(PLACEHOLDER_RGBA);
+    texture->checkTextureLoaded();
+}
 
 bool isCameraSource(agora::rtc::VIDEO_SOURCE_TYPE sourceType) {
     using agora::rtc::VIDEO_SOURCE_CAMERA;
@@ -41,6 +52,20 @@ VideoTextureManager::VideoTextureManager(agora::media::IMediaEngine *mediaEngine
 
 VideoTextureManager::~VideoTextureManager() {
     release();
+}
+
+const char *VideoTextureManager::bindingKindName(BindingKind kind) {
+    switch (kind) {
+        case BindingKind::Local:
+            return "Local";
+        case BindingKind::MediaPlayer:
+            return "MediaPlayer";
+        case BindingKind::RemoteMain:
+            return "RemoteMain";
+        case BindingKind::RemoteEx:
+            return "RemoteEx";
+    }
+    return "Unknown";
 }
 
 std::string VideoTextureManager::localKey(const VideoTextureCanvas &canvas) {
@@ -105,11 +130,21 @@ int VideoTextureManager::bind(const std::string &key, const VideoTextureCanvas &
     entry->texture.reset(canvas.texture);
     entry->onAspectRatioChanged = canvas.onAspectRatioChanged;
     retainCallback(entry->onAspectRatioChanged);
+    initializePlaceholderTexture(entry->texture.get());
     configureTexture(entry->texture.get());
+    entry->textureWidth = 1;
+    entry->textureHeight = 1;
     if (connection) {
         entry->channelId = connection->channelId ? connection->channelId : "";
         entry->localUid = static_cast<int>(connection->localUid);
     }
+
+    fprintf(stderr,
+            "VideoTextureManager: bind key=%s kind=%s uid=%u sourceType=%d mediaPlayerId=%d texture=%p callback=%p "
+            "channel=%s localUid=%d\n",
+            key.c_str(), bindingKindName(kind), static_cast<unsigned>(canvas.uid), static_cast<int>(canvas.sourceType),
+            canvas.mediaPlayerId, static_cast<void *>(canvas.texture), static_cast<void *>(canvas.onAspectRatioChanged),
+            connection && connection->channelId ? connection->channelId : "", connection ? static_cast<int>(connection->localUid) : 0);
 
     std::shared_ptr<BindingEntry> oldEntry;
     {
@@ -158,7 +193,19 @@ void VideoTextureManager::release() {
 
 bool VideoTextureManager::onCaptureVideoFrame(agora::rtc::VIDEO_SOURCE_TYPE sourceType, VideoFrame &videoFrame) {
     auto entry = findLocalEntry(sourceType);
-    if (entry) { handleFrame(entry, videoFrame); }
+    if (entry) {
+        handleFrame(entry, videoFrame);
+    } else {
+        static std::atomic<int> noEntryLogCount{0};
+        const int logIndex = noEntryLogCount.fetch_add(1);
+        if (logIndex < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
+            fprintf(stderr,
+                    "VideoTextureManager: onCapture no local entry sourceType=%d frameType=%d size=%dx%d stride=%d "
+                    "buffer=%p\n",
+                    static_cast<int>(sourceType), static_cast<int>(videoFrame.type), videoFrame.width, videoFrame.height,
+                    videoFrame.yStride, static_cast<void *>(videoFrame.yBuffer));
+        }
+    }
     return true;
 }
 
@@ -249,6 +296,18 @@ std::vector<std::shared_ptr<VideoTextureManager::BindingEntry>> VideoTextureMana
 void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry, const VideoFrame &frame) {
     if (_released.load() || !entry || frame.type != agora::media::base::VIDEO_PIXEL_RGBA || !frame.yBuffer ||
         frame.width <= 0 || frame.height <= 0) {
+        if (entry) {
+            std::lock_guard<std::mutex> lock(entry->mutex);
+            if (entry->rejectedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
+                ++entry->rejectedFrameLogCount;
+                fprintf(stderr,
+                        "VideoTextureManager: reject frame key=%s kind=%s released=%d texture=%p frameType=%d size=%dx%d "
+                        "stride=%d buffer=%p managerReleased=%d\n",
+                        entry->key.c_str(), bindingKindName(entry->kind), entry->released ? 1 : 0,
+                        static_cast<void *>(entry->texture.get()), static_cast<int>(frame.type), frame.width, frame.height,
+                        frame.yStride, static_cast<void *>(frame.yBuffer), _released.load() ? 1 : 0);
+            }
+        }
         return;
     }
 
@@ -268,6 +327,15 @@ void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry
         } else if (reportedStride >= rowBytes) {
             sourceRowBytes = reportedStride;
         } else {
+            std::lock_guard<std::mutex> lock(entry->mutex);
+            if (entry->rejectedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
+                ++entry->rejectedFrameLogCount;
+                fprintf(stderr,
+                        "VideoTextureManager: reject stride key=%s kind=%s frameType=%d size=%dx%d stride=%d rowBytes=%zu "
+                        "frameBytes=%zu buffer=%p\n",
+                        entry->key.c_str(), bindingKindName(entry->kind), static_cast<int>(frame.type), frame.width,
+                        frame.height, frame.yStride, rowBytes, frameBytes, static_cast<void *>(frame.yBuffer));
+            }
             return;
         }
     }
@@ -275,6 +343,15 @@ void VideoTextureManager::handleFrame(const std::shared_ptr<BindingEntry> &entry
     {
         std::lock_guard<std::mutex> lock(entry->mutex);
         if (entry->released || !entry->texture) { return; }
+        if (entry->acceptedFrameLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
+            ++entry->acceptedFrameLogCount;
+            fprintf(stderr,
+                    "VideoTextureManager: accept frame key=%s kind=%s sourceType=%d uid=%u frameType=%d size=%dx%d "
+                    "stride=%d rowBytes=%zu sourceRowBytes=%zu texture=%p\n",
+                    entry->key.c_str(), bindingKindName(entry->kind), static_cast<int>(entry->sourceType),
+                    static_cast<unsigned>(entry->uid), static_cast<int>(frame.type), frame.width, frame.height,
+                    frame.yStride, rowBytes, sourceRowBytes, static_cast<void *>(entry->texture.get()));
+        }
         entry->pixels.resize(frameBytes);
         if (sourceRowBytes != rowBytes) {
             for (int y = 0; y < frame.height; ++y) {
@@ -343,6 +420,13 @@ void VideoTextureManager::uploadEntryOnCocosThread(const std::shared_ptr<Binding
         pixels = entry->pixels;
         width = entry->width;
         height = entry->height;
+        if (entry->uploadLogCount < MAX_VIDEO_TEXTURE_DEBUG_LOGS) {
+            ++entry->uploadLogCount;
+            fprintf(stderr,
+                    "VideoTextureManager: upload dirty key=%s kind=%s size=%dx%d bytes=%zu texture=%p textureSize=%dx%d\n",
+                    entry->key.c_str(), bindingKindName(entry->kind), width, height, pixels.size(),
+                    static_cast<void *>(texture.get()), entry->textureWidth, entry->textureHeight);
+        }
         entry->dirty = false;
     }
 
@@ -363,15 +447,13 @@ void VideoTextureManager::uploadEntryOnCocosThread(const std::shared_ptr<Binding
                 entry->lastAspectWidth = width;
                 entry->lastAspectHeight = height;
                 aspectCallback = entry->onAspectRatioChanged;
-                retainCallback(aspectCallback);
-                aspectChanged = true;
+                aspectChanged = aspectCallback != nullptr;
             }
         }
     }
 
     if (aspectChanged) {
         callAspectRatioChanged(aspectCallback, width, height);
-        releaseCallback(aspectCallback);
     }
 }
 
@@ -412,11 +494,13 @@ void VideoTextureManager::releaseEntryResources(const std::shared_ptr<BindingEnt
 }
 
 void VideoTextureManager::callAspectRatioChanged(se::Object *callback, int width, int height) {
+    if (!callback) { return; }
     auto *scriptEngine = se::ScriptEngine::getInstance();
     if (!scriptEngine || !scriptEngine->isValid()) { return; }
-    if (!callback || !callback->isFunction()) { return; }
 
     se::AutoHandleScope handleScope;
+    if (!callback->isFunction()) { return; }
+
     se::ValueArray args;
     args.emplace_back(width);
     args.emplace_back(height);

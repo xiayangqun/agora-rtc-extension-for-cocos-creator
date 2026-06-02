@@ -76,11 +76,15 @@ private:
         int textureHeight{0};
         int lastAspectWidth{0};
         int lastAspectHeight{0};
+        int acceptedFrameLogCount{0};
+        int rejectedFrameLogCount{0};
+        int uploadLogCount{0};
         se::Object *onAspectRatioChanged{nullptr};
         bool dirty{false};
         bool released{false};
     };
 
+    static const char *bindingKindName(BindingKind kind);
     static std::string localKey(const VideoTextureCanvas &canvas);
     static std::string remoteKey(agora::rtc::uid_t uid);
     static std::string remoteKey(agora::rtc::uid_t uid, const agora::rtc::RtcConnection &connection);

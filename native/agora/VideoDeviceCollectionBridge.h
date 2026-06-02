@@ -5,8 +5,8 @@
 
 struct GetVideoDeviceInfoResult {
     int errorCode;
-    std::string deviceName;
-    std::string deviceId;
+    std::string deviceNameUTF8;
+    std::string deviceIdUTF8;
 };
 
 class VideoDeviceCollectionBridge {

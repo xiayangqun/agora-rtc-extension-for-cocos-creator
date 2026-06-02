@@ -59,7 +59,7 @@
 
 
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
-#include "bindings/manual/RtcNativeValueToSe.h"
+#include "bindings/manual/RtcSeValueToNative.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"
@@ -16451,8 +16451,8 @@ static bool js_VideoDeviceCollectionBridge_getDevice(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("deviceName", se::Value((&result)->deviceName));
-    obj->setProperty("deviceId", se::Value((&result)->deviceId));
+    obj->setProperty("deviceNameUTF8", se::Value((&result)->deviceNameUTF8));
+    obj->setProperty("deviceIdUTF8", se::Value((&result)->deviceIdUTF8));
     s.rval().setObject(obj);
     
     
@@ -16573,7 +16573,7 @@ static bool js_VideoDeviceManagerBridge_getDevice(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("deviceId", se::Value((&result)->deviceId));
+    obj->setProperty("deviceIdUTF8", se::Value((&result)->deviceIdUTF8));
     s.rval().setObject(obj);
     
     

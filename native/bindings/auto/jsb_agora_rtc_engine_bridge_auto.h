@@ -35,7 +35,7 @@
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
-#include "bindings/manual/RtcNativeValueToSe.h"
+#include "bindings/manual/RtcSeValueToNative.h"
 #include "agora/RtcNativeValueToSe.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"

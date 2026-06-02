@@ -7,7 +7,7 @@
 
 struct GetVideoDeviceResult {
     int errorCode;
-    std::string deviceId;
+    std::string deviceIdUTF8;
 };
 
 struct VideoDeviceCapabilityResult {

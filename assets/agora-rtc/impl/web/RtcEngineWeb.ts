@@ -529,8 +529,6 @@ export class RtcEngineWeb implements IRtcEngineEx {
                 const info = infoOrUid as string;
                 const uid = uidOrOptions as number;
                 const options: ChannelMediaOptions = {
-                    publishCameraTrack: true,
-                    publishMicrophoneTrack: true,
                     autoSubscribeVideo: true,
                     autoSubscribeAudio: true,
                 };

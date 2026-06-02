@@ -179,5 +179,32 @@ bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Valu
 bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &to, se::Object *ctx);
+
+// ── nativevalue_to_se overloads for bridge result structs ──────────────────
+// These must be in the header (not anonymous namespace) so both the auto-generated
+// and manual binding translation units can see them.
+#include "agora/AudioDeviceManagerBridge.h"
+#include "agora/VideoDeviceManagerBridge.h"
+#include "agora/MusicContentCenterBridge.h"
+#include "agora/ScreenCaptureSourceListBridge.h"
+
+// Bridge result struct nativevalue_to_se overloads (global namespace)
+bool nativevalue_to_se(const GetPlaybackDeviceResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetPlaybackDeviceInfoResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetPlaybackDeviceInfoExResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetPlaybackDeviceVolumeResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetPlaybackDeviceMuteResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetRecordingDeviceResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetRecordingDeviceInfoResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetRecordingDeviceInfoExResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetRecordingDeviceVolumeResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetRecordingDeviceMuteResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetLoopbackDeviceResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetVideoDeviceResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetCachesResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const MCCRequestResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetInternalSongCodeResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::MusicCacheInfo &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const std::vector<agora::rtc::MusicCacheInfo> &from, se::Value &to, se::Object *ctx);
 // USER CODE BLOCK END
 // AUTO-GENERATED DECLARATIONS END

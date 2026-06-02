@@ -8,7 +8,7 @@
 #pragma once
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions.h"
-#include "bindings/manual/RtcNativeValueToSe.h"
+#include "bindings/manual/RtcSeValueToNative.h"
 #include "agora/RtcNativeValueToSe.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
@@ -28,7 +28,7 @@
 
 %{
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
-#include "bindings/manual/RtcNativeValueToSe.h"
+#include "bindings/manual/RtcSeValueToNative.h"
 #include "agora/RtcEngineExBridge.h"
 #include "agora/AudioDeviceCollectionBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"

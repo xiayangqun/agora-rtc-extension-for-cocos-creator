@@ -31,8 +31,8 @@ int VideoDeviceCollectionBridge::setDevice(const std::string &deviceId) {
 
 GetVideoDeviceInfoResult VideoDeviceCollectionBridge::getDevice(int index) {
     if (!_collection) { return {-agora::ERR_INVALID_ARGUMENT, "", ""}; }
-    char deviceName[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    int ret = _collection->getDevice(index, deviceName, deviceId);
-    return {ret, std::string(deviceName), std::string(deviceId)};
+    char deviceNameUTF8[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+    char deviceIdUTF8[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+    int ret = _collection->getDevice(index, deviceNameUTF8, deviceIdUTF8);
+    return {ret, std::string(deviceNameUTF8), std::string(deviceIdUTF8)};
 }

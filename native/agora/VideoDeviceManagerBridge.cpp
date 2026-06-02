@@ -45,9 +45,9 @@ int VideoDeviceManagerBridge::setDevice(const std::string &deviceId) {
 
 GetVideoDeviceResult VideoDeviceManagerBridge::getDevice() {
     if (!_videoDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, ""}; }
-    char deviceId[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
-    int ret = _videoDeviceManager->getDevice(deviceId);
-    return {ret, std::string(deviceId)};
+    char deviceIdUTF8[agora::rtc::MAX_DEVICE_ID_LENGTH] = {0};
+    int ret = _videoDeviceManager->getDevice(deviceIdUTF8);
+    return {ret, std::string(deviceIdUTF8)};
 }
 
 int VideoDeviceManagerBridge::numberOfCapabilities(const std::string &deviceId) {

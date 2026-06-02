@@ -522,7 +522,7 @@
 %typemap(out) GetVideoDeviceResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("deviceId", se::Value($1.deviceId));
+    obj->setProperty("deviceIdUTF8", se::Value($1.deviceIdUTF8));
     s.rval().setObject(obj);
 %}
 
@@ -544,7 +544,7 @@
 %typemap(out) GetVideoDeviceInfoResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("deviceName", se::Value($1.deviceName));
-    obj->setProperty("deviceId", se::Value($1.deviceId));
+    obj->setProperty("deviceNameUTF8", se::Value($1.deviceNameUTF8));
+    obj->setProperty("deviceIdUTF8", se::Value($1.deviceIdUTF8));
     s.rval().setObject(obj);
 %}

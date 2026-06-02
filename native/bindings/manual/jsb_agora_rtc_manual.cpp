@@ -241,6 +241,13 @@ static bool js_agora_RtcEngineBridge_setupRemoteVideoEx(se::State &s) {
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_setupRemoteVideoEx)
 
+static bool js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled(se::State &s) {
+    (void)s.args();
+    s.rval().setInt32(0);
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled)
+
 static bool js_agora_RtcEngineBridge_createMediaPlayer(se::State &s) {
     auto *bridge = getRtcEngineBridge(s);
     if (bridge == nullptr) { s.rval().setNull(); return true; }
@@ -845,6 +852,7 @@ bool register_agora_rtc_manual(se::Object *global) {
         proto->defineFunction("setupRemoteVideo", _SE(js_agora_RtcEngineBridge_setupRemoteVideo));
         proto->defineFunction("setupLocalVideo", _SE(js_agora_RtcEngineBridge_setupLocalVideo));
         proto->defineFunction("setupRemoteVideoEx", _SE(js_agora_RtcEngineBridge_setupRemoteVideoEx));
+        proto->defineFunction("setRtcVideoDebugViewEnabled", _SE(js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled));
         proto->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineBridge_createMediaPlayer));
         proto->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
         proto->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));
