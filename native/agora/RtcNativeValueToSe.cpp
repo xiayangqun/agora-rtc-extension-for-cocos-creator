@@ -2018,8 +2018,10 @@ bool nativevalue_to_se(const agora::rtc::ScreenAudioParameters &from, se::Value 
     ok &= nativevalue_to_se(from.captureSignalVolume, field, ctx);
     if (ok) { obj->setProperty("captureSignalVolume", field); }
 
+#if defined(__APPLE__) && !TARGET_OS_IOS
     ok &= nativevalue_to_se(from.excludeCurrentProcessAudio, field, ctx);
     if (ok) { obj->setProperty("excludeCurrentProcessAudio", field); }
+#endif
 
     to.setObject(obj);
     return ok;
@@ -2124,6 +2126,7 @@ bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value 
     return ok;
 }
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
@@ -2138,6 +2141,7 @@ bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *
     to.setObject(obj);
     return ok;
 }
+#endif
 
 bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
@@ -2715,6 +2719,7 @@ bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &t
     return true;
 }
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     if (from.buffer && from.length > 0) {
@@ -2760,6 +2765,7 @@ bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Valu
     to.setObject(obj);
     return ok;
 }
+#endif
 
 // ===== nativevalue_to_se overloads for bridge result structs ================
 

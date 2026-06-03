@@ -1784,10 +1784,12 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenAudioParameters 
         ok &= sevalue_to_native(field, &(to->captureSignalVolume), ctx);
     }
 
+#if defined(__APPLE__) && !TARGET_OS_IOS
     json->getProperty("excludeCurrentProcessAudio", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->excludeCurrentProcessAudio), ctx);
     }
+#endif
 
     return ok;
 }
@@ -2497,6 +2499,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::PublisherConfiguration
     return ok;
 }
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool sevalue_to_native(const se::Value &from, agora::rtc::SIZE *to, se::Object *ctx)
 {
     assert(from.isObject());
@@ -2541,6 +2544,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ThumbImageBuffer *to, 
 
     return ok;
 }
+#endif
 
 bool sevalue_to_native(const se::Value &from, agora::rtc::LeaveChannelOptions *to, se::Object *ctx)
 {

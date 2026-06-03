@@ -363,8 +363,10 @@ public:
     bool isCameraCenterStageSupported();
     int enableCameraCenterStage(bool enabled);
     //jsb manual
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     ScreenCaptureSourceListBridge *getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
                                                            const agora::rtc::SIZE &iconSize, bool includeScreen);
+#endif
     int setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction);
     int startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
                                       const agora::rtc::ScreenCaptureParameters &captureParams);

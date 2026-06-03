@@ -149,7 +149,9 @@ bool nativevalue_to_se(const agora::rtc::ScreenCaptureParameters &from, se::Valu
 bool nativevalue_to_se(const agora::rtc::SegmentationProperty &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::SenderOptions &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value &to, se::Object *ctx);
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx);
+#endif
 bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::TranscodingVideoStream &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::UplinkNetworkInfo &from, se::Value &to, se::Object *ctx);
@@ -173,13 +175,6 @@ bool nativevalue_to_se(const agora::SpatialAudioParams &from, se::Value &to, se:
 bool nativevalue_to_se(const agora::UserInfo &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object *ctx);
 // USER CODE BLOCK START
-bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &to, se::Object *ctx);
-
 // ── nativevalue_to_se overloads for bridge result structs ──────────────────
 // These must be in the header (not anonymous namespace) so both the auto-generated
 // and manual binding translation units can see them.
@@ -188,6 +183,15 @@ bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &t
 #include "agora/MusicContentCenterBridge.h"
 #include "agora/ScreenCaptureSourceListBridge.h"
 #include "agora/RtcEngineExBridge.h"
+
+bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx);
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Value &to, se::Object *ctx);
+#endif
+bool nativevalue_to_se(const agora::rtc::LocalVideoStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &to, se::Object *ctx);
 
 // Bridge result struct nativevalue_to_se overloads (global namespace)
 bool nativevalue_to_se(const GetPlaybackDeviceResult &from, se::Value &to, se::Object *ctx);

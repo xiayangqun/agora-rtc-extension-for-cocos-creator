@@ -97,27 +97,30 @@ function collectCodeSignEntitlements(roots: string[]): string[] {
     return uniqueExisting(result);
 }
 
-function applyMacPermissions(options: AgoraBuildTaskOption, result?: IBuildResult, makeRoot?: string) {
-    if (options.platform !== "mac") return;
+function applyApplePermissions(options: AgoraBuildTaskOption, result?: IBuildResult, makeRoot?: string) {
+    if (options.platform !== "mac" && options.platform !== "ios") return;
 
     const pkgOptions = getPackageOptions(options);
+    const shouldWriteEntitlements = options.platform === "mac";
     const roots = getBuildRoots(options, result, makeRoot);
     const infoPlists = uniqueExisting(
         roots.flatMap((root) => collectFiles(root, (file) => file.endsWith("Info.plist"))),
     );
-    const entitlementPlists = uniqueExisting([
-        ...collectCodeSignEntitlements(roots),
-        ...roots.flatMap((root) =>
-            collectFiles(root, (file) => {
-                const fileName = basename(file).toLowerCase();
-                return (
-                    file.endsWith(".entitlements") ||
-                    fileName === "entitlements.plist" ||
-                    (file.endsWith("Entitlements.plist") && !file.includes("/CompilerId"))
-                );
-            }),
-        ),
-    ]);
+    const entitlementPlists = shouldWriteEntitlements
+        ? uniqueExisting([
+              ...collectCodeSignEntitlements(roots),
+              ...roots.flatMap((root) =>
+                  collectFiles(root, (file) => {
+                      const fileName = basename(file).toLowerCase();
+                      return (
+                          file.endsWith(".entitlements") ||
+                          fileName === "entitlements.plist" ||
+                          (file.endsWith("Entitlements.plist") && !file.includes("/CompilerId"))
+                      );
+                  }),
+              ),
+          ])
+        : [];
 
     for (const plistPath of infoPlists) {
         if (pkgOptions.writeCameraPermission) {
@@ -138,32 +141,36 @@ function applyMacPermissions(options: AgoraBuildTaskOption, result?: IBuildResul
         }
     }
 
-    for (const plistPath of entitlementPlists) {
-        if (pkgOptions.writeCameraPermission) {
-            setPlistValue(plistPath, "com.apple.security.device.camera", "bool", "true");
-        }
-        if (pkgOptions.writeMicrophonePermission) {
-            setPlistValue(plistPath, "com.apple.security.device.audio-input", "bool", "true");
-        }
-        if (pkgOptions.writeAgoraDefaultPermissions) {
-            setPlistValue(plistPath, "com.apple.security.network.client", "bool", "true");
+    if (shouldWriteEntitlements) {
+        for (const plistPath of entitlementPlists) {
+            if (pkgOptions.writeCameraPermission) {
+                setPlistValue(plistPath, "com.apple.security.device.camera", "bool", "true");
+            }
+            if (pkgOptions.writeMicrophonePermission) {
+                setPlistValue(plistPath, "com.apple.security.device.audio-input", "bool", "true");
+            }
+            if (pkgOptions.writeAgoraDefaultPermissions) {
+                setPlistValue(plistPath, "com.apple.security.network.client", "bool", "true");
+            }
         }
     }
 
-    log(`mac permissions applied. Info.plist: ${infoPlists.length}, entitlements: ${entitlementPlists.length}`);
+    log(
+        `${options.platform} permissions applied. Info.plist: ${infoPlists.length}, entitlements: ${entitlementPlists.length}`,
+    );
 }
 
 export const onAfterBuild: BuildHook.onAfterBuild = async function (
     options: AgoraBuildTaskOption,
     result: IBuildResult,
 ) {
-    applyMacPermissions(options, result);
+    applyApplePermissions(options, result);
 };
 
 export const onBeforeMake: BuildHook.onBeforeMake = async function (root: string, options: AgoraBuildTaskOption) {
-    applyMacPermissions(options, undefined, root);
+    applyApplePermissions(options, undefined, root);
 };
 
 export const onAfterMake: BuildHook.onAfterMake = async function (root: string, options: AgoraBuildTaskOption) {
-    applyMacPermissions(options, undefined, root);
+    applyApplePermissions(options, undefined, root);
 };

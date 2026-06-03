@@ -98,8 +98,10 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::AudioParameters *to, s
 bool sevalue_to_native(const se::Value &from, agora::rtc::RemoteVideoStats *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::InjectStreamConfig *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::PublisherConfiguration *to, se::Object *ctx);
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool sevalue_to_native(const se::Value &from, agora::rtc::SIZE *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::ThumbImageBuffer *to, se::Object *ctx);
+#endif
 bool sevalue_to_native(const se::Value &from, agora::rtc::LeaveChannelOptions *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingStats *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInfo *to, se::Object *ctx);

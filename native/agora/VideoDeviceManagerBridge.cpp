@@ -52,15 +52,25 @@ GetVideoDeviceResult VideoDeviceManagerBridge::getDevice() {
 
 int VideoDeviceManagerBridge::numberOfCapabilities(const std::string &deviceId) {
     if (!_videoDeviceManager) { return -agora::ERR_INVALID_ARGUMENT; }
+#if defined(_WIN32) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__)) || \
+    (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE)
     return _videoDeviceManager->numberOfCapabilities(deviceId.c_str());
+#else
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 VideoDeviceCapabilityResult VideoDeviceManagerBridge::getCapability(const std::string &deviceId,
                                                                     uint32_t deviceCapabilityNumber) {
     if (!_videoDeviceManager) { return {-agora::ERR_INVALID_ARGUMENT, {}}; }
     agora::rtc::VideoFormat capability;
+#if defined(_WIN32) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__)) || \
+    (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE)
     int ret = _videoDeviceManager->getCapability(deviceId.c_str(), deviceCapabilityNumber, capability);
     return {ret, capability};
+#else
+    return {-agora::ERR_NOT_SUPPORTED, capability};
+#endif
 }
 
 int VideoDeviceManagerBridge::startDeviceTest(agora::view_t hwnd) {

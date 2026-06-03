@@ -1371,6 +1371,7 @@ int RtcEngineExBridge::enableCameraCenterStage(bool enabled) {
     return _engine->enableCameraCenterStage(enabled);
 }
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 ScreenCaptureSourceListBridge *RtcEngineExBridge::getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
                                                                           const agora::rtc::SIZE &iconSize,
                                                                           bool includeScreen) {
@@ -1381,6 +1382,7 @@ ScreenCaptureSourceListBridge *RtcEngineExBridge::getScreenCaptureSources(const 
     _screenCaptureSources->setList(list);
     return _screenCaptureSources.get();
 }
+#endif
 
 int RtcEngineExBridge::setAudioSessionOperationRestriction(agora::AUDIO_SESSION_OPERATION_RESTRICTION restriction) {
     (void)restriction;
@@ -1389,8 +1391,15 @@ int RtcEngineExBridge::setAudioSessionOperationRestriction(agora::AUDIO_SESSION_
 
 int RtcEngineExBridge::startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
                                                      const agora::rtc::ScreenCaptureParameters &captureParams) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startScreenCaptureByDisplayId(displayId, regionRect, captureParams);
+#else
+    (void)displayId;
+    (void)regionRect;
+    (void)captureParams;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 int RtcEngineExBridge::startScreenCaptureByScreenRect(const agora::rtc::Rectangle &screenRect,
@@ -1410,23 +1419,45 @@ GetAudioDeviceInfoWithDeviceInfoResult RtcEngineExBridge::getAudioDeviceInfo() {
 
 int RtcEngineExBridge::startScreenCaptureByWindowId(int64_t windowId, const agora::rtc::Rectangle &regionRect,
                                                     const agora::rtc::ScreenCaptureParameters &captureParams) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startScreenCaptureByWindowId(windowId, regionRect, captureParams);
+#else
+    (void)windowId;
+    (void)regionRect;
+    (void)captureParams;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 int RtcEngineExBridge::setScreenCaptureContentHint(agora::rtc::VIDEO_CONTENT_HINT contentHint) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setScreenCaptureContentHint(contentHint);
+#else
+    (void)contentHint;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 int RtcEngineExBridge::updateScreenCaptureRegion(const agora::rtc::Rectangle &regionRect) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updateScreenCaptureRegion(regionRect);
+#else
+    (void)regionRect;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 int RtcEngineExBridge::updateScreenCaptureParameters(const agora::rtc::ScreenCaptureParameters &captureParams) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updateScreenCaptureParameters(captureParams);
+#else
+    (void)captureParams;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 #if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)

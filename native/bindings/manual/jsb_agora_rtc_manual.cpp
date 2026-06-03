@@ -293,6 +293,7 @@ static bool js_agora_RtcEngineBridge_destroyMediaRecorder(se::State &s) {
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_destroyMediaRecorder)
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 static bool js_agora_RtcEngineBridge_getScreenCaptureSources(se::State &s) {
     ScopedCStringGuard _cstrGuard;
     const auto &args = s.args();
@@ -311,6 +312,7 @@ static bool js_agora_RtcEngineBridge_getScreenCaptureSources(se::State &s) {
     return true;
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_getScreenCaptureSources)
+#endif
 
 static bool js_agora_RtcEngineBridge_addVideoWatermark(se::State &s) {
     ScopedCStringGuard _cstrGuard;
@@ -726,6 +728,7 @@ SE_BIND_FUNC(js_agora_AudioDeviceManagerBridge_getRecordingDevice)
 
 // ===== ScreenCaptureSourceListBridge manual binding =======================
 
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 static bool js_agora_ScreenCaptureSourceListBridge_getSourceInfo(se::State &s) {
     const auto &args = s.args();
     auto *list = static_cast<ScreenCaptureSourceListBridge *>(s.nativeThisObject());
@@ -735,6 +738,7 @@ static bool js_agora_ScreenCaptureSourceListBridge_getSourceInfo(se::State &s) {
     return true;
 }
 SE_BIND_FUNC(js_agora_ScreenCaptureSourceListBridge_getSourceInfo)
+#endif
 
 // ===== ArrayBuffer-accepting bindings =======================================
 // SWIG cannot auto-convert ArrayBuffer → (void*, size_t). Hand-write these.
@@ -907,7 +911,9 @@ bool register_agora_rtc_manual(se::Object *global) {
         proto->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
         proto->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));
         proto->defineFunction("destroyMediaRecorder", _SE(js_agora_RtcEngineBridge_destroyMediaRecorder));
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
         proto->defineFunction("getScreenCaptureSources", _SE(js_agora_RtcEngineBridge_getScreenCaptureSources));
+#endif
         proto->defineFunction("addVideoWatermark", _SE(js_agora_RtcEngineBridge_addVideoWatermark));
         proto->defineFunction("enableExtension", _SE(js_agora_RtcEngineBridge_enableExtension));
         proto->defineFunction("getExtensionProperty", _SE(js_agora_RtcEngineBridge_getExtensionProperty));
@@ -980,10 +986,12 @@ bool register_agora_rtc_manual(se::Object *global) {
     }
 
     // --- ScreenCaptureSourceListBridge ---
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (__jsb_ScreenCaptureSourceListBridge_proto) {
         auto *proto = __jsb_ScreenCaptureSourceListBridge_proto;
         proto->defineFunction("getSourceInfo", _SE(js_agora_ScreenCaptureSourceListBridge_getSourceInfo));
     }
+#endif
 
     return true;
 }
