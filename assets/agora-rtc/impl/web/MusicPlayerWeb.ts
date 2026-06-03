@@ -14,8 +14,8 @@ export class MusicPlayerWeb implements IMusicPlayer {
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 
-    async initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): Promise<number> {
-        console.warn("initEventHandler not support in web");
+    async registerPlayerSourceObserver(engineEventHandler: IMediaPlayerSourceObserver): Promise<number> {
+        console.warn("registerPlayerSourceObserver not support in web");
         return -ERROR_CODE_TYPE.ERR_NOT_SUPPORTED;
     }
 

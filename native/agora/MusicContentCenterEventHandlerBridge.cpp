@@ -10,6 +10,7 @@ namespace {
 std::vector<MusicChartInfoData> convertToMusicChartInfoDataVector(
     const agora::agora_refptr<agora::rtc::MusicChartCollection> &collection) {
     std::vector<MusicChartInfoData> result;
+    if (!collection) return result;
     int count = collection->getCount();
     result.reserve(count);
     for (int i = 0; i < count; ++i) {
@@ -57,6 +58,7 @@ MusicData convertToMusicData(const agora::rtc::Music *music) {
 
 MusicCollectionData convertToMusicCollectionData(const agora::agora_refptr<agora::rtc::MusicCollection> &collection) {
     MusicCollectionData data;
+    if (!collection) return data;
     data.count = collection->getCount();
     data.total = collection->getTotal();
     data.page = collection->getPage();

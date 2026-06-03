@@ -9,6 +9,7 @@ import { TestRunner } from "./test-framework";
 import { CallApiTestSuite } from "./call-api";
 import { CallbackTestSuite } from "./callback";
 import { SubApiTestSuite } from "./sub-api";
+import { SubCallbackTestSuite } from "./sub-callback";
 
 declare const cc: any;
 
@@ -21,8 +22,7 @@ async function main(): Promise<void> {
     runner.addTestSuite(new CallApiTestSuite());
     runner.addTestSuite(new CallbackTestSuite());
     runner.addTestSuite(new SubApiTestSuite());
-    // Sub-object callback triggers are not implemented in the native mock trigger registry yet.
-    // Keep the suite out of the integration run until those trigger functions exist.
+    runner.addTestSuite(new SubCallbackTestSuite());
 
     await runner.runAll();
 }

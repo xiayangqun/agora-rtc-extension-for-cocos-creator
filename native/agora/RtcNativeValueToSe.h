@@ -206,5 +206,14 @@ bool nativevalue_to_se(const MCCRequestResult &from, se::Value &to, se::Object *
 bool nativevalue_to_se(const GetInternalSongCodeResult &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::MusicCacheInfo &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const std::vector<agora::rtc::MusicCacheInfo> &from, se::Value &to, se::Object *ctx);
+
+struct MusicChartInfoData;
+struct MusicData;
+struct MusicCollectionData;
+bool nativevalue_to_se(const MusicChartInfoData &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const std::vector<MusicChartInfoData> &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const MusicData &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const std::vector<MusicData> &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const MusicCollectionData &from, se::Value &to, se::Object *ctx);
 // USER CODE BLOCK END
 // AUTO-GENERATED DECLARATIONS END

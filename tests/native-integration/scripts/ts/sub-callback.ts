@@ -75,6 +75,23 @@ export class SubCallbackTestSuite extends TestCase {
         (jsb as any).agora.test.reset();
         this.result = null;
         this.bridge = new (jsb as any).agora.RtcEngineExBridge() as IRtcEngineEx;
+        this.bridge.initialize({
+            eventHandler: new RtcEngineEventHandler(),
+            appId: "test",
+            context: 0,
+            channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_CLOUD_GAMING,
+            license: "license",
+            audioScenario: 8,
+            areaCode: 0x00000001,
+            logConfig: {
+                filePath: "filePath",
+                fileSizeInKB: 1024,
+                level: 4,
+            },
+            useExternalEglContext: false,
+            domainLimit: false,
+            autoRegisterAgoraExtensions: false,
+        });
     }
 
     private cleanup(): void {
@@ -89,6 +106,22 @@ export class SubCallbackTestSuite extends TestCase {
             if (actual.length !== expected.length) return false;
             for (let i = 0; i < actual.length; i++) {
                 if (actual[i] !== expected[i]) return false;
+            }
+            return true;
+        }
+        if (Array.isArray(expected)) {
+            if (!Array.isArray(actual)) return false;
+            if (actual.length !== expected.length) return false;
+            for (let i = 0; i < expected.length; i++) {
+                if (!this.valuesEqual(actual[i], expected[i])) return false;
+            }
+            return true;
+        }
+        if (expected !== null && typeof expected === "object") {
+            if (actual === null || typeof actual !== "object") return false;
+            const keys = Object.keys(expected);
+            for (let i = 0; i < keys.length; i++) {
+                if (!this.valuesEqual(actual[keys[i]], expected[keys[i]])) return false;
             }
             return true;
         }
@@ -145,6 +178,8 @@ export class SubCallbackTestSuite extends TestCase {
                         this.result[key] !== null && typeof this.result[key] === "object",
                         key + " should be a non-null object",
                     );
+                } else if (expected === "array") {
+                    runner.assert(Array.isArray(this.result[key]), key + " should be an array");
                 } else {
                     runner.assert(
                         this.valuesEqual(this.result[key], expected),
@@ -183,7 +218,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnRecorderStateChanged",
             "onRecorderStateChanged",
             ["channelId", "uid", "state", "reason"],
-            { channelId: "agora", uid: 2, state: 2, reason: 2 },
+            { channelId: "agora", uid: 2, state: 2, reason: 0 },
             async () => {
                 if (recorder) {
                     await this.bridge.destroyMediaRecorder(recorder);
@@ -233,13 +268,13 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerSourceStateChanged",
             "onPlayerSourceStateChanged",
             ["state", "reason"],
-            { state: 2, reason: 2 },
+            { state: 0, reason: 0 },
             async () => {
                 if (player) {
                     await this.bridge.destroyMediaPlayer(player);
@@ -257,7 +292,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPositionChanged",
@@ -281,13 +316,13 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerEvent",
             "onPlayerEvent",
             ["eventCode", "elapsedTime", "message"],
-            { eventCode: 2, elapsedTime: 2, message: "agora" },
+            { eventCode: 0, elapsedTime: 2, message: "agora" },
             async () => {
                 if (player) {
                     await this.bridge.destroyMediaPlayer(player);
@@ -305,7 +340,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnMetaData",
@@ -329,7 +364,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayBufferUpdated",
@@ -353,13 +388,13 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPreloadEvent",
             "onPreloadEvent",
             ["src", "event"],
-            { src: "agora", event: 2 },
+            { src: "agora", event: 0 },
             async () => {
                 if (player) {
                     await this.bridge.destroyMediaPlayer(player);
@@ -377,7 +412,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnCompleted",
@@ -401,7 +436,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnAgoraCDNTokenWillExpire",
@@ -425,7 +460,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerSrcInfoChanged",
@@ -449,7 +484,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerInfoUpdated",
@@ -473,7 +508,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerCacheStats",
@@ -497,7 +532,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnPlayerPlaybackStats",
@@ -521,7 +556,7 @@ export class SubCallbackTestSuite extends TestCase {
             async (observer) => {
                 player = await this.bridge.createMediaPlayer();
                 if (player) {
-                    await player.initEventHandler(observer);
+                    await player.registerPlayerSourceObserver(observer);
                 }
             },
             "triggerOnAudioVolumeIndication",
@@ -555,7 +590,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnEnableTranscode",
             "onEnableTranscode",
             ["result"],
-            { result: 2 },
+            { result: 0 },
             async () => {
                 if (transcoder) {
                     await transcoder.unregisterTranscoderObserver();
@@ -579,7 +614,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnQueryChannel",
             "onQueryChannel",
             ["result", "originChannel", "transcodeChannel"],
-            { result: 2, originChannel: "agora", transcodeChannel: "agora" },
+            { result: 0, originChannel: "agora", transcodeChannel: "agora" },
             async () => {
                 if (transcoder) {
                     await transcoder.unregisterTranscoderObserver();
@@ -603,7 +638,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnTriggerTranscode",
             "onTriggerTranscode",
             ["result"],
-            { result: 2 },
+            { result: 0 },
             async () => {
                 if (transcoder) {
                     await transcoder.unregisterTranscoderObserver();
@@ -631,7 +666,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnMusicChartsResult",
             "onMusicChartsResult",
             ["requestId", "result", "reason"],
-            { requestId: "agora", result: "object", reason: 2 },
+            { requestId: "agora", result: [{ chartName: "test-chart", id: 2 }], reason: 0 },
             async () => {
                 if (mcc) {
                     await mcc.unregisterEventHandler();
@@ -655,7 +690,28 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnMusicCollectionResult",
             "onMusicCollectionResult",
             ["requestId", "result", "reason"],
-            { requestId: "agora", result: "object", reason: 2 },
+            {
+                requestId: "agora",
+                result: {
+                    count: 1,
+                    total: 2,
+                    page: 2,
+                    pageSize: 2,
+                    musics: [
+                        {
+                            songCode: 2,
+                            name: "test-song",
+                            singer: "test-singer",
+                            poster: "test-poster",
+                            releaseTime: "test-releaseTime",
+                            durationS: 2,
+                            type: 2,
+                            pitchType: 2,
+                        },
+                    ],
+                },
+                reason: 0,
+            },
             async () => {
                 if (mcc) {
                     await mcc.unregisterEventHandler();
@@ -679,7 +735,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnLyricResult",
             "onLyricResult",
             ["requestId", "songCode", "lyricUrl", "reason"],
-            { requestId: "agora", songCode: 2, lyricUrl: "agora", reason: 2 },
+            { requestId: "agora", songCode: 2, lyricUrl: "agora", reason: 0 },
             async () => {
                 if (mcc) {
                     await mcc.unregisterEventHandler();
@@ -703,7 +759,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnSongSimpleInfoResult",
             "onSongSimpleInfoResult",
             ["requestId", "songCode", "simpleInfo", "reason"],
-            { requestId: "agora", songCode: 2, simpleInfo: "agora", reason: 2 },
+            { requestId: "agora", songCode: 2, simpleInfo: "agora", reason: 0 },
             async () => {
                 if (mcc) {
                     await mcc.unregisterEventHandler();
@@ -727,7 +783,7 @@ export class SubCallbackTestSuite extends TestCase {
             "triggerOnPreLoadEvent",
             "onPreLoadEvent",
             ["requestId", "songCode", "percent", "lyricUrl", "state", "reason"],
-            { requestId: "agora", songCode: 2, percent: 2, lyricUrl: "agora", state: 2, reason: 2 },
+            { requestId: "agora", songCode: 2, percent: 2, lyricUrl: "agora", state: 0, reason: 0 },
             async () => {
                 if (mcc) {
                     await mcc.unregisterEventHandler();

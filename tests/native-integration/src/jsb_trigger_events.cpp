@@ -841,7 +841,7 @@ static bool js_trigger_onPlayerSourceStateChanged(se::State &s) {
         m.mockMediaPlayer_.get());
     if (player && player->playerSourceObserver) {
         player->playerSourceObserver->onPlayerSourceStateChanged(
-            agora::media::base::PLAYER_STATE_OPENING,
+            agora::media::base::PLAYER_STATE_IDLE,
             agora::media::base::PLAYER_REASON_NONE);
     }
     return true;
@@ -865,7 +865,7 @@ static bool js_trigger_onPlayerEvent(se::State &s) {
         m.mockMediaPlayer_.get());
     if (player && player->playerSourceObserver) {
         player->playerSourceObserver->onPlayerEvent(
-            agora::media::base::PLAYER_EVENT_BUFFER_LOW, 2, "agora");
+            agora::media::base::PLAYER_EVENT_SEEK_BEGIN, 2, "agora");
     }
     return true;
 }
@@ -900,7 +900,7 @@ static bool js_trigger_onPreloadEvent(se::State &s) {
         m.mockMediaPlayer_.get());
     if (player && player->playerSourceObserver) {
         player->playerSourceObserver->onPreloadEvent("agora",
-            agora::media::base::PLAYER_PRELOAD_EVENT_COMPLETE);
+            agora::media::base::PLAYER_PRELOAD_EVENT_BEGIN);
     }
     return true;
 }
@@ -1041,11 +1041,9 @@ SE_BIND_FUNC(js_trigger_onTriggerTranscode)
 static bool js_trigger_onMusicChartsResult(se::State &s) {
     auto& m = mock();
     if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
-        // Create a mock MusicChartCollection
-        // Since we can't easily create agora_refptr objects, we'll call with nullptr
-        // The test should verify the callback was called
+        static agora::rtc::MockMusicChartCollection mockCollection;
         m.mockMusicContentCenter_->musicContentCenterEventHandler->onMusicChartsResult(
-            "agora", nullptr, agora::rtc::kMusicContentCenterReasonOk);
+            "agora", &mockCollection, agora::rtc::kMusicContentCenterReasonOk);
     }
     return true;
 }
@@ -1054,8 +1052,9 @@ SE_BIND_FUNC(js_trigger_onMusicChartsResult)
 static bool js_trigger_onMusicCollectionResult(se::State &s) {
     auto& m = mock();
     if (m.mockMusicContentCenter_ && m.mockMusicContentCenter_->musicContentCenterEventHandler) {
+        static agora::rtc::MockMusicCollection mockCollection;
         m.mockMusicContentCenter_->musicContentCenterEventHandler->onMusicCollectionResult(
-            "agora", nullptr, agora::rtc::kMusicContentCenterReasonOk);
+            "agora", &mockCollection, agora::rtc::kMusicContentCenterReasonOk);
     }
     return true;
 }

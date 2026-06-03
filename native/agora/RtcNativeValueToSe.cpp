@@ -1,4 +1,5 @@
 #include "RtcNativeValueToSe.h"
+#include "agora/MusicContentCenterEventHandlerBridge.h"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // This file is AUTO-GENERATED. See RtcNativeValueToSe.h for instructions on
@@ -2910,5 +2911,63 @@ bool nativevalue_to_se(const std::vector<agora::rtc::MusicCacheInfo> &from, se::
     to.setObject(arr);
     return true;
 }
+
+bool nativevalue_to_se(const MusicChartInfoData &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("chartName", se::Value(from.chartName));
+    obj->setProperty("id", se::Value(from.id));
+    to.setObject(obj);
+    return true;
+}
+
+bool nativevalue_to_se(const std::vector<MusicChartInfoData> &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject arr(se::Object::createArrayObject(from.size()));
+    for (size_t i = 0; i < from.size(); ++i) {
+        se::Value item;
+        nativevalue_to_se(from[i], item, ctx);
+        arr->setArrayElement(i, item);
+    }
+    to.setObject(arr);
+    return true;
+}
+
+bool nativevalue_to_se(const MusicData &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("songCode", se::Value(from.songCode));
+    obj->setProperty("name", se::Value(from.name));
+    obj->setProperty("singer", se::Value(from.singer));
+    obj->setProperty("poster", se::Value(from.poster));
+    obj->setProperty("releaseTime", se::Value(from.releaseTime));
+    obj->setProperty("durationS", se::Value(from.durationS));
+    obj->setProperty("type", se::Value(from.type));
+    obj->setProperty("pitchType", se::Value(from.pitchType));
+    to.setObject(obj);
+    return true;
+}
+
+bool nativevalue_to_se(const std::vector<MusicData> &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject arr(se::Object::createArrayObject(from.size()));
+    for (size_t i = 0; i < from.size(); ++i) {
+        se::Value item;
+        nativevalue_to_se(from[i], item, ctx);
+        arr->setArrayElement(i, item);
+    }
+    to.setObject(arr);
+    return true;
+}
+
+bool nativevalue_to_se(const MusicCollectionData &from, se::Value &to, se::Object *ctx) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("count", se::Value(from.count));
+    obj->setProperty("total", se::Value(from.total));
+    obj->setProperty("page", se::Value(from.page));
+    obj->setProperty("pageSize", se::Value(from.pageSize));
+    se::Value musics;
+    nativevalue_to_se(from.musics, musics, ctx);
+    obj->setProperty("musics", musics);
+    to.setObject(obj);
+    return true;
+}
+
 // USER CODE BLOCK END
 // AUTO-GENERATED IMPLEMENTATIONS END

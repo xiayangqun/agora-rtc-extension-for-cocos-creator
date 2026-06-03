@@ -296,6 +296,50 @@ public:
     IMusicContentCenterEventHandler* musicContentCenterEventHandler{nullptr};
 };
 
+// ─── MockMusicChartCollection ─────────────────────────────────────────────
+class MockMusicChartCollection : public RefCountMixin<MusicChartCollection> {
+public:
+    MockMusicChartCollection() = default;
+    int getCount() override { return 1; }
+    MusicChartInfo* get(int index) override {
+        if (index == 0) return &info_;
+        return nullptr;
+    }
+private:
+    MusicChartInfo info_{"test-chart", 2};
+};
+
+// ─── MockMusicCollection ─────────────────────────────────────────────────
+class MockMusicCollection : public RefCountMixin<MusicCollection> {
+public:
+    MockMusicCollection() {
+        music_.songCode = 2;
+        music_.name = "test-song";
+        music_.singer = "test-singer";
+        music_.poster = "test-poster";
+        music_.releaseTime = "test-releaseTime";
+        music_.durationS = 2;
+        music_.type = 2;
+        music_.pitchType = 2;
+        music_.lyricCount = 0;
+        music_.lyricList = nullptr;
+        music_.climaxSegmentCount = 0;
+        music_.climaxSegmentList = nullptr;
+        music_.mvPropertyCount = 0;
+        music_.mvPropertyList = nullptr;
+    }
+    int getCount() override { return 1; }
+    int getTotal() override { return 2; }
+    int getPage() override { return 2; }
+    int getPageSize() override { return 2; }
+    Music* getMusic(int32_t index) override {
+        if (index == 0) return &music_;
+        return nullptr;
+    }
+private:
+    Music music_{};
+};
+
 // ─── MockIMediaPlayerCacheManager ────────────────────────────────────────
 class MockIMediaPlayerCacheManager : public IMediaPlayerCacheManager {
 public:

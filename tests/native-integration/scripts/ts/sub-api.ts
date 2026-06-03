@@ -146,10 +146,10 @@ export class SubApiTestSuite extends TestCase {
         const id = await player.getId();
         this.assertLogEntry(runner, "getId", callTime1, {});
 
-        // 2. initEventHandler not need ut
+        // 2. registerPlayerSourceObserver not need ut
         // const callTime2 = Date.now();
-        // await player.initEventHandler({} as any);
-        // this.assertLogEntry(runner, "initEventHandler", callTime2, {});
+        // await player.registerPlayerSourceObserver({} as any);
+        // this.assertLogEntry(runner, "registerPlayerSourceObserver", callTime2, {});
 
         // 3. open
         const callTime3 = Date.now();
@@ -1258,10 +1258,10 @@ export class SubApiTestSuite extends TestCase {
             await player.getId();
             this.assertLogEntry(runner, "getId", callTime4, {});
 
-            // // 4. initEventHandler not need ut
+            // // 4. registerPlayerSourceObserver not need ut
             // const callTime5 = Date.now();
-            // await player.initEventHandler({} as any);
-            // this.assertLogEntry(runner, "initEventHandler", callTime5, {});
+            // await player.registerPlayerSourceObserver({} as any);
+            // this.assertLogEntry(runner, "registerPlayerSourceObserver", callTime5, {});
 
             // 5. open
             const callTime6 = Date.now();

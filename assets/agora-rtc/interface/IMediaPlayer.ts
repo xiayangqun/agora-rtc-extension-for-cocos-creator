@@ -6,7 +6,7 @@ import { IMediaPlayerSourceObserver } from "./IMediaPlayerSourceObserver";
 export interface IMediaPlayer {
     getId(): Promise<number>;
 
-    initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): Promise<number>;
+    registerPlayerSourceObserver(engineEventHandler: IMediaPlayerSourceObserver): Promise<number>;
 
     open(url: string, startPos: number): Promise<number>;
 

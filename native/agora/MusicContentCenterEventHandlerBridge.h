@@ -6,10 +6,6 @@
 #include <string>
 #include <vector>
 
-namespace se {
-class Object;
-}
-
 struct MusicChartInfoData {
     std::string chartName;
     int32_t id;

@@ -285,7 +285,7 @@ export class MediaPlayerWeb implements IMediaPlayer {
         return this._id;
     }
 
-    async initEventHandler(engineEventHandler: IMediaPlayerSourceObserver): Promise<number> {
+    async registerPlayerSourceObserver(engineEventHandler: IMediaPlayerSourceObserver): Promise<number> {
         if (!this._isUsable()) {
             return -ERROR_CODE_TYPE.ERR_INVALID_STATE;
         }
