@@ -2602,6 +2602,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingStat
     return ok;
 }
 
+// do not gen code cover it
 bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInfo *to, se::Object *ctx)
 {
     assert(from.isObject());
@@ -2622,6 +2623,11 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ExtensionInfo *to, se:
     json->getProperty("localUid", &field, true);
     if (!field.isNullOrUndefined()) {
         ok &= sevalue_to_native(field, &(to->localUid), ctx);
+    }
+
+    json->getProperty("channelId", &field, true);
+    if (!field.isNullOrUndefined()) {
+        to->channelId = ScopedCString::dup(field.toString().c_str());
     }
 
     return ok;

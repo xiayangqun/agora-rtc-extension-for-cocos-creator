@@ -479,12 +479,16 @@ public:
     int setAdvancedAudioOptions(agora::rtc::AdvancedAudioOptions &options, int sourceType);
     int setAVSyncSource(const std::string &channelId, agora::rtc::uid_t uid);
     int enableVideoImageSource(bool enable, const agora::rtc::ImageTrackOptions &options);
-    int64_t getCurrentMonotonicTimeInMs();
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long getCurrentMonotonicTimeInMs();
     int getNetworkType();
     int setParameters(const std::string &parameters);
     int startMediaRenderingTracing();
     int enableInstantMediaRendering();
-    uint64_t getNtpWallTimeInMs();
+    // Use unsigned long instead of uint64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts unsigned long → number, uint64_t → BigInt.
+    unsigned long getNtpWallTimeInMs();
     bool isFeatureAvailableOnDevice(agora::rtc::FeatureType type);
     int sendAudioMetadata(const void *metadata, size_t length);
     QueryHDRCapabilityResult queryHDRCapability(agora::rtc::VIDEO_MODULE_TYPE videoModule);

@@ -166,5 +166,6 @@ GetInternalSongCodeResult MusicContentCenterBridge::getInternalSongCode(int64_t 
     int64_t internalSongCode = 0;
     const char *opt = jsonOption.empty() ? nullptr : jsonOption.c_str();
     int ret = _musicContentCenter->getInternalSongCode(songCode, opt, internalSongCode);
-    return {ret, internalSongCode};
+    // Cast to long to prevent JavaScript BigInt conversion.
+    return {ret, static_cast<long>(internalSongCode)};
 }

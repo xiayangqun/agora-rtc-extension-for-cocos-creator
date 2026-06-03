@@ -123,7 +123,9 @@ void RtcEngineEventHandlerExBridge::onAudioDeviceStateChanged(const char* device
 }
 
 void RtcEngineEventHandlerExBridge::onAudioMixingPositionChanged(int64_t position) {
-    auto positionCopy = position;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    auto positionCopy = static_cast<long>(position);
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
         [self, positionCopy]() {
@@ -1595,7 +1597,9 @@ void RtcEngineEventHandlerExBridge::onStreamMessage(const RtcConnection& connect
     std::vector<uint8_t> dataCopy(data != nullptr ? reinterpret_cast<const uint8_t*>(data) : nullptr,
                                   data != nullptr ? reinterpret_cast<const uint8_t*>(data) + length : nullptr);
     auto lengthCopy = length;
-    auto sentTsCopy = sentTs;
+    // Cast to unsigned long to prevent JavaScript BigInt conversion.
+    // Cocos engine converts unsigned long → number, uint64_t → BigInt.
+    auto sentTsCopy = static_cast<unsigned long>(sentTs);
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
         [self, channelIdCopy, connCopy, remoteUidCopy, streamIdCopy, dataCopy, lengthCopy, sentTsCopy]() mutable {

@@ -8678,7 +8678,7 @@ static bool js_RtcEngineExBridge_getCurrentMonotonicTimeInMs(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    int64_t result;
+    long result;
     
     if(argc != 0) {
         SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -8686,7 +8686,7 @@ static bool js_RtcEngineExBridge_getCurrentMonotonicTimeInMs(se::State& s)
     }
     arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
     if (nullptr == arg1) return true;
-    result = (int64_t)(arg1)->getCurrentMonotonicTimeInMs();
+    result = (long)(arg1)->getCurrentMonotonicTimeInMs();
     
     ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
     
@@ -8805,7 +8805,7 @@ static bool js_RtcEngineExBridge_getNtpWallTimeInMs(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    uint64_t result;
+    unsigned long result;
     
     if(argc != 0) {
         SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -8813,7 +8813,7 @@ static bool js_RtcEngineExBridge_getNtpWallTimeInMs(se::State& s)
     }
     arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
     if (nullptr == arg1) return true;
-    result = (uint64_t)(arg1)->getNtpWallTimeInMs();
+    result = (unsigned long)(arg1)->getNtpWallTimeInMs();
     
     ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
     
@@ -13805,6 +13805,37 @@ static bool js_MediaPlayerBridge_open(se::State& s)
 }
 SE_BIND_FUNC(js_MediaPlayerBridge_open) 
 
+static bool js_MediaPlayerBridge_openWithMediaSource(se::State& s)
+{
+    CC_UNUSED bool ok = true;
+    ScopedCStringGuard _cstrGuard;
+    const auto& args = s.args();
+    size_t argc = args.size();
+    MediaPlayerBridge *arg1 = (MediaPlayerBridge *) NULL ;
+    agora::media::base::MediaSource *arg2 = 0 ;
+    agora::media::base::MediaSource temp2 ;
+    int result;
+    
+    if(argc != 1) {
+        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 1);
+        return false;
+    }
+    arg1 = SE_THIS_OBJECT<MediaPlayerBridge>(s);
+    if (nullptr == arg1) return true;
+    
+    ok &= sevalue_to_native(args[0], &temp2, s.thisObject());
+    SE_PRECONDITION2(ok, false, "Error processing arguments");
+    arg2 = &temp2;
+    
+    result = (int)(arg1)->openWithMediaSource((agora::media::base::MediaSource const &)*arg2);
+    
+    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
+    
+    
+    return true;
+}
+SE_BIND_FUNC(js_MediaPlayerBridge_openWithMediaSource) 
+
 static bool js_MediaPlayerBridge_play(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -13976,7 +14007,9 @@ static bool js_MediaPlayerBridge_getDuration(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("duration", se::Value((&result)->duration));
+    se::Value durationVal;
+    durationVal.setLong((&result)->duration);
+    obj->setProperty("duration", durationVal);
     s.rval().setObject(obj);
     
     
@@ -14004,7 +14037,9 @@ static bool js_MediaPlayerBridge_getPlayPosition(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("pos", se::Value((&result)->pos));
+    se::Value posVal;
+    posVal.setLong((&result)->pos);
+    obj->setProperty("pos", posVal);
     s.rval().setObject(obj);
     
     
@@ -14032,7 +14067,9 @@ static bool js_MediaPlayerBridge_getStreamCount(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("count", se::Value((&result)->count));
+    se::Value countVal;
+    countVal.setLong((&result)->count);
+    obj->setProperty("count", countVal);
     s.rval().setObject(obj);
     
     
@@ -14995,6 +15032,7 @@ bool js_register_MediaPlayerBridge(se::Object* obj) {
     
     cls->defineFunction("getId", _SE(js_MediaPlayerBridge_getId)); 
     cls->defineFunction("open", _SE(js_MediaPlayerBridge_open)); 
+    cls->defineFunction("openWithMediaSource", _SE(js_MediaPlayerBridge_openWithMediaSource)); 
     cls->defineFunction("play", _SE(js_MediaPlayerBridge_play)); 
     cls->defineFunction("pause", _SE(js_MediaPlayerBridge_pause)); 
     cls->defineFunction("stop", _SE(js_MediaPlayerBridge_stop)); 
@@ -15316,7 +15354,7 @@ static bool js_MediaPlayerCacheManagerBridge_getMaxCacheFileSize(se::State& s)
     const auto& args = s.args();
     size_t argc = args.size();
     MediaPlayerCacheManagerBridge *arg1 = (MediaPlayerCacheManagerBridge *) NULL ;
-    int64_t result;
+    long result;
     
     if(argc != 0) {
         SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 0);
@@ -15324,7 +15362,7 @@ static bool js_MediaPlayerCacheManagerBridge_getMaxCacheFileSize(se::State& s)
     }
     arg1 = SE_THIS_OBJECT<MediaPlayerCacheManagerBridge>(s);
     if (nullptr == arg1) return true;
-    result = (int64_t)(arg1)->getMaxCacheFileSize();
+    result = (long)(arg1)->getMaxCacheFileSize();
     
     ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
     
@@ -16126,7 +16164,9 @@ static bool js_MusicContentCenterBridge_getInternalSongCode(se::State& s)
     
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value((&result)->errorCode));
-    obj->setProperty("internalSongCode", se::Value((&result)->internalSongCode));
+    se::Value internalSongCodeVal;
+    internalSongCodeVal.setLong((&result)->internalSongCode);
+    obj->setProperty("internalSongCode", internalSongCodeVal);
     s.rval().setObject(obj);
     
     

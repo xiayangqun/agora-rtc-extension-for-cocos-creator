@@ -77,7 +77,9 @@ GetDurationResult MediaPlayerBridge::getDuration() {
         result.errorCode = -agora::ERR_INVALID_ARGUMENT;
         return result;
     }
-    result.errorCode = _mediaPlayer->getDuration(result.duration);
+    int64_t duration = 0;
+    result.errorCode = _mediaPlayer->getDuration(duration);
+    result.duration = static_cast<long>(duration);
     return result;
 }
 
@@ -87,7 +89,9 @@ GetPlayPositionResult MediaPlayerBridge::getPlayPosition() {
         result.errorCode = -agora::ERR_INVALID_ARGUMENT;
         return result;
     }
-    result.errorCode = _mediaPlayer->getPlayPosition(result.pos);
+    int64_t pos = 0;
+    result.errorCode = _mediaPlayer->getPlayPosition(pos);
+    result.pos = static_cast<long>(pos);
     return result;
 }
 
@@ -97,7 +101,9 @@ GetStreamCountResult MediaPlayerBridge::getStreamCount() {
         result.errorCode = -agora::ERR_INVALID_ARGUMENT;
         return result;
     }
-    result.errorCode = _mediaPlayer->getStreamCount(result.count);
+    int64_t count = 0;
+    result.errorCode = _mediaPlayer->getStreamCount(count);
+    result.count = static_cast<long>(count);
     return result;
 }
 

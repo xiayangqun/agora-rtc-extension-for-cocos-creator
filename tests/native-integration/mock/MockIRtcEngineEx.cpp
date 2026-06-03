@@ -83,7 +83,8 @@ int MockIRtcEngineEx::queryInterface(INTERFACE_ID_TYPE iid, void** inter) {
 }
 
 const char* MockIRtcEngineEx::getVersion(int* build) {
-    return nullptr;
+    if (build) *build = 2;
+    return "hello";
 }
 
 const char* MockIRtcEngineEx::getErrorDescription(int code) {

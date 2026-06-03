@@ -187,6 +187,7 @@ bool nativevalue_to_se(const std::vector<agora::VideoLayout> &from, se::Value &t
 #include "agora/VideoDeviceManagerBridge.h"
 #include "agora/MusicContentCenterBridge.h"
 #include "agora/ScreenCaptureSourceListBridge.h"
+#include "agora/RtcEngineExBridge.h"
 
 // Bridge result struct nativevalue_to_se overloads (global namespace)
 bool nativevalue_to_se(const GetPlaybackDeviceResult &from, se::Value &to, se::Object *ctx);
@@ -204,6 +205,7 @@ bool nativevalue_to_se(const GetVideoDeviceResult &from, se::Value &to, se::Obje
 bool nativevalue_to_se(const GetCachesResult &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const MCCRequestResult &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const GetInternalSongCodeResult &from, se::Value &to, se::Object *ctx);
+bool nativevalue_to_se(const GetExtensionPropertyResult &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::MusicCacheInfo &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const std::vector<agora::rtc::MusicCacheInfo> &from, se::Value &to, se::Object *ctx);
 

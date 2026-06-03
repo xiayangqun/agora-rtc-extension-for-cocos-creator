@@ -70,9 +70,11 @@ int MediaPlayerCacheManagerBridge::getMaxCacheFileCount() {
     return _cacheManager->getMaxCacheFileCount();
 }
 
-int64_t MediaPlayerCacheManagerBridge::getMaxCacheFileSize() {
+// Use long instead of int64_t to prevent JavaScript BigInt conversion.
+// Cocos engine converts long → number, int64_t → BigInt.
+long MediaPlayerCacheManagerBridge::getMaxCacheFileSize() {
     if (!_cacheManager) { return -agora::ERR_INVALID_ARGUMENT; }
-    return _cacheManager->getMaxCacheFileSize();
+    return static_cast<long>(_cacheManager->getMaxCacheFileSize());
 }
 
 int MediaPlayerCacheManagerBridge::getCacheFileCount() {

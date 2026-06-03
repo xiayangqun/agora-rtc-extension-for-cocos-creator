@@ -31,7 +31,9 @@ public:
     int enableAutoRemoveCache(bool enable);
     GetCacheDirResult getCacheDir();
     int getMaxCacheFileCount();
-    int64_t getMaxCacheFileSize();
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long getMaxCacheFileSize();
     int getCacheFileCount();
 
 private:

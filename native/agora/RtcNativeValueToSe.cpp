@@ -1,5 +1,6 @@
 #include "RtcNativeValueToSe.h"
 #include "agora/MusicContentCenterEventHandlerBridge.h"
+#include "agora/RtcEngineExBridge.h"
 
 // ─────────────────────────────────────────────────────────────────────────────
 // This file is AUTO-GENERATED. See RtcNativeValueToSe.h for instructions on
@@ -286,14 +287,16 @@ bool nativevalue_to_se(const agora::media::base::CacheStatistics &from, se::Valu
     se::Value field;
     bool ok = true;
 
-    ok &= nativevalue_to_se(from.fileSize, field, ctx);
-    if (ok) { obj->setProperty("fileSize", field); }
+    // Cast to long to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    field.setLong(static_cast<long>(from.fileSize));
+    obj->setProperty("fileSize", field);
 
-    ok &= nativevalue_to_se(from.cacheSize, field, ctx);
-    if (ok) { obj->setProperty("cacheSize", field); }
+    field.setLong(static_cast<long>(from.cacheSize));
+    obj->setProperty("cacheSize", field);
 
-    ok &= nativevalue_to_se(from.downloadSize, field, ctx);
-    if (ok) { obj->setProperty("downloadSize", field); }
+    field.setLong(static_cast<long>(from.downloadSize));
+    obj->setProperty("downloadSize", field);
 
     to.setObject(obj);
     return ok;
@@ -2868,7 +2871,11 @@ bool nativevalue_to_se(const GetCachesResult &from, se::Value &to, se::Object *)
     se::HandleObject arr(se::Object::createArrayObject(from.caches.size()));
     for (size_t i = 0; i < from.caches.size(); i++) {
         se::HandleObject item(se::Object::createPlainObject());
-        item->setProperty("songCode", se::Value(from.caches[i].songCode));
+        // Cast to long to prevent JavaScript BigInt conversion.
+        // Cocos engine converts long → number, int64_t → BigInt.
+        se::Value songCodeVal;
+        songCodeVal.setLong(from.caches[i].songCode);
+        item->setProperty("songCode", songCodeVal);
         item->setProperty("status", se::Value(static_cast<int>(from.caches[i].status)));
         arr->setArrayElement(static_cast<uint32_t>(i), se::Value(item));
     }
@@ -2888,14 +2895,21 @@ bool nativevalue_to_se(const MCCRequestResult &from, se::Value &to, se::Object *
 bool nativevalue_to_se(const GetInternalSongCodeResult &from, se::Value &to, se::Object *) {
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value(from.errorCode));
-    obj->setProperty("internalSongCode", se::Value(from.internalSongCode));
+    // long, not int64_t: Cocos JSB converts long → JS number, int64_t → JS BigInt.
+    se::Value internalSongCodeVal;
+    internalSongCodeVal.setLong(from.internalSongCode);
+    obj->setProperty("internalSongCode", internalSongCodeVal);
     to.setObject(obj);
     return true;
 }
 
 bool nativevalue_to_se(const agora::rtc::MusicCacheInfo &from, se::Value &to, se::Object *) {
     se::HandleObject obj(se::Object::createPlainObject());
-    obj->setProperty("songCode", se::Value(from.songCode));
+    // Cast to long to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    se::Value songCodeVal;
+    songCodeVal.setLong(from.songCode);
+    obj->setProperty("songCode", songCodeVal);
     obj->setProperty("status", se::Value(static_cast<int>(from.status)));
     to.setObject(obj);
     return true;
@@ -2933,7 +2947,10 @@ bool nativevalue_to_se(const std::vector<MusicChartInfoData> &from, se::Value &t
 
 bool nativevalue_to_se(const MusicData &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
-    obj->setProperty("songCode", se::Value(from.songCode));
+    // long, not int64_t: Cocos JSB converts long → JS number, int64_t → JS BigInt.
+    se::Value songCodeVal;
+    songCodeVal.setLong(from.songCode);
+    obj->setProperty("songCode", songCodeVal);
     obj->setProperty("name", se::Value(from.name));
     obj->setProperty("singer", se::Value(from.singer));
     obj->setProperty("poster", se::Value(from.poster));
@@ -2965,6 +2982,14 @@ bool nativevalue_to_se(const MusicCollectionData &from, se::Value &to, se::Objec
     se::Value musics;
     nativevalue_to_se(from.musics, musics, ctx);
     obj->setProperty("musics", musics);
+    to.setObject(obj);
+    return true;
+}
+
+bool nativevalue_to_se(const GetExtensionPropertyResult &from, se::Value &to, se::Object *) {
+    se::HandleObject obj(se::Object::createPlainObject());
+    obj->setProperty("errorCode", se::Value(from.errorCode));
+    obj->setProperty("value", se::Value(from.value));
     to.setObject(obj);
     return true;
 }

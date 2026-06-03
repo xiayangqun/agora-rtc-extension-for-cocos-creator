@@ -1862,9 +1862,10 @@ int RtcEngineExBridge::enableVideoImageSource(bool enable, const agora::rtc::Ima
     return _engine->enableVideoImageSource(enable, options);
 }
 
-int64_t RtcEngineExBridge::getCurrentMonotonicTimeInMs() {
+long RtcEngineExBridge::getCurrentMonotonicTimeInMs() {
     if (_engine == nullptr) { return -1; }
-    return _engine->getCurrentMonotonicTimeInMs();
+    // Cast to long to prevent JavaScript BigInt conversion.
+    return static_cast<long>(_engine->getCurrentMonotonicTimeInMs());
 }
 
 int RtcEngineExBridge::getNetworkType() {
@@ -1887,9 +1888,10 @@ int RtcEngineExBridge::enableInstantMediaRendering() {
     return _engine->enableInstantMediaRendering();
 }
 
-uint64_t RtcEngineExBridge::getNtpWallTimeInMs() {
+unsigned long RtcEngineExBridge::getNtpWallTimeInMs() {
     if (_engine == nullptr) { return 0; }
-    return _engine->getNtpWallTimeInMs();
+    // Cast to unsigned long to prevent JavaScript BigInt conversion.
+    return static_cast<unsigned long>(_engine->getNtpWallTimeInMs());
 }
 
 bool RtcEngineExBridge::isFeatureAvailableOnDevice(agora::rtc::FeatureType type) {

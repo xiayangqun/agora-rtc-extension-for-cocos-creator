@@ -10,6 +10,7 @@
 #include "agora/MusicContentCenterBridge.h"
 #include "agora/MusicPlayerBridge.h"
 #include "agora/RtcEngineExBridge.h"
+#include "agora/RtcNativeValueToSe.h"
 #include "agora/ScreenCaptureSourceListBridge.h"
 #include "agora/VideoDeviceCollectionBridge.h"
 #include "agora/VideoDeviceManagerBridge.h"
@@ -349,7 +350,7 @@ static bool js_agora_RtcEngineBridge_enableExtension(se::State &s) {
     std::string provider = args[0].toString();
     std::string extension = args[1].toString();
     if (args[2].isObject()) {
-        agora::rtc::ExtensionInfo extensionInfo;
+        agora::rtc::ExtensionInfo extensionInfo{};
         if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
         bool enable = args[3].toBoolean();
         s.rval().setInt32(bridge->enableExtension(provider.c_str(), extension.c_str(), extensionInfo, enable));
@@ -370,7 +371,7 @@ static bool js_agora_RtcEngineBridge_getExtensionProperty(se::State &s) {
     std::string provider = args[0].toString();
     std::string extension = args[1].toString();
     if (args[2].isObject()) {
-        agora::rtc::ExtensionInfo extensionInfo;
+        agora::rtc::ExtensionInfo extensionInfo{};
         if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
         std::string key = args[3].toString();
         auto result = bridge->getExtensionProperty(provider.c_str(), extension.c_str(), extensionInfo, key);
@@ -393,7 +394,7 @@ static bool js_agora_RtcEngineBridge_setExtensionProperty(se::State &s) {
     std::string provider = args[0].toString();
     std::string extension = args[1].toString();
     if (args[2].isObject()) {
-        agora::rtc::ExtensionInfo extensionInfo;
+        agora::rtc::ExtensionInfo extensionInfo{};
         if (!sevalue_to_native(args[2], &extensionInfo, s.thisObject())) { s.rval().setInt32(-2); return true; }
         std::string key = args[3].toString();
         std::string value = args[4].toString();

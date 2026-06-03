@@ -24,8 +24,10 @@ void MediaPlayerSourceObserverBridge::onPlayerSourceStateChanged(agora::media::b
 }
 
 void MediaPlayerSourceObserverBridge::onPositionChanged(int64_t positionMs, int64_t timestampMs) {
-    auto positionMsCopy = positionMs;
-    auto timestampMsCopy = timestampMs;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    auto positionMsCopy = static_cast<long>(positionMs);
+    auto timestampMsCopy = static_cast<long>(timestampMs);
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([self, positionMsCopy, timestampMsCopy]() {
         if (!isScriptEngineValid()) { return; }
@@ -40,7 +42,8 @@ void MediaPlayerSourceObserverBridge::onPositionChanged(int64_t positionMs, int6
 void MediaPlayerSourceObserverBridge::onPlayerEvent(agora::media::base::MEDIA_PLAYER_EVENT eventCode,
                                                        int64_t elapsedTime, const char *message) {
     auto eventCodeCopy = eventCode;
-    auto elapsedTimeCopy = elapsedTime;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    auto elapsedTimeCopy = static_cast<long>(elapsedTime);
     std::string messageCopy(message != nullptr ? message : "");
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread(
@@ -74,7 +77,8 @@ void MediaPlayerSourceObserverBridge::onMetaData(const void *data, int length) {
 }
 
 void MediaPlayerSourceObserverBridge::onPlayBufferUpdated(int64_t playCachedBuffer) {
-    auto playCachedBufferCopy = playCachedBuffer;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    auto playCachedBufferCopy = static_cast<long>(playCachedBuffer);
     auto self = shared_from_this();
     CC_CURRENT_ENGINE()->getScheduler()->performFunctionInCocosThread([self, playCachedBufferCopy]() {
         if (!isScriptEngineValid()) { return; }

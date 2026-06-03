@@ -117,7 +117,8 @@ void MusicContentCenterEventHandlerBridge::onMusicCollectionResult(
 void MusicContentCenterEventHandlerBridge::onLyricResult(const char *requestId, int64_t songCode, const char *lyricUrl,
                                                          agora::rtc::MusicContentCenterStateReason reason) {
     std::string requestIdCopy(requestId != nullptr ? requestId : "");
-    auto songCodeCopy = songCode;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    auto songCodeCopy = static_cast<long>(songCode);
     std::string lyricUrlCopy(lyricUrl != nullptr ? lyricUrl : "");
     auto reasonCopy = reason;
     auto self = shared_from_this();
@@ -138,7 +139,8 @@ void MusicContentCenterEventHandlerBridge::onSongSimpleInfoResult(const char *re
                                                                   const char *simpleInfo,
                                                                   agora::rtc::MusicContentCenterStateReason reason) {
     std::string requestIdCopy(requestId != nullptr ? requestId : "");
-    auto songCodeCopy = songCode;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    auto songCodeCopy = static_cast<long>(songCode);
     std::string simpleInfoCopy(simpleInfo != nullptr ? simpleInfo : "");
     auto reasonCopy = reason;
     auto self = shared_from_this();
@@ -159,7 +161,8 @@ void MusicContentCenterEventHandlerBridge::onPreLoadEvent(const char *requestId,
                                                           const char *lyricUrl, agora::rtc::PreloadState state,
                                                           agora::rtc::MusicContentCenterStateReason reason) {
     std::string requestIdCopy(requestId != nullptr ? requestId : "");
-    auto songCodeCopy = songCode;
+    // Cast to long to prevent JavaScript BigInt conversion.
+    auto songCodeCopy = static_cast<long>(songCode);
     auto percentCopy = percent;
     std::string lyricUrlCopy(lyricUrl != nullptr ? lyricUrl : "");
     auto stateCopy = state;

@@ -22,7 +22,9 @@ struct MvPropertyData {
 };
 
 struct MusicData {
-    int64_t songCode;
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long songCode;
     std::string name;
     std::string singer;
     std::string poster;

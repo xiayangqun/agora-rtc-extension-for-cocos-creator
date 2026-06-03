@@ -415,7 +415,9 @@
 %typemap(out) GetDurationResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("duration", se::Value($1.duration));
+    se::Value durationVal;
+    durationVal.setLong($1.duration);
+    obj->setProperty("duration", durationVal);
     s.rval().setObject(obj);
 %}
 
@@ -424,7 +426,9 @@
 %typemap(out) GetStreamCountResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("count", se::Value($1.count));
+    se::Value countVal;
+    countVal.setLong($1.count);
+    obj->setProperty("count", countVal);
     s.rval().setObject(obj);
 %}
 
@@ -471,7 +475,9 @@
 %typemap(out) GetPlayPositionResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("pos", se::Value($1.pos));
+    se::Value posVal;
+    posVal.setLong($1.pos);
+    obj->setProperty("pos", posVal);
     s.rval().setObject(obj);
 %}
 
@@ -502,7 +508,9 @@
 %typemap(out) GetInternalSongCodeResult %{
     se::HandleObject obj(se::Object::createPlainObject());
     obj->setProperty("errorCode", se::Value($1.errorCode));
-    obj->setProperty("internalSongCode", se::Value($1.internalSongCode));
+    se::Value internalSongCodeVal;
+    internalSongCodeVal.setLong($1.internalSongCode);
+    obj->setProperty("internalSongCode", internalSongCodeVal);
     s.rval().setObject(obj);
 %}
 

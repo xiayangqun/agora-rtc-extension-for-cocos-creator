@@ -11,12 +11,16 @@ class MediaPlayerSourceObserverBridge;
 
 struct GetDurationResult {
     int errorCode;
-    int64_t duration;
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long duration;
 };
 
 struct GetStreamCountResult {
     int errorCode;
-    int64_t count;
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long count;
 };
 
 struct GetStreamInfoResult {
@@ -41,7 +45,9 @@ struct GetPublishSignalVolumeResult {
 
 struct GetPlayPositionResult {
     int errorCode;
-    int64_t pos;
+    // Use long instead of int64_t to prevent JavaScript BigInt conversion.
+    // Cocos engine converts long → number, int64_t → BigInt.
+    long pos;
 };
 
 struct GetAudioBufferDelayResult {
