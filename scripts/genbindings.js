@@ -3,10 +3,10 @@
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
-const { resolveCocosGenbindings } = require("./native-binding-utils");
+const { readEngineRootFromPathFile, resolveCocosGenbindings } = require("./native-binding-utils");
 
 const root = path.resolve(__dirname, "..");
-const engineRoot = process.argv[2] ? path.resolve(process.argv[2]) : "";
+const engineRoot = process.argv[2] ? path.resolve(process.argv[2]) : readEngineRootFromPathFile(root);
 
 function removeIfExists(filePath) {
     if (fs.existsSync(filePath)) {
@@ -16,7 +16,8 @@ function removeIfExists(filePath) {
 }
 
 if (!engineRoot) {
-    console.error("Usage: node scripts/genbindings.js /absolute/path/to/cocos-engine");
+    console.error("Cocos engine path not found.");
+    console.error("Write it to cocos-engine-path.txt, or pass /absolute/path/to/cocos-engine as an override.");
     process.exit(1);
 }
 

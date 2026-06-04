@@ -71,6 +71,7 @@ function(agora_rtc_extension_embed_ios_frameworks TARGET_NAME)
         XCODE_EMBED_FRAMEWORKS "${AGORA_RTC_IOS_XCFRAMEWORK_PATHS}"
         XCODE_EMBED_FRAMEWORKS_CODE_SIGN_ON_COPY YES
         XCODE_EMBED_FRAMEWORKS_REMOVE_HEADERS_ON_COPY YES
+        XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "$(inherited) @executable_path/Frameworks"
     )
 endfunction()
 

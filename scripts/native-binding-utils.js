@@ -54,6 +54,21 @@ function readEngineRootFromCcDts(projectRoot) {
     return "";
 }
 
+function readEngineRootFromPathFile(projectRoot) {
+    const pathFile = path.join(projectRoot, "cocos-engine-path.txt");
+    if (!fs.existsSync(pathFile)) {
+        return "";
+    }
+
+    const content = fs.readFileSync(pathFile, "utf8");
+    const line = content
+        .split(/\r?\n/)
+        .map((value) => value.trim())
+        .find((value) => value && !value.startsWith("#"));
+
+    return line ? path.resolve(projectRoot, normalizePath(line)) : "";
+}
+
 function resolveCocosGenbindings(engineRoot) {
     const genbindingsPath = path.join(engineRoot, "native", "tools", "swig-config", "genbindings.js");
     if (!fs.existsSync(genbindingsPath)) {
@@ -64,6 +79,7 @@ function resolveCocosGenbindings(engineRoot) {
 
 module.exports = {
     extractEngineRootFromCcDtsLine,
+    readEngineRootFromPathFile,
     readEngineRootFromCcDts,
     resolveCocosGenbindings,
 };

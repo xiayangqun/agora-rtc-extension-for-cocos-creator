@@ -7275,42 +7275,6 @@ static bool js_RtcEngineExBridge_setScreenCaptureOrientation(se::State& s)
 }
 SE_BIND_FUNC(js_RtcEngineExBridge_setScreenCaptureOrientation) 
 
-static bool js_RtcEngineExBridge_startScreenCapture(se::State& s)
-{
-    CC_UNUSED bool ok = true;
-    ScopedCStringGuard _cstrGuard;
-    const auto& args = s.args();
-    size_t argc = args.size();
-    RtcEngineExBridge *arg1 = (RtcEngineExBridge *) NULL ;
-    agora::rtc::VIDEO_SOURCE_TYPE arg2 ;
-    agora::rtc::ScreenCaptureConfiguration *arg3 = 0 ;
-    agora::rtc::ScreenCaptureConfiguration temp3 ;
-    int result;
-    
-    if(argc != 2) {
-        SE_REPORT_ERROR("wrong number of arguments: %d, was expecting %d", (int)argc, 2);
-        return false;
-    }
-    arg1 = SE_THIS_OBJECT<RtcEngineExBridge>(s);
-    if (nullptr == arg1) return true;
-    
-    ok &= sevalue_to_native(args[0], &arg2, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments"); 
-    
-    
-    ok &= sevalue_to_native(args[1], &temp3, s.thisObject());
-    SE_PRECONDITION2(ok, false, "Error processing arguments");
-    arg3 = &temp3;
-    
-    result = (int)(arg1)->startScreenCapture(arg2,(agora::rtc::ScreenCaptureConfiguration const &)*arg3);
-    
-    ok &= nativevalue_to_se(result, s.rval(), s.thisObject()); 
-    
-    
-    return true;
-}
-SE_BIND_FUNC(js_RtcEngineExBridge_startScreenCapture) 
-
 static bool js_RtcEngineExBridge_stopScreenCapture__SWIG_1(se::State& s)
 {
     CC_UNUSED bool ok = true;
@@ -11370,7 +11334,6 @@ bool js_register_RtcEngineExBridge(se::Object* obj) {
     cls->defineFunction("stopCameraCapture", _SE(js_RtcEngineExBridge_stopCameraCapture)); 
     cls->defineFunction("setCameraDeviceOrientation", _SE(js_RtcEngineExBridge_setCameraDeviceOrientation)); 
     cls->defineFunction("setScreenCaptureOrientation", _SE(js_RtcEngineExBridge_setScreenCaptureOrientation)); 
-    cls->defineFunction("startScreenCapture", _SE(js_RtcEngineExBridge_startScreenCapture)); 
     cls->defineFunction("stopScreenCapture", _SE(js_RtcEngineExBridge_stopScreenCapture)); 
     cls->defineFunction("getConnectionState", _SE(js_RtcEngineExBridge_getConnectionState)); 
     cls->defineFunction("setRemoteUserPriority", _SE(js_RtcEngineExBridge_setRemoteUserPriority)); 

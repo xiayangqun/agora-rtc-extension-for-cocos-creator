@@ -3039,6 +3039,51 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfigura
     return true;
 }
 
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenVideoParameters *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+
+    obj->getProperty("dimensions", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->dimensions), ctx);
+    }
+    obj->getProperty("frameRate", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->frameRate = tmp.toInt32(); }
+    obj->getProperty("bitrate", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->bitrate = tmp.toInt32(); }
+    obj->getProperty("contentHint", &tmp, true);
+    if (!tmp.isNullOrUndefined()) {
+        to->contentHint = static_cast<agora::rtc::VIDEO_CONTENT_HINT>(tmp.toInt32());
+    }
+
+    return true;
+}
+
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureParameters2 *to, se::Object *ctx) {
+    if (!from.isObject()) return false;
+    se::Object *obj = from.toObject();
+    se::Value tmp;
+
+    obj->getProperty("captureAudio", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->captureAudio = tmp.toBoolean(); }
+
+    obj->getProperty("audioParams", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->audioParams), ctx);
+    }
+
+    obj->getProperty("captureVideo", &tmp, true);
+    if (!tmp.isNullOrUndefined()) { to->captureVideo = tmp.toBoolean(); }
+
+    obj->getProperty("videoParams", &tmp, true);
+    if (!tmp.isNullOrUndefined() && tmp.isObject()) {
+        sevalue_to_native(tmp, &(to->videoParams), ctx);
+    }
+
+    return true;
+}
+
 bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx) {
     if (!from.isObject()) return false;
     se::Object *obj = from.toObject();

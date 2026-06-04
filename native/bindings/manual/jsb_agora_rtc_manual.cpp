@@ -16,6 +16,7 @@
 #include "agora/VideoDeviceManagerBridge.h"
 #include "agora/VideoEffectObjectBridge.h"
 #include "bindings/auto/jsb_agora_rtc_engine_bridge_auto.h"
+#include "bindings/manual/RtcSeValueToNative.h"
 #include "bindings/manual/jsb_classtype.h"
 #include "bindings/manual/jsb_global.h"
 #include "bindings/jswrapper/SeApi.h"
@@ -249,6 +250,76 @@ static bool js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled(se::State &s) {
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled)
 
+static bool js_agora_RtcEngineBridge_startScreenCapture(se::State &s) {
+    ScopedCStringGuard _cstrGuard;
+    const auto &args = s.args();
+    auto *bridge = getRtcEngineBridge(s);
+    if (bridge == nullptr) {
+        s.rval().setInt32(-agora::ERR_NOT_INITIALIZED);
+        return true;
+    }
+
+    if (args.size() == 1) {
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+        agora::rtc::ScreenCaptureParameters2 captureParams;
+        if (!sevalue_to_native(args[0], &captureParams, s.thisObject())) {
+            SE_REPORT_ERROR("startScreenCapture failed to convert ScreenCaptureParameters2");
+            return false;
+        }
+        s.rval().setInt32(bridge->startScreenCapture(captureParams));
+#else
+        s.rval().setInt32(-agora::ERR_NOT_SUPPORTED);
+#endif
+        return true;
+    }
+
+    if (args.size() == 2) {
+        agora::rtc::VIDEO_SOURCE_TYPE sourceType;
+        agora::rtc::ScreenCaptureConfiguration config;
+        if (!sevalue_to_native(args[0], &sourceType, s.thisObject())) {
+            SE_REPORT_ERROR("startScreenCapture failed to convert VIDEO_SOURCE_TYPE");
+            return false;
+        }
+        if (!sevalue_to_native(args[1], &config, s.thisObject())) {
+            SE_REPORT_ERROR("startScreenCapture failed to convert ScreenCaptureConfiguration");
+            return false;
+        }
+        s.rval().setInt32(bridge->startScreenCapture(sourceType, config));
+        return true;
+    }
+
+    SE_REPORT_ERROR("startScreenCapture expects 1 or 2 arguments");
+    return false;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_startScreenCapture)
+
+static bool js_agora_RtcEngineBridge_updateScreenCapture(se::State &s) {
+    ScopedCStringGuard _cstrGuard;
+    const auto &args = s.args();
+    auto *bridge = getRtcEngineBridge(s);
+    if (bridge == nullptr) {
+        s.rval().setInt32(-agora::ERR_NOT_INITIALIZED);
+        return true;
+    }
+    if (args.size() != 1) {
+        SE_REPORT_ERROR("updateScreenCapture expects 1 argument");
+        return false;
+    }
+
+#if defined(__ANDROID__) || (defined(__APPLE__) && TARGET_OS_IOS) || defined(__OHOS__)
+    agora::rtc::ScreenCaptureParameters2 captureParams;
+    if (!sevalue_to_native(args[0], &captureParams, s.thisObject())) {
+        SE_REPORT_ERROR("updateScreenCapture failed to convert ScreenCaptureParameters2");
+        return false;
+    }
+    s.rval().setInt32(bridge->updateScreenCapture(captureParams));
+#else
+    s.rval().setInt32(-agora::ERR_NOT_SUPPORTED);
+#endif
+    return true;
+}
+SE_BIND_FUNC(js_agora_RtcEngineBridge_updateScreenCapture)
+
 static bool js_agora_RtcEngineBridge_createMediaPlayer(se::State &s) {
     auto *bridge = getRtcEngineBridge(s);
     if (bridge == nullptr) { s.rval().setNull(); return true; }
@@ -293,8 +364,8 @@ static bool js_agora_RtcEngineBridge_destroyMediaRecorder(se::State &s) {
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_destroyMediaRecorder)
 
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 static bool js_agora_RtcEngineBridge_getScreenCaptureSources(se::State &s) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     ScopedCStringGuard _cstrGuard;
     const auto &args = s.args();
     auto *bridge = getRtcEngineBridge(s);
@@ -310,9 +381,12 @@ static bool js_agora_RtcEngineBridge_getScreenCaptureSources(se::State &s) {
     if (list == nullptr) { s.rval().setNull(); return true; }
     nativevalue_to_se(list, s.rval(), s.thisObject());
     return true;
+#else
+    s.rval().setNull();
+    return true;
+#endif
 }
 SE_BIND_FUNC(js_agora_RtcEngineBridge_getScreenCaptureSources)
-#endif
 
 static bool js_agora_RtcEngineBridge_addVideoWatermark(se::State &s) {
     ScopedCStringGuard _cstrGuard;
@@ -728,17 +802,20 @@ SE_BIND_FUNC(js_agora_AudioDeviceManagerBridge_getRecordingDevice)
 
 // ===== ScreenCaptureSourceListBridge manual binding =======================
 
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 static bool js_agora_ScreenCaptureSourceListBridge_getSourceInfo(se::State &s) {
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     const auto &args = s.args();
     auto *list = static_cast<ScreenCaptureSourceListBridge *>(s.nativeThisObject());
     if (list == nullptr || args.empty()) { s.rval().setInt32(-2); return true; }
     unsigned int index = static_cast<unsigned int>(args[0].toInt32());
     nativevalue_to_se(list->getSourceInfo(index), s.rval(), s.thisObject());
     return true;
+#else
+    s.rval().setNull();
+    return true;
+#endif
 }
 SE_BIND_FUNC(js_agora_ScreenCaptureSourceListBridge_getSourceInfo)
-#endif
 
 // ===== ArrayBuffer-accepting bindings =======================================
 // SWIG cannot auto-convert ArrayBuffer → (void*, size_t). Hand-write these.
@@ -907,13 +984,13 @@ bool register_agora_rtc_manual(se::Object *global) {
         proto->defineFunction("setupLocalVideo", _SE(js_agora_RtcEngineBridge_setupLocalVideo));
         proto->defineFunction("setupRemoteVideoEx", _SE(js_agora_RtcEngineBridge_setupRemoteVideoEx));
         proto->defineFunction("setRtcVideoDebugViewEnabled", _SE(js_agora_RtcEngineBridge_setRtcVideoDebugViewEnabled));
+        proto->defineFunction("startScreenCapture", _SE(js_agora_RtcEngineBridge_startScreenCapture));
+        proto->defineFunction("updateScreenCapture", _SE(js_agora_RtcEngineBridge_updateScreenCapture));
         proto->defineFunction("createMediaPlayer", _SE(js_agora_RtcEngineBridge_createMediaPlayer));
         proto->defineFunction("destroyMediaPlayer", _SE(js_agora_RtcEngineBridge_destroyMediaPlayer));
         proto->defineFunction("createMediaRecorder", _SE(js_agora_RtcEngineBridge_createMediaRecorder));
         proto->defineFunction("destroyMediaRecorder", _SE(js_agora_RtcEngineBridge_destroyMediaRecorder));
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
         proto->defineFunction("getScreenCaptureSources", _SE(js_agora_RtcEngineBridge_getScreenCaptureSources));
-#endif
         proto->defineFunction("addVideoWatermark", _SE(js_agora_RtcEngineBridge_addVideoWatermark));
         proto->defineFunction("enableExtension", _SE(js_agora_RtcEngineBridge_enableExtension));
         proto->defineFunction("getExtensionProperty", _SE(js_agora_RtcEngineBridge_getExtensionProperty));
@@ -986,12 +1063,10 @@ bool register_agora_rtc_manual(se::Object *global) {
     }
 
     // --- ScreenCaptureSourceListBridge ---
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (__jsb_ScreenCaptureSourceListBridge_proto) {
         auto *proto = __jsb_ScreenCaptureSourceListBridge_proto;
         proto->defineFunction("getSourceInfo", _SE(js_agora_ScreenCaptureSourceListBridge_getSourceInfo));
     }
-#endif
 
     return true;
 }

@@ -156,6 +156,10 @@ export class AgoraRTCClientProxy {
             networkQualityProbe?: boolean;
         },
     ): Promise<UID> {
+        //if token is empty string, set to null to avoid web sdk error
+        if (token == "") {
+            token = null;
+        }
         return await this._client.join(appid, channel, token, uid, {
             ...options,
             autoSubscribe: false,
@@ -171,6 +175,11 @@ export class AgoraRTCClientProxy {
     }
 
     async setClientRole(role: ClientRole, options?: ClientRoleOptions): Promise<void> {
+        // setClientRole is only supported in live broadcasting mode
+        if (this._channelProfile !== CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_LIVE_BROADCASTING) {
+            console.warn("setClientRole is not supported in rtc mode, only available in live broadcasting mode");
+            return;
+        }
         if (options) {
             return await this._client.setClientRole(role, options);
         }

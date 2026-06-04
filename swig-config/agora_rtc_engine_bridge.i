@@ -172,6 +172,8 @@
 %ignore RtcEngineExBridge::setupRemoteVideo;
 %ignore RtcEngineExBridge::setupLocalVideo;
 %ignore RtcEngineExBridge::setupRemoteVideoEx;
+%ignore RtcEngineExBridge::startScreenCapture;
+%ignore RtcEngineExBridge::updateScreenCapture;
 
 // MediaPlayerBridge — manual bindings
 %ignore MediaPlayerBridge::registerPlayerSourceObserver;

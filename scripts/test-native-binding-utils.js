@@ -5,6 +5,7 @@ const path = require("path");
 
 const {
     extractEngineRootFromCcDtsLine,
+    readEngineRootFromPathFile,
     readEngineRootFromCcDts,
     resolveCocosGenbindings,
 } = require("./native-binding-utils");
@@ -26,8 +27,11 @@ fs.mkdirSync(path.join(projectRoot, "temp"), { recursive: true });
 fs.mkdirSync(missingProject, { recursive: true });
 fs.mkdirSync(path.join(engineRoot, "native/tools/swig-config"), { recursive: true });
 fs.writeFileSync(path.join(projectRoot, "temp/cc.d.ts"), `// ${engineRoot}/bin/.declarations/cc.d.ts\n`);
+fs.writeFileSync(path.join(projectRoot, "cocos-engine-path.txt"), `# comment\n${engineRoot}\n`);
 fs.writeFileSync(path.join(engineRoot, "native/tools/swig-config/genbindings.js"), "");
 
+assert.strictEqual(readEngineRootFromPathFile(projectRoot), engineRoot);
+assert.strictEqual(readEngineRootFromPathFile(missingProject), "");
 assert.strictEqual(readEngineRootFromCcDts(projectRoot), engineRoot);
 assert.strictEqual(readEngineRootFromCcDts(missingProject), "");
 assert.strictEqual(

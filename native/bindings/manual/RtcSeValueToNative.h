@@ -125,6 +125,8 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ChannelMediaOptions *t
 bool sevalue_to_native(const se::Value &from, agora::rtc::CameraCapturerConfiguration *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::SimulcastConfig *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfiguration *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenVideoParameters *to, se::Object *ctx);
+bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureParameters2 *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::rtc::AgoraRhythmPlayerConfig *to, se::Object *ctx);
 bool sevalue_to_native(const se::Value &from, agora::media::ContentInspectConfig *to, se::Object *ctx);
