@@ -1,0 +1,62 @@
+# clang-format config for Agora RTC Extension (Cocos Creator native plugin)
+# Based on existing code style observed in the codebase.
+# Usage: clang-format -i <file>  or  clang-format -i native/**/*.cpp native/**/*.h
+
+BasedOnStyle: LLVM
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ColumnLimit: 120
+
+# Brace style: attach to function/control, but allow one-line
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortBlocksOnASingleLine: Always
+AllowShortLoopsOnASingleLine: false
+
+# Pointer/reference alignment: attach to name (right) — matches existing code style
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# Spacing
+SpaceAfterCStyleCast: false
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+SpaceInEmptyParentheses: false
+SpacesInAngles: Never
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+
+# Include ordering
+SortIncludes: Never
+
+# Access modifiers
+AccessModifierOffset: -4
+
+# C++ standard
+Standard: c++17
+
+# Namespace
+NamespaceIndentation: None
+CompactNamespaces: false
+
+# Penalties (discourage line breaks in certain contexts)
+PenaltyBreakBeforeFirstCallParameter: 100
+PenaltyReturnTypeOnItsOwnLine: 1000
+
+# Alignment
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: None
+AlignConsecutiveDeclarations: None
+AlignEscapedNewlines: Left
+AlignOperands: Align
+AlignTrailingComments: true
+
+# Comments
+ReflowComments: false
+
+# Max empty lines
+MaxEmptyLinesToKeep: 1
+
+# Macro
+IndentPPDirectives: None

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Agora SDK UMD Global Enum Test</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 40px;
+            }
+            button {
+                padding: 12px 24px;
+                font-size: 16px;
+                cursor: pointer;
+            }
+            #output {
+                margin-top: 20px;
+                padding: 16px;
+                background: #f5f5f5;
+                border-radius: 8px;
+                white-space: pre-wrap;
+                font-family: monospace;
+                font-size: 13px;
+            }
+            .ok {
+                color: green;
+            }
+            .fail {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Agora SDK UMD 全局对象枚举验证</h1>
+        <p>通过 &lt;script&gt; 加载 UMD 版本后，检查 <code>window.AgoraRTC</code> 上的所有 enum 是否存在</p>
+        <button id="testBtn">运行测试</button>
+        <div id="output"></div>
+
+        <!-- 模拟 Cocos 插件加载 UMD SDK -->
+        <script type="module" src="./main.ts"></script>
+    </body>
+</html>

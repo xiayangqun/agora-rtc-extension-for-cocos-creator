@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "moduleResolution": "node",
+        "paths": {},
+        "types": [
+            "../../../temp/declarations/cc.custom-macro",
+            "../../../temp/declarations/jsb",
+            "../../../temp/declarations/cc",
+            "./../../temp/declarations/cc.env"
+        ]
+    },
+    "include": ["**/*.ts", "**/*.d.ts"]
+}

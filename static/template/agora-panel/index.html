@@ -1,0 +1,61 @@
+<div id="app">
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Agora RTC Plugin</h1>
+            <p class="subtitle">实时音视频插件管理面板</p>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">平台 SDK 管理</h2>
+            <div class="platform-card">
+                <div v-for="p in platforms" :key="p.name" class="platform-row">
+                    <span class="platform-name">{{ p.label }}</span>
+                    <span class="status-icon">{{ p.statusIcon }}</span>
+                    <span :class="['status-text', p.statusClass]">{{ p.statusText }}</span>
+                    <div
+                        class="install-btn platform-download-btn"
+                        @click="handleDownload(p.name)"
+                        :class="{ disabled: p.downloading }"
+                    >
+                        {{ p.btnText }}
+                    </div>
+                </div>
+            </div>
+            <div class="platform-delete-area">
+                <div
+                    class="install-btn delete-btn"
+                    @click="handleDeleteAllSdks"
+                    :class="{ disabled: deletingAll }"
+                >
+                    {{ deletingAll ? '删除中...' : '删除所有原生平台 SDK' }}
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Native Binding 生成</h2>
+            <div class="native-card">
+                <label class="field-label" for="engine-root">Cocos engine 根目录</label>
+                <div class="native-row">
+                    <input
+                        id="engine-root"
+                        class="path-input"
+                        v-model="engineRoot"
+                        placeholder="/absolute/path/to/cocos-engine"
+                        :disabled="generatingNativeBindings"
+                    />
+                    <div
+                        class="install-btn native-generate-btn"
+                        @click="handleGenerateNativeBindings"
+                        :class="{ disabled: generatingNativeBindings }"
+                    >
+                        {{ generateBtnText }}
+                    </div>
+                </div>
+            </div>
+            <div :class="['hint', generateStatusClass]">{{ generateHintText }}</div>
+        </section>
+
+
+    </div>
+</div>

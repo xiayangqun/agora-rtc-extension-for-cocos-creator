@@ -6,3 +6,30 @@ android/libs/
 ios/libs/
 mac/libs/
 windows/libs/
+node_modules
+dist
+rtc-sdk_cn.d.ts
+.claude
+.vscode
+agora-rtc-extension-for-cocos-creator.code-workspace
+agora_web_moudle
+*.meta
+.trae
+docs
+.understand-anything
+.codegraph
+
+# Tests build artifacts
+tests/native-integration/build/
+tests/native-integration/dist/
+tests/native-integration/declarations/
+tests/native-integration/scripts/node_modules/
+tests/native-integration/.DS_Store
+
+# TypeScript compilation artifacts (auto-generated before tests)
+assets/agora-rtc/**/*.js
+assets/agora-rtc/**/*.js.map
+assets/agora-rtc/**/*.d.ts
+assets/agora-rtc/**/*.d.ts.map
+.omo
+agora_test_log.jsonl

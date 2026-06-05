@@ -1,0 +1,2634 @@
+import {
+    VIDEO_PIXEL_FORMAT,
+    VIDEO_SOURCE_TYPE,
+    AUDIO_SOURCE_TYPE,
+    RENDER_MODE_TYPE,
+    VIDEO_MODULE_POSITION,
+} from "./AgoraMediaBase";
+import { Texture2D } from "cc";
+
+export enum CHANNEL_PROFILE_TYPE {
+    CHANNEL_PROFILE_COMMUNICATION = 0,
+
+    CHANNEL_PROFILE_LIVE_BROADCASTING = 1,
+
+    CHANNEL_PROFILE_GAME = 2,
+
+    CHANNEL_PROFILE_CLOUD_GAMING = 3,
+
+    CHANNEL_PROFILE_COMMUNICATION_1v1 = 4,
+}
+
+export enum WARN_CODE_TYPE {
+    WARN_INVALID_VIEW = 8,
+
+    WARN_INIT_VIDEO = 16,
+
+    WARN_PENDING = 20,
+
+    WARN_NO_AVAILABLE_CHANNEL = 103,
+
+    WARN_LOOKUP_CHANNEL_TIMEOUT = 104,
+
+    WARN_LOOKUP_CHANNEL_REJECTED = 105,
+
+    WARN_OPEN_CHANNEL_TIMEOUT = 106,
+
+    WARN_OPEN_CHANNEL_REJECTED = 107,
+
+    WARN_SWITCH_LIVE_VIDEO_TIMEOUT = 111,
+
+    WARN_SET_CLIENT_ROLE_TIMEOUT = 118,
+
+    WARN_OPEN_CHANNEL_INVALID_TICKET = 121,
+
+    WARN_OPEN_CHANNEL_TRY_NEXT_VOS = 122,
+
+    WARN_CHANNEL_CONNECTION_UNRECOVERABLE = 131,
+
+    WARN_CHANNEL_CONNECTION_IP_CHANGED = 132,
+
+    WARN_CHANNEL_CONNECTION_PORT_CHANGED = 133,
+
+    WARN_CHANNEL_SOCKET_ERROR = 134,
+
+    WARN_AUDIO_MIXING_OPEN_ERROR = 701,
+
+    WARN_ADM_RUNTIME_PLAYOUT_WARNING = 1014,
+
+    WARN_ADM_RUNTIME_RECORDING_WARNING = 1016,
+
+    WARN_ADM_RECORD_AUDIO_SILENCE = 1019,
+
+    WARN_ADM_PLAYOUT_MALFUNCTION = 1020,
+
+    WARN_ADM_RECORD_MALFUNCTION = 1021,
+
+    WARN_ADM_RECORD_AUDIO_LOWLEVEL = 1031,
+
+    WARN_ADM_PLAYOUT_AUDIO_LOWLEVEL = 1032,
+
+    WARN_ADM_WINDOWS_NO_DATA_READY_EVENT = 1040,
+
+    WARN_APM_HOWLING = 1051,
+
+    WARN_ADM_GLITCH_STATE = 1052,
+
+    WARN_ADM_IMPROPER_SETTINGS = 1053,
+
+    WARN_ADM_POP_STATE = 1055,
+
+    WARN_ADM_WIN_CORE_NO_RECORDING_DEVICE = 1322,
+
+    WARN_ADM_WIN_CORE_NO_PLAYOUT_DEVICE = 1323,
+
+    WARN_ADM_WIN_CORE_IMPROPER_CAPTURE_RELEASE = 1324,
+}
+
+export enum ERROR_CODE_TYPE {
+    ERR_OK = 0,
+
+    ERR_FAILED = 1,
+
+    ERR_INVALID_ARGUMENT = 2,
+
+    ERR_NOT_READY = 3,
+
+    ERR_NOT_SUPPORTED = 4,
+
+    ERR_REFUSED = 5,
+
+    ERR_BUFFER_TOO_SMALL = 6,
+
+    ERR_NOT_INITIALIZED = 7,
+
+    ERR_INVALID_STATE = 8,
+
+    ERR_NO_PERMISSION = 9,
+
+    ERR_TIMEDOUT = 10,
+
+    ERR_CANCELED = 11,
+
+    ERR_TOO_OFTEN = 12,
+
+    ERR_BIND_SOCKET = 13,
+
+    ERR_NET_DOWN = 14,
+
+    ERR_JOIN_CHANNEL_REJECTED = 17,
+
+    ERR_LEAVE_CHANNEL_REJECTED = 18,
+
+    ERR_ALREADY_IN_USE = 19,
+
+    ERR_ABORTED = 20,
+
+    ERR_INIT_NET_ENGINE = 21,
+
+    ERR_RESOURCE_LIMITED = 22,
+
+    ERR_FUNC_IS_PROHIBITED = 23,
+
+    ERR_INVALID_APP_ID = 101,
+
+    ERR_INVALID_CHANNEL_NAME = 102,
+
+    ERR_NO_SERVER_RESOURCES = 103,
+
+    ERR_TOKEN_EXPIRED = 109,
+
+    ERR_INVALID_TOKEN = 110,
+
+    ERR_CONNECTION_INTERRUPTED = 111,
+
+    ERR_CONNECTION_LOST = 112,
+
+    ERR_NOT_IN_CHANNEL = 113,
+
+    ERR_SIZE_TOO_LARGE = 114,
+
+    ERR_BITRATE_LIMIT = 115,
+
+    ERR_TOO_MANY_DATA_STREAMS = 116,
+
+    ERR_STREAM_MESSAGE_TIMEOUT = 117,
+
+    ERR_SET_CLIENT_ROLE_NOT_AUTHORIZED = 119,
+
+    ERR_DECRYPTION_FAILED = 120,
+
+    ERR_INVALID_USER_ID = 121,
+
+    ERR_DATASTREAM_DECRYPTION_FAILED = 122,
+
+    ERR_CLIENT_IS_BANNED_BY_SERVER = 123,
+
+    ERR_ENCRYPTED_STREAM_NOT_ALLOWED_PUBLISH = 130,
+
+    ERR_LICENSE_CREDENTIAL_INVALID = 131,
+
+    ERR_INVALID_USER_ACCOUNT = 134,
+
+    ERR_MODULE_NOT_FOUND = 157,
+
+    ERR_CERT_RAW = 157,
+
+    ERR_CERT_JSON_PART = 158,
+
+    ERR_CERT_JSON_INVAL = 159,
+
+    ERR_CERT_JSON_NOMEM = 160,
+
+    ERR_CERT_CUSTOM = 161,
+
+    ERR_CERT_CREDENTIAL = 162,
+
+    ERR_CERT_SIGN = 163,
+
+    ERR_CERT_FAIL = 164,
+
+    ERR_CERT_BUF = 165,
+
+    ERR_CERT_NULL = 166,
+
+    ERR_CERT_DUEDATE = 167,
+
+    ERR_CERT_REQUEST = 168,
+
+    ERR_PCMSEND_FORMAT = 200,
+
+    ERR_PCMSEND_BUFFEROVERFLOW = 201,
+
+    ERR_RDT_USER_NOT_EXIST = 250,
+
+    ERR_RDT_USER_NOT_READY = 251,
+
+    ERR_RDT_DATA_BLOCKED = 252,
+
+    ERR_RDT_CMD_EXCEED_LIMIT = 253,
+
+    ERR_RDT_DATA_EXCEED_LIMIT = 254,
+
+    ERR_RDT_ENCRYPTION = 255,
+
+    ERR_LOGIN_ALREADY_LOGIN = 428,
+
+    ERR_LOAD_MEDIA_ENGINE = 1001,
+
+    ERR_ADM_GENERAL_ERROR = 1005,
+
+    ERR_ADM_INIT_PLAYOUT = 1008,
+
+    ERR_ADM_START_PLAYOUT = 1009,
+
+    ERR_ADM_STOP_PLAYOUT = 1010,
+
+    ERR_ADM_INIT_RECORDING = 1011,
+
+    ERR_ADM_START_RECORDING = 1012,
+
+    ERR_ADM_STOP_RECORDING = 1013,
+
+    ERR_VDM_CAMERA_NOT_AUTHORIZED = 1501,
+}
+
+export enum LICENSE_ERROR_TYPE {
+    LICENSE_ERR_INVALID = 1,
+
+    LICENSE_ERR_EXPIRE = 2,
+
+    LICENSE_ERR_MINUTES_EXCEED = 3,
+
+    LICENSE_ERR_LIMITED_PERIOD = 4,
+
+    LICENSE_ERR_DIFF_DEVICES = 5,
+
+    LICENSE_ERR_INTERNAL = 99,
+}
+
+export enum AUDIO_SESSION_OPERATION_RESTRICTION {
+    AUDIO_SESSION_OPERATION_RESTRICTION_NONE = 0,
+
+    AUDIO_SESSION_OPERATION_RESTRICTION_SET_CATEGORY = 1,
+
+    AUDIO_SESSION_OPERATION_RESTRICTION_CONFIGURE_SESSION = 1 << 1,
+
+    AUDIO_SESSION_OPERATION_RESTRICTION_DEACTIVATE_SESSION = 1 << 2,
+
+    AUDIO_SESSION_OPERATION_RESTRICTION_ALL = 1 << 7,
+}
+
+export enum USER_OFFLINE_REASON_TYPE {
+    USER_OFFLINE_QUIT = 0,
+
+    USER_OFFLINE_DROPPED = 1,
+
+    USER_OFFLINE_BECOME_AUDIENCE = 2,
+}
+
+export enum INTERFACE_ID_TYPE {
+    AGORA_IID_AUDIO_DEVICE_MANAGER = 1,
+
+    AGORA_IID_VIDEO_DEVICE_MANAGER = 2,
+
+    AGORA_IID_PARAMETER_ENGINE = 3,
+
+    AGORA_IID_MEDIA_ENGINE = 4,
+
+    AGORA_IID_AUDIO_ENGINE = 5,
+
+    AGORA_IID_VIDEO_ENGINE = 6,
+
+    AGORA_IID_RTC_CONNECTION = 7,
+
+    AGORA_IID_SIGNALING_ENGINE = 8,
+
+    AGORA_IID_MEDIA_ENGINE_REGULATOR = 9,
+
+    AGORA_IID_LOCAL_SPATIAL_AUDIO = 11,
+
+    AGORA_IID_STATE_SYNC = 13,
+
+    AGORA_IID_META_SERVICE = 14,
+
+    AGORA_IID_MUSIC_CONTENT_CENTER = 15,
+
+    AGORA_IID_H265_TRANSCODER = 16,
+}
+
+export enum QUALITY_TYPE {
+    QUALITY_UNKNOWN = 0,
+
+    QUALITY_EXCELLENT = 1,
+
+    QUALITY_GOOD = 2,
+
+    QUALITY_POOR = 3,
+
+    QUALITY_BAD = 4,
+
+    QUALITY_VBAD = 5,
+
+    QUALITY_DOWN = 6,
+
+    QUALITY_UNSUPPORTED = 7,
+
+    QUALITY_DETECTING = 8,
+}
+
+export enum FIT_MODE_TYPE {
+    MODE_COVER = 1,
+
+    MODE_CONTAIN = 2,
+}
+
+export enum VIDEO_ORIENTATION {
+    VIDEO_ORIENTATION_0 = 0,
+
+    VIDEO_ORIENTATION_90 = 90,
+
+    VIDEO_ORIENTATION_180 = 180,
+
+    VIDEO_ORIENTATION_270 = 270,
+}
+
+export enum FRAME_RATE {
+    FRAME_RATE_FPS_1 = 1,
+
+    FRAME_RATE_FPS_7 = 7,
+
+    FRAME_RATE_FPS_10 = 10,
+
+    FRAME_RATE_FPS_15 = 15,
+
+    FRAME_RATE_FPS_24 = 24,
+
+    FRAME_RATE_FPS_30 = 30,
+
+    FRAME_RATE_FPS_60 = 60,
+}
+
+export enum FRAME_WIDTH {
+    FRAME_WIDTH_960 = 960,
+}
+
+export enum FRAME_HEIGHT {
+    FRAME_HEIGHT_540 = 540,
+}
+
+export enum VIDEO_FRAME_TYPE {
+    VIDEO_FRAME_TYPE_BLANK_FRAME = 0,
+
+    VIDEO_FRAME_TYPE_KEY_FRAME = 3,
+
+    VIDEO_FRAME_TYPE_DELTA_FRAME = 4,
+
+    VIDEO_FRAME_TYPE_B_FRAME = 5,
+
+    VIDEO_FRAME_TYPE_DROPPABLE_FRAME = 6,
+
+    VIDEO_FRAME_TYPE_UNKNOW,
+}
+
+export enum ORIENTATION_MODE {
+    ORIENTATION_MODE_ADAPTIVE = 0,
+
+    ORIENTATION_MODE_FIXED_LANDSCAPE = 1,
+
+    ORIENTATION_MODE_FIXED_PORTRAIT = 2,
+}
+
+export enum DEGRADATION_PREFERENCE {
+    MAINTAIN_AUTO = -1,
+
+    MAINTAIN_QUALITY = 0,
+
+    MAINTAIN_FRAMERATE = 1,
+
+    MAINTAIN_BALANCED = 2,
+
+    MAINTAIN_RESOLUTION = 3,
+
+    DISABLED = 100,
+}
+
+export interface VideoDimensions {
+    width: number;
+
+    height: number;
+}
+
+export enum SCREEN_CAPTURE_FRAMERATE_CAPABILITY {
+    SCREEN_CAPTURE_FRAMERATE_CAPABILITY_15_FPS = 0,
+
+    SCREEN_CAPTURE_FRAMERATE_CAPABILITY_30_FPS = 1,
+
+    SCREEN_CAPTURE_FRAMERATE_CAPABILITY_60_FPS = 2,
+}
+
+export enum VIDEO_CODEC_CAPABILITY_LEVEL {
+    CODEC_CAPABILITY_LEVEL_UNSPECIFIED = -1,
+
+    CODEC_CAPABILITY_LEVEL_BASIC_SUPPORT = 5,
+
+    CODEC_CAPABILITY_LEVEL_1080P30FPS = 10,
+
+    CODEC_CAPABILITY_LEVEL_1080P60FPS = 20,
+
+    CODEC_CAPABILITY_LEVEL_4K60FPS = 30,
+}
+
+export enum VIDEO_CODEC_TYPE {
+    VIDEO_CODEC_NONE = 0,
+
+    VIDEO_CODEC_VP8 = 1,
+
+    VIDEO_CODEC_H264 = 2,
+
+    VIDEO_CODEC_H265 = 3,
+
+    VIDEO_CODEC_GENERIC = 6,
+
+    VIDEO_CODEC_GENERIC_H264 = 7,
+
+    VIDEO_CODEC_AV1 = 12,
+
+    VIDEO_CODEC_VP9 = 13,
+
+    VIDEO_CODEC_GENERIC_JPEG = 20,
+}
+
+export enum CAMERA_FOCAL_LENGTH_TYPE {
+    CAMERA_FOCAL_LENGTH_DEFAULT = 0,
+
+    CAMERA_FOCAL_LENGTH_WIDE_ANGLE = 1,
+
+    CAMERA_FOCAL_LENGTH_ULTRA_WIDE = 2,
+
+    CAMERA_FOCAL_LENGTH_TELEPHOTO = 3,
+}
+
+export enum TCcMode {
+    CC_ENABLED,
+
+    CC_DISABLED,
+}
+
+export interface SenderOptions {
+    ccMode: TCcMode;
+
+    codecType: VIDEO_CODEC_TYPE;
+
+    targetBitrate: number;
+}
+
+export enum AUDIO_CODEC_TYPE {
+    AUDIO_CODEC_OPUS = 1,
+
+    AUDIO_CODEC_PCMA = 3,
+
+    AUDIO_CODEC_PCMU = 4,
+
+    AUDIO_CODEC_G722 = 5,
+
+    AUDIO_CODEC_AACLC = 8,
+
+    AUDIO_CODEC_HEAAC = 9,
+
+    AUDIO_CODEC_JC1 = 10,
+
+    AUDIO_CODEC_HEAAC2 = 11,
+
+    AUDIO_CODEC_LPCNET = 12,
+
+    AUDIO_CODEC_OPUSMC = 13,
+}
+
+export enum AUDIO_ENCODING_TYPE {
+    AUDIO_ENCODING_TYPE_AAC_16000_LOW = 0x010101,
+
+    AUDIO_ENCODING_TYPE_AAC_16000_MEDIUM = 0x010102,
+
+    AUDIO_ENCODING_TYPE_AAC_32000_LOW = 0x010201,
+
+    AUDIO_ENCODING_TYPE_AAC_32000_MEDIUM = 0x010202,
+
+    AUDIO_ENCODING_TYPE_AAC_32000_HIGH = 0x010203,
+
+    AUDIO_ENCODING_TYPE_AAC_48000_MEDIUM = 0x010302,
+
+    AUDIO_ENCODING_TYPE_AAC_48000_HIGH = 0x010303,
+
+    AUDIO_ENCODING_TYPE_OPUS_16000_LOW = 0x020101,
+
+    AUDIO_ENCODING_TYPE_OPUS_16000_MEDIUM = 0x020102,
+
+    AUDIO_ENCODING_TYPE_OPUS_48000_MEDIUM = 0x020302,
+
+    AUDIO_ENCODING_TYPE_OPUS_48000_HIGH = 0x020303,
+}
+
+export enum WATERMARK_FIT_MODE {
+    FIT_MODE_COVER_POSITION = 0,
+
+    FIT_MODE_USE_IMAGE_RATIO = 1,
+}
+
+export interface EncodedAudioFrameAdvancedSettings {
+    speech: boolean;
+
+    sendEvenIfEmpty: boolean;
+}
+
+export interface EncodedAudioFrameInfo {
+    codec: AUDIO_CODEC_TYPE;
+
+    sampleRateHz: number;
+
+    samplesPerChannel: number;
+
+    numberOfChannels: number;
+
+    advancedSettings: EncodedAudioFrameAdvancedSettings;
+
+    captureTimeMs: number;
+}
+
+export interface AudioPcmDataInfo {
+    samplesPerChannel: number;
+
+    channelNum: number;
+
+    samplesOut: number;
+
+    elapsedTimeMs: number;
+
+    ntpTimeMs: number;
+}
+
+export enum H264PacketizeMode {
+    NonInterleaved = 0,
+
+    SingleNalUnit,
+}
+
+export enum VIDEO_STREAM_TYPE {
+    VIDEO_STREAM_HIGH = 0,
+
+    VIDEO_STREAM_LOW = 1,
+
+    VIDEO_STREAM_LAYER_1 = 4,
+
+    VIDEO_STREAM_LAYER_2 = 5,
+
+    VIDEO_STREAM_LAYER_3 = 6,
+
+    VIDEO_STREAM_LAYER_4 = 7,
+
+    VIDEO_STREAM_LAYER_5 = 8,
+
+    VIDEO_STREAM_LAYER_6 = 9,
+}
+
+export interface VideoSubscriptionOptions {
+    type?: VIDEO_STREAM_TYPE;
+
+    encodedFrameOnly?: boolean;
+}
+
+export enum MAX_USER_ACCOUNT_LENGTH_TYPE {
+    MAX_USER_ACCOUNT_LENGTH = 256,
+}
+
+export interface EncodedVideoFrameInfo {
+    codecType: VIDEO_CODEC_TYPE;
+
+    width: number;
+
+    height: number;
+
+    framesPerSecond: number;
+
+    frameType: VIDEO_FRAME_TYPE;
+
+    rotation: VIDEO_ORIENTATION;
+
+    trackId: number;
+
+    captureTimeMs: number;
+
+    decodeTimeMs: number;
+
+    streamType: VIDEO_STREAM_TYPE;
+
+    presentationMs: number;
+}
+
+export enum COMPRESSION_PREFERENCE {
+    PREFER_COMPRESSION_AUTO = -1,
+
+    PREFER_LOW_LATENCY = 0,
+
+    PREFER_QUALITY = 1,
+}
+
+export enum ENCODING_PREFERENCE {
+    PREFER_AUTO = -1,
+
+    PREFER_SOFTWARE = 0,
+
+    PREFER_HARDWARE = 1,
+}
+
+export interface AdvanceOptions {
+    encodingPreference: ENCODING_PREFERENCE;
+
+    compressionPreference: COMPRESSION_PREFERENCE;
+
+    encodeAlpha: boolean;
+}
+
+export enum VIDEO_MIRROR_MODE_TYPE {
+    VIDEO_MIRROR_MODE_AUTO = 0,
+
+    VIDEO_MIRROR_MODE_ENABLED = 1,
+
+    VIDEO_MIRROR_MODE_DISABLED = 2,
+}
+
+export enum CAMERA_FORMAT_TYPE {
+    CAMERA_FORMAT_NV12,
+
+    CAMERA_FORMAT_BGRA,
+}
+
+export enum VIDEO_MODULE_TYPE {
+    VIDEO_MODULE_CAPTURER = 0,
+
+    VIDEO_MODULE_SOFTWARE_ENCODER = 1,
+
+    VIDEO_MODULE_HARDWARE_ENCODER = 2,
+
+    VIDEO_MODULE_SOFTWARE_DECODER = 3,
+
+    VIDEO_MODULE_HARDWARE_DECODER = 4,
+
+    VIDEO_MODULE_RENDERER = 5,
+}
+
+export enum HDR_CAPABILITY {
+    HDR_CAPABILITY_UNKNOWN = -1,
+
+    HDR_CAPABILITY_UNSUPPORTED = 0,
+
+    HDR_CAPABILITY_SUPPORTED = 1,
+}
+
+export enum CODEC_CAP_MASK {
+    CODEC_CAP_MASK_NONE = 0,
+
+    CODEC_CAP_MASK_HW_DEC = 1 << 0,
+
+    CODEC_CAP_MASK_HW_ENC = 1 << 1,
+
+    CODEC_CAP_MASK_SW_DEC = 1 << 2,
+
+    CODEC_CAP_MASK_SW_ENC = 1 << 3,
+}
+
+export interface CodecCapLevels {
+    hwDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL;
+
+    swDecodingLevel: VIDEO_CODEC_CAPABILITY_LEVEL;
+}
+
+export interface CodecCapInfo {
+    codecType: VIDEO_CODEC_TYPE;
+
+    codecCapMask: number;
+
+    codecLevels: CodecCapLevels;
+}
+
+export interface FocalLengthInfo {
+    cameraDirection: number;
+
+    focalLengthType: CAMERA_FOCAL_LENGTH_TYPE;
+}
+
+export interface VideoEncoderConfiguration {
+    codecType: VIDEO_CODEC_TYPE;
+
+    dimensions: VideoDimensions;
+
+    frameRate: number;
+
+    bitrate: number;
+
+    minBitrate: number;
+
+    orientationMode: ORIENTATION_MODE;
+
+    degradationPreference: DEGRADATION_PREFERENCE;
+
+    mirrorMode: VIDEO_MIRROR_MODE_TYPE;
+
+    advanceOptions: AdvanceOptions;
+}
+
+export interface DataStreamConfig {
+    syncWithAudio: boolean;
+
+    ordered: boolean;
+}
+
+export enum SIMULCAST_STREAM_MODE {
+    AUTO_SIMULCAST_STREAM = -1,
+
+    DISABLE_SIMULCAST_STREAM = 0,
+
+    ENABLE_SIMULCAST_STREAM = 1,
+}
+
+export interface SimulcastStreamConfig {
+    dimensions: VideoDimensions;
+
+    kBitrate: number;
+
+    framerate: number;
+}
+
+export interface SimulcastConfig {
+    configs: StreamLayerConfig[];
+
+    publish_fallback_enable: boolean;
+}
+
+export enum StreamLayerIndex {
+    STREAM_LAYER_1 = 0,
+
+    STREAM_LAYER_2 = 1,
+
+    STREAM_LAYER_3 = 2,
+
+    STREAM_LAYER_4 = 3,
+
+    STREAM_LAYER_5 = 4,
+
+    STREAM_LAYER_6 = 5,
+
+    STREAM_LOW = 6,
+
+    STREAM_LAYER_COUNT_MAX = 7,
+}
+
+export interface StreamLayerConfig {
+    dimensions: VideoDimensions;
+
+    framerate: number;
+
+    enable: boolean;
+}
+
+export interface Rectangle {
+    x: number;
+
+    y: number;
+
+    width: number;
+
+    height: number;
+}
+
+export interface WatermarkRatio {
+    xRatio: number;
+
+    yRatio: number;
+
+    widthRatio: number;
+}
+
+export interface WatermarkOptions {
+    visibleInPreview: boolean;
+
+    positionInLandscapeMode: Rectangle;
+
+    positionInPortraitMode: Rectangle;
+
+    watermarkRatio: WatermarkRatio;
+
+    mode: WATERMARK_FIT_MODE;
+
+    zOrder: number;
+}
+
+export enum WATERMARK_SOURCE_TYPE {
+    IMAGE = 0,
+
+    BUFFER = 1,
+
+    LITERAL = 2,
+
+    TIMESTAMPS = 3,
+}
+
+export interface WatermarkTimestamp {
+    fontSize: number;
+
+    fontFilePath: string;
+
+    strokeWidth: number;
+
+    format: string;
+}
+
+export interface WatermarkLiteral {
+    fontSize: number;
+
+    strokeWidth: number;
+
+    wmLiteral: string;
+
+    fontFilePath: string;
+}
+
+export interface WatermarkBuffer {
+    width: number;
+
+    height: number;
+
+    length: number;
+
+    format: VIDEO_PIXEL_FORMAT;
+
+    buffer: Uint8Array;
+}
+
+export interface WatermarkConfig {
+    id: string;
+
+    type: WATERMARK_SOURCE_TYPE;
+
+    buffer: WatermarkBuffer;
+
+    timestamp: WatermarkTimestamp;
+
+    literal: WatermarkLiteral;
+
+    imageUrl: string;
+
+    options: WatermarkOptions;
+}
+
+export enum MultipathMode {
+    Duplicate = 0,
+
+    Dynamic,
+}
+
+export enum MultipathType {
+    LAN = 0,
+
+    WIFI,
+
+    Mobile,
+
+    Unknown = 99,
+}
+
+export interface PathStats {
+    type: MultipathType;
+
+    txKBitRate: number;
+
+    rxKBitRate: number;
+}
+
+export interface MultipathStats {
+    lanTxBytes: number;
+
+    lanRxBytes: number;
+
+    wifiTxBytes: number;
+
+    wifiRxBytes: number;
+
+    mobileTxBytes: number;
+
+    mobileRxBytes: number;
+
+    activePathNum: number;
+
+    pathStats: PathStats[];
+}
+
+export interface RtcStats {
+    duration: number;
+
+    txBytes: number;
+
+    rxBytes: number;
+
+    txAudioBytes: number;
+
+    txVideoBytes: number;
+
+    rxAudioBytes: number;
+
+    rxVideoBytes: number;
+
+    txKBitRate: number;
+
+    rxKBitRate: number;
+
+    rxAudioKBitRate: number;
+
+    txAudioKBitRate: number;
+
+    rxVideoKBitRate: number;
+
+    txVideoKBitRate: number;
+
+    lastmileDelay: number;
+
+    userCount: number;
+
+    cpuAppUsage: number;
+
+    cpuTotalUsage: number;
+
+    gatewayRtt: number;
+
+    memoryAppUsageRatio: number;
+
+    memoryTotalUsageRatio: number;
+
+    memoryAppUsageInKbytes: number;
+
+    connectTimeMs: number;
+
+    firstAudioPacketDuration: number;
+
+    firstVideoPacketDuration: number;
+
+    firstVideoKeyFramePacketDuration: number;
+
+    packetsBeforeFirstKeyFramePacket: number;
+
+    firstAudioPacketDurationAfterUnmute: number;
+
+    firstVideoPacketDurationAfterUnmute: number;
+
+    firstVideoKeyFramePacketDurationAfterUnmute: number;
+
+    firstVideoKeyFrameDecodedDurationAfterUnmute: number;
+
+    firstVideoKeyFrameRenderedDurationAfterUnmute: number;
+
+    txPacketLossRate: number;
+
+    rxPacketLossRate: number;
+
+    lanAccelerateState: number;
+}
+
+export enum CLIENT_ROLE_TYPE {
+    CLIENT_ROLE_BROADCASTER = 1,
+
+    CLIENT_ROLE_AUDIENCE = 2,
+}
+
+export enum QUALITY_ADAPT_INDICATION {
+    ADAPT_NONE = 0,
+
+    ADAPT_UP_BANDWIDTH = 1,
+
+    ADAPT_DOWN_BANDWIDTH = 2,
+}
+
+export enum AUDIENCE_LATENCY_LEVEL_TYPE {
+    AUDIENCE_LATENCY_LEVEL_LOW_LATENCY = 1,
+
+    AUDIENCE_LATENCY_LEVEL_ULTRA_LOW_LATENCY = 2,
+}
+
+export interface ClientRoleOptions {
+    audienceLatencyLevel: AUDIENCE_LATENCY_LEVEL_TYPE;
+}
+
+export enum EXPERIENCE_QUALITY_TYPE {
+    EXPERIENCE_QUALITY_GOOD = 0,
+
+    EXPERIENCE_QUALITY_BAD = 1,
+}
+
+export enum EXPERIENCE_POOR_REASON {
+    EXPERIENCE_REASON_NONE = 0,
+
+    REMOTE_NETWORK_QUALITY_POOR = 1,
+
+    LOCAL_NETWORK_QUALITY_POOR = 2,
+
+    WIRELESS_SIGNAL_POOR = 4,
+
+    WIFI_BLUETOOTH_COEXIST = 8,
+}
+
+export enum AUDIO_AINS_MODE {
+    AINS_MODE_BALANCED = 0,
+
+    AINS_MODE_AGGRESSIVE = 1,
+
+    AINS_MODE_ULTRALOWLATENCY = 2,
+}
+
+export enum AUDIO_PROFILE_TYPE {
+    AUDIO_PROFILE_DEFAULT = 0,
+
+    AUDIO_PROFILE_SPEECH_STANDARD = 1,
+
+    AUDIO_PROFILE_MUSIC_STANDARD = 2,
+
+    AUDIO_PROFILE_MUSIC_STANDARD_STEREO = 3,
+
+    AUDIO_PROFILE_MUSIC_HIGH_QUALITY = 4,
+
+    AUDIO_PROFILE_MUSIC_HIGH_QUALITY_STEREO = 5,
+
+    AUDIO_PROFILE_IOT = 6,
+
+    AUDIO_PROFILE_NUM = 7,
+}
+
+export enum AUDIO_SCENARIO_TYPE {
+    AUDIO_SCENARIO_DEFAULT = 0,
+
+    AUDIO_SCENARIO_GAME_STREAMING = 3,
+
+    AUDIO_SCENARIO_CHATROOM = 5,
+
+    AUDIO_SCENARIO_CHORUS = 7,
+
+    AUDIO_SCENARIO_MEETING = 8,
+
+    AUDIO_SCENARIO_AI_SERVER = 9,
+
+    AUDIO_SCENARIO_AI_CLIENT = 10,
+
+    AUDIO_SCENARIO_NUM = 11,
+}
+
+export interface VideoFormat {
+    width: number;
+
+    height: number;
+
+    fps: number;
+}
+
+export enum VIDEO_CONTENT_HINT {
+    CONTENT_HINT_NONE,
+
+    CONTENT_HINT_MOTION,
+
+    CONTENT_HINT_DETAILS,
+}
+
+export enum SCREEN_SCENARIO_TYPE {
+    SCREEN_SCENARIO_DOCUMENT = 1,
+
+    SCREEN_SCENARIO_GAMING = 2,
+
+    SCREEN_SCENARIO_VIDEO = 3,
+
+    SCREEN_SCENARIO_RDC = 4,
+}
+
+export enum VIDEO_APPLICATION_SCENARIO_TYPE {
+    APPLICATION_SCENARIO_GENERAL = 0,
+
+    APPLICATION_SCENARIO_MEETING = 1,
+
+    APPLICATION_SCENARIO_1V1 = 2,
+
+    APPLICATION_SCENARIO_LIVESHOW = 3,
+}
+
+export enum VIDEO_QOE_PREFERENCE_TYPE {
+    VIDEO_QOE_PREFERENCE_BALANCE = 1,
+
+    VIDEO_QOE_PREFERENCE_DELAY_FIRST = 2,
+
+    VIDEO_QOE_PREFERENCE_PICTURE_QUALITY_FIRST = 3,
+
+    VIDEO_QOE_PREFERENCE_FLUENCY_FIRST = 4,
+}
+
+export enum CAPTURE_BRIGHTNESS_LEVEL_TYPE {
+    CAPTURE_BRIGHTNESS_LEVEL_INVALID = -1,
+
+    CAPTURE_BRIGHTNESS_LEVEL_NORMAL = 0,
+
+    CAPTURE_BRIGHTNESS_LEVEL_BRIGHT = 1,
+
+    CAPTURE_BRIGHTNESS_LEVEL_DARK = 2,
+}
+
+export enum CAMERA_STABILIZATION_MODE {
+    CAMERA_STABILIZATION_MODE_OFF = -1,
+
+    CAMERA_STABILIZATION_MODE_AUTO = 0,
+
+    CAMERA_STABILIZATION_MODE_LEVEL_1 = 1,
+
+    CAMERA_STABILIZATION_MODE_LEVEL_2 = 2,
+
+    CAMERA_STABILIZATION_MODE_LEVEL_3 = 3,
+
+    CAMERA_STABILIZATION_MODE_MAX_LEVEL = CAMERA_STABILIZATION_MODE_LEVEL_3,
+}
+
+export enum LOCAL_AUDIO_STREAM_STATE {
+    LOCAL_AUDIO_STREAM_STATE_STOPPED = 0,
+
+    LOCAL_AUDIO_STREAM_STATE_RECORDING = 1,
+
+    LOCAL_AUDIO_STREAM_STATE_ENCODING = 2,
+
+    LOCAL_AUDIO_STREAM_STATE_FAILED = 3,
+}
+
+export enum LOCAL_AUDIO_STREAM_REASON {
+    LOCAL_AUDIO_STREAM_REASON_OK = 0,
+
+    LOCAL_AUDIO_STREAM_REASON_FAILURE = 1,
+
+    LOCAL_AUDIO_STREAM_REASON_DEVICE_NO_PERMISSION = 2,
+
+    LOCAL_AUDIO_STREAM_REASON_DEVICE_BUSY = 3,
+
+    LOCAL_AUDIO_STREAM_REASON_RECORD_FAILURE = 4,
+
+    LOCAL_AUDIO_STREAM_REASON_ENCODE_FAILURE = 5,
+
+    LOCAL_AUDIO_STREAM_REASON_NO_RECORDING_DEVICE = 6,
+
+    LOCAL_AUDIO_STREAM_REASON_NO_PLAYOUT_DEVICE = 7,
+
+    LOCAL_AUDIO_STREAM_REASON_INTERRUPTED = 8,
+
+    LOCAL_AUDIO_STREAM_REASON_RECORD_INVALID_ID = 9,
+
+    LOCAL_AUDIO_STREAM_REASON_PLAYOUT_INVALID_ID = 10,
+}
+
+export enum LOCAL_VIDEO_STREAM_STATE {
+    LOCAL_VIDEO_STREAM_STATE_STOPPED = 0,
+
+    LOCAL_VIDEO_STREAM_STATE_CAPTURING = 1,
+
+    LOCAL_VIDEO_STREAM_STATE_ENCODING = 2,
+
+    LOCAL_VIDEO_STREAM_STATE_FAILED = 3,
+}
+
+export enum LOCAL_VIDEO_EVENT_TYPE {
+    LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_WINDOW_HIDDEN = 1,
+
+    LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_WINDOW_RECOVER_FROM_HIDDEN = 2,
+
+    LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_STOPPED_BY_USER = 3,
+
+    LOCAL_VIDEO_EVENT_TYPE_SCREEN_CAPTURE_SYSTEM_INTERNAL_ERROR = 4,
+}
+
+export enum LOCAL_VIDEO_STREAM_REASON {
+    LOCAL_VIDEO_STREAM_REASON_OK = 0,
+
+    LOCAL_VIDEO_STREAM_REASON_FAILURE = 1,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_NO_PERMISSION = 2,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_BUSY = 3,
+
+    LOCAL_VIDEO_STREAM_REASON_CAPTURE_FAILURE = 4,
+
+    LOCAL_VIDEO_STREAM_REASON_CODEC_NOT_SUPPORT = 5,
+
+    LOCAL_VIDEO_STREAM_REASON_CAPTURE_INBACKGROUND = 6,
+
+    LOCAL_VIDEO_STREAM_REASON_CAPTURE_MULTIPLE_FOREGROUND_APPS = 7,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_NOT_FOUND = 8,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_DISCONNECTED = 9,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_INVALID_ID = 10,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_INTERRUPT = 14,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_FATAL_ERROR = 15,
+
+    LOCAL_VIDEO_STREAM_REASON_DEVICE_SYSTEM_PRESSURE = 101,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_MINIMIZED = 11,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_CLOSED = 12,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_OCCLUDED = 13,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_NOT_SUPPORTED = 20,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_FAILURE = 21,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_NO_PERMISSION = 22,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_AUTO_FALLBACK = 24,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_HIDDEN = 25,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_RECOVER_FROM_HIDDEN = 26,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_WINDOW_RECOVER_FROM_MINIMIZED = 27,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_PAUSED = 28,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_RESUMED = 29,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_DISPLAY_DISCONNECTED = 30,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_STOPPED_BY_USER = 31,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_INTERRUPTED_BY_OTHER = 32,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_STOPPED_BY_CALL = 33,
+
+    LOCAL_VIDEO_STREAM_REASON_SCREEN_CAPTURE_EXCLUDE_WINDOW_FAILED = 34,
+}
+
+export enum REMOTE_AUDIO_STATE {
+    REMOTE_AUDIO_STATE_STOPPED = 0,
+
+    REMOTE_AUDIO_STATE_STARTING = 1,
+
+    REMOTE_AUDIO_STATE_DECODING = 2,
+
+    REMOTE_AUDIO_STATE_FROZEN = 3,
+
+    REMOTE_AUDIO_STATE_FAILED = 4,
+}
+
+export enum REMOTE_AUDIO_STATE_REASON {
+    REMOTE_AUDIO_REASON_INTERNAL = 0,
+
+    REMOTE_AUDIO_REASON_NETWORK_CONGESTION = 1,
+
+    REMOTE_AUDIO_REASON_NETWORK_RECOVERY = 2,
+
+    REMOTE_AUDIO_REASON_LOCAL_MUTED = 3,
+
+    REMOTE_AUDIO_REASON_LOCAL_UNMUTED = 4,
+
+    REMOTE_AUDIO_REASON_REMOTE_MUTED = 5,
+
+    REMOTE_AUDIO_REASON_REMOTE_UNMUTED = 6,
+
+    REMOTE_AUDIO_REASON_REMOTE_OFFLINE = 7,
+
+    REMOTE_AUDIO_REASON_NO_PACKET_RECEIVE = 8,
+
+    REMOTE_AUDIO_REASON_LOCAL_PLAY_FAILED = 9,
+}
+
+export enum REMOTE_VIDEO_STATE {
+    REMOTE_VIDEO_STATE_STOPPED = 0,
+
+    REMOTE_VIDEO_STATE_STARTING = 1,
+
+    REMOTE_VIDEO_STATE_DECODING = 2,
+
+    REMOTE_VIDEO_STATE_FROZEN = 3,
+
+    REMOTE_VIDEO_STATE_FAILED = 4,
+}
+
+export enum REMOTE_VIDEO_STATE_REASON {
+    REMOTE_VIDEO_STATE_REASON_INTERNAL = 0,
+
+    REMOTE_VIDEO_STATE_REASON_NETWORK_CONGESTION = 1,
+
+    REMOTE_VIDEO_STATE_REASON_NETWORK_RECOVERY = 2,
+
+    REMOTE_VIDEO_STATE_REASON_LOCAL_MUTED = 3,
+
+    REMOTE_VIDEO_STATE_REASON_LOCAL_UNMUTED = 4,
+
+    REMOTE_VIDEO_STATE_REASON_REMOTE_MUTED = 5,
+
+    REMOTE_VIDEO_STATE_REASON_REMOTE_UNMUTED = 6,
+
+    REMOTE_VIDEO_STATE_REASON_REMOTE_OFFLINE = 7,
+
+    REMOTE_VIDEO_STATE_REASON_AUDIO_FALLBACK = 8,
+
+    REMOTE_VIDEO_STATE_REASON_AUDIO_FALLBACK_RECOVERY = 9,
+
+    REMOTE_VIDEO_STATE_REASON_VIDEO_STREAM_TYPE_CHANGE_TO_LOW = 10,
+
+    REMOTE_VIDEO_STATE_REASON_VIDEO_STREAM_TYPE_CHANGE_TO_HIGH = 11,
+
+    REMOTE_VIDEO_STATE_REASON_SDK_IN_BACKGROUND = 12,
+
+    REMOTE_VIDEO_STATE_REASON_CODEC_NOT_SUPPORT = 13,
+}
+
+export enum REMOTE_USER_STATE {
+    USER_STATE_MUTE_AUDIO = 1 << 0,
+
+    USER_STATE_MUTE_VIDEO = 1 << 1,
+
+    USER_STATE_ENABLE_VIDEO = 1 << 4,
+
+    USER_STATE_ENABLE_LOCAL_VIDEO = 1 << 8,
+}
+
+export interface VideoTrackInfo {
+    isLocal: boolean;
+
+    ownerUid: number;
+
+    trackId: number;
+
+    channelId: string;
+
+    codecType: VIDEO_CODEC_TYPE;
+
+    encodedFrameOnly: boolean;
+
+    sourceType: VIDEO_SOURCE_TYPE;
+
+    observationPosition: number;
+}
+
+export enum REMOTE_VIDEO_DOWNSCALE_LEVEL {
+    REMOTE_VIDEO_DOWNSCALE_LEVEL_NONE,
+
+    REMOTE_VIDEO_DOWNSCALE_LEVEL_1,
+
+    REMOTE_VIDEO_DOWNSCALE_LEVEL_2,
+
+    REMOTE_VIDEO_DOWNSCALE_LEVEL_3,
+
+    REMOTE_VIDEO_DOWNSCALE_LEVEL_4,
+}
+
+export interface AudioVolumeInfo {
+    uid: number;
+
+    volume: number;
+
+    vad: number;
+
+    voicePitch: number;
+}
+
+export interface DeviceInfo {
+    isLowLatencyAudioSupported: boolean;
+}
+
+export enum AUDIO_SAMPLE_RATE_TYPE {
+    AUDIO_SAMPLE_RATE_32000 = 32000,
+
+    AUDIO_SAMPLE_RATE_44100 = 44100,
+
+    AUDIO_SAMPLE_RATE_48000 = 48000,
+}
+
+export enum VIDEO_CODEC_TYPE_FOR_STREAM {
+    VIDEO_CODEC_H264_FOR_STREAM = 1,
+
+    VIDEO_CODEC_H265_FOR_STREAM = 2,
+}
+
+export enum VIDEO_CODEC_PROFILE_TYPE {
+    VIDEO_CODEC_PROFILE_BASELINE = 66,
+
+    VIDEO_CODEC_PROFILE_MAIN = 77,
+
+    VIDEO_CODEC_PROFILE_HIGH = 100,
+}
+
+export enum AUDIO_CODEC_PROFILE_TYPE {
+    AUDIO_CODEC_PROFILE_LC_AAC = 0,
+
+    AUDIO_CODEC_PROFILE_HE_AAC = 1,
+
+    AUDIO_CODEC_PROFILE_HE_AAC_V2 = 2,
+}
+
+export interface LocalAudioStats {
+    numChannels: number;
+
+    sentSampleRate: number;
+
+    sentBitrate: number;
+
+    internalCodec: number;
+
+    txPacketLossRate: number;
+
+    audioDeviceDelay: number;
+
+    audioPlayoutDelay: number;
+
+    earMonitorDelay: number;
+
+    aecEstimatedDelay: number;
+}
+
+export enum RTMP_STREAM_PUBLISH_STATE {
+    RTMP_STREAM_PUBLISH_STATE_IDLE = 0,
+
+    RTMP_STREAM_PUBLISH_STATE_CONNECTING = 1,
+
+    RTMP_STREAM_PUBLISH_STATE_RUNNING = 2,
+
+    RTMP_STREAM_PUBLISH_STATE_RECOVERING = 3,
+
+    RTMP_STREAM_PUBLISH_STATE_FAILURE = 4,
+
+    RTMP_STREAM_PUBLISH_STATE_DISCONNECTING = 5,
+}
+
+export enum RTMP_STREAM_PUBLISH_REASON {
+    RTMP_STREAM_PUBLISH_REASON_OK = 0,
+
+    RTMP_STREAM_PUBLISH_REASON_INVALID_ARGUMENT = 1,
+
+    RTMP_STREAM_PUBLISH_REASON_ENCRYPTED_STREAM_NOT_ALLOWED = 2,
+
+    RTMP_STREAM_PUBLISH_REASON_CONNECTION_TIMEOUT = 3,
+
+    RTMP_STREAM_PUBLISH_REASON_INTERNAL_SERVER_ERROR = 4,
+
+    RTMP_STREAM_PUBLISH_REASON_RTMP_SERVER_ERROR = 5,
+
+    RTMP_STREAM_PUBLISH_REASON_TOO_OFTEN = 6,
+
+    RTMP_STREAM_PUBLISH_REASON_REACH_LIMIT = 7,
+
+    RTMP_STREAM_PUBLISH_REASON_NOT_AUTHORIZED = 8,
+
+    RTMP_STREAM_PUBLISH_REASON_STREAM_NOT_FOUND = 9,
+
+    RTMP_STREAM_PUBLISH_REASON_FORMAT_NOT_SUPPORTED = 10,
+
+    RTMP_STREAM_PUBLISH_REASON_NOT_BROADCASTER = 11,
+
+    RTMP_STREAM_PUBLISH_REASON_TRANSCODING_NO_MIX_STREAM = 13,
+
+    RTMP_STREAM_PUBLISH_REASON_NET_DOWN = 14,
+
+    RTMP_STREAM_PUBLISH_REASON_INVALID_APPID = 15,
+
+    RTMP_STREAM_PUBLISH_REASON_INVALID_PRIVILEGE = 16,
+
+    RTMP_STREAM_UNPUBLISH_REASON_OK = 100,
+}
+
+export enum RTMP_STREAMING_EVENT {
+    RTMP_STREAMING_EVENT_FAILED_LOAD_IMAGE = 1,
+
+    RTMP_STREAMING_EVENT_URL_ALREADY_IN_USE = 2,
+
+    RTMP_STREAMING_EVENT_ADVANCED_FEATURE_NOT_SUPPORT = 3,
+
+    RTMP_STREAMING_EVENT_REQUEST_TOO_OFTEN = 4,
+}
+
+export interface RtcImage {
+    url: string;
+
+    x: number;
+
+    y: number;
+
+    width: number;
+
+    height: number;
+
+    zOrder: number;
+
+    alpha: number;
+}
+
+export interface LiveStreamAdvancedFeature {
+    featureName: string;
+
+    opened: boolean;
+}
+
+export enum CONNECTION_STATE_TYPE {
+    CONNECTION_STATE_DISCONNECTED = 1,
+
+    CONNECTION_STATE_CONNECTING = 2,
+
+    CONNECTION_STATE_CONNECTED = 3,
+
+    CONNECTION_STATE_RECONNECTING = 4,
+
+    CONNECTION_STATE_FAILED = 5,
+}
+
+export interface TranscodingUser {
+    uid: number;
+
+    x: number;
+
+    y: number;
+
+    width: number;
+
+    height: number;
+
+    zOrder: number;
+
+    alpha: number;
+
+    audioChannel: number;
+}
+
+export interface LiveTranscoding {
+    width: number;
+
+    height: number;
+
+    videoBitrate: number;
+
+    videoFramerate: number;
+
+    lowLatency: boolean;
+
+    videoGop: number;
+
+    videoCodecProfile: VIDEO_CODEC_PROFILE_TYPE;
+
+    backgroundColor: number;
+
+    videoCodecType: VIDEO_CODEC_TYPE_FOR_STREAM;
+
+    userCount: number;
+
+    transcodingUsers: TranscodingUser[];
+
+    transcodingExtraInfo: string;
+
+    metadata: string;
+
+    watermark: RtcImage[];
+
+    watermarkCount: number;
+
+    backgroundImage: RtcImage[];
+
+    backgroundImageCount: number;
+
+    audioSampleRate: AUDIO_SAMPLE_RATE_TYPE;
+
+    audioBitrate: number;
+
+    audioChannels: number;
+
+    audioCodecProfile: AUDIO_CODEC_PROFILE_TYPE;
+
+    advancedFeatures: LiveStreamAdvancedFeature[];
+
+    advancedFeatureCount: number;
+}
+
+export interface TranscodingVideoStream {
+    sourceType: VIDEO_SOURCE_TYPE;
+
+    remoteUserUid: number;
+
+    imageUrl: string;
+
+    mediaPlayerId: number;
+
+    x: number;
+
+    y: number;
+
+    width: number;
+
+    height: number;
+
+    zOrder: number;
+
+    alpha: number;
+
+    mirror: boolean;
+}
+
+export interface LocalTranscoderConfiguration {
+    streamCount: number;
+
+    videoInputStreams: TranscodingVideoStream[];
+
+    videoOutputConfiguration: VideoEncoderConfiguration;
+
+    syncWithPrimaryCamera: boolean;
+}
+
+export enum VIDEO_TRANSCODER_ERROR {
+    VT_ERR_VIDEO_SOURCE_NOT_READY = 1,
+
+    VT_ERR_INVALID_VIDEO_SOURCE_TYPE = 2,
+
+    VT_ERR_INVALID_IMAGE_PATH = 3,
+
+    VT_ERR_UNSUPPORT_IMAGE_FORMAT = 4,
+
+    VT_ERR_INVALID_LAYOUT = 5,
+
+    VT_ERR_INTERNAL = 20,
+}
+
+export interface MixedAudioStream {
+    sourceType: AUDIO_SOURCE_TYPE;
+
+    remoteUserUid: number;
+
+    channelId: string;
+
+    trackId: number;
+}
+
+export interface LocalAudioMixerConfiguration {
+    streamCount: number;
+
+    audioInputStreams: MixedAudioStream[];
+
+    syncWithLocalMic: boolean;
+}
+
+export interface LastmileProbeConfig {
+    probeUplink: boolean;
+
+    probeDownlink: boolean;
+
+    expectedUplinkBitrate: number;
+
+    expectedDownlinkBitrate: number;
+}
+
+export enum LASTMILE_PROBE_RESULT_STATE {
+    LASTMILE_PROBE_RESULT_COMPLETE = 1,
+
+    LASTMILE_PROBE_RESULT_INCOMPLETE_NO_BWE = 2,
+
+    LASTMILE_PROBE_RESULT_UNAVAILABLE = 3,
+}
+
+export interface LastmileProbeOneWayResult {
+    packetLossRate: number;
+
+    jitter: number;
+
+    availableBandwidth: number;
+}
+
+export interface LastmileProbeResult {
+    state: LASTMILE_PROBE_RESULT_STATE;
+
+    uplinkReport: LastmileProbeOneWayResult;
+
+    downlinkReport: LastmileProbeOneWayResult;
+
+    rtt: number;
+}
+
+export enum CONNECTION_CHANGED_REASON_TYPE {
+    CONNECTION_CHANGED_CONNECTING = 0,
+
+    CONNECTION_CHANGED_JOIN_SUCCESS = 1,
+
+    CONNECTION_CHANGED_INTERRUPTED = 2,
+
+    CONNECTION_CHANGED_BANNED_BY_SERVER = 3,
+
+    CONNECTION_CHANGED_JOIN_FAILED = 4,
+
+    CONNECTION_CHANGED_LEAVE_CHANNEL = 5,
+
+    CONNECTION_CHANGED_INVALID_APP_ID = 6,
+
+    CONNECTION_CHANGED_INVALID_CHANNEL_NAME = 7,
+
+    CONNECTION_CHANGED_INVALID_TOKEN = 8,
+
+    CONNECTION_CHANGED_TOKEN_EXPIRED = 9,
+
+    CONNECTION_CHANGED_REJECTED_BY_SERVER = 10,
+
+    CONNECTION_CHANGED_SETTING_PROXY_SERVER = 11,
+
+    CONNECTION_CHANGED_RENEW_TOKEN = 12,
+
+    CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED = 13,
+
+    CONNECTION_CHANGED_KEEP_ALIVE_TIMEOUT = 14,
+
+    CONNECTION_CHANGED_REJOIN_SUCCESS = 15,
+
+    CONNECTION_CHANGED_LOST = 16,
+
+    CONNECTION_CHANGED_ECHO_TEST = 17,
+
+    CONNECTION_CHANGED_CLIENT_IP_ADDRESS_CHANGED_BY_USER = 18,
+
+    CONNECTION_CHANGED_SAME_UID_LOGIN = 19,
+
+    CONNECTION_CHANGED_TOO_MANY_BROADCASTERS = 20,
+
+    CONNECTION_CHANGED_LICENSE_VALIDATION_FAILURE = 21,
+
+    CONNECTION_CHANGED_CERTIFICATION_VERYFY_FAILURE = 22,
+
+    CONNECTION_CHANGED_STREAM_CHANNEL_NOT_AVAILABLE = 23,
+
+    CONNECTION_CHANGED_INCONSISTENT_APPID = 24,
+}
+
+export enum CLIENT_ROLE_CHANGE_FAILED_REASON {
+    CLIENT_ROLE_CHANGE_FAILED_TOO_MANY_BROADCASTERS = 1,
+
+    CLIENT_ROLE_CHANGE_FAILED_NOT_AUTHORIZED = 2,
+
+    CLIENT_ROLE_CHANGE_FAILED_REQUEST_TIME_OUT = 3,
+
+    CLIENT_ROLE_CHANGE_FAILED_CONNECTION_FAILED = 4,
+}
+
+export enum NETWORK_TYPE {
+    NETWORK_TYPE_UNKNOWN = -1,
+
+    NETWORK_TYPE_DISCONNECTED = 0,
+
+    NETWORK_TYPE_LAN = 1,
+
+    NETWORK_TYPE_WIFI = 2,
+
+    NETWORK_TYPE_MOBILE_2G = 3,
+
+    NETWORK_TYPE_MOBILE_3G = 4,
+
+    NETWORK_TYPE_MOBILE_4G = 5,
+
+    NETWORK_TYPE_MOBILE_5G = 6,
+}
+
+export enum VIDEO_VIEW_SETUP_MODE {
+    VIDEO_VIEW_SETUP_REPLACE = 0,
+
+    VIDEO_VIEW_SETUP_ADD = 1,
+
+    VIDEO_VIEW_SETUP_REMOVE = 2,
+}
+
+export interface VideoCanvas {
+    uid: number;
+
+    subviewUid?: number;
+
+    view: Texture2D;
+
+    backgroundColor?: number;
+
+    renderMode?: RENDER_MODE_TYPE;
+
+    mirrorMode?: VIDEO_MIRROR_MODE_TYPE;
+
+    setupMode?: VIDEO_VIEW_SETUP_MODE;
+
+    sourceType: VIDEO_SOURCE_TYPE;
+
+    mediaPlayerId: number;
+
+    cropArea?: Rectangle;
+
+    enableAlphaMask?: boolean;
+
+    position?: VIDEO_MODULE_POSITION;
+}
+
+export interface BeautyOptions {
+    lighteningContrastLevel: LIGHTENING_CONTRAST_LEVEL;
+
+    lighteningLevel: number;
+
+    smoothnessLevel: number;
+
+    rednessLevel: number;
+
+    sharpnessLevel: number;
+}
+
+export enum LIGHTENING_CONTRAST_LEVEL {
+    LIGHTENING_CONTRAST_LOW = 0,
+
+    LIGHTENING_CONTRAST_NORMAL = 1,
+
+    LIGHTENING_CONTRAST_HIGH = 2,
+}
+
+export interface FaceShapeAreaOptions {
+    shapeArea: FACE_SHAPE_AREA;
+
+    shapeIntensity: number;
+}
+
+export enum FACE_SHAPE_AREA {
+    FACE_SHAPE_AREA_NONE = -1,
+
+    FACE_SHAPE_AREA_HEADSCALE = 100,
+
+    FACE_SHAPE_AREA_FOREHEAD = 101,
+
+    FACE_SHAPE_AREA_FACECONTOUR = 102,
+
+    FACE_SHAPE_AREA_FACELENGTH = 103,
+
+    FACE_SHAPE_AREA_FACEWIDTH = 104,
+
+    FACE_SHAPE_AREA_CHEEKBONE = 105,
+
+    FACE_SHAPE_AREA_CHEEK = 106,
+
+    FACE_SHAPE_AREA_MANDIBLE = 107,
+
+    FACE_SHAPE_AREA_CHIN = 108,
+
+    FACE_SHAPE_AREA_EYESCALE = 200,
+
+    FACE_SHAPE_AREA_EYEDISTANCE = 201,
+
+    FACE_SHAPE_AREA_EYEPOSITION = 202,
+
+    FACE_SHAPE_AREA_LOWEREYELID = 203,
+
+    FACE_SHAPE_AREA_EYEPUPILS = 204,
+
+    FACE_SHAPE_AREA_EYEINNERCORNER = 205,
+
+    FACE_SHAPE_AREA_EYEOUTERCORNER = 206,
+
+    FACE_SHAPE_AREA_NOSELENGTH = 300,
+
+    FACE_SHAPE_AREA_NOSEWIDTH = 301,
+
+    FACE_SHAPE_AREA_NOSEWING = 302,
+
+    FACE_SHAPE_AREA_NOSEROOT = 303,
+
+    FACE_SHAPE_AREA_NOSEBRIDGE = 304,
+
+    FACE_SHAPE_AREA_NOSETIP = 305,
+
+    FACE_SHAPE_AREA_NOSEGENERAL = 306,
+
+    FACE_SHAPE_AREA_MOUTHSCALE = 400,
+
+    FACE_SHAPE_AREA_MOUTHPOSITION = 401,
+
+    FACE_SHAPE_AREA_MOUTHSMILE = 402,
+
+    FACE_SHAPE_AREA_MOUTHLIP = 403,
+
+    FACE_SHAPE_AREA_EYEBROWPOSITION = 500,
+
+    FACE_SHAPE_AREA_EYEBROWTHICKNESS = 501,
+}
+
+export interface FaceShapeBeautyOptions {
+    shapeStyle: FACE_SHAPE_BEAUTY_STYLE;
+
+    styleIntensity: number;
+}
+
+export enum FACE_SHAPE_BEAUTY_STYLE {
+    FACE_SHAPE_BEAUTY_STYLE_FEMALE = 0,
+
+    FACE_SHAPE_BEAUTY_STYLE_MALE = 1,
+
+    FACE_SHAPE_BEAUTY_STYLE_NATURAL = 2,
+}
+
+export interface FilterEffectOptions {
+    path: string;
+
+    strength: number;
+}
+
+export interface LowlightEnhanceOptions {
+    mode: LOW_LIGHT_ENHANCE_MODE;
+
+    level: LOW_LIGHT_ENHANCE_LEVEL;
+}
+
+export enum LOW_LIGHT_ENHANCE_MODE {
+    LOW_LIGHT_ENHANCE_AUTO = 0,
+
+    LOW_LIGHT_ENHANCE_MANUAL = 1,
+}
+
+export enum LOW_LIGHT_ENHANCE_LEVEL {
+    LOW_LIGHT_ENHANCE_LEVEL_HIGH_QUALITY = 0,
+
+    LOW_LIGHT_ENHANCE_LEVEL_FAST = 1,
+}
+
+export interface VideoDenoiserOptions {
+    mode: VIDEO_DENOISER_MODE;
+
+    level: VIDEO_DENOISER_LEVEL;
+}
+
+export enum VIDEO_DENOISER_MODE {
+    VIDEO_DENOISER_AUTO = 0,
+
+    VIDEO_DENOISER_MANUAL = 1,
+}
+
+export enum VIDEO_DENOISER_LEVEL {
+    VIDEO_DENOISER_LEVEL_HIGH_QUALITY = 0,
+
+    VIDEO_DENOISER_LEVEL_FAST = 1,
+}
+
+export interface ColorEnhanceOptions {
+    strengthLevel: number;
+
+    skinProtectLevel: number;
+}
+
+export interface VirtualBackgroundSource {
+    background_source_type: BACKGROUND_SOURCE_TYPE;
+
+    color: number;
+
+    source: string;
+
+    blur_degree: BACKGROUND_BLUR_DEGREE;
+}
+
+export enum BACKGROUND_SOURCE_TYPE {
+    BACKGROUND_NONE = 0,
+
+    BACKGROUND_COLOR = 1,
+
+    BACKGROUND_IMG = 2,
+
+    BACKGROUND_BLUR = 3,
+
+    BACKGROUND_VIDEO = 4,
+}
+
+export enum BACKGROUND_BLUR_DEGREE {
+    BLUR_DEGREE_LOW = 1,
+
+    BLUR_DEGREE_MEDIUM = 2,
+
+    BLUR_DEGREE_HIGH = 3,
+}
+
+export interface SegmentationProperty {
+    modelType: SEG_MODEL_TYPE;
+
+    greenCapacity: number;
+
+    screenColorType: SCREEN_COLOR_TYPE;
+}
+
+export enum SEG_MODEL_TYPE {
+    SEG_MODEL_AI = 1,
+
+    SEG_MODEL_GREEN = 2,
+}
+
+export enum SCREEN_COLOR_TYPE {
+    SCREEN_COLOR_AUTO = 0,
+
+    SCREEN_COLOR_GREEN = 1,
+
+    SCREEN_COLOR_BLUE = 2,
+}
+
+export enum AUDIO_TRACK_TYPE {
+    AUDIO_TRACK_INVALID = -1,
+
+    AUDIO_TRACK_MIXABLE = 0,
+
+    AUDIO_TRACK_DIRECT = 1,
+}
+
+export interface AudioTrackConfig {
+    enableLocalPlayback: boolean;
+
+    enableAudioProcessing: boolean;
+}
+
+export enum VOICE_BEAUTIFIER_PRESET {
+    VOICE_BEAUTIFIER_OFF = 0x00000000,
+
+    CHAT_BEAUTIFIER_MAGNETIC = 0x01010100,
+
+    CHAT_BEAUTIFIER_FRESH = 0x01010200,
+
+    CHAT_BEAUTIFIER_VITALITY = 0x01010300,
+
+    SINGING_BEAUTIFIER = 0x01020100,
+
+    TIMBRE_TRANSFORMATION_VIGOROUS = 0x01030100,
+
+    TIMBRE_TRANSFORMATION_DEEP = 0x01030200,
+
+    TIMBRE_TRANSFORMATION_MELLOW = 0x01030300,
+
+    TIMBRE_TRANSFORMATION_FALSETTO = 0x01030400,
+
+    TIMBRE_TRANSFORMATION_FULL = 0x01030500,
+
+    TIMBRE_TRANSFORMATION_CLEAR = 0x01030600,
+
+    TIMBRE_TRANSFORMATION_RESOUNDING = 0x01030700,
+
+    TIMBRE_TRANSFORMATION_RINGING = 0x01030800,
+
+    ULTRA_HIGH_QUALITY_VOICE = 0x01040100,
+}
+
+export enum AUDIO_EFFECT_PRESET {
+    AUDIO_EFFECT_OFF = 0x00000000,
+
+    ROOM_ACOUSTICS_KTV = 0x02010100,
+
+    ROOM_ACOUSTICS_VOCAL_CONCERT = 0x02010200,
+
+    ROOM_ACOUSTICS_STUDIO = 0x02010300,
+
+    ROOM_ACOUSTICS_PHONOGRAPH = 0x02010400,
+
+    ROOM_ACOUSTICS_VIRTUAL_STEREO = 0x02010500,
+
+    ROOM_ACOUSTICS_SPACIAL = 0x02010600,
+
+    ROOM_ACOUSTICS_ETHEREAL = 0x02010700,
+
+    ROOM_ACOUSTICS_3D_VOICE = 0x02010800,
+
+    ROOM_ACOUSTICS_VIRTUAL_SURROUND_SOUND = 0x02010900,
+
+    ROOM_ACOUSTICS_CHORUS = 0x02010d00,
+
+    VOICE_CHANGER_EFFECT_UNCLE = 0x02020100,
+
+    VOICE_CHANGER_EFFECT_OLDMAN = 0x02020200,
+
+    VOICE_CHANGER_EFFECT_BOY = 0x02020300,
+
+    VOICE_CHANGER_EFFECT_SISTER = 0x02020400,
+
+    VOICE_CHANGER_EFFECT_GIRL = 0x02020500,
+
+    VOICE_CHANGER_EFFECT_PIGKING = 0x02020600,
+
+    VOICE_CHANGER_EFFECT_HULK = 0x02020700,
+
+    STYLE_TRANSFORMATION_RNB = 0x02030100,
+
+    STYLE_TRANSFORMATION_POPULAR = 0x02030200,
+
+    PITCH_CORRECTION = 0x02040100,
+}
+
+export enum VOICE_CONVERSION_PRESET {
+    VOICE_CONVERSION_OFF = 0x00000000,
+
+    VOICE_CHANGER_NEUTRAL = 0x03010100,
+
+    VOICE_CHANGER_SWEET = 0x03010200,
+
+    VOICE_CHANGER_SOLID = 0x03010300,
+
+    VOICE_CHANGER_BASS = 0x03010400,
+
+    VOICE_CHANGER_CARTOON = 0x03010500,
+
+    VOICE_CHANGER_CHILDLIKE = 0x03010600,
+
+    VOICE_CHANGER_PHONE_OPERATOR = 0x03010700,
+
+    VOICE_CHANGER_MONSTER = 0x03010800,
+
+    VOICE_CHANGER_TRANSFORMERS = 0x03010900,
+
+    VOICE_CHANGER_GROOT = 0x03010a00,
+
+    VOICE_CHANGER_DARTH_VADER = 0x03010b00,
+
+    VOICE_CHANGER_IRON_LADY = 0x03010c00,
+
+    VOICE_CHANGER_SHIN_CHAN = 0x03010d00,
+
+    VOICE_CHANGER_GIRLISH_MAN = 0x03010e00,
+
+    VOICE_CHANGER_CHIPMUNK = 0x03010f00,
+}
+
+export enum HEADPHONE_EQUALIZER_PRESET {
+    HEADPHONE_EQUALIZER_OFF = 0x00000000,
+
+    HEADPHONE_EQUALIZER_OVEREAR = 0x04000001,
+
+    HEADPHONE_EQUALIZER_INEAR = 0x04000002,
+}
+
+export enum VOICE_AI_TUNER_TYPE {
+    VOICE_AI_TUNER_MATURE_MALE,
+
+    VOICE_AI_TUNER_FRESH_MALE,
+
+    VOICE_AI_TUNER_ELEGANT_FEMALE,
+
+    VOICE_AI_TUNER_SWEET_FEMALE,
+
+    VOICE_AI_TUNER_WARM_MALE_SINGING,
+
+    VOICE_AI_TUNER_GENTLE_FEMALE_SINGING,
+
+    VOICE_AI_TUNER_HUSKY_MALE_SINGING,
+
+    VOICE_AI_TUNER_WARM_ELEGANT_FEMALE_SINGING,
+
+    VOICE_AI_TUNER_POWERFUL_MALE_SINGING,
+
+    VOICE_AI_TUNER_DREAMY_FEMALE_SINGING,
+}
+
+export interface ScreenAudioParameters {
+    sampleRate: number;
+
+    channels: number;
+
+    captureSignalVolume: number;
+
+    excludeCurrentProcessAudio: boolean;
+}
+
+export interface ScreenCaptureParameters {
+    captureAudio: boolean;
+
+    audioParams: ScreenAudioParameters;
+
+    dimensions: VideoDimensions;
+
+    frameRate: number;
+
+    bitrate: number;
+
+    captureMouseCursor: boolean;
+
+    windowFocus: boolean;
+
+    excludeWindowList: unknown[];
+
+    excludeWindowCount: number;
+
+    highLightWidth: number;
+
+    highLightColor: number;
+
+    enableHighLight: boolean;
+}
+
+export enum AUDIO_RECORDING_QUALITY_TYPE {
+    AUDIO_RECORDING_QUALITY_LOW = 0,
+
+    AUDIO_RECORDING_QUALITY_MEDIUM = 1,
+
+    AUDIO_RECORDING_QUALITY_HIGH = 2,
+
+    AUDIO_RECORDING_QUALITY_ULTRA_HIGH = 3,
+}
+
+export enum AUDIO_FILE_RECORDING_TYPE {
+    AUDIO_FILE_RECORDING_MIC = 1,
+
+    AUDIO_FILE_RECORDING_PLAYBACK = 2,
+
+    AUDIO_FILE_RECORDING_MIXED = 3,
+}
+
+export enum AUDIO_ENCODED_FRAME_OBSERVER_POSITION {
+    AUDIO_ENCODED_FRAME_OBSERVER_POSITION_RECORD = 1,
+
+    AUDIO_ENCODED_FRAME_OBSERVER_POSITION_PLAYBACK = 2,
+
+    AUDIO_ENCODED_FRAME_OBSERVER_POSITION_MIXED = 3,
+}
+
+export interface AudioRecordingConfiguration {
+    filePath: string;
+
+    encode: boolean;
+
+    sampleRate: number;
+
+    fileRecordingType: AUDIO_FILE_RECORDING_TYPE;
+
+    quality: AUDIO_RECORDING_QUALITY_TYPE;
+
+    recordingChannel: number;
+}
+
+export interface AudioEncodedFrameObserverConfig {
+    postionType: AUDIO_ENCODED_FRAME_OBSERVER_POSITION;
+
+    encodingType: AUDIO_ENCODING_TYPE;
+}
+
+export enum AREA_CODE {
+    AREA_CODE_CN = 0x00000001,
+
+    AREA_CODE_NA = 0x00000002,
+
+    AREA_CODE_EU = 0x00000004,
+
+    AREA_CODE_AS = 0x00000008,
+
+    AREA_CODE_JP = 0x00000010,
+
+    AREA_CODE_IN = 0x00000020,
+
+    AREA_CODE_GLOB = 0xffffffff,
+}
+
+export enum AREA_CODE_EX {
+    AREA_CODE_OC = 0x00000040,
+
+    AREA_CODE_SA = 0x00000080,
+
+    AREA_CODE_AF = 0x00000100,
+
+    AREA_CODE_KR = 0x00000200,
+
+    AREA_CODE_HKMC = 0x00000400,
+
+    AREA_CODE_US = 0x00000800,
+
+    AREA_CODE_RU = 0x00001000,
+
+    AREA_CODE_OVS = 0xfffffffe,
+}
+
+export enum CHANNEL_MEDIA_RELAY_ERROR {
+    RELAY_OK = 0,
+
+    RELAY_ERROR_SERVER_ERROR_RESPONSE = 1,
+
+    RELAY_ERROR_SERVER_NO_RESPONSE = 2,
+
+    RELAY_ERROR_NO_RESOURCE_AVAILABLE = 3,
+
+    RELAY_ERROR_FAILED_JOIN_SRC = 4,
+
+    RELAY_ERROR_FAILED_JOIN_DEST = 5,
+
+    RELAY_ERROR_FAILED_PACKET_RECEIVED_FROM_SRC = 6,
+
+    RELAY_ERROR_FAILED_PACKET_SENT_TO_DEST = 7,
+
+    RELAY_ERROR_SERVER_CONNECTION_LOST = 8,
+
+    RELAY_ERROR_INTERNAL_ERROR = 9,
+
+    RELAY_ERROR_SRC_TOKEN_EXPIRED = 10,
+
+    RELAY_ERROR_DEST_TOKEN_EXPIRED = 11,
+}
+
+export enum CHANNEL_MEDIA_RELAY_STATE {
+    RELAY_STATE_IDLE = 0,
+
+    RELAY_STATE_CONNECTING = 1,
+
+    RELAY_STATE_RUNNING = 2,
+
+    RELAY_STATE_FAILURE = 3,
+}
+
+export interface ChannelMediaInfo {
+    uid: number;
+
+    channelName: string;
+
+    token: string;
+}
+
+export interface ChannelMediaRelayConfiguration {
+    srcInfo: ChannelMediaInfo;
+
+    destInfos: ChannelMediaInfo[];
+
+    destCount: number;
+}
+
+export interface UplinkNetworkInfo {
+    video_encoder_target_bitrate_bps: number;
+}
+
+export interface PeerDownlinkInfo {
+    userId: string;
+
+    stream_type: VIDEO_STREAM_TYPE;
+
+    current_downscale_level: REMOTE_VIDEO_DOWNSCALE_LEVEL;
+
+    expected_bitrate_bps: number;
+}
+
+export enum ENCRYPTION_MODE {
+    AES_128_XTS = 1,
+
+    AES_128_ECB = 2,
+
+    AES_256_XTS = 3,
+
+    SM4_128_ECB = 4,
+
+    AES_128_GCM = 5,
+
+    AES_256_GCM = 6,
+
+    AES_128_GCM2 = 7,
+
+    AES_256_GCM2 = 8,
+
+    MODE_END,
+}
+
+export interface EncryptionConfig {
+    encryptionMode: ENCRYPTION_MODE;
+
+    encryptionKey: string;
+
+    encryptionKdfSalt: Uint8Array; // uint8_t[32] → Uint8Array
+
+    datastreamEncryptionEnabled: boolean;
+}
+
+export enum ENCRYPTION_ERROR_TYPE {
+    ENCRYPTION_ERROR_INTERNAL_FAILURE = 0,
+
+    ENCRYPTION_ERROR_DECRYPTION_FAILURE = 1,
+
+    ENCRYPTION_ERROR_ENCRYPTION_FAILURE = 2,
+
+    ENCRYPTION_ERROR_DATASTREAM_DECRYPTION_FAILURE = 3,
+
+    ENCRYPTION_ERROR_DATASTREAM_ENCRYPTION_FAILURE = 4,
+}
+
+export enum UPLOAD_ERROR_REASON {
+    UPLOAD_SUCCESS = 0,
+
+    UPLOAD_NET_ERROR = 1,
+
+    UPLOAD_SERVER_ERROR = 2,
+}
+
+export enum RENEW_TOKEN_ERROR_CODE {
+    RENEW_TOKEN_SUCCESS = 0,
+
+    RENEW_TOKEN_FAILURE = 1,
+
+    RENEW_TOKEN_TOKEN_EXPIRED = 2,
+
+    RENEW_TOKEN_INVALID_TOKEN = 3,
+
+    RENEW_TOKEN_INVALID_CHANNEL_NAME = 4,
+
+    RENEW_TOKEN_INCONSISTENT_APPID = 5,
+
+    RENEW_TOKEN_CANCELED_BY_NEW_REQUEST = 6,
+}
+
+export enum PERMISSION_TYPE {
+    RECORD_AUDIO = 0,
+
+    CAMERA = 1,
+
+    SCREEN_CAPTURE = 2,
+}
+
+export enum STREAM_SUBSCRIBE_STATE {
+    SUB_STATE_IDLE = 0,
+
+    SUB_STATE_NO_SUBSCRIBED = 1,
+
+    SUB_STATE_SUBSCRIBING = 2,
+
+    SUB_STATE_SUBSCRIBED = 3,
+}
+
+export enum STREAM_PUBLISH_STATE {
+    PUB_STATE_IDLE = 0,
+
+    PUB_STATE_NO_PUBLISHED = 1,
+
+    PUB_STATE_PUBLISHING = 2,
+
+    PUB_STATE_PUBLISHED = 3,
+}
+
+export interface EchoTestConfiguration {
+    view: unknown;
+
+    enableAudio: boolean;
+
+    enableVideo: boolean;
+
+    token: string;
+
+    channelId: string;
+
+    intervalInSeconds: number;
+}
+
+export interface UserInfo {
+    uid: number;
+
+    userAccount: string;
+}
+
+export enum EAR_MONITORING_FILTER_TYPE {
+    EAR_MONITORING_FILTER_NONE = 1 << 0,
+
+    EAR_MONITORING_FILTER_BUILT_IN_AUDIO_FILTERS = 1 << 1,
+
+    EAR_MONITORING_FILTER_NOISE_SUPPRESSION = 1 << 2,
+
+    EAR_MONITORING_FILTER_REUSE_POST_PROCESSING_FILTER = 1 << 15,
+}
+
+export enum THREAD_PRIORITY_TYPE {
+    LOWEST = 0,
+
+    LOW = 1,
+
+    NORMAL = 2,
+
+    HIGH = 3,
+
+    HIGHEST = 4,
+
+    CRITICAL = 5,
+}
+
+export interface ScreenVideoParameters {
+    dimensions: VideoDimensions;
+
+    frameRate: number;
+
+    bitrate: number;
+
+    contentHint: VIDEO_CONTENT_HINT;
+}
+
+export interface ScreenCaptureParameters2 {
+    captureAudio: boolean;
+
+    audioParams: ScreenAudioParameters;
+
+    captureVideo: boolean;
+
+    videoParams: ScreenVideoParameters;
+}
+
+export enum MEDIA_TRACE_EVENT {
+    MEDIA_TRACE_EVENT_VIDEO_RENDERED = 0,
+
+    MEDIA_TRACE_EVENT_VIDEO_DECODED,
+}
+
+export interface VideoRenderingTracingInfo {
+    elapsedTime: number;
+
+    start2JoinChannel: number;
+
+    join2JoinSuccess: number;
+
+    joinSuccess2RemoteJoined: number;
+
+    remoteJoined2SetView: number;
+
+    remoteJoined2UnmuteVideo: number;
+
+    remoteJoined2PacketReceived: number;
+}
+
+export enum CONFIG_FETCH_TYPE {
+    CONFIG_FETCH_TYPE_INITIALIZE = 1,
+
+    CONFIG_FETCH_TYPE_JOIN_CHANNEL = 2,
+}
+
+export enum LOCAL_PROXY_MODE {
+    ConnectivityFirst = 0,
+
+    LocalOnly = 1,
+}
+
+export interface LogUploadServerInfo {
+    serverDomain: string;
+
+    serverPath: string;
+
+    serverPort: number;
+
+    serverHttps: boolean;
+}
+
+export interface AdvancedConfigInfo {
+    logUploadServer: LogUploadServerInfo;
+}
+
+export interface LocalAccessPointConfiguration {
+    ipList: string[];
+
+    ipListSize: number;
+
+    domainList: string[];
+
+    domainListSize: number;
+
+    verifyDomainName: string;
+
+    mode: LOCAL_PROXY_MODE;
+
+    advancedConfig: AdvancedConfigInfo;
+
+    disableAut: boolean;
+}
+
+export enum RecorderStreamType {
+    RTC,
+
+    PREVIEW,
+}
+
+export interface RecorderStreamInfo {
+    channelId: string;
+
+    uid: number;
+
+    type: RecorderStreamType;
+}
+
+export enum RdtStreamType {
+    RDT_STREAM_CMD,
+
+    RDT_STREAM_DATA,
+
+    RDT_STREAM_COUNT,
+}
+
+export enum RdtState {
+    RDT_STATE_CLOSED,
+
+    RDT_STATE_OPENED,
+
+    RDT_STATE_BLOCKED,
+
+    RDT_STATE_PENDING,
+
+    RDT_STATE_BROKEN,
+}
+
+export interface SpatialAudioParams {
+    speaker_azimuth?: number;
+
+    speaker_elevation?: number;
+
+    speaker_distance?: number;
+
+    speaker_orientation?: number;
+
+    enable_blur?: boolean;
+
+    enable_air_absorb?: boolean;
+
+    speaker_attenuation?: number;
+
+    enable_doppler?: boolean;
+}
+
+export interface VideoLayout {
+    channelId: string;
+
+    uid: number;
+
+    strUid: string;
+
+    x: number;
+
+    y: number;
+
+    width: number;
+
+    height: number;
+
+    videoState: number;
+}

@@ -4,11 +4,13 @@
         "module": "CommonJS",
         "outDir": "./dist",
         "rootDir": "./src",
-        "strict": true,
+        "strict": false,
         "moduleResolution": "node",
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "resolveJsonModule": true,
-    }
+        "paths": {}
+    },
+    "exclude": ["./assets", "./agora-sdk-export-test", "./tests"]
 }

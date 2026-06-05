@@ -1,0 +1,13 @@
+{
+  "name": "agora-integration-tests",
+  "version": "1.0.0",
+  "description": "Agora RTC Integration Tests",
+  "scripts": {
+    "build": "tsc && esbuild ../dist/tests/native-integration/scripts/ts/main.js --bundle --format=iife --outfile=../dist/main.bundle.js --platform=browser --alias:agora-rtc=../dist/assets/agora-rtc",
+    "watch": "tsc -w"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.12",
+    "typescript": "^5.0.0"
+  }
+}
