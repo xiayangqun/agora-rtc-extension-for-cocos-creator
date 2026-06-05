@@ -14,7 +14,6 @@
 - **空间音频** — 3D 位置音频，打造沉浸式体验
 - **美颜与视频特效** — 美颜、滤镜、虚拟背景、视频降噪
 - **音乐内容中心** — 音乐播放和混音功能
-- **H.265 转码** — H.265 视频编解码器转码支持
 - **数据通道** — 用户间发送自定义数据消息
 - **内容审核** — AI 驱动的内容审核
 - **加密通信** — 端到端加密保障通信安全
@@ -30,7 +29,7 @@
 | 静音远端音视频 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 用户角色（主播/观众） | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 频道模式 | ✅ | ✅ | ✅ | ✅ | ✅ |
-| 屏幕共享 | ✅ | ✅ | ✅ | ✅ | ❌ |
+| 屏幕共享 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 屏幕采集源列表 | ❌ | ❌ | ✅ | ✅ | ❌ |
 | 媒体播放器 | ✅ | ✅ | ✅ | ✅ | ⚠️ |
 | 媒体录制器 | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -42,7 +41,6 @@
 | 色彩增强 | ✅ | ✅ | ✅ | ✅ | ❌ |
 | 低光增强 | ✅ | ✅ | ✅ | ✅ | ❌ |
 | 空间音频 | ✅ | ✅ | ✅ | ✅ | ❌ |
-| H.265 转码器 | ✅ | ❌ | ✅ | ❌ | ❌ |
 | 数据流 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | CDN 推流 | ✅ | ✅ | ✅ | ✅ | ❌ |
 | 截图 | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -51,7 +49,6 @@
 | 音量提示 | ✅ | ✅ | ✅ | ✅ | ✅ |
 | 设备管理 | ✅ | ✅ | ✅ | ✅ | ⚠️ |
 | 扩展插件系统 | ✅ | ✅ | ✅ | ✅ | ❌ |
-| 人脸信息观察者 | ✅ | ✅ | ❌ | ❌ | ❌ |
 
 > ✅ 支持 &nbsp; ❌ 不支持 &nbsp; ⚠️ 功能受限
 
@@ -164,16 +161,162 @@ npm run build
 }
 ```
 
-7. 创建 `RtcEngine`，使用如下代码：
+7. 使用如下代码快速上手：
+
+**音视频通话**
 
 ```typescript
 import {
     IRtcEngineEx,
+    IRtcEngineEventHandler,
     createRtcEngine,
+    RtcEngineContext,
+    RtcConnection,
+    ChannelMediaOptions,
+    VideoCanvas,
+    VIDEO_SOURCE_TYPE,
+    CLIENT_ROLE_TYPE,
+    CHANNEL_PROFILE_TYPE,
 } from "db://agora-rtc-extension-for-cocos-creator/agora-rtc";
+import { Texture2D, SpriteFrame, Sprite } from "cc";
 
-this.rtcEngine = createRtcEngine();
+// 1. 创建并初始化引擎
+let rtcEngine: IRtcEngineEx = createRtcEngine();
+let config: RtcEngineContext = {
+    appId: "<YOUR_APP_ID>",
+    channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+};
+await rtcEngine.initialize(config);
+
+// 2. 创建本地和远端视图的纹理
+let localTexture: Texture2D = new Texture2D();
+let localSpriteFrame: SpriteFrame = new SpriteFrame();
+localSpriteFrame.texture = localTexture;
+localSpriteFrame.packable = false;
+localSprite.spriteFrame = localSpriteFrame; // 绑定到 Sprite 组件
+
+let remoteTexture: Texture2D = new Texture2D();
+let remoteSpriteFrame: SpriteFrame = new SpriteFrame();
+remoteSpriteFrame.texture = remoteTexture;
+remoteSpriteFrame.packable = false;
+remoteSprite.spriteFrame = remoteSpriteFrame;
+
+// 3. 开启视频并加入频道
+await rtcEngine.enableVideo();
+let options: ChannelMediaOptions = {
+    clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    publishCameraTrack: true,
+    publishMicrophoneTrack: true,
+    autoSubscribeAudio: true,
+    autoSubscribeVideo: true,
+};
+await rtcEngine.joinChannel("<TOKEN>", "<CHANNEL_ID>", 0, options);
+
+// 4. 绑定本地视图 — 可在任意时刻调用
+let localCanvas: VideoCanvas = {
+    uid: 0,
+    view: localTexture,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA,
+    mediaPlayerId: 0,
+};
+rtcEngine.setupLocalVideo(localCanvas);
+
+// 5. 远端用户加入时绑定远端视图（在 onUserJoined 回调中）
+onUserJoined(connection: RtcConnection, remoteUid: number, elapsed: number) {
+    let remoteCanvas: VideoCanvas = {
+        uid: remoteUid,
+        view: remoteTexture,
+        sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+        mediaPlayerId: 0,
+    };
+    rtcEngine.setupRemoteVideo(remoteCanvas);
+}
+
+// 6. 清理 — 解绑视图、销毁纹理，然后释放引擎
+rtcEngine.setupLocalVideo({ uid: 0, view: null, sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA, mediaPlayerId: 0 });
+rtcEngine.setupRemoteVideo({ uid: remoteUid, view: null, sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE, mediaPlayerId: 0 });
+localTexture.destroy();
+localSpriteFrame.destroy();
+remoteTexture.destroy();
+remoteSpriteFrame.destroy();
+await rtcEngine.leaveChannel();
+await rtcEngine.release(true);
+rtcEngine = null;
 ```
+
+**媒体播放器**
+
+```typescript
+import {
+    IRtcEngineEx,
+    IMediaPlayer,
+    createRtcEngine,
+    RtcEngineContext,
+    ChannelMediaOptions,
+    VideoCanvas,
+    VIDEO_SOURCE_TYPE,
+    CLIENT_ROLE_TYPE,
+    CHANNEL_PROFILE_TYPE,
+} from "db://agora-rtc-extension-for-cocos-creator/agora-rtc";
+import { Texture2D, SpriteFrame, Sprite } from "cc";
+
+// 1. 创建并初始化引擎，加入频道
+let rtcEngine: IRtcEngineEx = createRtcEngine();
+let config: RtcEngineContext = {
+    appId: "<YOUR_APP_ID>",
+    channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+};
+await rtcEngine.initialize(config);
+await rtcEngine.enableVideo();
+let options: ChannelMediaOptions = {
+    clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    autoSubscribeAudio: true,
+    autoSubscribeVideo: true,
+};
+await rtcEngine.joinChannel("<TOKEN>", "<CHANNEL_ID>", 0, options);
+
+// 2. 创建媒体播放器
+let mediaPlayer: IMediaPlayer = await rtcEngine.createMediaPlayer();
+let playerId: number = await mediaPlayer.getId();
+
+// 3. 创建媒体播放器视图的纹理
+let mpkTexture: Texture2D = new Texture2D();
+let mpkSpriteFrame: SpriteFrame = new SpriteFrame();
+mpkSpriteFrame.texture = mpkTexture;
+mpkSpriteFrame.packable = false;
+mediaPlayerSprite.spriteFrame = mpkSpriteFrame; // 绑定到 Sprite 组件
+
+// 4. 绑定媒体播放器视图
+let canvas: VideoCanvas = {
+    uid: 0,
+    view: mpkTexture,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+    mediaPlayerId: playerId,
+};
+rtcEngine.setupLocalVideo(canvas);
+
+// 5. 打开并播放 — 等待 onPlayerSourceStateChanged 返回 PLAYER_STATE_OPEN_COMPLETED 后再 play()
+await mediaPlayer.open("https://example.com/video.mp4", 0);
+await mediaPlayer.play();
+
+// 6. 销毁媒体播放器 — 先解绑视图并销毁纹理
+rtcEngine.setupLocalVideo({
+    uid: 0,
+    view: null,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+    mediaPlayerId: playerId,
+});
+mpkTexture.destroy();
+mpkSpriteFrame.destroy();
+await rtcEngine.destroyMediaPlayer(mediaPlayer);
+
+// 7. 释放引擎 — release 后不能再访问 mediaPlayer 的任何方法
+await rtcEngine.leaveChannel();
+await rtcEngine.release(true);
+rtcEngine = null;
+```
+
+> ⚠️ **重要**：创建 `SpriteFrame` 时必须设置 `packable = false`，防止 Cocos 将视频纹理打入动态图集。调用 `release` 前，必须先解绑所有视频视图（`view: null`）并 `destroy()` 所有 `Texture2D` 和 `SpriteFrame` 实例。`release` 之后，`mediaPlayer` 实例已失效，不要再调用其任何方法。
 
 8. 我们准备了一个丰富的示例项目供你参考：[Agora-Rtc-Extension-Demo](https://github.com/xiayangqun/Agora-Rtc-Extension-Demo)
 

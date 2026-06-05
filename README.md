@@ -14,7 +14,6 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 - **Spatial Audio** — 3D positional audio for immersive experiences
 - **Beauty & Video Effects** — Face beautification, filters, virtual background, video denoiser
 - **Music Content Center** — Music playback and mixing capabilities
-- **H.265 Transcoding** — H.265 video codec transcoding support
 - **Data Channels** — Send custom data messages between users
 - **Content Inspection** — AI-powered content moderation
 - **Encryption** — End-to-end encryption for secure communication
@@ -30,7 +29,7 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 | Mute Remote Audio/Video | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client Role (Broadcaster/Audience) | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Channel Profile | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Screen Sharing | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Screen Sharing | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Screen Capture Sources | ❌ | ❌ | ✅ | ✅ | ❌ |
 | Media Player | ✅ | ✅ | ✅ | ✅ | ⚠️ |
 | Media Recorder | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -42,7 +41,6 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 | Color Enhance | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Lowlight Enhance | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Spatial Audio | ✅ | ✅ | ✅ | ✅ | ❌ |
-| H.265 Transcoder | ✅ | ❌ | ✅ | ❌ | ❌ |
 | Data Stream | ✅ | ✅ | ✅ | ✅ | ✅ |
 | CDN Push Streaming | ✅ | ✅ | ✅ | ✅ | ❌ |
 | Take Snapshot | ✅ | ✅ | ✅ | ✅ | ❌ |
@@ -51,7 +49,6 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 | Audio Volume Indication | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Device Manager | ✅ | ✅ | ✅ | ✅ | ⚠️ |
 | Extension System | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Face Info Observer | ✅ | ✅ | ❌ | ❌ | ❌ |
 
 > ✅ Supported &nbsp; ❌ Not supported &nbsp; ⚠️ Limited functionality
 
@@ -164,16 +161,162 @@ npm run build
 }
 ```
 
-7. Create an `RtcEngine` using the following code:
+7. Use the following code to get started:
+
+**Video/Audio Call**
 
 ```typescript
 import {
     IRtcEngineEx,
+    IRtcEngineEventHandler,
     createRtcEngine,
+    RtcEngineContext,
+    RtcConnection,
+    ChannelMediaOptions,
+    VideoCanvas,
+    VIDEO_SOURCE_TYPE,
+    CLIENT_ROLE_TYPE,
+    CHANNEL_PROFILE_TYPE,
 } from "db://agora-rtc-extension-for-cocos-creator/agora-rtc";
+import { Texture2D, SpriteFrame, Sprite } from "cc";
 
-this.rtcEngine = createRtcEngine();
+// 1. Create and initialize engine
+let rtcEngine: IRtcEngineEx = createRtcEngine();
+let config: RtcEngineContext = {
+    appId: "<YOUR_APP_ID>",
+    channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+};
+await rtcEngine.initialize(config);
+
+// 2. Create textures for local and remote views
+let localTexture: Texture2D = new Texture2D();
+let localSpriteFrame: SpriteFrame = new SpriteFrame();
+localSpriteFrame.texture = localTexture;
+localSpriteFrame.packable = false;
+localSprite.spriteFrame = localSpriteFrame; // bind to a Sprite component
+
+let remoteTexture: Texture2D = new Texture2D();
+let remoteSpriteFrame: SpriteFrame = new SpriteFrame();
+remoteSpriteFrame.texture = remoteTexture;
+remoteSpriteFrame.packable = false;
+remoteSprite.spriteFrame = remoteSpriteFrame;
+
+// 3. Enable video and join channel
+await rtcEngine.enableVideo();
+let options: ChannelMediaOptions = {
+    clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    publishCameraTrack: true,
+    publishMicrophoneTrack: true,
+    autoSubscribeAudio: true,
+    autoSubscribeVideo: true,
+};
+await rtcEngine.joinChannel("<TOKEN>", "<CHANNEL_ID>", 0, options);
+
+// 4. Bind local view — can be called at any time
+let localCanvas: VideoCanvas = {
+    uid: 0,
+    view: localTexture,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA,
+    mediaPlayerId: 0,
+};
+rtcEngine.setupLocalVideo(localCanvas);
+
+// 5. Bind remote view when a remote user joins (in onUserJoined callback)
+onUserJoined(connection: RtcConnection, remoteUid: number, elapsed: number) {
+    let remoteCanvas: VideoCanvas = {
+        uid: remoteUid,
+        view: remoteTexture,
+        sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE,
+        mediaPlayerId: 0,
+    };
+    rtcEngine.setupRemoteVideo(remoteCanvas);
+}
+
+// 6. Clean up — unbind views, destroy textures, then release
+rtcEngine.setupLocalVideo({ uid: 0, view: null, sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_CAMERA, mediaPlayerId: 0 });
+rtcEngine.setupRemoteVideo({ uid: remoteUid, view: null, sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_REMOTE, mediaPlayerId: 0 });
+localTexture.destroy();
+localSpriteFrame.destroy();
+remoteTexture.destroy();
+remoteSpriteFrame.destroy();
+await rtcEngine.leaveChannel();
+await rtcEngine.release(true);
+rtcEngine = null;
 ```
+
+**Media Player**
+
+```typescript
+import {
+    IRtcEngineEx,
+    IMediaPlayer,
+    createRtcEngine,
+    RtcEngineContext,
+    ChannelMediaOptions,
+    VideoCanvas,
+    VIDEO_SOURCE_TYPE,
+    CLIENT_ROLE_TYPE,
+    CHANNEL_PROFILE_TYPE,
+} from "db://agora-rtc-extension-for-cocos-creator/agora-rtc";
+import { Texture2D, SpriteFrame, Sprite } from "cc";
+
+// 1. Create and initialize engine, then join channel
+let rtcEngine: IRtcEngineEx = createRtcEngine();
+let config: RtcEngineContext = {
+    appId: "<YOUR_APP_ID>",
+    channelProfile: CHANNEL_PROFILE_TYPE.CHANNEL_PROFILE_COMMUNICATION,
+};
+await rtcEngine.initialize(config);
+await rtcEngine.enableVideo();
+let options: ChannelMediaOptions = {
+    clientRoleType: CLIENT_ROLE_TYPE.CLIENT_ROLE_BROADCASTER,
+    autoSubscribeAudio: true,
+    autoSubscribeVideo: true,
+};
+await rtcEngine.joinChannel("<TOKEN>", "<CHANNEL_ID>", 0, options);
+
+// 2. Create media player
+let mediaPlayer: IMediaPlayer = await rtcEngine.createMediaPlayer();
+let playerId: number = await mediaPlayer.getId();
+
+// 3. Create texture for media player view
+let mpkTexture: Texture2D = new Texture2D();
+let mpkSpriteFrame: SpriteFrame = new SpriteFrame();
+mpkSpriteFrame.texture = mpkTexture;
+mpkSpriteFrame.packable = false;
+mediaPlayerSprite.spriteFrame = mpkSpriteFrame; // bind to a Sprite component
+
+// 4. Bind media player view
+let canvas: VideoCanvas = {
+    uid: 0,
+    view: mpkTexture,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+    mediaPlayerId: playerId,
+};
+rtcEngine.setupLocalVideo(canvas);
+
+// 5. Open and play — wait for onPlayerSourceStateChanged with PLAYER_STATE_OPEN_COMPLETED before play()
+await mediaPlayer.open("https://example.com/video.mp4", 0);
+await mediaPlayer.play();
+
+// 6. Destroy media player — unbind view and destroy textures first
+rtcEngine.setupLocalVideo({
+    uid: 0,
+    view: null,
+    sourceType: VIDEO_SOURCE_TYPE.VIDEO_SOURCE_MEDIA_PLAYER,
+    mediaPlayerId: playerId,
+});
+mpkTexture.destroy();
+mpkSpriteFrame.destroy();
+await rtcEngine.destroyMediaPlayer(mediaPlayer);
+
+// 7. Release engine — do NOT access mediaPlayer after this
+await rtcEngine.leaveChannel();
+await rtcEngine.release(true);
+rtcEngine = null;
+```
+
+> ⚠️ **Important**: Always create `SpriteFrame` with `packable = false` — this prevents Cocos from packing video textures into the dynamic atlas. Before calling `release`, unbind all video views (`view: null`) and `destroy()` all `Texture2D` and `SpriteFrame` instances. After `release`, the `mediaPlayer` is invalid — do not call any methods on it.
 
 8. We provide a rich example project for reference: [Agora-Rtc-Extension-Demo](https://github.com/xiayangqun/Agora-Rtc-Extension-Demo)
 
