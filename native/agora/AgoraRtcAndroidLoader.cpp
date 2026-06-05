@@ -44,6 +44,11 @@ void loadAgoraRtcExtensionLibraries() {
 void *getAgoraRtcAndroidSdkHandle() {
     ensureAgoraRtcAndroidLibrariesLoaded();
     if (gAgoraRtcAndroidSdkHandle) { return gAgoraRtcAndroidSdkHandle; }
+    // Do not link Android libagora-rtc-sdk.so as a direct dependency of libcocos.so.
+    // Let Agora's Java loader run first so the SDK JNI lifecycle and dependent native
+    // libraries are initialized in the same order as the official Android integration.
+    // After that point, dlopen/dlsym is only used for the few non-virtual factory
+    // symbols this bridge needs.
     gAgoraRtcAndroidSdkHandle = dlopen("libagora-rtc-sdk.so", RTLD_NOW | RTLD_LOCAL);
     if (!gAgoraRtcAndroidSdkHandle) {
         CC_LOG_ERROR("[AgoraRtcExtension] failed to dlopen libagora-rtc-sdk.so: %s", dlerror());
