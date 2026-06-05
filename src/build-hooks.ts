@@ -200,75 +200,6 @@ function ensureAndroidManifestPermission(manifestPath: string, permission: strin
     writeFileSync(manifestPath, content);
 }
 
-function ensureJavaImport(content: string, importName: string): string {
-    const importLine = `import ${importName};`;
-    if (content.includes(importLine)) return content;
-    const packageMatch = content.match(/^package\s+[^;]+;\s*/m);
-    if (packageMatch) {
-        return content.replace(packageMatch[0], `${packageMatch[0]}\n${importLine}\n`);
-    }
-    return `${importLine}\n${content}`;
-}
-
-function ensureAndroidActivityRuntimePermissions(activityPath: string, permissions: string[]) {
-    if (permissions.length === 0) return;
-
-    let content = readFileSync(activityPath, "utf-8");
-    if (!content.includes("extends CocosActivity") && !content.includes("extends Activity")) return;
-
-    content = ensureJavaImport(content, "android.Manifest");
-    content = ensureJavaImport(content, "android.content.pm.PackageManager");
-    content = ensureJavaImport(content, "android.os.Build");
-    content = ensureJavaImport(content, "java.util.ArrayList");
-
-    if (!content.includes("REQUEST_AGORA_RUNTIME_PERMISSIONS")) {
-        content = content.replace(
-            /public\s+class\s+([A-Za-z0-9_]+)\s+extends\s+([^{]+)\{/,
-            "public class $1 extends $2{\n    private static final int REQUEST_AGORA_RUNTIME_PERMISSIONS = 1001;\n",
-        );
-    }
-
-    if (!content.includes("requestAgoraRuntimePermissions();")) {
-        content = content.replace(
-            /SDKWrapper\.shared\(\)\.init\(this\);\s*/,
-            "SDKWrapper.shared().init(this);\n        requestAgoraRuntimePermissions();\n",
-        );
-    }
-
-    if (!content.includes("private void requestAgoraRuntimePermissions()")) {
-        const permissionChecks = permissions
-            .map(
-                (
-                    permission,
-                ) => `        if (checkSelfPermission(Manifest.permission.${permission}) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.${permission});
-        }`,
-            )
-            .join("\n");
-        const method = `
-    private void requestAgoraRuntimePermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return;
-        }
-
-        ArrayList<String> permissions = new ArrayList<>();
-${permissionChecks}
-
-        if (!permissions.isEmpty()) {
-            requestPermissions(permissions.toArray(new String[0]), REQUEST_AGORA_RUNTIME_PERMISSIONS);
-        }
-    }
-
-`;
-        content = content.replace(
-            /\n\s*@Override\s+protected void onResume\(/,
-            `${method}    @Override\n    protected void onResume(`,
-        );
-    }
-
-    writeFileSync(activityPath, content);
-}
-
 function collectAndroidModuleRoots(roots: string[], pluginName: string): string[] {
     const candidates = roots.flatMap((root) => [
         root,
@@ -404,17 +335,7 @@ function applyAndroidPermissions(options: AgoraBuildTaskOption, result?: IBuildR
         }
     }
 
-    const runtimePermissions: string[] = [];
-    if (pkgOptions.writeCameraPermission) runtimePermissions.push("CAMERA");
-    if (pkgOptions.writeMicrophonePermission) runtimePermissions.push("RECORD_AUDIO");
-    const activities = uniqueExisting(
-        roots.flatMap((root) => collectFiles(root, (file) => file.endsWith("Activity.java") && file.includes("/src/"))),
-    );
-    for (const activityPath of activities) {
-        ensureAndroidActivityRuntimePermissions(activityPath, runtimePermissions);
-    }
-
-    log(`android permissions applied. AndroidManifest.xml: ${manifests.length}, Activity.java: ${activities.length}`);
+    log(`android permissions applied. AndroidManifest.xml: ${manifests.length}`);
 }
 
 function applyAndroidDependencies(options: AgoraBuildTaskOption, result?: IBuildResult, makeRoot?: string) {
