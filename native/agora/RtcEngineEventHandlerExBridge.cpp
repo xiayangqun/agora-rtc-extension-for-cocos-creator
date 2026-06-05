@@ -429,10 +429,13 @@ void RtcEngineEventHandlerExBridge::onCameraExposureAreaChanged(int x, int y, in
         });
 }
 
-void RtcEngineEventHandlerExBridge::onFacePositionChanged(int imageWidth, int imageHeight, const Rectangle* vecRectangle, const int* vecDistance, int numFaces) {
+void RtcEngineEventHandlerExBridge::onFacePositionChanged(int imageWidth, int imageHeight,
+                                                          const agora::rtc::Rectangle *vecRectangle,
+                                                          const int *vecDistance, int numFaces) {
     auto imageWidthCopy = imageWidth;
     auto imageHeightCopy = imageHeight;
-    std::vector<Rectangle> vecRectangleCopy(vecRectangle, vecRectangle != nullptr ? vecRectangle + numFaces : vecRectangle);
+    std::vector<agora::rtc::Rectangle> vecRectangleCopy(
+        vecRectangle, vecRectangle != nullptr ? vecRectangle + numFaces : vecRectangle);
     std::vector<int> vecDistanceCopy(vecDistance, vecDistance != nullptr ? vecDistance + numFaces : vecDistance);
     auto numFacesCopy = numFaces;
     auto self = shared_from_this();

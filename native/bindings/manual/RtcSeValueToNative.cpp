@@ -2500,6 +2500,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::PublisherConfiguration
 }
 
 #if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+// do not gen code cover it
 bool sevalue_to_native(const se::Value &from, agora::rtc::SIZE *to, se::Object *ctx)
 {
     assert(from.isObject());
@@ -2509,12 +2510,20 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::SIZE *to, se::Object *
 
     json->getProperty("width", &field, true);
     if (!field.isNullOrUndefined()) {
+#if defined(_WIN32)
+        to->cx = static_cast<LONG>(field.toInt32());
+#else
         ok &= sevalue_to_native(field, &(to->width), ctx);
+#endif
     }
 
     json->getProperty("height", &field, true);
     if (!field.isNullOrUndefined()) {
+#if defined(_WIN32)
+        to->cy = static_cast<LONG>(field.toInt32());
+#else
         ok &= sevalue_to_native(field, &(to->height), ctx);
+#endif
     }
 
     return ok;
@@ -3039,6 +3048,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureConfigura
     return true;
 }
 
+#if defined(__ANDROID__) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE) || defined(__OHOS__)
 bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenVideoParameters *to, se::Object *ctx) {
     if (!from.isObject()) return false;
     se::Object *obj = from.toObject();
@@ -3083,6 +3093,7 @@ bool sevalue_to_native(const se::Value &from, agora::rtc::ScreenCaptureParameter
 
     return true;
 }
+#endif
 
 bool sevalue_to_native(const se::Value &from, agora::rtc::DirectCdnStreamingMediaOptions *to, se::Object *ctx) {
     if (!from.isObject()) return false;

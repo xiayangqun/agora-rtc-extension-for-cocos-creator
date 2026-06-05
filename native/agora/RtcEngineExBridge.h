@@ -27,7 +27,7 @@ struct AgoraRtcNativeContext {
     std::string appId;
     int channelProfile{static_cast<int>(agora::CHANNEL_PROFILE_COMMUNICATION)};
     int audioScenario{static_cast<int>(agora::rtc::AUDIO_SCENARIO_DEFAULT)};
-    unsigned int areaCode{agora::rtc::AREA_CODE_GLOB};
+    unsigned int areaCode{static_cast<unsigned int>(agora::rtc::AREA_CODE_GLOB)};
 };
 
 struct GetVersionResult {

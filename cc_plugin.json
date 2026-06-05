@@ -10,5 +10,5 @@
             "depends": []
         }
     ],
-    "platforms": ["mac", "ios", "android", "google-play"]
+    "platforms": ["mac", "ios", "android", "google-play", "windows"]
 }

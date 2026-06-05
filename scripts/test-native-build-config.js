@@ -14,9 +14,11 @@ function assertContains(content, pattern, message) {
 
 const iosCmakePath = path.join(root, "ios", "AgoraRtcExtensionConfig.cmake");
 const androidCmakePath = path.join(root, "android", "AgoraRtcExtensionConfig.cmake");
+const windowsCmakePath = path.join(root, "windows", "AgoraRtcExtensionConfig.cmake");
 
 assert.strictEqual(fs.existsSync(iosCmakePath), true, "iOS CMake config should exist");
 assert.strictEqual(fs.existsSync(androidCmakePath), true, "Android CMake config should exist");
+assert.strictEqual(fs.existsSync(windowsCmakePath), true, "Windows CMake config should exist");
 
 const macCmake = read("mac/AgoraRtcExtensionConfig.cmake");
 assert.doesNotMatch(macCmake, /AgoraRtcExtensionCommon/, "mac CMake should not include common CMake");
@@ -38,8 +40,15 @@ assertContains(androidCmake, /add_library\(AgoraRtcExtension STATIC/, "Android C
 assertContains(androidCmake, /android\/include\/rtc/, "Android CMake should use Android headers");
 assertContains(androidCmake, /AGORA_RTC_ANDROID_EXTENSION_LIBRARIES/, "Android CMake should pass extension library names");
 
+const windowsCmake = read("windows/AgoraRtcExtensionConfig.cmake");
+assert.doesNotMatch(windowsCmake, /AgoraRtcExtensionCommon/, "Windows CMake should not include common CMake");
+assertContains(windowsCmake, /add_library\(AgoraRtcExtension STATIC/, "Windows CMake should define AgoraRtcExtension directly");
+assertContains(windowsCmake, /windows\/include\/rtc/, "Windows CMake should use Windows headers");
+assertContains(windowsCmake, /\.lib/, "Windows CMake should link import libraries");
+assertContains(windowsCmake, /AGORA_RTC_WINDOWS_DLLS[\s\S]*copy_if_different/, "Windows CMake should copy runtime DLLs");
+
 const plugin = JSON.parse(read("cc_plugin.json"));
-assert.deepStrictEqual(plugin.platforms, ["mac", "ios", "android", "google-play"], "cc_plugin platforms should include mac, ios, android, and google-play");
+assert.deepStrictEqual(plugin.platforms, ["mac", "ios", "android", "google-play", "windows"], "cc_plugin platforms should include mac, ios, android, google-play, and windows");
 
 const builder = read("src/builder.ts");
 assertContains(builder, /ios:\s*\{[\s\S]*hooks:\s*"\.\/build-hooks"/, "builder should register iOS hooks");
@@ -52,4 +61,4 @@ const hooks = read("src/build-hooks.ts");
 assertContains(hooks, /options\.platform !== "mac" && options\.platform !== "ios"/, "hooks should run for mac and iOS");
 assertContains(hooks, /const shouldWriteEntitlements = options\.platform === "mac"/, "hooks should limit entitlements to mac");
 
-console.log("iOS build config tests passed");
+console.log("Native build config tests passed");

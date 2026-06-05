@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { execSync } = require('child_process');
+const { execFileSync } = require('child_process');
 const { copyDirContentsSync, ensureDir } = require('./predownload-utils');
 
 const ROOT = path.resolve(__dirname, '..');
@@ -88,7 +88,16 @@ function downloadFile(url, dest) {
 
 function extractZip(zipPath, destDir) {
     console.log(`  解压中: ${path.basename(zipPath)}`);
-    execSync(`unzip -o "${zipPath}" -d "${destDir}"`, { stdio: 'pipe' });
+    if (process.platform === 'win32') {
+        execFileSync('tar', [
+            '-xf',
+            zipPath,
+            '-C',
+            destDir,
+        ], { stdio: 'pipe' });
+        return;
+    }
+    execFileSync('unzip', ['-o', zipPath, '-d', destDir], { stdio: 'pipe' });
 }
 
 // ─── 清理模式 ───────────────────────────────────────────────
@@ -215,11 +224,11 @@ function copyWindows(extractedDir) {
     for (const arch of ['x86', 'x86_64']) {
         const archDir = path.join(sdkDir, arch);
         if (!fs.existsSync(archDir)) continue;
-        const dllFiles = fs.readdirSync(archDir).filter(f => f.endsWith('.dll'));
-        for (const dll of dllFiles) {
-            copyFileSync(path.join(archDir, dll), path.join(winLibsDest, arch, dll));
+        const libFiles = fs.readdirSync(archDir).filter(f => f.endsWith('.dll') || f.endsWith('.lib'));
+        for (const lib of libFiles) {
+            copyFileSync(path.join(archDir, lib), path.join(winLibsDest, arch, lib));
         }
-        console.log(`    拷贝 ${dllFiles.length} 个 .dll 文件到 ${arch}/`);
+        console.log(`    Copied ${libFiles.length} .dll/.lib files to ${arch}/`);
     }
 
     // 拷贝头文件

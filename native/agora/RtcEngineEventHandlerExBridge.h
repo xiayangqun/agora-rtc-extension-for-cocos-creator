@@ -65,8 +65,8 @@ public:
     void onCameraReady() override;
     void onCameraFocusAreaChanged(int x, int y, int width, int height) override;
     void onCameraExposureAreaChanged(int x, int y, int width, int height) override;
-    void onFacePositionChanged(int imageWidth, int imageHeight, const Rectangle *vecRectangle, const int *vecDistance,
-                               int numFaces);
+    void onFacePositionChanged(int imageWidth, int imageHeight, const agora::rtc::Rectangle *vecRectangle,
+                               const int *vecDistance, int numFaces);
     void onVideoStopped() override;
     void onAudioMixingStateChanged(AUDIO_MIXING_STATE_TYPE state, AUDIO_MIXING_REASON_TYPE reason) override;
     void onRhythmPlayerStateChanged(RHYTHM_PLAYER_STATE_TYPE state, RHYTHM_PLAYER_REASON reason) override;

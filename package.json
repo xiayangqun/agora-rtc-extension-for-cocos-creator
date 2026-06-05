@@ -12,7 +12,7 @@
         "predownload": "node scripts/predownload.js",
         "predownload:clear": "node scripts/predownload.js --clear",
         "test:predownload": "node scripts/test-predownload-utils.js",
-        "test:ios-build-config": "node scripts/test-ios-build-config.js",
+        "test:native-build-config": "node scripts/test-native-build-config.js",
         "native:genbindings": "node scripts/genbindings.js",
         "genbindings:sevalue": "node scripts/generate-nativevalue-to-se.js",
         "genbindings:native-tosevalue": "node scripts/generate-native-tosevalue.js",
