@@ -1,0 +1,45 @@
+Copyright (c) 2026 xiayangqun
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Additional Grant: Commons Clause
+
+The Software is provided to you by the Licensor under the License,
+as defined below, subject to the following Commons Clause condition.
+
+Without limiting other conditions in the License, the grant of rights
+under the License will not include, and the License does not grant to
+you, the right to Sell the Software.
+
+"Sell" means providing a third party with a fee-based product or
+service that derives a primary or significant value from the Software.
+
+For the avoidance of doubt, you may freely use the Software to build
+products and services for your own use or for your customers, whether
+free or paid, without restriction.
+
+---
+
+Third-Party Notice
+
+This software integrates the Agora RTC SDK, which is proprietary
+software owned by Agora.io. The Agora SDK is subject to Agora's own
+license terms and conditions, available at:
+
+    https://www.agora.io/en/terms-of-service/
+
+This LICENSE applies only to the original code authored by xiayangqun
+(including but not limited to TypeScript interfaces, C++ bridge layers,
+SWIG bindings, editor panels, and build scripts). It does not apply to
+the Agora SDK or any other third-party components, which remain subject
+to their respective licenses.
+
+By using this software, you agree to comply with Agora's Terms of
+Service. The Agora SDK headers and binaries included in or downloaded
+by this software are provided under Agora's license, not this LICENSE.
+This LICENSE does not grant any rights to sublicense, redistribute,
+or modify the Agora SDK itself.
