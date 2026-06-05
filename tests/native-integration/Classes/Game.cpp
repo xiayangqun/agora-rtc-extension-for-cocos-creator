@@ -1,6 +1,4 @@
 /****************************************************************************
- Copyright (c) 2024 Agora.io
- 
  Integration test Game class - boots real Cocos engine with Agora JSB bindings.
  ****************************************************************************/
 #include "Game.h"
