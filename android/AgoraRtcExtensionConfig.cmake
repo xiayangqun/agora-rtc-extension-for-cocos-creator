@@ -132,7 +132,6 @@ target_compile_definitions(AgoraRtcExtension PUBLIC
 )
 
 target_link_libraries(AgoraRtcExtension PUBLIC
-    ${AGORA_RTC_ANDROID_IMPORTED_LIBS}
     ${AGORA_RTC_ANDROID_LOG_LIB}
 )
 

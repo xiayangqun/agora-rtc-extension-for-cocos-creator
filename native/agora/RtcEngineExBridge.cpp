@@ -78,7 +78,11 @@ void RtcEngineExBridge::release(bool sync) {
         _mediaEngine = nullptr;
     }
     if (_engine != nullptr) {
+#if defined(__ANDROID__)
+        releaseAgoraRtcEngineLoaded(nullptr);
+#else
         agora::rtc::IRtcEngine::release(nullptr);
+#endif
         _engine = nullptr;
     }
     _eventHandler.reset();
@@ -140,7 +144,11 @@ VideoTextureManager *RtcEngineExBridge::videoTextureManager() {
 
 int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, se::Object *eventHandler) {
     if (_engine != nullptr) { return -agora::ERR_ALREADY_IN_USE; }
+#if defined(__ANDROID__)
+    _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngineLoaded());
+#else
     _engine = static_cast<agora::rtc::IRtcEngineEx *>(createAgoraRtcEngine());
+#endif
     if (_engine == nullptr) { return -agora::ERR_FAILED; }
     _eventHandler = std::make_shared<RtcEngineEventHandlerExBridge>(eventHandler);
     agora::rtc::RtcEngineContext rtcContext = context;
@@ -186,7 +194,11 @@ MusicContentCenterBridge *RtcEngineExBridge::getMusicContentCenter() {
 
 MediaPlayerCacheManagerBridge *RtcEngineExBridge::getMediaPlayerCacheManager() {
     if (!_mediaPlayerCacheManager || !_mediaPlayerCacheManager->hasCacheManager()) {
+#if defined(__ANDROID__)
+        auto *cacheManager = getMediaPlayerCacheManagerLoaded();
+#else
         auto *cacheManager = ::getMediaPlayerCacheManager();
+#endif
         if (!cacheManager) { return nullptr; }
         _mediaPlayerCacheManager = std::make_shared<MediaPlayerCacheManagerBridge>(cacheManager);
     }
