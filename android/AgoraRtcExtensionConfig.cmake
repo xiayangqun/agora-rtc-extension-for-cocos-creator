@@ -1,10 +1,6 @@
 set(AGORA_RTC_EXTENSION_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
 set(AGORA_RTC_EXTENSION_LIBCPP_COMPAT_DEFINE _LIBCPP_ENABLE_CXX17_REMOVED_UNARY_BINARY_FUNCTION)
 
-# Cocos Creator 3.8.0 bundles Boost headers that still reference
-# std::unary_function. Newer Apple libc++ hides it in C++17 unless this
-# compatibility define is enabled. Apply it globally because the error can
-# surface while compiling the engine or app target, not just this plugin.
 add_definitions(-D${AGORA_RTC_EXTENSION_LIBCPP_COMPAT_DEFINE})
 
 if(DEFINED ENGINE_NAME AND TARGET ${ENGINE_NAME})
@@ -13,14 +9,59 @@ if(DEFINED ENGINE_NAME AND TARGET ${ENGINE_NAME})
     )
 endif()
 
-if(CMAKE_GENERATOR STREQUAL "Xcode")
-    set(CMAKE_XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
-    set(CMAKE_XCODE_ATTRIBUTE_ARCHS "$(ARCHS_STANDARD)")
+if(NOT ANDROID_ABI)
+    message(FATAL_ERROR "AgoraRtcExtension Android build requires ANDROID_ABI")
 endif()
 
-file(GLOB AGORA_RTC_MAC_FRAMEWORKS
-    ${AGORA_RTC_EXTENSION_ROOT}/mac/libs/*.xcframework/macos-arm64_x86_64/*.framework
+set(AGORA_RTC_ANDROID_LIB_DIR ${AGORA_RTC_EXTENSION_ROOT}/android/libs/${ANDROID_ABI})
+
+if(NOT EXISTS "${AGORA_RTC_ANDROID_LIB_DIR}")
+    message(FATAL_ERROR "AgoraRtcExtension Android SDK libs not found for ABI ${ANDROID_ABI}: ${AGORA_RTC_ANDROID_LIB_DIR}")
+endif()
+
+function(agora_rtc_extension_import_android_so OUT_TARGETS)
+    set(AGORA_RTC_ANDROID_IMPORTED_TARGETS)
+    foreach(AGORA_RTC_ANDROID_SO ${ARGN})
+        get_filename_component(AGORA_RTC_ANDROID_SO_NAME ${AGORA_RTC_ANDROID_SO} NAME_WE)
+        string(REGEX REPLACE "^lib" "" AGORA_RTC_ANDROID_TARGET_SUFFIX "${AGORA_RTC_ANDROID_SO_NAME}")
+        string(REGEX REPLACE "[^A-Za-z0-9_]" "_" AGORA_RTC_ANDROID_TARGET_SUFFIX "${AGORA_RTC_ANDROID_TARGET_SUFFIX}")
+        set(AGORA_RTC_ANDROID_TARGET "AgoraRtcExtensionAndroid_${AGORA_RTC_ANDROID_TARGET_SUFFIX}")
+
+        if(NOT TARGET ${AGORA_RTC_ANDROID_TARGET})
+            add_library(${AGORA_RTC_ANDROID_TARGET} SHARED IMPORTED GLOBAL)
+            set_target_properties(${AGORA_RTC_ANDROID_TARGET} PROPERTIES
+                IMPORTED_LOCATION "${AGORA_RTC_ANDROID_SO}"
+            )
+        endif()
+
+        list(APPEND AGORA_RTC_ANDROID_IMPORTED_TARGETS ${AGORA_RTC_ANDROID_TARGET})
+    endforeach()
+
+    set(${OUT_TARGETS} ${AGORA_RTC_ANDROID_IMPORTED_TARGETS} PARENT_SCOPE)
+endfunction()
+
+file(GLOB AGORA_RTC_ANDROID_SO_FILES
+    ${AGORA_RTC_ANDROID_LIB_DIR}/*.so
 )
+
+set(AGORA_RTC_ANDROID_LINK_SO_FILES)
+set(AGORA_RTC_ANDROID_EXTENSION_LIBRARY_NAMES)
+foreach(AGORA_RTC_ANDROID_SO ${AGORA_RTC_ANDROID_SO_FILES})
+    if(AGORA_RTC_ANDROID_SO MATCHES "_extension\\.so$")
+        get_filename_component(AGORA_RTC_ANDROID_EXTENSION_NAME ${AGORA_RTC_ANDROID_SO} NAME_WE)
+        string(REGEX REPLACE "^lib" "" AGORA_RTC_ANDROID_EXTENSION_NAME "${AGORA_RTC_ANDROID_EXTENSION_NAME}")
+        list(APPEND AGORA_RTC_ANDROID_EXTENSION_LIBRARY_NAMES ${AGORA_RTC_ANDROID_EXTENSION_NAME})
+    else()
+        list(APPEND AGORA_RTC_ANDROID_LINK_SO_FILES ${AGORA_RTC_ANDROID_SO})
+    endif()
+endforeach()
+
+agora_rtc_extension_import_android_so(
+    AGORA_RTC_ANDROID_IMPORTED_LIBS
+    ${AGORA_RTC_ANDROID_LINK_SO_FILES}
+)
+
+find_library(AGORA_RTC_ANDROID_LOG_LIB log)
 
 add_library(AgoraRtcExtension STATIC
     ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AgoraRtcAndroidLoader.cpp
@@ -58,26 +99,14 @@ if(EXISTS ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto/jsb_agora_rtc_engine_
     )
 endif()
 
-if(CMAKE_GENERATOR STREQUAL "Xcode")
-    set_target_properties(AgoraRtcExtension PROPERTIES
-        XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO"
-        XCODE_ATTRIBUTE_ARCHS "$(ARCHS_STANDARD)"
-        XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=Debug] "dwarf"
-        XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=Debug] "0"
-        XCODE_ATTRIBUTE_DEBUG_INFORMATION_FORMAT[variant=RelWithDebInfo] "dwarf-with-dsym"
-        XCODE_ATTRIBUTE_GCC_OPTIMIZATION_LEVEL[variant=RelWithDebInfo] "Os"
-    )
-endif()
-
 target_include_directories(AgoraRtcExtension PUBLIC
-    ${AGORA_RTC_EXTENSION_ROOT}/mac/include/rtc
-    ${AGORA_RTC_EXTENSION_ROOT}/mac/libs/aosl.xcframework/macos-arm64_x86_64/aosl.framework/Headers
+    ${AGORA_RTC_EXTENSION_ROOT}/android/include/rtc
     ${AGORA_RTC_EXTENSION_ROOT}/native
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/auto
     ${AGORA_RTC_EXTENSION_ROOT}/native/bindings/manual
     ${COCOS_X_PATH}
-    ${COCOS_X_PATH}/external/mac/include
-    ${COCOS_X_PATH}/external/mac/include/v8
+    ${COCOS_X_PATH}/external/android/${ANDROID_ABI}/include
+    ${COCOS_X_PATH}/external/android/${ANDROID_ABI}/include/v8
     ${COCOS_X_PATH}/cocos
     ${COCOS_X_PATH}/cocos/bindings/jswrapper
     ${COCOS_X_PATH}/cocos/renderer
@@ -89,19 +118,25 @@ target_compile_options(AgoraRtcExtension PUBLIC
     -Wno-missing-template-arg-list-after-template-kw
 )
 
-target_compile_definitions(AgoraRtcExtension PUBLIC
+set(AGORA_RTC_ANDROID_COMPILE_DEFINITIONS
     ${AGORA_RTC_EXTENSION_LIBCPP_COMPAT_DEFINE}
     CC_USE_PLUGINS=1
     USE_V8_DEBUGGER=0
-    V8_COMPRESS_POINTERS
+)
+if(ANDROID_ABI STREQUAL "arm64-v8a" OR ANDROID_ABI STREQUAL "x86_64")
+    list(APPEND AGORA_RTC_ANDROID_COMPILE_DEFINITIONS V8_COMPRESS_POINTERS)
+endif()
+
+target_compile_definitions(AgoraRtcExtension PUBLIC
+    ${AGORA_RTC_ANDROID_COMPILE_DEFINITIONS}
 )
 
 target_link_libraries(AgoraRtcExtension PUBLIC
-    ${AGORA_RTC_MAC_FRAMEWORKS}
+    ${AGORA_RTC_ANDROID_IMPORTED_LIBS}
+    ${AGORA_RTC_ANDROID_LOG_LIB}
 )
 
-foreach(AGORA_RTC_MAC_FRAMEWORK ${AGORA_RTC_MAC_FRAMEWORKS})
-    set_source_files_properties(${AGORA_RTC_MAC_FRAMEWORK} PROPERTIES
-        MACOSX_PACKAGE_LOCATION Frameworks
-    )
-endforeach()
+list(JOIN AGORA_RTC_ANDROID_EXTENSION_LIBRARY_NAMES "," AGORA_RTC_ANDROID_EXTENSION_LIBRARY_NAMES_STRING)
+target_compile_definitions(AgoraRtcExtension PRIVATE
+    AGORA_RTC_ANDROID_EXTENSION_LIBRARIES="${AGORA_RTC_ANDROID_EXTENSION_LIBRARY_NAMES_STRING}"
+)

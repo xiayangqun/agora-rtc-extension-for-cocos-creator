@@ -4,32 +4,15 @@
 #include <vector>
 
 #include "AgoraBase.h"
-#include "AgoraExtensionVersion.h"
-#include "AgoraExtensions.h"
 #include "AgoraMediaBase.h"
 #include "AgoraMediaPlayerTypes.h"
-#include "IAgoraFileUploader.h"
 #include "IAgoraLog.h"
 #include "IAgoraMediaStreamingSource.h"
 #include "IAgoraMusicContentCenter.h"
 #include "IAgoraRhythmPlayer.h"
 #include "IAgoraRtcEngine.h"
 #include "IAgoraRtcEngineEx.h"
-#include "IAgoraService.h"
 #include "IAgoraSpatialAudio.h"
-#include "NGIAgoraAudioDeviceManager.h"
-#include "NGIAgoraAudioTrack.h"
-#include "NGIAgoraDataChannel.h"
-#include "NGIAgoraExtensionControl.h"
-#include "NGIAgoraExtensionProvider.h"
-#include "NGIAgoraLocalUser.h"
-#include "NGIAgoraMediaNode.h"
-#include "NGIAgoraRtcConnection.h"
-#include "NGIAgoraRtmpConnection.h"
-#include "NGIAgoraSyncClient.h"
-#include "NGIAgoraVideoFrame.h"
-#include "NGIAgoraVideoMixerSource.h"
-#include "NGIAgoraVideoTrack.h"
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions_spec.h"
 
@@ -71,8 +54,6 @@ inline bool nativevalue_to_se(const agora::util::AString &from, se::Value &to, s
 
 // AUTO-GENERATED DECLARATIONS START
 
-bool nativevalue_to_se(const agora::base::AgoraServiceConfiguration &from, se::Value &to, se::Object *ctx);
-bool nativevalue_to_se(const agora::base::SyncConfig &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::commons::LogConfig &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::media::AudioSpectrumData &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::media::base::AudioEncodedFrameInfo &from, se::Value &to, se::Object *ctx);
@@ -149,9 +130,6 @@ bool nativevalue_to_se(const agora::rtc::ScreenCaptureParameters &from, se::Valu
 bool nativevalue_to_se(const agora::rtc::SegmentationProperty &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::SenderOptions &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value &to, se::Object *ctx);
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
-bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx);
-#endif
 bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::TranscodingVideoStream &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::UplinkNetworkInfo &from, se::Value &to, se::Object *ctx);
@@ -185,7 +163,8 @@ bool nativevalue_to_se(const agora::VideoLayout &from, se::Value &to, se::Object
 #include "agora/RtcEngineExBridge.h"
 
 bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &to, se::Object *ctx);
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx);
 bool nativevalue_to_se(const agora::rtc::ScreenCaptureSourceInfo &from, se::Value &to, se::Object *ctx);
 #endif

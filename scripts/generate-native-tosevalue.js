@@ -21,7 +21,9 @@ const path = require("path");
 
 // ─── paths ───────────────────────────────────────────────────────────────
 const ROOT = path.resolve(__dirname, "..");
-const HEADERS_DIR = path.join(ROOT, "mac", "include", "rtc");
+const ANDROID_HEADERS_DIR = path.join(ROOT, "android", "include", "rtc");
+const MAC_HEADERS_DIR = path.join(ROOT, "mac", "include", "rtc");
+const HEADERS_DIR = fs.existsSync(ANDROID_HEADERS_DIR) ? ANDROID_HEADERS_DIR : MAC_HEADERS_DIR;
 const OUTPUT_H = path.join(ROOT, "native", "agora", "RtcNativeValueToSe.h");
 const OUTPUT_CPP = path.join(ROOT, "native", "agora", "RtcNativeValueToSe.cpp");
 
@@ -184,6 +186,7 @@ const SKIP_STRUCTS = new Set([
     "ChannelMediaOptions",
     "ScreenCaptureSourceInfo",
     "ThumbImageBuffer",
+    "SIZE",
     "SimulcastConfig",
     "AudioPcmFrame",
     "AgoraRhythmPlayerConfig",
@@ -348,8 +351,22 @@ function isStringLike(type) {
     return normalized === "char" || normalized === "std::string" || normalized === "ccstd::string";
 }
 
+function isJsNumberInt64Like(type) {
+    const normalized = normalizeType(type);
+    return (
+        normalized === "long long" ||
+        normalized === "unsigned long long" ||
+        normalized === "int64_t" ||
+        normalized === "uint64_t"
+    );
+}
+
 function isSupportedPointerField(field) {
     return field.isPointer && isCharType(field.type);
+}
+
+function shouldSkipField(field, fullName) {
+    return fullName === "agora::rtc::ScreenAudioParameters" && field.name === "excludeCurrentProcessAudio";
 }
 
 function qualifyArraySize(arraySize, fullName) {
@@ -368,6 +385,10 @@ function generateFieldConversion(field, fullName) {
     const lines = [];
     const prop = field.name;
     const access = `from.${prop}`;
+
+    if (shouldSkipField(field, fullName)) {
+        return lines;
+    }
 
     if (field.arraySize) {
         const arraySize = qualifyArraySize(field.arraySize, fullName);
@@ -403,6 +424,15 @@ function generateFieldConversion(field, fullName) {
     if (field.isBitfield) {
         lines.push(`    ok &= nativevalue_to_se(static_cast<int32_t>(${access}), field, ctx);`);
         lines.push(`    if (ok) { obj->setProperty("${prop}", field); }`);
+        return lines;
+    }
+
+    if (isJsNumberInt64Like(field.type)) {
+        lines.push(
+            `    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.`,
+        );
+        lines.push(`    field.setLong(static_cast<long>(${access}));`);
+        lines.push(`    obj->setProperty("${prop}", field);`);
         return lines;
     }
 
@@ -447,32 +477,15 @@ function createInitialHeader() {
 #include <type_traits>
 
 #include "AgoraBase.h"
-#include "AgoraExtensionVersion.h"
-#include "AgoraExtensions.h"
 #include "AgoraMediaBase.h"
 #include "AgoraMediaPlayerTypes.h"
-#include "IAgoraFileUploader.h"
 #include "IAgoraLog.h"
 #include "IAgoraMediaStreamingSource.h"
 #include "IAgoraMusicContentCenter.h"
 #include "IAgoraRhythmPlayer.h"
 #include "IAgoraRtcEngine.h"
 #include "IAgoraRtcEngineEx.h"
-#include "IAgoraService.h"
 #include "IAgoraSpatialAudio.h"
-#include "NGIAgoraAudioDeviceManager.h"
-#include "NGIAgoraAudioTrack.h"
-#include "NGIAgoraDataChannel.h"
-#include "NGIAgoraExtensionControl.h"
-#include "NGIAgoraExtensionProvider.h"
-#include "NGIAgoraLocalUser.h"
-#include "NGIAgoraMediaNode.h"
-#include "NGIAgoraRtcConnection.h"
-#include "NGIAgoraRtmpConnection.h"
-#include "NGIAgoraSyncClient.h"
-#include "NGIAgoraVideoFrame.h"
-#include "NGIAgoraVideoMixerSource.h"
-#include "NGIAgoraVideoTrack.h"
 #include "bindings/jswrapper/SeApi.h"
 #include "bindings/manual/jsb_conversions_spec.h"
 

@@ -49,6 +49,7 @@ public:
     bool getRotationApplied() override;
     bool getMirrorApplied() override;
     uint32_t getObservedFramePosition() override;
+    bool isExternal() override { return true; }
 
 private:
     struct BindingEntry {

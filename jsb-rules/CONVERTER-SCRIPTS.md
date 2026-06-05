@@ -46,6 +46,19 @@ If the generated code has systemic issues (wrong namespaces, missing types), mod
 
 ## Common Issues
 
+### 64-bit integers become JS `BigInt`
+
+Cocos JSB exposes `se::Value::setInt64`, `se::Value::setUint64`, and the corresponding `nativevalue_to_se(int64_t/uint64_t)` overloads as JavaScript `BigInt`. Agora TypeScript APIs expect these values to remain plain JS `number`s.
+
+When converting Agora `int64_t`, `uint64_t`, `long long`, or `unsigned long long` values to `se::Value`, cast to `long` and use `setLong`:
+
+```cpp
+se::Value field;
+field.setLong(static_cast<long>(value));
+```
+
+Do not route these fields through `nativevalue_to_se(int64_t/uint64_t)` or `setInt64`/`setUint64`. Cocos does not provide `setULong`, so unsigned 64-bit values are intentionally narrowed through the same `long` path to preserve JS `number` behavior.
+
 ### Generated converters for non-existent types
 
 The scripts attempt to generate converters for all types found in SDK headers, but some types may not exist in the current platform's SDK version. Solutions:

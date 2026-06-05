@@ -174,72 +174,6 @@ bool nativevalue_to_se(const agora::rtc::RemoteAudioStats &from, se::Value &to, 
     return ok;
 }
 
-bool nativevalue_to_se(const agora::base::AgoraServiceConfiguration &from, se::Value &to, se::Object *ctx) {
-    se::HandleObject obj(se::Object::createPlainObject());
-    se::Value field;
-    bool ok = true;
-
-    ok &= nativevalue_to_se(from.enableAudioProcessor, field, ctx);
-    if (ok) { obj->setProperty("enableAudioProcessor", field); }
-
-    ok &= nativevalue_to_se(from.enableAudioDevice, field, ctx);
-    if (ok) { obj->setProperty("enableAudioDevice", field); }
-
-    ok &= nativevalue_to_se(from.enableVideo, field, ctx);
-    if (ok) { obj->setProperty("enableVideo", field); }
-
-    // void* context;
-    // Pointer fields are intentionally left for a protected hand-written converter.
-
-    ok &= nativevalue_to_se(from.areaCode, field, ctx);
-    if (ok) { obj->setProperty("areaCode", field); }
-
-    ok &= nativevalue_to_se(from.channelProfile, field, ctx);
-    if (ok) { obj->setProperty("channelProfile", field); }
-
-    ok &= nativevalue_to_se(from.audioScenario, field, ctx);
-    if (ok) { obj->setProperty("audioScenario", field); }
-
-    ok &= nativevalue_to_se(from.logConfig, field, ctx);
-    if (ok) { obj->setProperty("logConfig", field); }
-
-    ok &= nativevalue_to_se(from.useStringUid, field, ctx);
-    if (ok) { obj->setProperty("useStringUid", field); }
-
-    // IServiceObserver* serviceObserver;
-    // Pointer fields are intentionally left for a protected hand-written converter.
-
-    ok &= nativevalue_to_se(from.threadPriority, field, ctx);
-    if (ok) { obj->setProperty("threadPriority", field); }
-
-    ok &= nativevalue_to_se(from.useExternalEglContext, field, ctx);
-    if (ok) { obj->setProperty("useExternalEglContext", field); }
-
-    ok &= nativevalue_to_se(from.domainLimit, field, ctx);
-    if (ok) { obj->setProperty("domainLimit", field); }
-
-    to.setObject(obj);
-    return ok;
-}
-
-bool nativevalue_to_se(const agora::base::SyncConfig &from, se::Value &to, se::Object *ctx) {
-    se::HandleObject obj(se::Object::createPlainObject());
-    se::Value field;
-    bool ok = true;
-
-    ok &= nativevalue_to_se(from.shakehand_interval, field, ctx);
-    if (ok) { obj->setProperty("shakehand_interval", field); }
-
-    ok &= nativevalue_to_se(from.connection_timeout, field, ctx);
-    if (ok) { obj->setProperty("connection_timeout", field); }
-
-    ok &= nativevalue_to_se(from.compact_interval, field, ctx);
-    if (ok) { obj->setProperty("compact_interval", field); }
-
-    to.setObject(obj);
-    return ok;
-}
-
 bool nativevalue_to_se(const agora::commons::LogConfig &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     se::Value field;
@@ -272,8 +206,9 @@ bool nativevalue_to_se(const agora::media::base::AudioEncodedFrameInfo &from, se
     se::Value field;
     bool ok = true;
 
-    ok &= nativevalue_to_se(from.sendTs, field, ctx);
-    if (ok) { obj->setProperty("sendTs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.sendTs));
+    obj->setProperty("sendTs", field);
 
     ok &= nativevalue_to_se(from.codec, field, ctx);
     if (ok) { obj->setProperty("codec", field); }
@@ -287,14 +222,15 @@ bool nativevalue_to_se(const agora::media::base::CacheStatistics &from, se::Valu
     se::Value field;
     bool ok = true;
 
-    // Cast to long to prevent JavaScript BigInt conversion.
-    // Cocos engine converts long → number, int64_t → BigInt.
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
     field.setLong(static_cast<long>(from.fileSize));
     obj->setProperty("fileSize", field);
 
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
     field.setLong(static_cast<long>(from.cacheSize));
     obj->setProperty("cacheSize", field);
 
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
     field.setLong(static_cast<long>(from.downloadSize));
     obj->setProperty("downloadSize", field);
 
@@ -358,8 +294,9 @@ bool nativevalue_to_se(const agora::media::base::ExternalVideoFrame &from, se::V
     ok &= nativevalue_to_se(from.rotation, field, ctx);
     if (ok) { obj->setProperty("rotation", field); }
 
-    ok &= nativevalue_to_se(from.timestamp, field, ctx);
-    if (ok) { obj->setProperty("timestamp", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.timestamp));
+    obj->setProperty("timestamp", field);
 
     // void* eglContext;
     // Pointer fields are intentionally left for a protected hand-written converter.
@@ -370,8 +307,9 @@ bool nativevalue_to_se(const agora::media::base::ExternalVideoFrame &from, se::V
     ok &= nativevalue_to_se(from.textureId, field, ctx);
     if (ok) { obj->setProperty("textureId", field); }
 
-    ok &= nativevalue_to_se(from.fenceObject, field, ctx);
-    if (ok) { obj->setProperty("fenceObject", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.fenceObject));
+    obj->setProperty("fenceObject", field);
 
     {
         se::HandleObject array(se::Object::createArrayObject(16));
@@ -464,8 +402,9 @@ bool nativevalue_to_se(const agora::media::base::MediaSource &from, se::Value &t
     se::Value field;
     bool ok = true;
 
-    ok &= nativevalue_to_se(from.startPos, field, ctx);
-    if (ok) { obj->setProperty("startPos", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.startPos));
+    obj->setProperty("startPos", field);
 
     ok &= nativevalue_to_se(from.autoPlay, field, ctx);
     if (ok) { obj->setProperty("autoPlay", field); }
@@ -564,8 +503,9 @@ bool nativevalue_to_se(const agora::media::base::PlayerStreamInfo &from, se::Val
     ok &= nativevalue_to_se(from.audioBitsPerSample, field, ctx);
     if (ok) { obj->setProperty("audioBitsPerSample", field); }
 
-    ok &= nativevalue_to_se(from.duration, field, ctx);
-    if (ok) { obj->setProperty("duration", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.duration));
+    obj->setProperty("duration", field);
 
     to.setObject(obj);
     return ok;
@@ -642,8 +582,9 @@ bool nativevalue_to_se(const agora::media::base::VideoFrame &from, se::Value &to
     ok &= nativevalue_to_se(from.rotation, field, ctx);
     if (ok) { obj->setProperty("rotation", field); }
 
-    ok &= nativevalue_to_se(from.renderTimeMs, field, ctx);
-    if (ok) { obj->setProperty("renderTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.renderTimeMs));
+    obj->setProperty("renderTimeMs", field);
 
     ok &= nativevalue_to_se(from.avsync_type, field, ctx);
     if (ok) { obj->setProperty("avsync_type", field); }
@@ -832,11 +773,13 @@ bool nativevalue_to_se(const agora::rtc::AudioPcmDataInfo &from, se::Value &to, 
     ok &= nativevalue_to_se(from.samplesOut, field, ctx);
     if (ok) { obj->setProperty("samplesOut", field); }
 
-    ok &= nativevalue_to_se(from.elapsedTimeMs, field, ctx);
-    if (ok) { obj->setProperty("elapsedTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.elapsedTimeMs));
+    obj->setProperty("elapsedTimeMs", field);
 
-    ok &= nativevalue_to_se(from.ntpTimeMs, field, ctx);
-    if (ok) { obj->setProperty("ntpTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.ntpTimeMs));
+    obj->setProperty("ntpTimeMs", field);
 
     to.setObject(obj);
     return ok;
@@ -1147,8 +1090,9 @@ bool nativevalue_to_se(const agora::rtc::EncodedAudioFrameInfo &from, se::Value 
     ok &= nativevalue_to_se(from.advancedSettings, field, ctx);
     if (ok) { obj->setProperty("advancedSettings", field); }
 
-    ok &= nativevalue_to_se(from.captureTimeMs, field, ctx);
-    if (ok) { obj->setProperty("captureTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.captureTimeMs));
+    obj->setProperty("captureTimeMs", field);
 
     to.setObject(obj);
     return ok;
@@ -1180,17 +1124,20 @@ bool nativevalue_to_se(const agora::rtc::EncodedVideoFrameInfo &from, se::Value 
     ok &= nativevalue_to_se(from.trackId, field, ctx);
     if (ok) { obj->setProperty("trackId", field); }
 
-    ok &= nativevalue_to_se(from.captureTimeMs, field, ctx);
-    if (ok) { obj->setProperty("captureTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.captureTimeMs));
+    obj->setProperty("captureTimeMs", field);
 
-    ok &= nativevalue_to_se(from.decodeTimeMs, field, ctx);
-    if (ok) { obj->setProperty("decodeTimeMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.decodeTimeMs));
+    obj->setProperty("decodeTimeMs", field);
 
     ok &= nativevalue_to_se(from.streamType, field, ctx);
     if (ok) { obj->setProperty("streamType", field); }
 
-    ok &= nativevalue_to_se(from.presentationMs, field, ctx);
-    if (ok) { obj->setProperty("presentationMs", field); }
+    // Keep 64-bit integers as JS number; Cocos JSB converts int64_t/uint64_t overloads to BigInt.
+    field.setLong(static_cast<long>(from.presentationMs));
+    obj->setProperty("presentationMs", field);
 
     to.setObject(obj);
     return ok;
@@ -1844,9 +1791,6 @@ bool nativevalue_to_se(const agora::rtc::RtcConnection &from, se::Value &to, se:
     se::Value field;
     bool ok = true;
 
-    ok &= nativevalue_to_se(from.channelId ? from.channelId : "", field, ctx);
-    if (ok) { obj->setProperty("channelId", field); }
-
     ok &= nativevalue_to_se(from.localUid, field, ctx);
     if (ok) { obj->setProperty("localUid", field); }
 
@@ -2018,11 +1962,6 @@ bool nativevalue_to_se(const agora::rtc::ScreenAudioParameters &from, se::Value 
     ok &= nativevalue_to_se(from.captureSignalVolume, field, ctx);
     if (ok) { obj->setProperty("captureSignalVolume", field); }
 
-#if defined(__APPLE__) && !TARGET_OS_IOS
-    ok &= nativevalue_to_se(from.excludeCurrentProcessAudio, field, ctx);
-    if (ok) { obj->setProperty("excludeCurrentProcessAudio", field); }
-#endif
-
     to.setObject(obj);
     return ok;
 }
@@ -2125,23 +2064,6 @@ bool nativevalue_to_se(const agora::rtc::SimulcastStreamConfig &from, se::Value 
     to.setObject(obj);
     return ok;
 }
-
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
-bool nativevalue_to_se(const agora::rtc::SIZE &from, se::Value &to, se::Object *ctx) {
-    se::HandleObject obj(se::Object::createPlainObject());
-    se::Value field;
-    bool ok = true;
-
-    ok &= nativevalue_to_se(from.width, field, ctx);
-    if (ok) { obj->setProperty("width", field); }
-
-    ok &= nativevalue_to_se(from.height, field, ctx);
-    if (ok) { obj->setProperty("height", field); }
-
-    to.setObject(obj);
-    return ok;
-}
-#endif
 
 bool nativevalue_to_se(const agora::rtc::TranscodingUser &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
@@ -2719,7 +2641,8 @@ bool nativevalue_to_se(const agora::rtc::ChannelMediaOptions &from, se::Value &t
     return true;
 }
 
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 bool nativevalue_to_se(const agora::rtc::ThumbImageBuffer &from, se::Value &to, se::Object *ctx) {
     se::HandleObject obj(se::Object::createPlainObject());
     if (from.buffer && from.length > 0) {

@@ -174,14 +174,14 @@ void VideoTextureManager::release() {
 }
 
 bool VideoTextureManager::onCaptureVideoFrame(agora::rtc::VIDEO_SOURCE_TYPE sourceType, VideoFrame &videoFrame) {
-    auto entry = findLocalEntry(sourceType);
-    if (entry) { handleFrame(entry, videoFrame); }
+    (void)sourceType;
+    (void)videoFrame;
     return true;
 }
 
 bool VideoTextureManager::onPreEncodeVideoFrame(agora::rtc::VIDEO_SOURCE_TYPE sourceType, VideoFrame &videoFrame) {
-    (void)sourceType;
-    (void)videoFrame;
+    auto entry = findLocalEntry(sourceType);
+    if (entry) { handleFrame(entry, videoFrame); }
     return true;
 }
 
@@ -211,10 +211,14 @@ VideoTextureManager::VIDEO_FRAME_PROCESS_MODE VideoTextureManager::getVideoFrame
 }
 
 agora::media::base::VIDEO_PIXEL_FORMAT VideoTextureManager::getVideoFormatPreference() {
+    std::lock_guard<std::mutex> lock(_entriesMutex);
+    if (_entries.empty()) { return agora::media::base::VIDEO_PIXEL_DEFAULT; }
     return agora::media::base::VIDEO_PIXEL_RGBA;
 }
 
 bool VideoTextureManager::getRotationApplied() {
+    std::lock_guard<std::mutex> lock(_entriesMutex);
+    if (_entries.empty()) { return IVideoFrameObserver::getRotationApplied(); }
     return true;
 }
 
@@ -223,7 +227,11 @@ bool VideoTextureManager::getMirrorApplied() {
 }
 
 uint32_t VideoTextureManager::getObservedFramePosition() {
-    return agora::media::base::POSITION_POST_CAPTURER | agora::media::base::POSITION_PRE_RENDERER;
+    std::lock_guard<std::mutex> lock(_entriesMutex);
+    if (_entries.empty()) {
+        return agora::media::base::POSITION_PRE_ENCODER | agora::media::base::POSITION_PRE_RENDERER;
+    }
+    return agora::media::base::POSITION_PRE_ENCODER | agora::media::base::POSITION_PRE_RENDERER;
 }
 
 std::shared_ptr<VideoTextureManager::BindingEntry> VideoTextureManager::findLocalEntry(

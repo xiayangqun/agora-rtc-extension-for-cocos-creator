@@ -1,5 +1,6 @@
 #include "agora/RtcEngineExBridge.h"
 
+#include "agora/AgoraRtcAndroidLoader.h"
 #include "agora/RtcEngineEventHandlerExBridge.h"
 #include "agora/AudioDeviceManagerBridge.h"
 #include "agora/H265TranscoderBridge.h"
@@ -24,7 +25,9 @@ const char *nullableCString(const std::string &value) {
 }
 } // namespace
 
-RtcEngineExBridge::RtcEngineExBridge() = default;
+RtcEngineExBridge::RtcEngineExBridge() {
+    ensureAgoraRtcAndroidLibrariesLoaded();
+}
 
 RtcEngineExBridge::~RtcEngineExBridge() {}
 
@@ -1362,13 +1365,22 @@ int RtcEngineExBridge::setRouteInCommunicationMode(int route) {
 }
 
 bool RtcEngineExBridge::isCameraCenterStageSupported() {
+#if defined(__APPLE__)
     if (_engine == nullptr) { return false; }
     return _engine->isCameraCenterStageSupported();
+#else
+    return false;
+#endif
 }
 
 int RtcEngineExBridge::enableCameraCenterStage(bool enabled) {
+#if defined(__APPLE__)
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->enableCameraCenterStage(enabled);
+#else
+    (void)enabled;
+    return -agora::ERR_NOT_SUPPORTED;
+#endif
 }
 
 #if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))

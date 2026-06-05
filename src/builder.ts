@@ -42,6 +42,7 @@ const agoraMacPermissionOptions = {
 };
 
 const agoraIosPermissionOptions = agoraMediaPermissionOptions;
+const agoraAndroidPermissionOptions = agoraMacPermissionOptions;
 
 export const configs: BuildPlugin.Configs = {
     mac: {
@@ -51,5 +52,13 @@ export const configs: BuildPlugin.Configs = {
     ios: {
         hooks: "./build-hooks",
         options: agoraIosPermissionOptions,
+    },
+    android: {
+        hooks: "./build-hooks",
+        options: agoraAndroidPermissionOptions,
+    },
+    "google-play": {
+        hooks: "./build-hooks",
+        options: agoraAndroidPermissionOptions,
     },
 };
