@@ -40,6 +40,7 @@ set(AGORA_RTC_EXTENSION_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
 set(AGORA_RTC_SOURCES
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/ObserverBridgeBase.cpp
+  ${AGORA_RTC_EXTENSION_ROOT}/native/agora/AgoraRtcAndroidLoader.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineExBridge.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/RtcEngineEventHandlerExBridge.cpp
   ${AGORA_RTC_EXTENSION_ROOT}/native/agora/MediaPlayerBridge.cpp

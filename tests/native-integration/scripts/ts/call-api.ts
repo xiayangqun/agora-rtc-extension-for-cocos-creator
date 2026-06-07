@@ -3763,7 +3763,11 @@ export class CallApiTestSuite extends TestCase {
     // 214. setParameters(parameters)
     private async testSetParameters(runner: TestRunner): Promise<void> {
         runner.log("\n--- Test: testSetParameters ---");
+        const initTime = Date.now();
         const bridge = this.createBridgeAndInit();
+        this.assertLogEntry(runner, "setParameters", initTime, {
+            parameters: '{"rtc.set_app_type": 10}',
+        });
         const callTime = Date.now();
         const setParametersResult386 = await bridge.setParameters('{"che.audio.enable.aec":true}');
         this.assertLogEntry(runner, "setParameters", callTime, {
