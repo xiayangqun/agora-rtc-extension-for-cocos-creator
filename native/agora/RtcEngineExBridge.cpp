@@ -154,7 +154,10 @@ int RtcEngineExBridge::initialize(const agora::rtc::RtcEngineContext &context, s
     agora::rtc::RtcEngineContext rtcContext = context;
     rtcContext.eventHandler = _eventHandler.get();
     auto ret = _engine->initialize(rtcContext);
-    if (ret == agora::ERR_OK) { videoTextureManager(); }
+    if (ret == agora::ERR_OK) {
+        videoTextureManager();
+        _engine->setParameters("{\"rtc.set_app_type\": 10}");
+    }
     return ret;
 }
 
@@ -1395,7 +1398,8 @@ int RtcEngineExBridge::enableCameraCenterStage(bool enabled) {
 #endif
 }
 
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
 ScreenCaptureSourceListBridge *RtcEngineExBridge::getScreenCaptureSources(const agora::rtc::SIZE &thumbSize,
                                                                           const agora::rtc::SIZE &iconSize,
                                                                           bool includeScreen) {
@@ -1415,7 +1419,8 @@ int RtcEngineExBridge::setAudioSessionOperationRestriction(agora::AUDIO_SESSION_
 
 int RtcEngineExBridge::startScreenCaptureByDisplayId(int64_t displayId, const agora::rtc::Rectangle &regionRect,
                                                      const agora::rtc::ScreenCaptureParameters &captureParams) {
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startScreenCaptureByDisplayId(displayId, regionRect, captureParams);
 #else
@@ -1443,7 +1448,8 @@ GetAudioDeviceInfoWithDeviceInfoResult RtcEngineExBridge::getAudioDeviceInfo() {
 
 int RtcEngineExBridge::startScreenCaptureByWindowId(int64_t windowId, const agora::rtc::Rectangle &regionRect,
                                                     const agora::rtc::ScreenCaptureParameters &captureParams) {
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->startScreenCaptureByWindowId(windowId, regionRect, captureParams);
 #else
@@ -1455,7 +1461,8 @@ int RtcEngineExBridge::startScreenCaptureByWindowId(int64_t windowId, const agor
 }
 
 int RtcEngineExBridge::setScreenCaptureContentHint(agora::rtc::VIDEO_CONTENT_HINT contentHint) {
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->setScreenCaptureContentHint(contentHint);
 #else
@@ -1465,7 +1472,8 @@ int RtcEngineExBridge::setScreenCaptureContentHint(agora::rtc::VIDEO_CONTENT_HIN
 }
 
 int RtcEngineExBridge::updateScreenCaptureRegion(const agora::rtc::Rectangle &regionRect) {
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updateScreenCaptureRegion(regionRect);
 #else
@@ -1475,7 +1483,8 @@ int RtcEngineExBridge::updateScreenCaptureRegion(const agora::rtc::Rectangle &re
 }
 
 int RtcEngineExBridge::updateScreenCaptureParameters(const agora::rtc::ScreenCaptureParameters &captureParams) {
-#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
+#if defined(_WIN32) || (defined(__APPLE__) && TARGET_OS_MAC && !TARGET_OS_IPHONE) || \
+    (defined(__linux__) && !defined(__ANDROID__) && !defined(__OHOS__))
     if (_engine == nullptr) { return -agora::ERR_NOT_INITIALIZED; }
     return _engine->updateScreenCaptureParameters(captureParams);
 #else
