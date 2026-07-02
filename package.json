@@ -21,7 +21,8 @@
         "lint:fix": "eslint src --ext .ts --fix",
         "format": "prettier --write \"{src,assets}/**/*.ts\"",
         "format:check": "prettier --check \"{src,assets}/**/*.ts\"",
-        "prepare": "husky"
+        "prepare": "husky",
+        "make": "node scripts/make.js"
     },
     "lint-staged": {
         "*.ts": [
