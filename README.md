@@ -1,6 +1,6 @@
 # Agora RTC Extension for Cocos Creator
 
-[中文](README.zh-CN.md)
+[中文](README.zh.md)
 
 A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www.agora.io/) for real-time communication. Build video calling, interactive live streaming, screen sharing, and media playback features into your Cocos Creator games and applications.
 
@@ -20,35 +20,35 @@ A Cocos Creator editor extension that integrates the [Agora RTC SDK](https://www
 
 ## Platform Capability Matrix
 
-| Capability | iOS | Android | macOS | Windows | Browser (Chrome) |
-|---|:---:|:---:|:---:|:---:|:---:|
-| Join/Leave Channel | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Video Call | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Audio Call | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Mute Local Audio/Video | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Mute Remote Audio/Video | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Client Role (Broadcaster/Audience) | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Channel Profile | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Screen Sharing | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Screen Capture Sources | ❌ | ❌ | ✅ | ✅ | ❌ |
-| Media Player | ✅ | ✅ | ✅ | ✅ | ⚠️ |
-| Media Recorder | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Audio Mixing | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Beauty Effect | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Filter Effect | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Virtual Background | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Video Denoiser | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Color Enhance | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Lowlight Enhance | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Spatial Audio | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Data Stream | ✅ | ✅ | ✅ | ✅ | ✅ |
-| CDN Push Streaming | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Take Snapshot | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Content Inspection | ✅ | ✅ | ✅ | ✅ | ❌ |
-| Encryption | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Audio Volume Indication | ✅ | ✅ | ✅ | ✅ | ✅ |
-| Device Manager | ✅ | ✅ | ✅ | ✅ | ⚠️ |
-| Extension System | ✅ | ✅ | ✅ | ✅ | ❌ |
+| Capability                         | iOS | Android | macOS | Windows | Browser (Chrome) |
+| ---------------------------------- | :-: | :-----: | :---: | :-----: | :--------------: |
+| Join/Leave Channel                 | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Video Call                         | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Audio Call                         | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Mute Local Audio/Video             | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Mute Remote Audio/Video            | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Client Role (Broadcaster/Audience) | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Channel Profile                    | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Screen Sharing                     | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Screen Capture Sources             | ❌  |   ❌    |  ✅   |   ✅    |        ❌        |
+| Media Player                       | ✅  |   ✅    |  ✅   |   ✅    |        ⚠️        |
+| Media Recorder                     | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Audio Mixing                       | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Beauty Effect                      | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Filter Effect                      | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Virtual Background                 | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Video Denoiser                     | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Color Enhance                      | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Lowlight Enhance                   | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Spatial Audio                      | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Data Stream                        | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| CDN Push Streaming                 | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Take Snapshot                      | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Content Inspection                 | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
+| Encryption                         | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Audio Volume Indication            | ✅  |   ✅    |  ✅   |   ✅    |        ✅        |
+| Device Manager                     | ✅  |   ✅    |  ✅   |   ✅    |        ⚠️        |
+| Extension System                   | ✅  |   ✅    |  ✅   |   ✅    |        ❌        |
 
 > ✅ Supported &nbsp; ❌ Not supported &nbsp; ⚠️ Limited functionality
 
@@ -134,30 +134,30 @@ npm run build
 
 3. In the Cocos Creator editor, open **Extensions → Agora RTC → Open AgoraRTC Plugin**
 
-   ![Agora RTC Panel](README/panel.png)
+    <img src="README/panel.png" alt="Agora RTC Panel" width="50%"/>
 
 4. Select the platform SDKs you want to support, then click Download
 
-   ![Build Panel - SDK Version Selection](README/predownload.png)
+    <img src="README/predownload.png" alt="Build Panel - SDK Version Selection" width="50%"/>
 
 5. `agora-rtc-sdk-ng` is included in the SDK by default — no extra download needed. Set it as a plugin as shown below:
 
-   ![Set as Plugin](README/set_as_plugin.png)
+    <img src="README/set_as_plugin.png" alt="Set as Plugin" width="50%"/>
 
 6. Add the plugin script search path to your Cocos project's `tsconfig.json` so code completion works correctly:
 
 ```json
 {
-  "extends": "./temp/tsconfig.cocos.json",
-  "compilerOptions": {
-    "strict": false,
-    "baseUrl": ".",
-    "paths": {
-      "db://agora-rtc-extension-for-cocos-creator/*": [
-        "./extensions/agora-rtc-extension-for-cocos-creator/assets/*"
-      ]
+    "extends": "./temp/tsconfig.cocos.json",
+    "compilerOptions": {
+        "strict": false,
+        "baseUrl": ".",
+        "paths": {
+            "db://agora-rtc-extension-for-cocos-creator/*": [
+                "./extensions/agora-rtc-extension-for-cocos-creator/assets/*"
+            ]
+        }
     }
-  }
 }
 ```
 

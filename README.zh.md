@@ -134,15 +134,15 @@ npm run build
 
 3. 在 Cocos 编辑器中打开 **扩展 → Agora RTC → 打开 AgoraRTC 插件**
 
-   ![Agora RTC 面板](README/panel.png)
+   <img src="README/panel.png" alt="Agora RTC 面板" width="50%"/>
 
 4. 选择想要支持的平台 SDK，点击下载
 
-   ![构建面板 - SDK 版本选择](README/predownload.png)
+   <img src="README/predownload.png" alt="构建面板 - SDK 版本选择" width="50%"/>
 
 5. `agora-rtc-sdk-ng` 默认包含在 SDK 中，无需额外下载。将其设置为插件，如图所示：
 
-   ![设置为插件](README/set_as_plugin.png)
+   <img src="README/set_as_plugin.png" alt="设置为插件" width="50%"/>
 
 6. 在 Cocos 项目的 `tsconfig.json` 中添加插件脚本的搜索路径，使代码提示正常工作：
 
